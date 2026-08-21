@@ -1,6 +1,6 @@
-const CACHE_NAME = "painel-mestre-ingles-v1";
+const CACHE_NAME = "painel-mestre-ingles-v2";
 const ASSETS = [
-  "./painel-mestre-ingles.html",
+  "./index.html",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
