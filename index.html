@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#10151c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Painel Mestre">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>Painel Mestre do Inglês</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --panel-deep:#10151c; --panel:#1b2430; --panel-raised:#242f3d;
+    --brass:#c9a34e; --brass-dim:#8a744f; --teal:#4fb6a6; --red:#c1483d;
+    --amber:#e0a458; --violet:#8f8fd6; --paper:#ede6d6; --paper-dim:#a9a294;
+    --line: rgba(237,230,214,0.10); --bg-top:#182130;
+  }
+  :root[data-theme="light"]{
+    --panel-deep:#f4f0e6; --panel:#ffffff; --panel-raised:#efe9db;
+    --brass:#a8762c; --brass-dim:#8a744f; --teal:#227b6b; --red:#a83527;
+    --amber:#b06f22; --violet:#5f57ad; --paper:#211c14; --paper-dim:#6e6656;
+    --line: rgba(33,28,20,0.12); --bg-top:#fbf7ee;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background: radial-gradient(ellipse at top, var(--bg-top) 0%, var(--panel-deep) 55%); color: var(--paper); font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased; padding: 20px 14px calc(60px + env(safe-area-inset-bottom, 0px)) 14px; min-height:100vh; transition:background .25s ease, color .25s ease;}
+  .app{max-width:640px; margin:0 auto; width:100%;}
+
+  header{text-align:center; margin-bottom:18px;}
+
+  .topnav{position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:calc(10px + env(safe-area-inset-top, 0px)) 4px 10px; margin:0 -14px 18px; background:linear-gradient(180deg, color-mix(in srgb, var(--panel-deep) 97%, transparent), color-mix(in srgb, var(--panel-deep) 90%, transparent)); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
+  .nav-pills{display:flex; gap:8px; overflow-x:auto; padding:0 10px;}
+  .nav-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:11.5px; font-weight:600; color:var(--paper-dim); font-family:'JetBrains Mono'; cursor:pointer; transition:all .18s ease; flex-shrink:0; white-space:nowrap;}
+  .nav-pill:active{color:var(--brass); border-color:var(--brass);}
+  .theme-toggle{width:32px; height:32px; border-radius:50%; background:var(--panel-raised); border:1px solid var(--line); color:var(--paper); font-size:15px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .18s ease; margin-right:10px;}
+  .theme-toggle:active{border-color:var(--brass); transform:scale(0.92);}
+  .eyebrow{font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass); margin-bottom:8px;}
+  h1{font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:clamp(28px,7vw,40px); margin:0 0 6px; letter-spacing:-0.01em;}
+  header p{color:var(--paper-dim); font-size:14px; margin:0; line-height:1.5;}
+  header p b{color:var(--teal); font-weight:600;}
+  header p .b2{color:var(--brass);}
+  header p .b3{color:var(--violet);}
+
+  .console{background: linear-gradient(180deg, var(--panel) 0%, var(--panel-deep) 100%); border:1px solid var(--line); border-radius: 20px; padding: 18px 16px 20px; box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03); margin-bottom:16px;}
+  .console-label{font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.14em; color:var(--paper-dim); text-transform:uppercase; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;}
+  .console-label .pulse{width:6px;height:6px;border-radius:50%;background:var(--teal); box-shadow:0 0 8px var(--teal); animation:blink 2.2s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  .dial-group{margin-bottom:16px;}
+  .dial-group-title{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:8px; font-weight:600;}
+  .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .opt-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:10px 8px; color:var(--paper-dim); font-family:'Inter'; font-size:12px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; transition: all .18s ease; text-align:center;}
+  .opt-btn .ic{font-size:18px; filter:grayscale(1); opacity:.6; transition:all .18s ease;}
+  .opt-btn[data-active="true"]{color:var(--paper); border-color: var(--accent, var(--brass)); background: linear-gradient(180deg, color-mix(in srgb, var(--accent,var(--brass)) 16%, transparent), transparent); box-shadow: 0 0 0 1px var(--accent, var(--brass)) inset, 0 0 18px -4px var(--accent, var(--brass));}
+  .opt-btn[data-active="true"] .ic{filter:none; opacity:1;}
+
+  .pronome-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .pronome-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:12.5px; font-weight:600; color:var(--paper-dim); cursor:pointer; transition:all .18s ease; font-family:'JetBrains Mono';}
+  .pronome-pill[data-active="true"]{color:var(--panel-deep); background:var(--brass); border-color:var(--brass);}
+
+  .tempo-track{position:relative; background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:14px 10px 10px;}
+  .tempo-rail{position:relative; height:3px; background:var(--line); border-radius:2px; margin:0 6px 10px;}
+  .tempo-fill{position:absolute; top:0; left:0; height:3px; border-radius:2px; background: linear-gradient(90deg, transparent, var(--teal)); transition: width .25s ease;}
+  .tempo-dot{position:absolute; top:50%; width:12px; height:12px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal); transform:translate(-50%,-50%); transition:left .25s ease;}
+  .tempo-labels{display:flex; justify-content:space-between; padding:0 2px;}
+  .tempo-label{font-size:12px; font-weight:600; color:var(--paper-dim); cursor:pointer; padding:4px 6px; border-radius:6px; transition:all .18s ease;}
+  .tempo-label[data-active="true"]{color:var(--teal);}
+
+  .formato-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .formato-switch{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:10px 6px; text-align:center; cursor:pointer; transition:all .18s ease;}
+  .formato-switch .lamp{width:9px;height:9px;border-radius:50%;margin:0 auto 6px; background:#3a4553; transition:all .18s ease;}
+  .formato-switch .lbl{font-size:11px; font-weight:600; color:var(--paper-dim); letter-spacing:0.02em;}
+  .formato-switch[data-active="true"][data-kind="afirmativa"] .lamp{background:var(--teal); box-shadow:0 0 10px var(--teal);}
+  .formato-switch[data-active="true"][data-kind="negativa"] .lamp{background:var(--red); box-shadow:0 0 10px var(--red);}
+  .formato-switch[data-active="true"][data-kind="pergunta"] .lamp{background:var(--amber); box-shadow:0 0 10px var(--amber);}
+  .formato-switch[data-active="true"] .lbl{color:var(--paper);}
+  .formato-switch[data-active="true"]{border-color:rgba(255,255,255,0.18);}
+
+  .signal-row{display:flex; flex-direction:column; gap:4px;}
+  .signal-row-inner{display:flex; flex-wrap:nowrap; overflow-x:auto; gap:6px; padding-bottom:3px; scrollbar-width:thin;}
+  .signal-row-inner::-webkit-scrollbar{height:4px;}
+  .signal-row-inner::-webkit-scrollbar-thumb{background:var(--line); border-radius:2px;}
+  .signal-chip{flex-shrink:0;}
+  .signal-group-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin:5px 0 1px;}
+  .signal-chip{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:6px 11px; font-size:11.5px; font-family:'JetBrains Mono'; color:var(--paper-dim); cursor:pointer; transition:all .18s ease;}
+  .signal-chip[data-active="true"]{color:var(--panel-deep); background:var(--teal); border-color:var(--teal);}
+  .signal-hint{font-size:11px; color:var(--paper-dim); margin-top:6px; line-height:1.4;}
+  .signal-rule{font-size:10.5px; color:var(--paper-dim); margin:2px 0 4px; line-height:1.4;}
+
+  .wh-group-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin:8px 0 4px;}
+  .wh-group-label:first-child{margin-top:0;}
+
+  .readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
+  .readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none;}
+  .readout-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .readout-label{font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase;}
+  .audio-btn{position:relative; z-index:1; width:30px; height:30px; border-radius:50%; background:var(--panel-raised); border:1px solid var(--line); color:var(--teal); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .18s ease; flex-shrink:0;}
+  .audio-btn:hover{border-color:var(--teal); box-shadow:0 0 12px -2px var(--teal);}
+  .audio-btn.sm{width:24px; height:24px; font-size:11px;}
+  .readout-sentence{font-family:'JetBrains Mono'; font-size:clamp(17px,5.2vw,23px); font-weight:600; color:var(--paper); text-shadow:0 0 16px rgba(237,230,214,0.25); margin-bottom:6px; min-height:30px;}
+  .readout-translation{font-size:13px; color:var(--paper-dim); font-style:italic; margin-bottom:10px;}
+  .readout-translation b{color:var(--amber); font-style:normal; font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; margin-right:6px;}
+  .readout-formula{font-size:11.5px; color:var(--paper-dim); letter-spacing:0.03em; margin-bottom:6px;}
+  .readout-formula span{color:var(--brass); font-weight:600;}
+  .readout-structure{font-family:'JetBrains Mono'; font-size:12px; color:var(--teal);}
+  .note-box{margin-top:10px; padding:9px 11px; background:rgba(143,143,214,0.1); border:1px solid rgba(143,143,214,0.3); border-radius:9px; font-size:11.5px; color:var(--paper); line-height:1.5; display:none;}
+  .note-box.show{display:block;}
+  .note-box b{color:var(--violet);}
+
+  .modal-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .modal-result{margin-top:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 14px 8px;}
+  .modal-result-label{font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase; margin-bottom:10px;}
+  .modal-row{padding:9px 0; border-top:1px solid var(--line);}
+  .modal-row:first-of-type{border-top:none;}
+  .modal-row .tempo-tag{font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--violet); font-weight:700; margin-bottom:3px;}
+  .modal-row .forma{font-family:'JetBrains Mono'; font-size:14px; color:var(--paper); margin-bottom:3px;}
+  .modal-row .ex-row{display:flex; align-items:center; gap:8px; margin-bottom:3px;}
+  .modal-row .ex{font-size:12px; color:var(--teal);}
+  .modal-row .pt{font-size:11.5px; color:var(--paper-dim); font-style:italic; margin-bottom:3px;}
+  .modal-row .nuance{font-size:11.5px; color:var(--paper-dim); line-height:1.5;}
+  .modal-alerta{margin-top:8px; padding:10px 12px; background:rgba(193,72,61,0.1); border:1px solid rgba(193,72,61,0.35); border-radius:10px; font-size:11.5px; color:var(--paper); line-height:1.5;}
+  .modal-alerta b{color:var(--red);}
+
+  section.block{background:var(--panel); border:1px solid var(--line); border-radius:16px; margin-bottom:16px; overflow:hidden;}
+  .block-head{padding:14px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none;}
+  .block-head-title{display:flex; align-items:center; gap:10px;}
+  .block-num{font-family:'JetBrains Mono'; font-size:11px; color:var(--panel-deep); background:var(--brass); width:22px;height:22px;border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;}
+  .block-head h2{font-family:'Space Grotesk'; font-size:15px; margin:0; font-weight:600;}
+  .chev{color:var(--paper-dim); transition:transform .2s ease; font-size:12px;}
+  .block[data-open="true"] .chev{transform:rotate(180deg);}
+  .block-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px;}
+  .block[data-open="true"] .block-body{padding-bottom:16px;}
+  .block-body-inner{padding-top:2px;}
+
+  table.matrix{width:100%; border-collapse:collapse; font-size:12px; margin-bottom:14px; min-width:460px;}
+  #matrixWrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  table.matrix caption{text-align:left; font-family:'Space Grotesk'; font-size:12.5px; color:var(--paper); margin-bottom:8px; font-weight:600;}
+  table.matrix th{font-family:'JetBrains Mono'; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--brass); text-align:left; padding:6px 5px; border-bottom:1px solid var(--line);}
+  table.matrix td{padding:7px 5px; border-bottom:1px solid var(--line); vertical-align:top; font-size:11.5px;}
+  table.matrix td.cat{font-weight:600; color:var(--paper); white-space:nowrap;}
+  table.matrix .cell-lines div{margin-bottom:2px; font-family:'JetBrains Mono'; font-size:10.8px;}
+  table.matrix .aff{color:var(--teal);}
+  table.matrix .neg{color:var(--red);}
+  table.matrix .per{color:var(--amber);}
+  .matrix-note{font-size:11px; color:var(--paper-dim); margin:-4px 0 14px;}
+
+  .ref-tense-block{margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line);}
+  .ref-tense-block:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
+  .ref-tense-title{font-family:'Space Grotesk'; font-size:14px; font-weight:700; color:var(--paper); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .ref-subhead{font-size:11px; font-weight:700; color:var(--paper); margin:8px 0 4px; display:flex; align-items:center; gap:5px;}
+  .ref-class-label{font-size:9.5px; color:var(--brass-dim); text-transform:uppercase; letter-spacing:0.06em; margin:5px 0 3px;}
+  .ref-tag{display:inline-block; background:var(--panel-raised); border:1px solid var(--line); border-radius:14px; padding:4px 10px; font-size:11px; font-family:'JetBrains Mono'; color:var(--paper-dim); margin:0 5px 5px 0;}
+  .ref-tag i{opacity:.65; font-style:normal; color:var(--paper-dim);}
+  .ref-conj-note{font-size:11px; color:var(--paper-dim); line-height:1.5; margin-top:6px; font-style:italic;}
+
+  .erro-grid{display:grid; grid-template-columns:1fr; gap:8px;}
+  .erro-card{background:var(--panel-raised); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:12.5px; line-height:1.5;}
+  .erro-card .no{color:var(--red); font-family:'JetBrains Mono'; display:block;}
+  .erro-card .yes-row{display:flex; align-items:center; gap:6px; margin-top:3px;}
+  .erro-card .yes{color:var(--teal); font-family:'JetBrains Mono';}
+  .erro-card .why{color:var(--paper-dim); font-size:11.5px; margin-top:4px;}
+
+  .conj-card{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px;}
+  .conj-card:last-child{margin-bottom:0;}
+  .conj-card h3{font-family:'Space Grotesk'; font-size:13.5px; margin:0 0 6px; color:var(--paper);}
+  .conj-card p{font-size:12.5px; line-height:1.55; color:var(--paper-dim); margin:0 0 6px;}
+  .conj-card .ex{font-family:'JetBrains Mono'; font-size:12px; color:var(--teal); display:block; margin-bottom:2px;}
+  .conj-card .ex.no{color:var(--red);}
+
+  .algo-flow{display:flex; flex-direction:column; gap:0;}
+  .algo-step{display:flex; gap:12px; align-items:flex-start; padding:10px 0;}
+  .algo-step .n{width:26px;height:26px;border-radius:50%; background:var(--panel-raised); border:1px solid var(--brass); color:var(--brass); font-family:'JetBrains Mono'; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .algo-step .t{font-size:13px; padding-top:3px;}
+  .algo-step .t b{display:block; color:var(--paper); font-size:13.5px; margin-bottom:2px;}
+  .algo-step .t span{color:var(--paper-dim); font-size:12px;}
+  .algo-connector{width:1px; height:14px; background:var(--line); margin-left:13px;}
+
+  footer{text-align:center; margin-top:26px; padding-top:16px;}
+  footer .tagline{font-size:12px; color:var(--paper-dim); margin-bottom:10px;}
+  footer .formula{font-family:'JetBrains Mono'; font-size:12px; color:var(--brass); letter-spacing:0.02em;}
+
+  @media (max-height: 480px) and (orientation: landscape){
+    .topnav{position:relative; top:auto;}
+    .readout{position:relative; top:auto;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="eyebrow">VS Linguistic Lab · English Console</div>
+    <h1>Painel Mestre do Inglês</h1>
+    <p>Tempos verbais, <b>aspectos</b>, <span class="b2">modais</span>, <span class="b3">interrogativas e advérbios posicionais</span> — tudo na mesma frase</p>
+  </header>
+
+  <div class="topnav">
+    <div class="nav-pills">
+      <button class="nav-pill" onclick="document.getElementById('console-tempos').scrollIntoView({behavior:'smooth'})">⚙️ Tempos</button>
+      <button class="nav-pill" onclick="document.getElementById('console-modais').scrollIntoView({behavior:'smooth'})">🗣️ Modais</button>
+      <button class="nav-pill" onclick="document.getElementById('block-matrix').scrollIntoView({behavior:'smooth'})">📚 Referência</button>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+  </div>
+
+  <div class="console" id="console-tempos" style="scroll-margin-top:64px;">
+    <div class="console-label"><span>MOTOR DE TEMPOS VERBAIS</span><span class="pulse"></span></div>
+
+    <div class="readout">
+      <div class="readout-top">
+        <div class="readout-label">Frase resultante</div>
+        <button class="audio-btn" id="audioMain" title="Ouvir">🔊</button>
+      </div>
+      <div class="readout-sentence" id="sentence">—</div>
+      <div class="readout-translation"><b>PT</b><span id="translation">—</span></div>
+      <div class="readout-formula" id="formula">—</div>
+      <div class="readout-structure" id="structure">—</div>
+      <div class="note-box" id="noteBox"></div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">① Pronome / sujeito</div>
+      <div class="pronome-row" id="pronomeRow"></div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">② Categoria do verbo</div>
+      <div class="grid2" id="categoriaGrid"></div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">③ Em que tempo?</div>
+      <div class="tempo-track">
+        <div class="tempo-rail"><div class="tempo-fill" id="tempoFill"></div><div class="tempo-dot" id="tempoDot"></div></div>
+        <div class="tempo-labels" id="tempoLabels"></div>
+      </div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">④ Qual aspecto?</div>
+      <div class="grid2" id="aspectoGrid"></div>
+    </div>
+
+    <div class="dial-group" id="signalDialGroup">
+      <div class="dial-group-title">⑤ Palavras-sinal (meio + fim, opcional)</div>
+      <div class="signal-row" id="signalRow"></div>
+      <div class="signal-hint" id="signalHint"></div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">⑥ Qual formato?</div>
+      <div class="formato-row" id="formatoRow"></div>
+    </div>
+
+    <div class="dial-group" id="whDialGroup" style="margin-bottom:0;">
+      <div class="dial-group-title">⑦ Palavra interrogativa (só em perguntas)</div>
+      <div id="whGrid"></div>
+      <div class="signal-hint" id="whHint"></div>
+    </div>
+  </div>
+
+  <div class="console" id="console-modais" style="scroll-margin-top:64px;">
+    <div class="console-label"><span>MOTOR DE MODAIS</span><span class="pulse"></span></div>
+    <div class="dial-group" style="margin-bottom:0;">
+      <div class="dial-group-title">Qual função você quer expressar?</div>
+      <div class="modal-grid" id="modalGrid"></div>
+    </div>
+    <div class="modal-result">
+      <div class="modal-result-label" id="modalResultLabel">Capacidade</div>
+      <div id="modalRows"></div>
+      <div id="modalAlerta"></div>
+    </div>
+  </div>
+
+  <section class="block" data-open="true" id="block-matrix" style="scroll-margin-top:64px;">
+    <div class="block-head" onclick="toggleBlock('block-matrix')">
+      <div class="block-head-title"><div class="block-num">📊</div><h2>Tabela-resumo — tempos e aspectos</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="matrix-note">Referência fixa com o pronome <b style="color:var(--brass)">I</b>. Use o console acima para pronomes, interrogativas, tradução e áudio.</div>
+      <div id="matrixWrap"></div>
+    </div></div>
+  </section>
+
+  <section class="block" data-open="false" id="block-posicao">
+    <div class="block-head" onclick="toggleBlock('block-posicao')">
+      <div class="block-head-title"><div class="block-num">🎯</div><h2>Advérbios e interrogativas — guia de posição</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="conj-card">
+        <h3>Frequência indefinida — sempre no meio</h3>
+        <p><b style="color:var(--paper)">always, usually, often, sometimes, rarely, never, ever</b> entram entre o sujeito/auxiliar e o verbo principal — nunca no fim da frase.</p>
+        <span class="ex">I always work. · I have never worked here. · Are you ever tired?</span>
+        <span class="ex no">I work always. (ordem errada — armadilha clássica do português)</span>
+      </div>
+      <div class="conj-card">
+        <h3>Already / yet / still — o trio do perfect</h3>
+        <p><b style="color:var(--paper)">Already</b> (já) = afirmativa, meio da frase. <b style="color:var(--paper)">Yet</b> (ainda) = negativa/pergunta, fim da frase. <b style="color:var(--paper)">Still</b> (ainda) = continuidade, meio da frase.</p>
+        <span class="ex">I have already finished. · I haven't finished yet. · I am still working.</span>
+      </div>
+      <div class="conj-card">
+        <h3>Frequência definida/numérica — sempre no fim</h3>
+        <p><b style="color:var(--paper)">Once, twice, three times, every day</b> respondem "quantas vezes" e vão no final da frase — posição diferente da frequência indefinida.</p>
+        <span class="ex">I have been there twice. · I work out three times a week.</span>
+      </div>
+      <div class="conj-card">
+        <h3>Wh-questions: sujeito vs. circunstância — a regra que muda tudo</h3>
+        <p>Quando <b style="color:var(--paper)">who/what</b> é o próprio sujeito da pergunta, não há inversão nem do-support — a frase fica na ordem normal. Quando <b style="color:var(--paper)">where/when/why/how</b> pergunta sobre uma circunstância, a estrutura de sim/não se mantém, só com a palavra na frente.</p>
+        <span class="ex">Who works here? (sem auxiliar)</span>
+        <span class="ex">Where do you work? (com do-support)</span>
+        <span class="ex no">Where you work? (faltou o auxiliar)</span>
+      </div>
+      <div class="conj-card">
+        <h3>How much / how many — depende do substantivo, não do tempo</h3>
+        <p><b style="color:var(--paper)">How much</b> + substantivo incontável (singular). <b style="color:var(--paper)">How many</b> + substantivo contável (plural). Por isso não entram no motor de conjugação acima — a escolha depende do tipo de palavra que vem depois, não do tempo verbal.</p>
+        <span class="ex">How much water do you need? · How many books did you read?</span>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="block" data-open="false" id="block-adverbs-tempo">
+    <div class="block-head" onclick="toggleBlock('block-adverbs-tempo')">
+      <div class="block-head-title"><div class="block-num">🗂️</div><h2>Advérbios e conjunções por tempo verbal</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="matrix-note">Lista completa, organizada por tempo → aspecto → classe. Gerada a partir do mesmo banco usado no console interativo.</div>
+      <div id="adverbsListWrap"></div>
+    </div></div>
+  </section>
+
+  <section class="block" data-open="false" id="block-conj">
+    <div class="block-head" onclick="toggleBlock('block-conj')">
+      <div class="block-head-title"><div class="block-num">⏳</div><h2>Conjunções de tempo — a armadilha do futuro</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="conj-card">
+        <h3>When / while / as soon as / before / after / by the time</h3>
+        <p>Em orações que marcam <b style="color:var(--paper)">tempo futuro</b>, essas conjunções pedem o verbo no <b style="color:var(--paper)">presente</b> — nunca "will" — mesmo que a ideia toda seja sobre o futuro.</p>
+        <span class="ex">When I arrive, I will call you.</span>
+        <span class="ex no">When I will arrive, I will call you.</span>
+        <span class="ex">As soon as she finishes, we'll start.</span>
+      </div>
+      <div class="conj-card">
+        <h3>Since — dois usos diferentes</h3>
+        <p>Como conjunção de tempo, "since" introduz o ponto de partida de uma ação que continua — combina com present perfect / present perfect continuous.</p>
+        <span class="ex">I have worked here since 2020.</span>
+        <p style="margin-top:6px;">Também funciona como conjunção de causa ("já que"), sem relação com tempo verbal específico: "Since you're here, let's talk."</p>
+      </div>
+      <div class="conj-card">
+        <h3>For vs. since</h3>
+        <p><b style="color:var(--paper)">For</b> + duração (for two hours, for three years). <b style="color:var(--paper)">Since</b> + ponto no tempo (since 2020, since Monday).</p>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="block" data-open="false" id="block-erros">
+    <div class="block-head" onclick="toggleBlock('block-erros')">
+      <div class="block-head-title"><div class="block-num">⚠️</div><h2>Erros comuns</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="erro-grid" id="errosGrid"></div>
+    </div></div>
+  </section>
+
+  <section class="block" data-open="false" id="block-algo">
+    <div class="block-head" onclick="toggleBlock('block-algo')">
+      <div class="block-head-title"><div class="block-num">🧭</div><h2>Algoritmo mental</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="algo-flow">
+        <div class="algo-step"><div class="n">1</div><div class="t"><b>Quem fala?</b><span>pronome / sujeito</span></div></div>
+        <div class="algo-connector"></div>
+        <div class="algo-step"><div class="n">2</div><div class="t"><b>Categoria</b><span>ação/fato ou ser/estar</span></div></div>
+        <div class="algo-connector"></div>
+        <div class="algo-step"><div class="n">3</div><div class="t"><b>Tempo + aspecto</b><span>quando + como a ação se desenrola</span></div></div>
+        <div class="algo-connector"></div>
+        <div class="algo-step"><div class="n">4</div><div class="t"><b>Palavra-sinal?</b><span>reforça o tempo — respeite a posição (meio ou fim)</span></div></div>
+        <div class="algo-connector"></div>
+        <div class="algo-step"><div class="n">5</div><div class="t"><b>Formato</b><span>afirmativa · negativa · pergunta</span></div></div>
+        <div class="algo-connector"></div>
+        <div class="algo-step"><div class="n">6</div><div class="t"><b>Interrogativa?</b><span>sujeito (sem inversão) ou circunstância (com inversão)</span></div></div>
+        <div class="algo-connector"></div>
+        <div class="algo-step"><div class="n">✓</div><div class="t"><b>Pronto.</b><span>ouça, compare com o português, e veja se faz sentido</span></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <footer>
+    <div class="tagline">Não decore frases. Entenda o sistema.</div>
+    <div class="formula">SUJEITO × CATEGORIA × TEMPO × ASPECTO × SINAL × FORMATO × WH = FRASE</div>
+  </footer>
+
+</div>
+
+<script>
+function speak(text, lang){
+  if(!('speechSynthesis' in window) || !text) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang || 'en-US';
+  u.rate = 0.92;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.audio-btn');
+  if(btn && btn.dataset.text) speak(btn.dataset.text, btn.dataset.lang || 'en-US');
+});
+function toggleTheme(){
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  const btn = document.getElementById('themeToggle');
+  if(isLight){ html.removeAttribute('data-theme'); btn.textContent = '🌙'; }
+  else { html.setAttribute('data-theme','light'); btn.textContent = '☀️'; }
+}
+
+const PRONOUNS = ["I","You","He","She","It","We","They"];
+const IS_3SG = p => ["He","She","It","Who","What"].includes(p);
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function lowerFirst(s){ return s.charAt(0).toLowerCase()+s.slice(1); }
+function subjLower(p){ return p==="I" ? "I" : p.toLowerCase(); }
+function bePres(p){ return IS_3SG(p) ? "is" : (p==="I" ? "am" : "are"); }
+function bePast(p){ return (IS_3SG(p)||p==="I") ? "was" : "were"; }
+function doPres(p){ return IS_3SG(p) ? "does" : "do"; }
+function doPresNeg(p){ return IS_3SG(p) ? "doesn't" : "don't"; }
+function havePres(p){ return IS_3SG(p) ? "has" : "have"; }
+function havePresNeg(p){ return IS_3SG(p) ? "hasn't" : "haven't"; }
+function negBe(p, when){
+  if(when==='present'){ if(p==='I') return "I'm not"; if(IS_3SG(p)) return p+" isn't"; return p+" aren't"; }
+  else { if(IS_3SG(p)||p==='I') return p+" wasn't"; return p+" weren't"; }
+}
+
+function genFact(tempo,aspecto,formato,p){
+  const base="work", s3="works", ing="working", pp="worked";
+  let text, structure; const q = formato==='pergunta';
+  if(tempo==='present'){
+    if(aspecto==='simples'){
+      if(formato==='afirmativa') text = `${p} ${IS_3SG(p)?s3:base}`;
+      else if(formato==='negativa') text = `${p} ${doPresNeg(p)} ${base}`;
+      else text = `${cap(doPres(p))} ${subjLower(p)} ${base}`;
+      structure = "Sujeito + verbo (forma base) / do-support";
+    } else if(aspecto==='continuo'){
+      const be=bePres(p);
+      if(formato==='afirmativa') text = `${p} ${be} ${ing}`;
+      else if(formato==='negativa') text = `${negBe(p,'present')} ${ing}`;
+      else text = `${cap(be)} ${subjLower(p)} ${ing}`;
+      structure = "Sujeito + am/is/are + V-ing";
+    } else if(aspecto==='perfeito'){
+      const h=havePres(p), hn=havePresNeg(p);
+      if(formato==='afirmativa') text = `${p} ${h} ${pp}`;
+      else if(formato==='negativa') text = `${p} ${hn} ${pp}`;
+      else text = `${cap(h)} ${subjLower(p)} ${pp}`;
+      structure = "Sujeito + have/has + particípio";
+    } else {
+      const h=havePres(p), hn=havePresNeg(p);
+      if(formato==='afirmativa') text = `${p} ${h} been ${ing}`;
+      else if(formato==='negativa') text = `${p} ${hn} been ${ing}`;
+      else text = `${cap(h)} ${subjLower(p)} been ${ing}`;
+      structure = "Sujeito + have/has been + V-ing";
+    }
+  } else if(tempo==='past'){
+    if(aspecto==='simples'){
+      if(formato==='afirmativa') text = `${p} ${pp}`;
+      else if(formato==='negativa') text = `${p} didn't ${base}`;
+      else text = `Did ${subjLower(p)} ${base}`;
+      structure = "Sujeito + verbo+ed (ou irregular) / did";
+    } else if(aspecto==='continuo'){
+      const be=bePast(p);
+      if(formato==='afirmativa') text = `${p} ${be} ${ing}`;
+      else if(formato==='negativa') text = `${negBe(p,'past')} ${ing}`;
+      else text = `${cap(be)} ${subjLower(p)} ${ing}`;
+      structure = "Sujeito + was/were + V-ing";
+    } else if(aspecto==='perfeito'){
+      if(formato==='afirmativa') text = `${p} had ${pp}`;
+      else if(formato==='negativa') text = `${p} hadn't ${pp}`;
+      else text = `Had ${subjLower(p)} ${pp}`;
+      structure = "Sujeito + had + particípio";
+    } else {
+      if(formato==='afirmativa') text = `${p} had been ${ing}`;
+      else if(formato==='negativa') text = `${p} hadn't been ${ing}`;
+      else text = `Had ${subjLower(p)} been ${ing}`;
+      structure = "Sujeito + had been + V-ing";
+    }
+  } else {
+    if(aspecto==='simples'){
+      if(formato==='afirmativa') text = `${p} will ${base}`;
+      else if(formato==='negativa') text = `${p} won't ${base}`;
+      else text = `Will ${subjLower(p)} ${base}`;
+      structure = "Sujeito + will + verbo";
+    } else if(aspecto==='continuo'){
+      if(formato==='afirmativa') text = `${p} will be ${ing}`;
+      else if(formato==='negativa') text = `${p} won't be ${ing}`;
+      else text = `Will ${subjLower(p)} be ${ing}`;
+      structure = "Sujeito + will be + V-ing";
+    } else if(aspecto==='perfeito'){
+      if(formato==='afirmativa') text = `${p} will have ${pp}`;
+      else if(formato==='negativa') text = `${p} won't have ${pp}`;
+      else text = `Will ${subjLower(p)} have ${pp}`;
+      structure = "Sujeito + will have + particípio";
+    } else {
+      if(formato==='afirmativa') text = `${p} will have been ${ing}`;
+      else if(formato==='negativa') text = `${p} won't have been ${ing}`;
+      else text = `Will ${subjLower(p)} have been ${ing}`;
+      structure = "Sujeito + will have been + V-ing";
+    }
+  }
+  return {text, isQuestion:q, structure};
+}
+
+function genState(tempo,aspecto,formato,p){
+  const adj="tired";
+  let text, structure; const q = formato==='pergunta';
+  if(tempo==='present'){
+    if(aspecto==='simples'){
+      const be=bePres(p);
+      if(formato==='afirmativa') text = `${p} ${be} ${adj}`;
+      else if(formato==='negativa') text = `${negBe(p,'present')} ${adj}`;
+      else text = `${cap(be)} ${subjLower(p)} ${adj}`;
+      structure = "Sujeito + am/is/are";
+    } else {
+      const h=havePres(p), hn=havePresNeg(p);
+      if(formato==='afirmativa') text = `${p} ${h} been ${adj}`;
+      else if(formato==='negativa') text = `${p} ${hn} been ${adj}`;
+      else text = `${cap(h)} ${subjLower(p)} been ${adj}`;
+      structure = "Sujeito + have/has been + adjetivo";
+    }
+  } else if(tempo==='past'){
+    if(aspecto==='simples'){
+      const be=bePast(p);
+      if(formato==='afirmativa') text = `${p} ${be} ${adj}`;
+      else if(formato==='negativa') text = `${negBe(p,'past')} ${adj}`;
+      else text = `${cap(be)} ${subjLower(p)} ${adj}`;
+      structure = "Sujeito + was/were";
+    } else {
+      if(formato==='afirmativa') text = `${p} had been ${adj}`;
+      else if(formato==='negativa') text = `${p} hadn't been ${adj}`;
+      else text = `Had ${subjLower(p)} been ${adj}`;
+      structure = "Sujeito + had been + adjetivo";
+    }
+  } else {
+    if(aspecto==='simples'){
+      if(formato==='afirmativa') text = `${p} will be ${adj}`;
+      else if(formato==='negativa') text = `${p} won't be ${adj}`;
+      else text = `Will ${subjLower(p)} be ${adj}`;
+      structure = "Sujeito + will be";
+    } else {
+      if(formato==='afirmativa') text = `${p} will have been ${adj}`;
+      else if(formato==='negativa') text = `${p} won't have been ${adj}`;
+      else text = `Will ${subjLower(p)} have been ${adj}`;
+      structure = "Sujeito + will have been + adjetivo";
+    }
+  }
+  return {text, isQuestion:q, structure};
+}
+function generate(categoria,tempo,aspecto,formato,pronoun){
+  return categoria==='fact' ? genFact(tempo,aspecto,formato,pronoun) : genState(tempo,aspecto,formato,pronoun);
+}
+
+/* ---- PT translation engine ---- */
+const PT_PRONOUN = {I:"eu",You:"você",He:"ele",She:"ela",It:"ele/ela",We:"nós",They:"eles/elas"};
+function ptPerson(p){ if(p==="I") return "1s"; if(p==="We") return "1p"; if(p==="They") return "3p"; return "3s"; }
+const PT_TRABALHAR = { presente:{"1s":"trabalho","3s":"trabalha","1p":"trabalhamos","3p":"trabalham"}, pperf:{"1s":"trabalhei","3s":"trabalhou","1p":"trabalhamos","3p":"trabalharam"} };
+const PT_ESTAR = { presente:{"1s":"estou","3s":"está","1p":"estamos","3p":"estão"}, imperf:{"1s":"estava","3s":"estava","1p":"estávamos","3p":"estavam"}, ir:{"1s":"vou","3s":"vai","1p":"vamos","3p":"vão"} };
+const PT_TER = { presente:{"1s":"tenho","3s":"tem","1p":"temos","3p":"têm"}, imperf:{"1s":"tinha","3s":"tinha","1p":"tínhamos","3p":"tinham"} };
+
+const SIGNAL_PT = {
+  "always":"sempre","usually":"normalmente","often":"frequentemente","sometimes":"às vezes","occasionally":"ocasionalmente","rarely":"raramente","hardly ever":"quase nunca","never":"nunca",
+  "every day":"todo dia","every week":"toda semana","every month":"todo mês","twice a week":"duas vezes por semana","three times a day":"três vezes por dia","once a month":"uma vez por mês",
+  "right now":"agora mesmo","at the moment":"no momento","at present":"no presente","nowadays":"hoje em dia","today":"hoje","currently":"atualmente","still":"ainda",
+  "already":"já","just":"agora","yet":"ainda","ever":"já",
+  "once":"uma vez","twice":"duas vezes","three times":"três vezes","several times":"várias vezes","many times":"muitas vezes",
+  "since 2020":"desde 2020","since Monday":"desde segunda-feira","since last year":"desde o ano passado","for three years":"há três anos","for a long time":"por muito tempo","so far":"até agora","up to now":"até agora",
+  "since morning":"desde a manhã","since 9 a.m.":"desde as 9h","for two hours":"há duas horas","for a while":"por um tempo","lately":"ultimamente","recently":"recentemente","all week":"a semana toda",
+  "yesterday":"ontem","last week":"semana passada","last month":"mês passado","last year":"ano passado","two days ago":"dois dias atrás","a week ago":"uma semana atrás","in 2020":"em 2020","when I was young":"quando eu era jovem","back then":"naquela época",
+  "at that moment":"naquele momento","at 5 p.m. yesterday":"às 17h de ontem","all day yesterday":"o dia todo ontem",
+  "before I left":"antes de eu sair","by the time you arrived":"quando você chegou","already by 2010":"já em 2010","all morning":"a manhã toda",
+  "tomorrow":"amanhã","next week":"semana que vem","next month":"mês que vem","next year":"ano que vem","soon":"em breve","in a few days":"em alguns dias","later":"mais tarde",
+  "at this time tomorrow":"a esta hora amanhã","this time next week":"a esta hora semana que vem","at 8 p.m. tomorrow":"às 20h de amanhã",
+  "by then":"até lá","by next year":"até o ano que vem","by the end of the month":"até o fim do mês","by 2030":"até 2030","for five years":"há cinco anos"
+};
+function ptFactParts(tempo,aspecto,pEN){
+  const person = ptPerson(pEN), pron = PT_PRONOUN[pEN];
+  let core;
+  if(tempo==='present'){
+    if(aspecto==='simples') core = PT_TRABALHAR.presente[person];
+    else if(aspecto==='continuo') core = `${PT_ESTAR.presente[person]} trabalhando`;
+    else core = `${PT_TER.presente[person]} trabalhado`;
+  } else if(tempo==='past'){
+    if(aspecto==='simples') core = PT_TRABALHAR.pperf[person];
+    else if(aspecto==='continuo') core = `${PT_ESTAR.imperf[person]} trabalhando`;
+    else if(aspecto==='perfeito') core = `${PT_TER.imperf[person]} trabalhado`;
+    else core = `${PT_ESTAR.imperf[person]} trabalhando`;
+  } else {
+    if(aspecto==='simples') core = `${PT_ESTAR.ir[person]} trabalhar`;
+    else if(aspecto==='continuo') core = `${PT_ESTAR.ir[person]} estar trabalhando`;
+    else if(aspecto==='perfeito') core = `${PT_ESTAR.ir[person]} ter trabalhado`;
+    else core = `${PT_ESTAR.ir[person]} ter estado trabalhando`;
+  }
+  return {pron, core};
+}
+function ptStateParts(tempo,aspecto,pEN){
+  const person = ptPerson(pEN), pron = PT_PRONOUN[pEN];
+  const adj = pEN==="She" ? "cansada" : pEN==="He" ? "cansado" : "cansado(a)";
+  let core;
+  if(tempo==='present'){
+    core = aspecto==='simples' ? `${PT_ESTAR.presente[person]} ${adj}` : `${PT_TER.presente[person]} estado ${adj}`;
+  } else if(tempo==='past'){
+    core = aspecto==='simples' ? `${PT_ESTAR.imperf[person]} ${adj}` : `${PT_TER.imperf[person]} estado ${adj}`;
+  } else {
+    core = aspecto==='simples' ? `${PT_ESTAR.ir[person]} estar ${adj}` : `${PT_ESTAR.ir[person]} ter estado ${adj}`;
+  }
+  return {pron, core};
+}
+function buildPTSentence(parts, formato, signalMid, signalEnd){
+  const negPart = formato==='negativa' ? ' não' : '';
+  let body = parts.core;
+  if(signalMid) body = `${SIGNAL_PT[signalMid.w] || signalMid.w} ${body}`;
+  if(signalEnd) body = `${body} ${SIGNAL_PT[signalEnd.w] || signalEnd.w}`;
+  return `${cap(parts.pron)}${negPart} ${body}` + (formato==='pergunta' ? "?" : ".");
+}
+function translate(categoria,tempo,aspecto,formato,pronoun,signalMid,signalEnd){
+  const parts = categoria==='fact' ? ptFactParts(tempo,aspecto,pronoun) : ptStateParts(tempo,aspecto,pronoun);
+  return buildPTSentence(parts, formato, signalMid || null, signalEnd || null);
+}
+
+/* ---- Wh-question engine ---- */
+const WH_SUBJECT = ["Who","What"];
+const WH_ADJUNCT = ["Where","When","Why","How","How long","How often"];
+const WH_QUANTITY = ["How much","How many"];
+const WH_PT_SUBJECT = {Who:"Quem",What:"O que"};
+const WH_PT_ADJUNCT = {Where:"Onde",When:"Quando",Why:"Por que",How:"Como","How long":"Por quanto tempo","How often":"Com que frequência"};
+const WH_STATIC = {
+  "How much": {en:"How much water do you need?", pt:"De quanta água você precisa?", structure:"How much + substantivo incontável (singular) — pergunta por quantidade não contável"},
+  "How many": {en:"How many books did you read?", pt:"Quantos livros você leu?", structure:"How many + substantivo contável (plural) — pergunta por quantidade contável"}
+};
+function whGenerate(cat,tempo,aspecto,pronoun,whWord){
+  if(WH_STATIC[whWord]) return Object.assign({isStatic:true}, WH_STATIC[whWord]);
+  if(WH_SUBJECT.includes(whWord)){
+    const g = generate(cat,tempo,aspecto,'afirmativa', whWord);
+    const en = g.text + "?";
+    const affPT = translate(cat,tempo,aspecto,'afirmativa','He');
+    const core = affPT.replace(/^Ele\s+/,'').replace(/\.$/,'');
+    const pt = `${WH_PT_SUBJECT[whWord]} ${core}?`;
+    return {en, pt, structure:`${whWord} (sujeito) + verbo — sem auxiliar, sem inversão`, isStatic:false};
+  } else {
+    const g = generate(cat,tempo,aspecto,'pergunta', pronoun);
+    const en = `${whWord} ${lowerFirst(g.text)}?`;
+    const affPT = translate(cat,tempo,aspecto,'afirmativa',pronoun).replace(/\.$/,'');
+    const pt = `${WH_PT_ADJUNCT[whWord]} ${lowerFirst(affPT)}?`;
+    return {en, pt, structure:`${whWord} + estrutura de pergunta sim/não (auxiliar antes do sujeito)`, isStatic:false};
+  }
+}
+
+const CATEGORIES = {
+  fact: { label:"AÇÃO / FATO", icon:"🏃", accent:"#c9a34e", aspects:["simples","continuo","perfeito","perfeito_continuo"] },
+  state: { label:"SER / ESTAR", icon:"🧍", accent:"#4fb6a6", aspects:["simples","perfeito"] }
+};
+const TENSES = ["past","present","future"];
+const TENSE_LABEL = {past:"Passado", present:"Presente", future:"Futuro"};
+const ASPECT_LABEL = {simples:"Simples", continuo:"Contínuo", perfeito:"Perfeito", perfeito_continuo:"Perf. Contínuo"};
+const ASPECT_ICON = {simples:"▪️", continuo:"〰️", perfeito:"✅", perfeito_continuo:"⏳"};
+const FORMATOS = ["afirmativa","negativa","pergunta"];
+
+const CLASS_INFO = {
+  freqIndef: {label:"Frequência indefinida — meio da frase"},
+  freqDef: {label:"Frequência definida/numérica — fim da frase"},
+  perfectAdv: {label:"Advérbios de perfect — already/just/still: meio · yet: fim"},
+  timePoint: {label:"Ponto/expressão de tempo — fim da frase"}
+};
+const SIGNAL_WORDS = {
+  present_simples: [
+    {w:"always",pl:"mid",cls:"freqIndef"},{w:"usually",pl:"mid",cls:"freqIndef"},{w:"often",pl:"mid",cls:"freqIndef"},{w:"sometimes",pl:"mid",cls:"freqIndef"},{w:"occasionally",pl:"mid",cls:"freqIndef"},{w:"rarely",pl:"mid",cls:"freqIndef"},{w:"hardly ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},
+    {w:"every day",pl:"end",cls:"freqDef"},{w:"every week",pl:"end",cls:"freqDef"},{w:"every month",pl:"end",cls:"freqDef"},{w:"twice a week",pl:"end",cls:"freqDef"},{w:"three times a day",pl:"end",cls:"freqDef"},{w:"once a month",pl:"end",cls:"freqDef"}
+  ],
+  present_continuo: [
+    {w:"right now",pl:"end",cls:"timePoint"},{w:"at the moment",pl:"end",cls:"timePoint"},{w:"at present",pl:"end",cls:"timePoint"},{w:"nowadays",pl:"end",cls:"timePoint"},{w:"today",pl:"end",cls:"timePoint"},
+    {w:"currently",pl:"mid",cls:"timePoint"},{w:"still",pl:"mid",cls:"perfectAdv"}
+  ],
+  present_perfeito: [
+    {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"yet",pl:"end",cls:"perfectAdv"},
+    {w:"ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},
+    {w:"once",pl:"end",cls:"freqDef"},{w:"twice",pl:"end",cls:"freqDef"},{w:"three times",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"},{w:"many times",pl:"end",cls:"freqDef"},
+    {w:"since 2020",pl:"end",cls:"timePoint"},{w:"since Monday",pl:"end",cls:"timePoint"},{w:"since last year",pl:"end",cls:"timePoint"},{w:"for three years",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},{w:"so far",pl:"end",cls:"timePoint"},{w:"up to now",pl:"end",cls:"timePoint"}
+  ],
+  present_perfeito_continuo: [
+    {w:"since morning",pl:"end",cls:"timePoint"},{w:"since 9 a.m.",pl:"end",cls:"timePoint"},{w:"for two hours",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"lately",pl:"end",cls:"timePoint"},{w:"recently",pl:"end",cls:"timePoint"},{w:"all week",pl:"end",cls:"timePoint"}
+  ],
+  past_simples: [
+    {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},
+    {w:"once",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"}
+  ],
+  past_continuo: [
+    {w:"at that moment",pl:"end",cls:"timePoint"},{w:"at 5 p.m. yesterday",pl:"end",cls:"timePoint"},{w:"all day yesterday",pl:"end",cls:"timePoint"}
+  ],
+  past_perfeito: [
+    {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"never",pl:"mid",cls:"freqIndef"},
+    {w:"before I left",pl:"end",cls:"timePoint"},{w:"by the time you arrived",pl:"end",cls:"timePoint"},{w:"by then",pl:"end",cls:"timePoint"},{w:"already by 2010",pl:"end",cls:"timePoint"}
+  ],
+  past_perfeito_continuo: [
+    {w:"for two hours",pl:"end",cls:"timePoint"},{w:"since morning",pl:"end",cls:"timePoint"},{w:"all morning",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"}
+  ],
+  future_simples: [
+    {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"}
+  ],
+  future_continuo: [
+    {w:"at this time tomorrow",pl:"end",cls:"timePoint"},{w:"this time next week",pl:"end",cls:"timePoint"},{w:"at 8 p.m. tomorrow",pl:"end",cls:"timePoint"}
+  ],
+  future_perfeito: [
+    {w:"by then",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},{w:"by 2030",pl:"end",cls:"timePoint"}
+  ],
+  future_perfeito_continuo: [
+    {w:"by then",pl:"end",cls:"timePoint"},{w:"for five years",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"}
+  ]
+};
+
+let state = { pronome:"I", categoria:"fact", tempo:"present", aspecto:"simples", formato:"afirmativa", signalMid:null, signalEnd:null, whWord:null };
+
+function buildPronome(){
+  const el = document.getElementById('pronomeRow'); el.innerHTML="";
+  PRONOUNS.forEach(p=>{
+    const btn=document.createElement('div'); btn.className='pronome-pill';
+    btn.dataset.active=(state.pronome===p); btn.textContent=p;
+    btn.onclick=()=>{ state.pronome=p; render(); };
+    el.appendChild(btn);
+  });
+}
+function buildCategoria(){
+  const el = document.getElementById('categoriaGrid'); el.innerHTML="";
+  Object.keys(CATEGORIES).forEach(key=>{
+    const d = CATEGORIES[key];
+    const btn = document.createElement('div'); btn.className='opt-btn';
+    btn.style.setProperty('--accent', d.accent);
+    btn.dataset.active = (state.categoria===key);
+    btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
+    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMid=null; state.signalEnd=null; render(); };
+    el.appendChild(btn);
+  });
+}
+function buildTempo(){
+  const labelsEl = document.getElementById('tempoLabels'); labelsEl.innerHTML="";
+  TENSES.forEach(t=>{
+    const s = document.createElement('div'); s.className='tempo-label';
+    s.dataset.active = (state.tempo===t); s.textContent = TENSE_LABEL[t];
+    s.onclick = ()=>{ state.tempo=t; state.signalMid=null; state.signalEnd=null; render(); };
+    labelsEl.appendChild(s);
+  });
+}
+function updateTempoTrack(){
+  const idx = TENSES.indexOf(state.tempo); const pct = (idx/(TENSES.length-1))*100;
+  document.getElementById('tempoFill').style.width = pct+'%';
+  document.getElementById('tempoDot').style.left = pct+'%';
+}
+function buildAspecto(){
+  const el = document.getElementById('aspectoGrid'); el.innerHTML="";
+  CATEGORIES[state.categoria].aspects.forEach(a=>{
+    const btn = document.createElement('div'); btn.className='opt-btn';
+    btn.style.setProperty('--accent', 'var(--violet)');
+    btn.dataset.active = (state.aspecto===a);
+    btn.innerHTML = `<span class="ic">${ASPECT_ICON[a]}</span><span>${ASPECT_LABEL[a]}</span>`;
+    btn.onclick = ()=>{ state.aspecto=a; state.signalMid=null; state.signalEnd=null; render(); };
+    el.appendChild(btn);
+  });
+}
+function buildSignal(){
+  const el = document.getElementById('signalRow'); const hint = document.getElementById('signalHint');
+  const key = `${state.tempo}_${state.aspecto}`; const words = SIGNAL_WORDS[key] || [];
+  el.innerHTML="";
+  const disabled = !!state.whWord;
+  const noneWrap = document.createElement('div'); noneWrap.className='signal-row-inner';
+  const none = document.createElement('div'); none.className='signal-chip';
+  none.dataset.active = (state.signalMid===null && state.signalEnd===null); none.textContent = "limpar tudo";
+  none.style.opacity = disabled ? .4 : 1;
+  none.onclick = ()=>{ if(disabled) return; state.signalMid=null; state.signalEnd=null; render(); };
+  noneWrap.appendChild(none); el.appendChild(noneWrap);
+  const groups = {};
+  words.forEach(sw=>{ (groups[sw.cls] = groups[sw.cls]||[]).push(sw); });
+  Object.keys(CLASS_INFO).forEach(clsKey=>{
+    if(!groups[clsKey]) return;
+    const label = document.createElement('div'); label.className='signal-group-label'; label.textContent = CLASS_INFO[clsKey].label;
+    el.appendChild(label);
+    const wrap = document.createElement('div'); wrap.className='signal-row-inner';
+    groups[clsKey].forEach(sw=>{
+      const chip = document.createElement('div'); chip.className='signal-chip';
+      const slot = sw.pl==='mid' ? 'signalMid' : 'signalEnd';
+      const isActive = state[slot] && state[slot].w===sw.w;
+      chip.dataset.active = isActive; chip.textContent = sw.w;
+      chip.style.opacity = disabled ? .4 : 1;
+      chip.onclick = ()=>{ if(disabled) return; state[slot] = isActive ? null : sw; render(); };
+      wrap.appendChild(chip);
+    });
+    el.appendChild(wrap);
+  });
+  hint.textContent = disabled ? "Desativado com interrogativa ativa — remova a palavra interrogativa para usar sinais." : (words.length ? "Meio e fim são complementares — dá pra combinar uma palavra de cada posição na mesma frase (ex.: already + twice)." : "Nenhuma palavra-sinal cadastrada para esta combinação ainda.");
+}
+function buildFormato(){
+  const el = document.getElementById('formatoRow'); el.innerHTML="";
+  FORMATOS.forEach(f=>{
+    const s = document.createElement('div'); s.className='formato-switch';
+    s.dataset.kind=f; s.dataset.active=(state.formato===f);
+    s.innerHTML = `<div class="lamp"></div><div class="lbl">${f.charAt(0).toUpperCase()+f.slice(1)}</div>`;
+    s.onclick = ()=>{ state.formato=f; if(f!=='pergunta') state.whWord=null; render(); };
+    el.appendChild(s);
+  });
+}
+function buildWh(){
+  const el = document.getElementById('whGrid'); const hint = document.getElementById('whHint');
+  el.innerHTML="";
+  const noneWrap = document.createElement('div'); noneWrap.className='signal-row-inner';
+  const none = document.createElement('div'); none.className='signal-chip';
+  none.dataset.active = (state.whWord===null); none.textContent = "nenhuma (sim/não)";
+  none.onclick = ()=>{ state.whWord=null; render(); };
+  noneWrap.appendChild(none); el.appendChild(noneWrap);
+
+  const groups = [ ["Sujeito (sem inversão)", WH_SUBJECT], ["Circunstância (com inversão)", WH_ADJUNCT], ["Quantidade (exemplo fixo)", WH_QUANTITY] ];
+  groups.forEach(([label, list])=>{
+    const lab = document.createElement('div'); lab.className='wh-group-label'; lab.textContent = label; el.appendChild(lab);
+    const wrap = document.createElement('div'); wrap.className='signal-row-inner';
+    list.forEach(w=>{
+      const chip = document.createElement('div'); chip.className='signal-chip';
+      chip.dataset.active = (state.whWord===w); chip.textContent = w;
+      chip.onclick = ()=>{ state.whWord=w; state.formato='pergunta'; render(); };
+      wrap.appendChild(chip);
+    });
+    el.appendChild(wrap);
+  });
+  hint.textContent = "Combinações servem para entender a estrutura — nem toda frase resultante é 100% natural semanticamente.";
+}
+function applySignal(text, signalMid, signalEnd){
+  let words = text.split(" ");
+  if(signalMid) words.splice(words.length-1,0, signalMid.w);
+  if(signalEnd) words.push(signalEnd.w);
+  return words.join(" ");
+}
+
+function render(){
+  buildPronome(); buildCategoria(); buildTempo(); buildAspecto(); buildSignal(); buildFormato(); buildWh(); updateTempoTrack();
+
+  document.getElementById('whDialGroup').style.display = state.formato==='pergunta' ? '' : 'none';
+  document.getElementById('signalDialGroup').style.display = (state.formato==='pergunta' && state.whWord) ? 'none' : '';
+
+  let finalSentence, ptText, structureText, formulaExtra="";
+  if(state.formato==='pergunta' && state.whWord){
+    const w = whGenerate(state.categoria, state.tempo, state.aspecto, state.pronome, state.whWord);
+    finalSentence = w.en; ptText = w.pt; structureText = w.structure;
+    formulaExtra = ` × <span>❓ ${state.whWord}</span>`;
+  } else {
+    const g = generate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome);
+    const withSignal = applySignal(g.text, state.signalMid, state.signalEnd);
+    finalSentence = withSignal + (g.isQuestion ? "?" : ".");
+    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, state.signalMid, state.signalEnd);
+    const signalNote = [state.signalMid, state.signalEnd].filter(Boolean).map(s=>s.w).join(" + ");
+    structureText = g.structure + (signalNote ? ` + palavra-sinal (${signalNote})` : "");
+  }
+  document.getElementById('sentence').textContent = finalSentence;
+  document.getElementById('translation').textContent = " " + ptText;
+  document.getElementById('structure').textContent = structureText;
+  document.getElementById('formula').innerHTML = `<span>${state.pronome}</span> × <span>${CATEGORIES[state.categoria].label}</span> × <span>${TENSE_LABEL[state.tempo]}</span> × <span>${ASPECT_LABEL[state.aspecto]}</span> × <span>${state.formato.charAt(0).toUpperCase()+state.formato.slice(1)}</span>${formulaExtra}`;
+  document.getElementById('audioMain').dataset.text = finalSentence;
+
+  const isStaticWh = state.formato==='pergunta' && state.whWord && WH_STATIC[state.whWord];
+  const note = isStaticWh ? "Exemplo fixo — How much/How many dependem do substantivo (contável/incontável), não do tempo verbal do motor." : getNote(state);
+  const noteBox = document.getElementById('noteBox');
+  if(note){ noteBox.innerHTML = "💡 " + note; noteBox.classList.add('show'); } else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
+}
+
+function getNote(s){
+  if(s.signalMid && s.signalMid.w==='just') return "\"Just\" (recém-feito) idiomaticamente vira <b>\"acabar de\" + infinitivo</b> em português — \"I have just worked\" soa melhor como \"Eu acabei de trabalhar\" do que uma tradução palavra por palavra.";
+  if(s.signalMid && s.signalEnd) return "Meio + fim não competem entre si — cada palavra-sinal responde uma pergunta diferente (<b>com que frequência</b> vs. <b>quando/quantas vezes exatamente</b>), por isso podem conviver na mesma frase.";
+  if(s.aspecto==='perfeito_continuo') return "O português normalmente não distingue Present/Past Perfect <b>Continuous</b> do Perfect simples na tradução — ambos tendem a virar \"tenho/tinha trabalhado\". A diferença (duração vs. simples completude) existe só no inglês.";
+  if(s.tempo==='future' && s.aspecto==='simples') return "\"Vou trabalhar\" (futuro perifrástico, mais comum na fala) e \"trabalharei\" (futuro sintético, mais formal/escrito) traduzem o mesmo \"will work\".";
+  if(s.tempo==='past' && s.aspecto==='perfeito') return "Past Perfect marca uma ação anterior a outra ação já passada — em português, \"tinha trabalhado\" cumpre esse mesmo papel de \"passado do passado\".";
+  if(s.categoria==='state') return "O adjetivo concorda em gênero com o sujeito em português (cansado/cansada) — o inglês \"tired\" não muda.";
+  if(s.aspecto==='continuo' && s.categoria==='fact') return "Verbos de estado (know, like, want, believe) normalmente não vão para o contínuo em inglês, mesmo quando o português aceitaria \"estou sabendo\".";
+  return null;
+}
+
+const TENSE_ICON = {present:"📍", past:"⏮️", future:"⏭️"};
+const CONJ_BY_TEMPO = {
+  present: { list:[{c:"when",note:"quando"},{c:"while",note:"enquanto"},{c:"before",note:"antes de"},{c:"after",note:"depois de"},{c:"as soon as",note:"assim que"},{c:"by the time",note:"até que/quando"},{c:"until",note:"até que"},{c:"unless",note:"a menos que"}], note:"Em orações subordinadas de tempo, essas conjunções pedem presente mesmo quando a ideia principal é futura." },
+  past: { list:[{c:"when",note:"quando"},{c:"while",note:"enquanto"},{c:"before",note:"antes de"},{c:"after",note:"depois de"},{c:"as soon as",note:"assim que"},{c:"until",note:"até que"}], note:"Mesmas conjunções, numa narrativa no passado — costumam disparar Past Perfect quando marcam uma ação anterior a outra já passada." },
+  future: { list:[], note:"As conjunções de tempo não entram no futuro — elas empurram a oração subordinada para o presente. O \"will\" fica só na oração principal (ver bloco ⏳ Conjunções de tempo)." }
+};
+function buildAdverbsList(){
+  const wrap = document.getElementById('adverbsListWrap');
+  const aspectOrder = ["simples","continuo","perfeito","perfeito_continuo"];
+  const tenseOrder = ["present","past","future"];
+  let html = "";
+  tenseOrder.forEach(t=>{
+    html += `<div class="ref-tense-block"><div class="ref-tense-title">${TENSE_ICON[t]} ${TENSE_LABEL[t]}</div>`;
+    aspectOrder.forEach(asp=>{
+      const key = `${t}_${asp}`; const words = SIGNAL_WORDS[key];
+      if(!words || !words.length) return;
+      html += `<div class="ref-subhead">${ASPECT_ICON[asp]} ${ASPECT_LABEL[asp]}</div>`;
+      const groups = {};
+      words.forEach(w=>{ (groups[w.cls]=groups[w.cls]||[]).push(w); });
+      Object.keys(CLASS_INFO).forEach(cls=>{
+        if(!groups[cls]) return;
+        html += `<div class="ref-class-label">${CLASS_INFO[cls].label}</div><div>`;
+        groups[cls].forEach(w=>{ html += `<span class="ref-tag">${w.w}</span>`; });
+        html += `</div>`;
+      });
+    });
+    const cj = CONJ_BY_TEMPO[t];
+    if(cj.list.length){
+      html += `<div class="ref-subhead">🔗 Conjunções típicas</div><div>`;
+      cj.list.forEach(c=>{ html += `<span class="ref-tag">${c.c} <i>— ${c.note}</i></span>`; });
+      html += `</div>`;
+    }
+    if(cj.note) html += `<div class="ref-conj-note">💡 ${cj.note}</div>`;
+    html += `</div>`;
+  });
+  html += `<div class="ref-tense-block"><div class="ref-tense-title">✅ Since / For — aspecto perfeito (qualquer tempo)</div><div>
+    <span class="ref-tag">since 2020</span><span class="ref-tag">since Monday</span><span class="ref-tag">for three years</span><span class="ref-tag">for two hours</span>
+  </div><div class="ref-conj-note">💡 "Since" marca o ponto de partida (desde X); "for" marca a duração (por/há X). Combinam com o perfeito em qualquer tempo — presente, passado ou futuro.</div></div>`;
+  wrap.innerHTML = html;
+}
+function buildMatrix(){
+  const wrap = document.getElementById('matrixWrap'); let html = "";
+  Object.keys(CATEGORIES).forEach(catKey=>{
+    const cat = CATEGORIES[catKey];
+    html += `<table class="matrix"><caption>${cat.icon} ${cat.label}</caption><thead><tr><th>Aspecto \\ Tempo</th><th>Presente</th><th>Passado</th><th>Futuro</th></tr></thead><tbody>`;
+    cat.aspects.forEach(asp=>{
+      html += `<tr><td class="cat">${ASPECT_LABEL[asp]}</td>`;
+      ["present","past","future"].forEach(t=>{
+        const aff = generate(catKey,t,asp,'afirmativa','I').text + ".";
+        const neg = generate(catKey,t,asp,'negativa','I').text + ".";
+        const per = generate(catKey,t,asp,'pergunta','I').text + "?";
+        html += `<td class="cell-lines"><div class="aff">${aff}</div><div class="neg">${neg}</div><div class="per">${per}</div></td>`;
+      });
+      html += `</tr>`;
+    });
+    html += `</tbody></table>`;
+  });
+  wrap.innerHTML = html;
+}
+
+const ERROS = [
+  {no:"Did you worked?", yes:"Did you work?", why:"Depois de did/do/does o verbo fica sempre na forma base — quem carrega o passado é o auxiliar."},
+  {no:"I are working.", yes:"I am working.", why:"O verbo to be concorda com o sujeito (am/is/are) — não existe forma única para todos."},
+  {no:"I will can do it.", yes:"I will be able to do it.", why:"Modais não se empilham. Can não tem futuro próprio — usa-se will be able to."},
+  {no:"I have work here since 2020.", yes:"I have worked here since 2020.", why:"O present perfect exige particípio (worked), não a forma base."},
+  {no:"He don't work.", yes:"He doesn't work.", why:"3ª pessoa do singular (he/she/it) exige doesn't, não don't."},
+  {no:"You must not come if you don't want.", yes:"You don't have to come if you don't want.", why:"\"Must not\" = proibição. \"Don't have to\" = ausência de obrigação. Não são intercambiáveis."},
+  {no:"I usedn't to work here.", yes:"I didn't use to work here.", why:"A negativa de used to é formada com didn't + use to (sem -d)."},
+  {no:"When I will arrive, I will call you.", yes:"When I arrive, I will call you.", why:"Depois de when/while/before/after/as soon as com sentido futuro, usa-se presente — nunca will."},
+  {no:"Where you work?", yes:"Where do you work?", why:"Perguntas com wh-word de circunstância continuam precisando do auxiliar (do/does/did/is/have...) — só muda o que vem antes dele."},
+  {no:"What means this?", yes:"What does this mean?", why:"\"What\" aqui não é sujeito — é objeto de \"mean\". Como não é pergunta de sujeito, precisa do do-support: does + this + mean."}
+];
+function buildErros(){
+  const el = document.getElementById('errosGrid');
+  el.innerHTML = ERROS.map(e=>`
+    <div class="erro-card">
+      <span class="no">✗ ${e.no}</span>
+      <div class="yes-row"><span class="yes">✓ ${e.yes}</span><button class="audio-btn sm" data-text="${e.yes}" title="Ouvir">🔊</button></div>
+      <div class="why">${e.why}</div>
+    </div>
+  `).join("");
+}
+
+const MODAL_DATA = {
+  capacidade: { label:"Capacidade", icon:"💪", rows:[
+    {tempo:"Presente", forma:"can", ex:"I can do it.", pt:"Eu consigo fazer isso.", nuance:"Capacidade real, no presente."},
+    {tempo:"Passado", forma:"could / was able to", ex:"I could swim. / I was able to finish it.", pt:"Eu conseguia nadar. / Eu consegui terminar isso.", nuance:"\"Could\" = capacidade geral e contínua. \"Was/were able to\" = conseguiu em uma ocasião específica."},
+    {tempo:"Futuro", forma:"will be able to", ex:"I will be able to do it.", pt:"Eu vou conseguir fazer isso.", nuance:"\"Can\" não tem forma de futuro própria."}
+  ]},
+  possibilidade: { label:"Possibilidade", icon:"🌫️", rows:[
+    {tempo:"Presente / Futuro", forma:"may / might / could", ex:"It may rain. / It might rain.", pt:"Pode ser que chova. / Talvez chova.", nuance:"\"May\" soa levemente mais provável que \"might\". \"Could\" marca possibilidade teórica."},
+    {tempo:"Passado (especulação)", forma:"may have / might have + particípio", ex:"It might have rained.", pt:"Pode ser que tenha chovido.", nuance:"Modal perfeito — dúvida sobre algo que já aconteceu."}
+  ]},
+  obrigacao: { label:"Obrigação", icon:"📌", rows:[
+    {tempo:"Presente", forma:"must / have to", ex:"I must finish this. / I have to finish this.", pt:"Eu preciso terminar isso. / Eu tenho que terminar isso.", nuance:"\"Must\" = obrigação que parte do próprio falante. \"Have to\" = imposta por regra externa."},
+    {tempo:"Passado", forma:"had to", ex:"I had to finish it.", pt:"Eu tive que terminar isso.", nuance:"\"Must\" não tem passado — usa-se sempre \"had to\"."},
+    {tempo:"Futuro", forma:"will have to", ex:"I will have to finish it.", pt:"Eu vou ter que terminar isso.", nuance:""}
+  ], alerta:"<b>\"Must not\"</b> = proibição (\"You must not smoke\"). <b>\"Don't have to\"</b> = ausência de obrigação (\"You don't have to come\"). São opostos, não sinônimos."},
+  permissao: { label:"Permissão", icon:"🔓", rows:[
+    {tempo:"Presente", forma:"can / may", ex:"Can I leave? / May I leave?", pt:"Posso sair? / Poderia sair? (formal)", nuance:"\"Can\" é informal, \"may\" é a forma educada/formal."},
+    {tempo:"Passado / pedido educado", forma:"could", ex:"Could I leave early?", pt:"Eu poderia sair mais cedo?", nuance:"\"Could\" como pedido soa mais educado que \"can\", mesmo falando do presente."},
+    {tempo:"Futuro", forma:"will be allowed to", ex:"I will be allowed to leave.", pt:"Eu terei permissão para sair.", nuance:""}
+  ]},
+  conselho: { label:"Conselho", icon:"💡", rows:[
+    {tempo:"Presente", forma:"should / ought to", ex:"You should rest. / You ought to rest.", pt:"Você deveria descansar.", nuance:"\"Ought to\" é mais formal e menos comum na fala."},
+    {tempo:"Passado (crítica)", forma:"should have + particípio", ex:"You should have rested.", pt:"Você deveria ter descansado.", nuance:"Conselho tardio — expressa arrependimento ou repreensão sobre algo que já passou."}
+  ]},
+  habito: { label:"Hábito passado", icon:"🕰️", rows:[
+    {tempo:"Passado", forma:"used to", ex:"I used to work here.", pt:"Eu costumava trabalhar aqui.", nuance:"Hábito ou estado que não existe mais. Funciona com ações e estados."},
+    {tempo:"Passado", forma:"would", ex:"I would often work late.", pt:"Eu costumava trabalhar até tarde, com frequência.", nuance:"Só para ações repetidas — nunca para estados."}
+  ], alerta:"Negativa de <b>\"used to\"</b>: \"I didn't use to work here\" — nunca \"usedn't\"."}
+};
+let modalState = "capacidade";
+function buildModalGrid(){
+  const el = document.getElementById('modalGrid'); el.innerHTML="";
+  Object.keys(MODAL_DATA).forEach(key=>{
+    const d = MODAL_DATA[key];
+    const btn = document.createElement('div'); btn.className='opt-btn';
+    btn.style.setProperty('--accent', 'var(--amber)');
+    btn.dataset.active = (modalState===key);
+    btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
+    btn.onclick = ()=>{ modalState=key; renderModal(); };
+    el.appendChild(btn);
+  });
+}
+function renderModal(){
+  buildModalGrid();
+  const d = MODAL_DATA[modalState];
+  document.getElementById('modalResultLabel').textContent = d.label;
+  document.getElementById('modalRows').innerHTML = d.rows.map(r=>`
+    <div class="modal-row">
+      <div class="tempo-tag">${r.tempo}</div>
+      <div class="forma">${r.forma}</div>
+      <div class="ex-row"><span class="ex">${r.ex}</span><button class="audio-btn sm" data-text="${r.ex.split(' / ')[0]}" title="Ouvir">🔊</button></div>
+      <div class="pt">${r.pt}</div>
+      ${r.nuance ? `<div class="nuance">${r.nuance}</div>` : ""}
+    </div>
+  `).join("");
+  document.getElementById('modalAlerta').innerHTML = d.alerta ? `<div class="modal-alerta">⚠️ ${d.alerta}</div>` : "";
+}
+
+function toggleBlock(id){
+  const block = document.getElementById(id);
+  const isOpen = block.dataset.open === "true";
+  const body = block.querySelector('.block-body');
+  if(isOpen){
+    body.style.maxHeight = body.scrollHeight+'px';
+    requestAnimationFrame(()=>{ body.style.maxHeight = '0px'; });
+    block.dataset.open = "false";
+  } else {
+    block.dataset.open = "true";
+    body.style.maxHeight = body.scrollHeight+'px';
+    setTimeout(()=>{ if(block.dataset.open==="true") body.style.maxHeight='none'; }, 320);
+  }
+}
+
+buildMatrix();
+buildAdverbsList();
+buildErros();
+render();
+renderModal();
+setTimeout(()=>{
+  document.querySelectorAll('.block[data-open="true"] .block-body').forEach(b=>{ b.style.maxHeight='none'; });
+},50);
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
