@@ -20,13 +20,13 @@
   :root{
     --panel-deep:#10151c; --panel:#1b2430; --panel-raised:#242f3d;
     --brass:#c9a34e; --brass-dim:#8a744f; --teal:#4fb6a6; --red:#c1483d;
-    --amber:#e0a458; --violet:#8f8fd6; --paper:#ede6d6; --paper-dim:#a9a294;
+    --amber:#e0a458; --violet:#8f8fd6; --burnt-yellow:#c9972c; --rose:#c76d9e; --blue:#6b9fd8; --paper:#ede6d6; --paper-dim:#a9a294;
     --line: rgba(237,230,214,0.10); --bg-top:#182130;
   }
   :root[data-theme="light"]{
     --panel-deep:#f4f0e6; --panel:#ffffff; --panel-raised:#efe9db;
     --brass:#a8762c; --brass-dim:#8a744f; --teal:#227b6b; --red:#a83527;
-    --amber:#b06f22; --violet:#5f57ad; --paper:#211c14; --paper-dim:#6e6656;
+    --amber:#b06f22; --violet:#5f57ad; --burnt-yellow:#96650f; --rose:#a03a6e; --blue:#2f5f9e; --paper:#211c14; --paper-dim:#6e6656;
     --line: rgba(33,28,20,0.12); --bg-top:#fbf7ee;
   }
   *{box-sizing:border-box;}
@@ -64,6 +64,9 @@
   .opt-btn[data-active="true"] .ic{filter:none; opacity:1;}
 
   .pronome-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .letter-row{margin-bottom:10px;}
+  .letter-pill{min-width:32px; text-align:center; padding:6px 0;}
+  .verbo-choices{padding-top:2px; border-top:1px dashed var(--line);}
   .pronome-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:12.5px; font-weight:600; color:var(--paper-dim); cursor:pointer; transition:all .18s ease; font-family:'JetBrains Mono';}
   .pronome-pill[data-active="true"]{color:var(--panel-deep); background:var(--brass); border-color:var(--brass);}
 
@@ -75,13 +78,14 @@
   .tempo-label{font-size:12px; font-weight:600; color:var(--paper-dim); cursor:pointer; padding:4px 6px; border-radius:6px; transition:all .18s ease;}
   .tempo-label[data-active="true"]{color:var(--teal);}
 
-  .formato-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .formato-row{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
   .formato-switch{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:10px 6px; text-align:center; cursor:pointer; transition:all .18s ease;}
   .formato-switch .lamp{width:9px;height:9px;border-radius:50%;margin:0 auto 6px; background:#3a4553; transition:all .18s ease;}
   .formato-switch .lbl{font-size:11px; font-weight:600; color:var(--paper-dim); letter-spacing:0.02em;}
   .formato-switch[data-active="true"][data-kind="afirmativa"] .lamp{background:var(--teal); box-shadow:0 0 10px var(--teal);}
   .formato-switch[data-active="true"][data-kind="negativa"] .lamp{background:var(--red); box-shadow:0 0 10px var(--red);}
-  .formato-switch[data-active="true"][data-kind="pergunta"] .lamp{background:var(--amber); box-shadow:0 0 10px var(--amber);}
+  .formato-switch[data-active="true"][data-kind="pergunta"] .lamp{background:var(--burnt-yellow); box-shadow:0 0 10px var(--burnt-yellow);}
+  .formato-switch[data-active="true"][data-kind="pergunta_negativa"] .lamp{background:var(--rose); box-shadow:0 0 10px var(--rose);}
   .formato-switch[data-active="true"] .lbl{color:var(--paper);}
   .formato-switch[data-active="true"]{border-color:rgba(255,255,255,0.18);}
 
@@ -91,6 +95,18 @@
   .signal-row-inner::-webkit-scrollbar-thumb{background:var(--line); border-radius:2px;}
   .signal-chip{flex-shrink:0;}
   .signal-group-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin:5px 0 1px;}
+  .fam-row{padding-bottom:8px; border-bottom:1px dashed var(--line); margin-bottom:2px;
+    flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .fam-row::-webkit-scrollbar{display:none;}
+  .fam-row .fam-chip{flex:0 0 auto;}
+  .signal-active{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:8px 0 2px; font-size:10.5px; color:var(--paper-dim);}
+  .signal-active .tagx{display:inline-flex; align-items:center; gap:6px; background:var(--panel-raised); border:1px solid var(--line);
+    border-radius:999px; padding:3px 8px; color:var(--violet); cursor:pointer;}
+  .signal-active .tagx b{font-weight:600;}
+  .signal-active .tagx span{opacity:.65;}
+  .fam-chip{position:relative; display:inline-flex; align-items:center; gap:5px;}
+  .fam-count{font-size:9px; opacity:.6; font-variant-numeric:tabular-nums;}
+  .fam-dot{width:5px; height:5px; border-radius:50%; background:var(--violet); display:inline-block;}
   .signal-chip{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:6px 11px; font-size:11.5px; font-family:'JetBrains Mono'; color:var(--paper-dim); cursor:pointer; transition:all .18s ease;}
   .signal-chip[data-active="true"]{color:var(--panel-deep); background:var(--teal); border-color:var(--teal);}
   .signal-hint{font-size:11px; color:var(--paper-dim); margin-top:6px; line-height:1.4;}
@@ -102,6 +118,7 @@
   .readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none;}
   .readout-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .readout-btns{display:flex; gap:6px; position:relative; z-index:1;}
   .readout-label{font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase;}
   .audio-btn{position:relative; z-index:1; width:30px; height:30px; border-radius:50%; background:var(--panel-raised); border:1px solid var(--line); color:var(--teal); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .18s ease; flex-shrink:0;}
   .audio-btn:hover{border-color:var(--teal); box-shadow:0 0 12px -2px var(--teal);}
@@ -118,6 +135,8 @@
 
   .modal-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
   .modal-result{margin-top:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 14px 8px;}
+  .modal-readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
+  .modal-readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none; border-radius:12px;}
   .modal-result-label{font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase; margin-bottom:10px;}
   .modal-row{padding:9px 0; border-top:1px solid var(--line);}
   .modal-row:first-of-type{border-top:none;}
@@ -147,11 +166,14 @@
   table.matrix th{font-family:'JetBrains Mono'; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--brass); text-align:left; padding:6px 5px; border-bottom:1px solid var(--line);}
   table.matrix td{padding:7px 5px; border-bottom:1px solid var(--line); vertical-align:top; font-size:11.5px;}
   table.matrix td.cat{font-weight:600; color:var(--paper); white-space:nowrap;}
-  table.matrix .cell-lines div{margin-bottom:2px; font-family:'JetBrains Mono'; font-size:10.8px;}
-  table.matrix .aff{color:var(--teal);}
-  table.matrix .neg{color:var(--red);}
-  table.matrix .per{color:var(--amber);}
+  table.matrix .cell-lines div{margin-bottom:3px; font-family:'JetBrains Mono'; font-size:10.8px; line-height:1.45; color:var(--paper);}
   .matrix-note{font-size:11px; color:var(--paper-dim); margin:-4px 0 14px;}
+  .color-legend{display:flex; flex-wrap:wrap; gap:6px 14px; margin:0 0 12px; font-size:10.5px; color:var(--paper-dim);}
+  .color-legend span{display:inline-flex; align-items:center; gap:5px;}
+  .color-legend i{width:9px; height:9px; border-radius:50%; display:inline-block; font-style:normal; flex-shrink:0;}
+  .download-btn{display:inline-flex; align-items:center; gap:7px; background:var(--panel-raised); border:1px solid var(--brass); border-radius:20px; padding:9px 15px; font-family:'JetBrains Mono'; font-size:12px; font-weight:600; color:var(--brass); cursor:pointer; margin-bottom:14px; transition:all .18s ease;}
+  .download-btn:active{background:var(--brass); color:var(--panel-deep); transform:scale(0.97);}
+  .download-btn[disabled]{opacity:.6; pointer-events:none;}
 
   .ref-tense-block{margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line);}
   .ref-tense-block:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
@@ -186,11 +208,68 @@
 
   footer{text-align:center; margin-top:26px; padding-top:16px;}
   footer .tagline{font-size:12px; color:var(--paper-dim); margin-bottom:10px;}
+  .bank-panel{margin-top:10px; border-top:1px dashed var(--line); padding-top:10px;}
+  .bank-toggle{width:100%; background:transparent; border:1px solid var(--line); border-radius:10px; padding:9px;
+    color:var(--paper-dim); font-size:11px; font-family:inherit; cursor:pointer; text-align:left;}
+  .bank-toggle b{color:var(--brass);}
+  .bank-body{margin-top:8px; max-height:260px; overflow-y:auto;}
+  .bank-line{padding:7px 2px; border-bottom:1px solid var(--line);}
+  .bank-line:last-child{border-bottom:0;}
+  .bank-en{font-family:'JetBrains Mono'; font-size:12px; color:var(--blue);}
+  .bank-pt{font-size:11px; color:var(--paper-dim); margin-top:2px;}
+  .db-toolbar{display:flex; flex-direction:column; gap:8px; margin-bottom:14px;}
+  .db-search{width:100%; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px;
+    padding:11px 12px; color:var(--paper); font-family:inherit; font-size:13px;}
+  .db-search::placeholder{color:var(--paper-dim);}
+  .db-stats{font-size:10.5px; color:var(--paper-dim); font-variant-numeric:tabular-nums;}
+  .db-fam-head{background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:14px;}
+  .db-fam-name{font-family:'JetBrains Mono'; font-size:19px; color:var(--brass); font-weight:600; letter-spacing:0.02em;}
+  .db-fam-core{font-size:12.5px; color:var(--paper); margin-top:6px; line-height:1.45;}
+  .db-fam-pages{font-size:10px; color:var(--paper-dim); margin-top:6px;}
+  .db-maps{display:grid; grid-template-columns:1fr; gap:6px; margin-top:12px;}
+  .db-map{border:1px solid var(--line); background:var(--panel-raised); border-radius:10px; padding:8px 10px;}
+  .db-map b{display:block; color:var(--teal); font-size:10px; letter-spacing:0.06em; text-transform:uppercase;}
+  .db-map span{font-family:'JetBrains Mono'; font-size:11px; color:var(--paper-dim); line-height:1.5;}
+  .db-item{border-bottom:1px solid var(--line); padding:11px 2px;}
+  .db-item:last-child{border-bottom:0;}
+  .db-expr-row{display:flex; align-items:flex-start; gap:8px;}
+  .db-expr{font-family:'JetBrains Mono'; font-size:13.5px; color:var(--blue); font-weight:600; flex:1; line-height:1.4;}
+  .db-trans{font-size:12.5px; color:var(--paper); margin-top:3px; line-height:1.45;}
+  .db-meta{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; align-items:center;}
+  .db-tag{font-size:9px; text-transform:uppercase; letter-spacing:0.05em; color:var(--paper-dim);
+    background:var(--panel-raised); border:1px solid var(--line); border-radius:999px; padding:3px 7px;}
+  .db-tag.src{color:var(--teal);}
+  .db-note{font-size:10.5px; color:var(--paper-dim); font-style:italic;}
+  .db-empty{padding:26px 4px; text-align:center; color:var(--paper-dim); font-size:12px;}
+  .db-more{width:100%; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px;
+    padding:10px; color:var(--paper); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; margin-top:12px;}
+  .db-hit{font-family:'JetBrains Mono'; font-size:10px; color:var(--brass-dim); margin-bottom:2px;}
+  .practice-card{background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px;
+    position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
+  .practice-prompt-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin-bottom:8px;}
+  .practice-pt{font-size:17px; line-height:1.45; color:var(--paper); font-weight:500;}
+  .practice-specs{display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;}
+  .practice-specs span{font-size:9.5px; text-transform:uppercase; letter-spacing:0.05em; color:var(--paper-dim);
+    background:var(--panel-raised); border:1px solid var(--line); border-radius:999px; padding:3px 8px;}
+  .practice-answer{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);}
+  .practice-en{font-family:'JetBrains Mono'; font-size:15px; line-height:1.5;}
+  .practice-structure{font-size:10.5px; color:var(--paper-dim); margin-top:6px;}
+  .practice-actions{display:flex; align-items:center; gap:8px; margin-top:14px;}
+  .practice-btn{flex:1; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px; padding:10px;
+    color:var(--paper); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .18s ease;}
+  .practice-btn.primary{border-color:var(--brass-dim); color:var(--brass);}
+  .practice-btn:active{transform:scale(.98);}
+  .practice-btn.hit{border-color:var(--teal); color:var(--teal);}
+  .practice-btn.miss{border-color:var(--red); color:var(--red);}
+  .practice-bar{height:4px; border-radius:999px; background:var(--panel-raised); overflow:hidden; margin-top:10px;}
+  .practice-bar i{display:block; height:100%; background:var(--teal); transition:width .3s ease;}
+  .practice-score{font-size:10.5px; color:var(--paper-dim); margin-top:10px; text-align:center; font-variant-numeric:tabular-nums;}
   footer .formula{font-family:'JetBrains Mono'; font-size:12px; color:var(--brass); letter-spacing:0.02em;}
+  footer .version{font-family:'JetBrains Mono'; font-size:10px; color:var(--paper-dim); margin-top:10px; letter-spacing:0.08em; text-transform:uppercase;}
 
   @media (max-height: 480px) and (orientation: landscape){
     .topnav{position:relative; top:auto;}
-    .readout{position:relative; top:auto;}
+    .readout, .modal-readout, .practice-card{position:relative; top:auto;}
   }
 </style>
 </head>
@@ -207,6 +286,8 @@
     <div class="nav-pills">
       <button class="nav-pill" onclick="document.getElementById('console-tempos').scrollIntoView({behavior:'smooth'})">⚙️ Tempos</button>
       <button class="nav-pill" onclick="document.getElementById('console-modais').scrollIntoView({behavior:'smooth'})">🗣️ Modais</button>
+      <button class="nav-pill" onclick="document.getElementById('console-pratica').scrollIntoView({behavior:'smooth'})">🎯 Praticar</button>
+      <button class="nav-pill" id="navExpressoes" onclick="document.getElementById('console-expressoes').scrollIntoView({behavior:'smooth'})">🗃️ Expressões</button>
       <button class="nav-pill" onclick="document.getElementById('block-matrix').scrollIntoView({behavior:'smooth'})">📚 Referência</button>
     </div>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
@@ -218,7 +299,10 @@
     <div class="readout">
       <div class="readout-top">
         <div class="readout-label">Frase resultante</div>
-        <button class="audio-btn" id="audioMain" title="Ouvir">🔊</button>
+        <div class="readout-btns">
+          <button class="audio-btn" id="copyMain" title="Copiar EN + PT">📋</button>
+          <button class="audio-btn" id="audioMain" title="Ouvir">🔊</button>
+        </div>
       </div>
       <div class="readout-sentence" id="sentence">—</div>
       <div class="readout-translation"><b>PT</b><span id="translation">—</span></div>
@@ -237,8 +321,19 @@
       <div class="grid2" id="categoriaGrid"></div>
     </div>
 
+    <div class="dial-group" id="verboDialGroup">
+      <div class="dial-group-title">③ Verbo (regular ou irregular)</div>
+      <div id="verboRow"></div>
+    </div>
+
+    <div class="dial-group" id="colDialGroup">
+      <div class="dial-group-title">④ Regência / collocation do verbo (opcional)</div>
+      <div class="signal-row-inner" id="colRow"></div>
+      <div id="verbBankPanel"></div>
+    </div>
+
     <div class="dial-group">
-      <div class="dial-group-title">③ Em que tempo?</div>
+      <div class="dial-group-title">⑤ Em que tempo?</div>
       <div class="tempo-track">
         <div class="tempo-rail"><div class="tempo-fill" id="tempoFill"></div><div class="tempo-dot" id="tempoDot"></div></div>
         <div class="tempo-labels" id="tempoLabels"></div>
@@ -246,23 +341,23 @@
     </div>
 
     <div class="dial-group">
-      <div class="dial-group-title">④ Qual aspecto?</div>
+      <div class="dial-group-title">⑥ Qual aspecto?</div>
       <div class="grid2" id="aspectoGrid"></div>
     </div>
 
     <div class="dial-group" id="signalDialGroup">
-      <div class="dial-group-title">⑤ Palavras-sinal (meio + fim, opcional)</div>
+      <div class="dial-group-title">⑦ Palavras-sinal (meio + fim, opcional)</div>
       <div class="signal-row" id="signalRow"></div>
       <div class="signal-hint" id="signalHint"></div>
     </div>
 
     <div class="dial-group">
-      <div class="dial-group-title">⑥ Qual formato?</div>
+      <div class="dial-group-title">⑧ Qual formato?</div>
       <div class="formato-row" id="formatoRow"></div>
     </div>
 
     <div class="dial-group" id="whDialGroup" style="margin-bottom:0;">
-      <div class="dial-group-title">⑦ Palavra interrogativa (só em perguntas)</div>
+      <div class="dial-group-title">⑨ Palavra interrogativa (só em perguntas)</div>
       <div id="whGrid"></div>
       <div class="signal-hint" id="whHint"></div>
     </div>
@@ -270,15 +365,101 @@
 
   <div class="console" id="console-modais" style="scroll-margin-top:64px;">
     <div class="console-label"><span>MOTOR DE MODAIS</span><span class="pulse"></span></div>
-    <div class="dial-group" style="margin-bottom:0;">
-      <div class="dial-group-title">Qual função você quer expressar?</div>
+
+    <div class="modal-readout">
+      <div class="readout-top"><div class="readout-label">Frase modal</div><div class="readout-btns"><button class="audio-btn" id="copyModal" title="Copiar EN + PT">📋</button><button class="audio-btn" id="modalAudio" title="Ouvir">🔊</button></div></div>
+      <div class="readout-sentence" id="modalSentence">—</div>
+      <div class="readout-translation" id="modalTranslation"></div>
+      <div class="readout-structure" id="modalStructure"></div>
+      <div class="note-box" id="modalNote"></div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">Ⓐ Qual função você quer expressar?</div>
       <div class="modal-grid" id="modalGrid"></div>
     </div>
-    <div class="modal-result">
-      <div class="modal-result-label" id="modalResultLabel">Capacidade</div>
-      <div id="modalRows"></div>
-      <div id="modalAlerta"></div>
+    <div class="dial-group">
+      <div class="dial-group-title">Ⓑ Pronome / sujeito</div>
+      <div class="pronome-row" id="modalPronomeRow"></div>
     </div>
+    <div class="dial-group">
+      <div class="dial-group-title">Ⓒ Em que tempo?</div>
+      <div class="pronome-row" id="modalTempoRow"></div>
+    </div>
+    <div class="dial-group">
+      <div class="dial-group-title">Ⓓ Qual formato?</div>
+      <div class="formato-row" id="modalFormatoRow"></div>
+    </div>
+    <div class="dial-group" style="margin-bottom:0;">
+      <div class="dial-group-title">Ⓔ Palavras-sinal da função (fim da frase, opcional)</div>
+      <div class="signal-row-inner" id="modalSignalRow"></div>
+      <div class="signal-hint">O verbo principal e a regência/collocation são os mesmos escolhidos no console de tempos (dials ③ e ④).</div>
+    </div>
+    <div id="modalAlerta"></div>
+  </div>
+
+  <div class="console" id="console-pratica" style="scroll-margin-top:64px;">
+    <div class="console-label"><span>MODO PRÁTICA</span><span class="pulse"></span></div>
+
+    <div class="practice-card">
+      <div class="readout-top">
+        <div class="practice-prompt-label" style="margin-bottom:0;">Traduza para o inglês</div>
+        <div class="readout-btns"><button class="audio-btn" id="copyPractice" title="Copiar EN + PT" hidden>📋</button></div>
+      </div>
+      <div class="practice-pt" id="practicePT">—</div>
+      <div class="practice-specs" id="practiceSpecs"></div>
+
+      <div class="practice-answer" id="practiceAnswer" hidden>
+        <div class="practice-en" id="practiceEN"></div>
+        <div class="practice-structure" id="practiceStructure"></div>
+      </div>
+
+      <div class="practice-actions" id="practiceActionsReveal">
+        <button class="practice-btn primary" id="practiceReveal">👁️ Ver resposta</button>
+        <button class="practice-btn" id="practiceNext">🎲 Pular</button>
+      </div>
+      <div class="practice-actions" id="practiceActionsScore" hidden>
+        <button class="practice-btn hit" id="practiceHit">✅ Acertei</button>
+        <button class="practice-btn miss" id="practiceMiss">↻ Errei</button>
+        <button class="audio-btn" id="practiceAudio" title="Ouvir">🔊</button>
+      </div>
+      <div class="practice-bar" id="practiceBar" hidden><i></i></div>
+      <div class="practice-score" id="practiceScore"></div>
+    </div>
+
+    <div class="dial-group" style="margin-bottom:0;">
+      <div class="dial-group-title">Nível do desafio</div>
+      <div class="pronome-row" id="practiceLevelRow"></div>
+      <div class="signal-hint">Os desafios são gerados pelos mesmos motores — nada é fixo.</div>
+    </div>
+  </div>
+
+  <div class="console" id="console-expressoes" style="scroll-margin-top:64px;">
+    <div class="console-label"><span>BANCO DE EXPRESSÕES</span><span class="pulse"></span></div>
+
+    <div class="db-toolbar">
+      <input type="search" id="dbSearch" class="db-search" placeholder="Buscar em inglês ou português…" autocomplete="off">
+      <div class="db-stats" id="dbStats"></div>
+    </div>
+
+    <div class="dial-group">
+      <div class="dial-group-title">Tipo de família</div>
+      <div class="pronome-row" id="dbTypeRow"></div>
+    </div>
+
+    <div class="dial-group" id="dbFamilyGroup">
+      <div class="dial-group-title">Família</div>
+      <div class="signal-row-inner fam-row" id="dbFamilyRow"></div>
+    </div>
+
+    <div id="dbFamilyHead"></div>
+
+    <div class="dial-group" id="dbGroupWrap" style="margin-bottom:12px;">
+      <div class="dial-group-title">Grupo semântico</div>
+      <div class="signal-row-inner" id="dbGroupRow"></div>
+    </div>
+
+    <div id="dbList"></div>
   </div>
 
   <section class="block" data-open="true" id="block-matrix" style="scroll-margin-top:64px;">
@@ -287,7 +468,17 @@
       <span class="chev">▾</span>
     </div>
     <div class="block-body"><div class="block-body-inner">
-      <div class="matrix-note">Referência fixa com o pronome <b style="color:var(--brass)">I</b>. Use o console acima para pronomes, interrogativas, tradução e áudio.</div>
+      <div class="matrix-note">Referência fixa com o pronome <b style="color:var(--brass)">I</b>. Use o console acima para pronomes, verbos, interrogativas, tradução e áudio.</div>
+      <div class="color-legend">
+        <span><i style="background:var(--paper)"></i>sujeito + raiz</span>
+        <span><i style="background:var(--teal)"></i>afirmativa</span>
+        <span><i style="background:var(--red)"></i>negativa</span>
+        <span><i style="background:var(--burnt-yellow)"></i>pergunta</span>
+        <span><i style="background:var(--rose)"></i>pergunta negativa</span>
+        <span><i style="background:var(--blue)"></i>regência / collocation</span>
+        <span><i style="background:var(--violet)"></i>complemento (advérbio/tempo)</span>
+      </div>
+      <button class="download-btn" id="downloadMatrixBtn" onclick="downloadMatrixPNG()">⬇️ Baixar tabela (PNG)</button>
       <div id="matrixWrap"></div>
     </div></div>
   </section>
@@ -402,7 +593,8 @@
 
   <footer>
     <div class="tagline">Não decore frases. Entenda o sistema.</div>
-    <div class="formula">SUJEITO × CATEGORIA × TEMPO × ASPECTO × SINAL × FORMATO × WH = FRASE</div>
+    <div class="formula">SUJEITO × CATEGORIA × VERBO × TEMPO × ASPECTO × SINAL × FORMATO × WH = FRASE</div>
+    <div class="version">Painel Mestre do Inglês · v1.0</div>
   </footer>
 
 </div>
@@ -439,82 +631,236 @@ function doPres(p){ return IS_3SG(p) ? "does" : "do"; }
 function doPresNeg(p){ return IS_3SG(p) ? "doesn't" : "don't"; }
 function havePres(p){ return IS_3SG(p) ? "has" : "have"; }
 function havePresNeg(p){ return IS_3SG(p) ? "hasn't" : "haven't"; }
+/* Negação do "be", separada em sujeito (neutro) + marcador (colorido) — ex.:
+   negBe('I','present') → {subj:"I", marker:"'m not"} → "I" + "'m not" = "I'm not" */
 function negBe(p, when){
-  if(when==='present'){ if(p==='I') return "I'm not"; if(IS_3SG(p)) return p+" isn't"; return p+" aren't"; }
-  else { if(IS_3SG(p)||p==='I') return p+" wasn't"; return p+" weren't"; }
+  if(when==='present'){ if(p==='I') return {subj:"I", marker:"'m not"}; if(IS_3SG(p)) return {subj:p, marker:" isn't"}; return {subj:p, marker:" aren't"}; }
+  else { if(IS_3SG(p)||p==='I') return {subj:p, marker:" wasn't"}; return {subj:p, marker:" weren't"}; }
+}
+/* Mesma ideia, já na ordem de pergunta (marcador vem antes do sujeito) — ex.:
+   negBeQ('I','present') → {marker:"Aren't", subj:"I"} → "Aren't" + " " + "I" = "Aren't I".
+   "Aren't I" é a exceção idiomática do inglês: a forma logicamente regular seria
+   "Amn't I" / "Am I not", mas a fala e escrita naturais usam "aren't" nesse caso único. */
+function negBeQ(p, when){
+  if(when==='present'){ if(p==='I') return {marker:"Aren't", subj:"I"}; if(IS_3SG(p)) return {marker:"Isn't", subj:subjLower(p)}; return {marker:"Aren't", subj:subjLower(p)}; }
+  else { if(IS_3SG(p)||p==='I') return {marker:"Wasn't", subj:subjLower(p)}; return {marker:"Weren't", subj:subjLower(p)}; }
 }
 
-function genFact(tempo,aspecto,formato,p){
-  const base="work", s3="works", ing="working", pp="worked";
-  let text, structure; const q = formato==='pergunta';
+/* ---- Marcação de cor por morfema (auxiliar/terminação vs. sujeito/raiz vs. complemento) ----
+   Cada frase gerada carrega, embutidos no texto, delimitadores invisíveis ao redor de dois tipos
+   de trecho:
+   - "formato" (MARK_OPEN/MARK_CLOSE): tudo que muda com o tempo/formato — auxiliares (am/is/are/
+     was/were/have/has/had/will/do/does/did, incluindo "be"/"been" quando fazem parte da cadeia
+     auxiliar), a negação ("n't"/"not") e as terminações (-ed/-ing/-s, ou a forma irregular
+     inteira quando o verbo não segue o padrão regular). Colorido conforme markColorVar(formato).
+   - "complemento" (COMP_OPEN/COMP_CLOSE): advérbios e expressões de tempo (palavras-sinal),
+     tanto no meio quanto no fim da frase. Sempre roxo/violeta, independente do formato.
+   Sujeito e raiz do verbo nunca são marcados. markedToHTML()/drawMarkedLine() leem essa
+   marcação para colorir na tela e no canvas. */
+const MARK_OPEN = '\u0001', MARK_CLOSE = '\u0002', COMP_OPEN = '\u0003', COMP_CLOSE = '\u0004', REG_OPEN = '\u0005', REG_CLOSE = '\u0006';
+function M(s){ return MARK_OPEN + s + MARK_CLOSE; }
+function C(s){ return COMP_OPEN + s + COMP_CLOSE; }
+function R(s){ return REG_OPEN + s + REG_CLOSE; } /* regência / collocation — azul */
+function stripMarks(s){ return s.replace(/[\u0001-\u0006]/g, ''); }
+function markedToSegments(s){
+  const segments = [];
+  const re = /\u0001([^\u0002]*)\u0002|\u0003([^\u0004]*)\u0004|\u0005([^\u0006]*)\u0006/g;
+  let last = 0, m;
+  while((m = re.exec(s))){
+    if(m.index > last) segments.push({t: s.slice(last, m.index), kind:'neutral'});
+    if(m[1] !== undefined) segments.push({t: m[1], kind:'formato'});
+    else if(m[2] !== undefined) segments.push({t: m[2], kind:'complemento'});
+    else segments.push({t: m[3], kind:'regencia'});
+    last = re.lastIndex;
+  }
+  if(last < s.length) segments.push({t: s.slice(last), kind:'neutral'});
+  return segments;
+}
+function escapeHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function markedToHTML(s, formatoColorVar){
+  return markedToSegments(s).map(seg => {
+    if(seg.kind==='neutral') return escapeHTML(seg.t);
+    const color = seg.kind==='formato' ? formatoColorVar : (seg.kind==='complemento' ? 'var(--violet)' : 'var(--blue)');
+    return `<span style="color:${color}">${escapeHTML(seg.t)}</span>`;
+  }).join('');
+}
+/* Cor do marcador por formato — cada um dos 4 tem cor própria:
+   afirmativa=teal, negativa=vermelho, pergunta=amarelo queimado, pergunta negativa=rosa. */
+function markColorVar(formato){
+  if(formato==='afirmativa') return 'var(--teal)';
+  if(formato==='negativa') return 'var(--red)';
+  if(formato==='pergunta') return 'var(--burnt-yellow)';
+  return 'var(--rose)'; // pergunta_negativa
+}
+
+/* Compara a raiz do verbo com uma forma flexionada e marca só o trecho que realmente muda —
+   funciona tanto pra verbos regulares (work→worked: raiz "work" + marcado "ed") quanto
+   irregulares, onde o prefixo comum pode ser parcial (go→went: "g"+"ent") ou inexistente
+   (eat→ate: marca a palavra inteira), já que verbos irregulares não têm uma terminação fixa. */
+function markedForm(base, inflected){
+  let i=0;
+  while(i<base.length && i<inflected.length && base[i]===inflected[i]) i++;
+  return inflected.slice(0,i) + M(inflected.slice(i));
+}
+
+/* ---- Banco de verbos — "work" é o padrão regular; os demais mostram os principais
+   padrões de irregularidade (ABC, ABA, ABB, AAA) para o motor interativo. ---- */
+const VERBS = [
+  { id:"work",  label:"work · regular",       base:"work",  s3:"works",  ing:"working",  past:"worked", pp:"worked", col:[{en:"on a project", pt:"em um projeto"},{en:"from home", pt:"de casa"},{en:"as a team", pt:"em equipe"}] },
+  { id:"go",    label:"go → went → gone",     base:"go",    s3:"goes",   ing:"going",    past:"went",   pp:"gone", col:[{en:"home", pt:"para casa"},{en:"to school", pt:"para a escola"},{en:"by car", pt:"de carro"}] },
+  { id:"eat",   label:"eat → ate → eaten",    base:"eat",   s3:"eats",   ing:"eating",   past:"ate",    pp:"eaten", col:[{en:"out", pt:"fora"},{en:"healthy food", pt:"comida saudável"},{en:"too much", pt:"demais"}] },
+  { id:"write", label:"write → wrote → written", base:"write", s3:"writes", ing:"writing", past:"wrote", pp:"written", col:[{en:"a letter", pt:"uma carta"},{en:"a report", pt:"um relatório"},{en:"in English", pt:"em inglês"}] },
+  { id:"see",   label:"see → saw → seen",     base:"see",   s3:"sees",   ing:"seeing",   past:"saw",    pp:"seen", col:[{en:"a doctor", pt:"um médico"},{en:"the results", pt:"os resultados"},{en:"a movie", pt:"um filme"}] },
+  { id:"take",  label:"take → took → taken",  base:"take",  s3:"takes",  ing:"taking",   past:"took",   pp:"taken", col:[{en:"the bus", pt:"o ônibus"},{en:"a taxi", pt:"um táxi"},{en:"the keys", pt:"as chaves"}] },
+  { id:"come",  label:"come → came → come",   base:"come",  s3:"comes",  ing:"coming",   past:"came",   pp:"come", col:[{en:"home", pt:"para casa"},{en:"to the party", pt:"para a festa"},{en:"by train", pt:"de trem"}] },
+  { id:"run",   label:"run → ran → run",      base:"run",   s3:"runs",   ing:"running",  past:"ran",    pp:"run", col:[{en:"in the park", pt:"no parque"},{en:"a marathon", pt:"uma maratona"},{en:"fast", pt:"rápido"}] },
+  { id:"buy",   label:"buy → bought → bought", base:"buy",  s3:"buys",   ing:"buying",   past:"bought", pp:"bought", col:[{en:"a gift", pt:"um presente"},{en:"groceries", pt:"mantimentos"},{en:"online", pt:"pela internet"}] },
+  { id:"think", label:"think → thought → thought", base:"think", s3:"thinks", ing:"thinking", past:"thought", pp:"thought", col:[{en:"about the future", pt:"sobre o futuro"},{en:"about it", pt:"sobre isso"},{en:"carefully", pt:"com cuidado"}] },
+  { id:"put",   label:"put → put → put",      base:"put",   s3:"puts",   ing:"putting",  past:"put",    pp:"put", col:[{en:"it on the table", pt:"isso na mesa"},{en:"everything in place", pt:"tudo no lugar"},{en:"the keys in the drawer", pt:"as chaves na gaveta"}] },
+  { id:"speak", label:"speak → spoke → spoken", base:"speak", s3:"speaks", ing:"speaking", past:"spoke", pp:"spoken", col:[{en:"English", pt:"inglês"},{en:"in public", pt:"em público"},{en:"slowly", pt:"devagar"}] },
+  { id:"say",     label:"say → said → said",         base:"say",     s3:"says",     ing:"saying",     past:"said",     pp:"said", col:[{en:"the truth", pt:"a verdade"},{en:"something important", pt:"algo importante"},{en:"goodbye", pt:"tchau"}] },
+  { id:"get",     label:"get → got → got",           base:"get",     s3:"gets",     ing:"getting",    past:"got",      pp:"got", col:[{en:"a job", pt:"um emprego"},{en:"a discount", pt:"um desconto"},{en:"good results", pt:"bons resultados"}] },
+  { id:"make",    label:"make → made → made",        base:"make",    s3:"makes",    ing:"making",     past:"made",     pp:"made", col:[{en:"progress", pt:"progresso"},{en:"plans", pt:"planos"},{en:"a cake", pt:"um bolo"}] },
+  { id:"know",    label:"know → knew → known",       base:"know",    s3:"knows",    ing:"knowing",    past:"knew",     pp:"known", col:[{en:"the answer", pt:"a resposta"},{en:"the truth", pt:"a verdade"},{en:"the way", pt:"o caminho"}] },
+  { id:"give",    label:"give → gave → given",       base:"give",    s3:"gives",    ing:"giving",     past:"gave",     pp:"given", col:[{en:"a present", pt:"um presente"},{en:"an example", pt:"um exemplo"},{en:"advice", pt:"um conselho"}] },
+  { id:"find",    label:"find → found → found",      base:"find",    s3:"finds",    ing:"finding",    past:"found",    pp:"found", col:[{en:"a solution", pt:"uma solução"},{en:"the keys", pt:"as chaves"},{en:"a good price", pt:"um bom preço"}] },
+  { id:"tell",    label:"tell → told → told",        base:"tell",    s3:"tells",    ing:"telling",    past:"told",     pp:"told", col:[{en:"a story", pt:"uma história"},{en:"the truth", pt:"a verdade"},{en:"a secret", pt:"um segredo"}] },
+  { id:"become",  label:"become → became → become",  base:"become",  s3:"becomes",  ing:"becoming",   past:"became",   pp:"become", col:[{en:"famous", pt:"famoso(a)"},{en:"rich", pt:"rico(a)"},{en:"stronger", pt:"mais forte"}] },
+  { id:"leave",   label:"leave → left → left",       base:"leave",   s3:"leaves",   ing:"leaving",    past:"left",     pp:"left", col:[{en:"early", pt:"cedo"},{en:"home", pt:"de casa"},{en:"the room", pt:"da sala"}] },
+  { id:"feel",    label:"feel → felt → felt",        base:"feel",    s3:"feels",    ing:"feeling",    past:"felt",     pp:"felt", col:[{en:"the difference", pt:"a diferença"},{en:"pain", pt:"dor"},{en:"the pressure", pt:"a pressão"}] },
+  { id:"bring",   label:"bring → brought → brought", base:"bring",   s3:"brings",   ing:"bringing",   past:"brought",  pp:"brought", col:[{en:"good news", pt:"boas notícias"},{en:"the documents", pt:"os documentos"},{en:"a friend", pt:"um amigo"}] },
+  { id:"begin",   label:"begin → began → begun",     base:"begin",   s3:"begins",   ing:"beginning",  past:"began",    pp:"begun", col:[{en:"a new project", pt:"um projeto novo"},{en:"again", pt:"de novo"},{en:"at nine", pt:"às nove"}] },
+  { id:"keep",    label:"keep → kept → kept",        base:"keep",    s3:"keeps",    ing:"keeping",    past:"kept",     pp:"kept", col:[{en:"the focus", pt:"o foco"},{en:"a routine", pt:"uma rotina"},{en:"the promise", pt:"a promessa"}] },
+  { id:"hold",    label:"hold → held → held",        base:"hold",    s3:"holds",    ing:"holding",    past:"held",     pp:"held", col:[{en:"my hand", pt:"minha mão"},{en:"the door", pt:"a porta"},{en:"the phone", pt:"o telefone"}] },
+  { id:"meet",    label:"meet → met → met",          base:"meet",    s3:"meets",    ing:"meeting",    past:"met",      pp:"met", col:[{en:"a friend", pt:"um amigo"},{en:"the team", pt:"a equipe"},{en:"new people", pt:"pessoas novas"}] },
+  { id:"win",     label:"win → won → won",           base:"win",     s3:"wins",     ing:"winning",    past:"won",      pp:"won", col:[{en:"the game", pt:"o jogo"},{en:"a prize", pt:"um prêmio"},{en:"the election", pt:"a eleição"}] },
+  { id:"teach",   label:"teach → taught → taught",   base:"teach",   s3:"teaches",  ing:"teaching",   past:"taught",   pp:"taught", col:[{en:"English", pt:"inglês"},{en:"children", pt:"crianças"},{en:"online", pt:"online"}] },
+  { id:"sell",    label:"sell → sold → sold",        base:"sell",    s3:"sells",    ing:"selling",    past:"sold",     pp:"sold", col:[{en:"the house", pt:"a casa"},{en:"products online", pt:"produtos online"},{en:"everything", pt:"tudo"}] },
+  { id:"send",    label:"send → sent → sent",        base:"send",    s3:"sends",    ing:"sending",    past:"sent",     pp:"sent", col:[{en:"an email", pt:"um e-mail"},{en:"a message", pt:"uma mensagem"},{en:"the report", pt:"o relatório"}] },
+  { id:"break",   label:"break → broke → broken",    base:"break",   s3:"breaks",   ing:"breaking",   past:"broke",    pp:"broken", col:[{en:"the rules", pt:"as regras"},{en:"a record", pt:"um recorde"},{en:"the silence", pt:"o silêncio"}] },
+  { id:"drive",   label:"drive → drove → driven",    base:"drive",   s3:"drives",   ing:"driving",    past:"drove",    pp:"driven", col:[{en:"to work", pt:"até o trabalho"},{en:"carefully", pt:"com cuidado"},{en:"at night", pt:"à noite"}] },
+  { id:"choose",  label:"choose → chose → chosen",   base:"choose",  s3:"chooses",  ing:"choosing",   past:"chose",    pp:"chosen", col:[{en:"the best option", pt:"a melhor opção"},{en:"a career", pt:"uma carreira"},{en:"wisely", pt:"com sabedoria"}] },
+  { id:"wear",    label:"wear → wore → worn",        base:"wear",    s3:"wears",    ing:"wearing",    past:"wore",     pp:"worn", col:[{en:"a suit", pt:"um terno"},{en:"something comfortable", pt:"algo confortável"},{en:"black", pt:"preto"}] },
+  { id:"fall",    label:"fall → fell → fallen",      base:"fall",    s3:"falls",    ing:"falling",    past:"fell",     pp:"fallen", col:[{en:"on the floor", pt:"no chão"},{en:"from the stairs", pt:"da escada"},{en:"into the trap", pt:"na armadilha"}] },
+  { id:"forget",  label:"forget → forgot → forgotten", base:"forget", s3:"forgets", ing:"forgetting", past:"forgot",   pp:"forgotten", col:[{en:"the password", pt:"a senha"},{en:"my keys", pt:"minhas chaves"},{en:"the appointment", pt:"o compromisso"}] },
+  { id:"grow",    label:"grow → grew → grown",       base:"grow",    s3:"grows",    ing:"growing",    past:"grew",     pp:"grown", col:[{en:"fast", pt:"rápido"},{en:"professionally", pt:"profissionalmente"},{en:"a lot", pt:"muito"}] },
+  { id:"catch",   label:"catch → caught → caught",   base:"catch",   s3:"catches",  ing:"catching",   past:"caught",   pp:"caught", col:[{en:"the ball", pt:"a bola"},{en:"the opportunity", pt:"a oportunidade"},{en:"the rope", pt:"a corda"}] },
+  { id:"sleep",   label:"sleep → slept → slept",     base:"sleep",   s3:"sleeps",   ing:"sleeping",   past:"slept",    pp:"slept", col:[{en:"eight hours", pt:"oito horas"},{en:"well", pt:"bem"},{en:"on the couch", pt:"no sofá"}] },
+  { id:"arise",       label:"arise → arose → arisen",         base:"arise",       s3:"arises",       ing:"arising",       past:"arose",     pp:"arisen", col:[{en:"from the data", pt:"dos dados"},{en:"unexpectedly", pt:"inesperadamente"},{en:"naturally", pt:"naturalmente"}] },
+  { id:"imagine",     label:"imagine · regular",              base:"imagine",     s3:"imagines",     ing:"imagining",     past:"imagined",  pp:"imagined", col:[{en:"the future", pt:"o futuro"},{en:"a better world", pt:"um mundo melhor"},{en:"the scene", pt:"a cena"}] },
+  { id:"join",        label:"join · regular",                 base:"join",        s3:"joins",        ing:"joining",       past:"joined",    pp:"joined", col:[{en:"the pieces", pt:"as peças"},{en:"the documents", pt:"os documentos"},{en:"forces", pt:"forças"}] },
+  { id:"need",        label:"need · regular",                 base:"need",        s3:"needs",        ing:"needing",       past:"needed",    pp:"needed", col:[{en:"help", pt:"de ajuda"},{en:"more time", pt:"de mais tempo"},{en:"a break", pt:"de uma pausa"}] },
+  { id:"overcome",    label:"overcome → overcame → overcome", base:"overcome",    s3:"overcomes",    ing:"overcoming",    past:"overcame",  pp:"overcome", col:[{en:"the fear", pt:"o medo"},{en:"obstacles", pt:"obstáculos"},{en:"the crisis", pt:"a crise"}] },
+  { id:"quit",        label:"quit → quit → quit",             base:"quit",        s3:"quits",        ing:"quitting",      past:"quit",      pp:"quit", col:[{en:"the job", pt:"do emprego"},{en:"the game", pt:"do jogo"},{en:"the course", pt:"do curso"}] },
+  { id:"understand",  label:"understand → understood → understood", base:"understand", s3:"understands", ing:"understanding", past:"understood", pp:"understood", col:[{en:"the problem", pt:"o problema"},{en:"the rules", pt:"as regras"},{en:"the lesson", pt:"a lição"}] },
+  { id:"visit",       label:"visit · regular",                base:"visit",       s3:"visits",       ing:"visiting",      past:"visited",   pp:"visited", col:[{en:"my family", pt:"minha família"},{en:"a museum", pt:"um museu"},{en:"the client", pt:"o cliente"}] },
+  { id:"x-ray",       label:"x-ray · regular",                base:"x-ray",       s3:"x-rays",       ing:"x-raying",      past:"x-rayed",   pp:"x-rayed", col:[{en:"the chest", pt:"o tórax"},{en:"the luggage", pt:"a bagagem"},{en:"the hand", pt:"a mão"}] },
+  { id:"yell",        label:"yell · regular",                 base:"yell",        s3:"yells",        ing:"yelling",       past:"yelled",    pp:"yelled", col:[{en:"at the TV", pt:"com a TV"},{en:"loudly", pt:"alto"},{en:"for help", pt:"por socorro"}] },
+  { id:"zoom",        label:"zoom · regular",                 base:"zoom",        s3:"zooms",        ing:"zooming",       past:"zoomed",    pp:"zoomed", col:[{en:"out the door", pt:"porta afora"},{en:"down the street", pt:"pela rua"},{en:"ahead", pt:"na frente"}] },
+  { id:"give-up", label:"give up → gave up → given up", base:"give", s3:"gives", ing:"giving", past:"gave", pp:"given", prt:"up", phrasal:true, col:[{en:"smoking", pt:"de fumar"},{en:"the idea", pt:"da ideia"},{en:"too easily", pt:"fácil demais"}] },
+  { id:"find-out", label:"find out → found out → found out", base:"find", s3:"finds", ing:"finding", past:"found", pp:"found", prt:"out", phrasal:true, col:[{en:"the truth", pt:"a verdade"},{en:"the answer", pt:"a resposta"},{en:"later", pt:"depois"}] },
+  { id:"look-after", label:"look after → looked after → looked after", base:"look", s3:"looks", ing:"looking", past:"looked", pp:"looked", prt:"after", phrasal:true, col:[{en:"the children", pt:"das crianças"},{en:"my parents", pt:"dos meus pais"},{en:"the house", pt:"da casa"}] },
+  { id:"look-for", label:"look for → looked for → looked for", base:"look", s3:"looks", ing:"looking", past:"looked", pp:"looked", prt:"for", phrasal:true, col:[{en:"a job", pt:"um emprego"},{en:"the keys", pt:"as chaves"},{en:"an apartment", pt:"um apartamento"}] },
+  { id:"put-off", label:"put off → put off → put off", base:"put", s3:"puts", ing:"putting", past:"put", pp:"put", prt:"off", phrasal:true, col:[{en:"the meeting", pt:"a reunião"},{en:"the decision", pt:"a decisão"},{en:"the trip", pt:"a viagem"}] },
+  { id:"get-up", label:"get up → got up → got up", base:"get", s3:"gets", ing:"getting", past:"got", pp:"got", prt:"up", phrasal:true, col:[{en:"early", pt:"cedo"},{en:"late", pt:"tarde"},{en:"at six", pt:"às seis"}] },
+  { id:"come-back", label:"come back → came back → come back", base:"come", s3:"comes", ing:"coming", past:"came", pp:"come", prt:"back", phrasal:true, col:[{en:"home", pt:"para casa"},{en:"later", pt:"depois"},{en:"next week", pt:"semana que vem"}] },
+  { id:"turn-on", label:"turn on → turned on → turned on", base:"turn", s3:"turns", ing:"turning", past:"turned", pp:"turned", prt:"on", phrasal:true, col:[{en:"the light", pt:"a luz"},{en:"the computer", pt:"o computador"},{en:"the radio", pt:"o rádio"}] },
+  { id:"run-out", label:"run out → ran out → run out", base:"run", s3:"runs", ing:"running", past:"ran", pp:"run", prt:"out", phrasal:true, col:[{en:"of time", pt:"de tempo"},{en:"of money", pt:"de dinheiro"},{en:"of patience", pt:"de paciência"}] },
+  { id:"take-off", label:"take off → took off → taken off", base:"take", s3:"takes", ing:"taking", past:"took", pp:"taken", prt:"off", phrasal:true, col:[{en:"your shoes", pt:"os sapatos"},{en:"the jacket", pt:"a jaqueta"},{en:"on time", pt:"no horário"}] },
+  { id:"carry-on", label:"carry on → carried on → carried on", base:"carry", s3:"carries", ing:"carrying", past:"carried", pp:"carried", prt:"on", phrasal:true, col:[{en:"with the plan", pt:"com o plano"},{en:"as usual", pt:"normalmente"},{en:"without me", pt:"sem mim"}] },
+  { id:"work-out", label:"work out → worked out → worked out", base:"work", s3:"works", ing:"working", past:"worked", pp:"worked", prt:"out", phrasal:true, col:[{en:"at the gym", pt:"na academia"},{en:"every morning", pt:"toda manhã"},{en:"the details", pt:"os detalhes"}] }
+];
+function verbById(id){ return VERBS.find(v=>v.id===id) || VERBS[0]; }
+
+function genFact(tempo,aspecto,formato,p,verb){
+  const v = verb || verbById('work');
+  /* Verbos frasais carregam uma partícula (give **up**, look **after**) que não flexiona:
+     ela fica neutra e sempre depois da forma conjugada — só o núcleo verbal recebe a marcação. */
+  const prt = v.prt ? ' ' + v.prt : '';
+  const base = v.base + prt;
+  const ingM = markedForm(v.base, v.ing) + prt, pastM = markedForm(v.base, v.past) + prt,
+        ppM = markedForm(v.base, v.pp) + prt, s3M = markedForm(v.base, v.s3) + prt;
+  let text, structure; const q = formato==='pergunta' || formato==='pergunta_negativa';
   if(tempo==='present'){
     if(aspecto==='simples'){
-      if(formato==='afirmativa') text = `${p} ${IS_3SG(p)?s3:base}`;
-      else if(formato==='negativa') text = `${p} ${doPresNeg(p)} ${base}`;
-      else text = `${cap(doPres(p))} ${subjLower(p)} ${base}`;
+      if(formato==='afirmativa') text = `${p} ${IS_3SG(p)?s3M:base}`;
+      else if(formato==='negativa') text = `${p} ${M(doPresNeg(p))} ${base}`;
+      else if(formato==='pergunta') text = `${M(cap(doPres(p)))} ${subjLower(p)} ${base}`;
+      else text = `${M(cap(doPresNeg(p)))} ${subjLower(p)} ${base}`;
       structure = "Sujeito + verbo (forma base) / do-support";
     } else if(aspecto==='continuo'){
       const be=bePres(p);
-      if(formato==='afirmativa') text = `${p} ${be} ${ing}`;
-      else if(formato==='negativa') text = `${negBe(p,'present')} ${ing}`;
-      else text = `${cap(be)} ${subjLower(p)} ${ing}`;
+      if(formato==='afirmativa') text = `${p} ${M(be)} ${ingM}`;
+      else if(formato==='negativa'){ const nb=negBe(p,'present'); text = `${nb.subj}${M(nb.marker)} ${ingM}`; }
+      else if(formato==='pergunta') text = `${M(cap(be))} ${subjLower(p)} ${ingM}`;
+      else { const nq=negBeQ(p,'present'); text = `${M(nq.marker)} ${nq.subj} ${ingM}`; }
       structure = "Sujeito + am/is/are + V-ing";
     } else if(aspecto==='perfeito'){
       const h=havePres(p), hn=havePresNeg(p);
-      if(formato==='afirmativa') text = `${p} ${h} ${pp}`;
-      else if(formato==='negativa') text = `${p} ${hn} ${pp}`;
-      else text = `${cap(h)} ${subjLower(p)} ${pp}`;
+      if(formato==='afirmativa') text = `${p} ${M(h)} ${ppM}`;
+      else if(formato==='negativa') text = `${p} ${M(hn)} ${ppM}`;
+      else if(formato==='pergunta') text = `${M(cap(h))} ${subjLower(p)} ${ppM}`;
+      else text = `${M(cap(hn))} ${subjLower(p)} ${ppM}`;
       structure = "Sujeito + have/has + particípio";
     } else {
       const h=havePres(p), hn=havePresNeg(p);
-      if(formato==='afirmativa') text = `${p} ${h} been ${ing}`;
-      else if(formato==='negativa') text = `${p} ${hn} been ${ing}`;
-      else text = `${cap(h)} ${subjLower(p)} been ${ing}`;
+      if(formato==='afirmativa') text = `${p} ${M(h)} ${M('been')} ${ingM}`;
+      else if(formato==='negativa') text = `${p} ${M(hn)} ${M('been')} ${ingM}`;
+      else if(formato==='pergunta') text = `${M(cap(h))} ${subjLower(p)} ${M('been')} ${ingM}`;
+      else text = `${M(cap(hn))} ${subjLower(p)} ${M('been')} ${ingM}`;
       structure = "Sujeito + have/has been + V-ing";
     }
   } else if(tempo==='past'){
     if(aspecto==='simples'){
-      if(formato==='afirmativa') text = `${p} ${pp}`;
-      else if(formato==='negativa') text = `${p} didn't ${base}`;
-      else text = `Did ${subjLower(p)} ${base}`;
+      if(formato==='afirmativa') text = `${p} ${pastM}`;
+      else if(formato==='negativa') text = `${p} ${M("didn't")} ${base}`;
+      else if(formato==='pergunta') text = `${M('Did')} ${subjLower(p)} ${base}`;
+      else text = `${M("Didn't")} ${subjLower(p)} ${base}`;
       structure = "Sujeito + verbo+ed (ou irregular) / did";
     } else if(aspecto==='continuo'){
       const be=bePast(p);
-      if(formato==='afirmativa') text = `${p} ${be} ${ing}`;
-      else if(formato==='negativa') text = `${negBe(p,'past')} ${ing}`;
-      else text = `${cap(be)} ${subjLower(p)} ${ing}`;
+      if(formato==='afirmativa') text = `${p} ${M(be)} ${ingM}`;
+      else if(formato==='negativa'){ const nb=negBe(p,'past'); text = `${nb.subj}${M(nb.marker)} ${ingM}`; }
+      else if(formato==='pergunta') text = `${M(cap(be))} ${subjLower(p)} ${ingM}`;
+      else { const nq=negBeQ(p,'past'); text = `${M(nq.marker)} ${nq.subj} ${ingM}`; }
       structure = "Sujeito + was/were + V-ing";
     } else if(aspecto==='perfeito'){
-      if(formato==='afirmativa') text = `${p} had ${pp}`;
-      else if(formato==='negativa') text = `${p} hadn't ${pp}`;
-      else text = `Had ${subjLower(p)} ${pp}`;
+      if(formato==='afirmativa') text = `${p} ${M('had')} ${ppM}`;
+      else if(formato==='negativa') text = `${p} ${M("hadn't")} ${ppM}`;
+      else if(formato==='pergunta') text = `${M('Had')} ${subjLower(p)} ${ppM}`;
+      else text = `${M("Hadn't")} ${subjLower(p)} ${ppM}`;
       structure = "Sujeito + had + particípio";
     } else {
-      if(formato==='afirmativa') text = `${p} had been ${ing}`;
-      else if(formato==='negativa') text = `${p} hadn't been ${ing}`;
-      else text = `Had ${subjLower(p)} been ${ing}`;
+      if(formato==='afirmativa') text = `${p} ${M('had')} ${M('been')} ${ingM}`;
+      else if(formato==='negativa') text = `${p} ${M("hadn't")} ${M('been')} ${ingM}`;
+      else if(formato==='pergunta') text = `${M('Had')} ${subjLower(p)} ${M('been')} ${ingM}`;
+      else text = `${M("Hadn't")} ${subjLower(p)} ${M('been')} ${ingM}`;
       structure = "Sujeito + had been + V-ing";
     }
   } else {
     if(aspecto==='simples'){
-      if(formato==='afirmativa') text = `${p} will ${base}`;
-      else if(formato==='negativa') text = `${p} won't ${base}`;
-      else text = `Will ${subjLower(p)} ${base}`;
+      if(formato==='afirmativa') text = `${p} ${M('will')} ${base}`;
+      else if(formato==='negativa') text = `${p} ${M("won't")} ${base}`;
+      else if(formato==='pergunta') text = `${M('Will')} ${subjLower(p)} ${base}`;
+      else text = `${M("Won't")} ${subjLower(p)} ${base}`;
       structure = "Sujeito + will + verbo";
     } else if(aspecto==='continuo'){
-      if(formato==='afirmativa') text = `${p} will be ${ing}`;
-      else if(formato==='negativa') text = `${p} won't be ${ing}`;
-      else text = `Will ${subjLower(p)} be ${ing}`;
+      if(formato==='afirmativa') text = `${p} ${M('will')} ${M('be')} ${ingM}`;
+      else if(formato==='negativa') text = `${p} ${M("won't")} ${M('be')} ${ingM}`;
+      else if(formato==='pergunta') text = `${M('Will')} ${subjLower(p)} ${M('be')} ${ingM}`;
+      else text = `${M("Won't")} ${subjLower(p)} ${M('be')} ${ingM}`;
       structure = "Sujeito + will be + V-ing";
     } else if(aspecto==='perfeito'){
-      if(formato==='afirmativa') text = `${p} will have ${pp}`;
-      else if(formato==='negativa') text = `${p} won't have ${pp}`;
-      else text = `Will ${subjLower(p)} have ${pp}`;
+      if(formato==='afirmativa') text = `${p} ${M('will')} ${M('have')} ${ppM}`;
+      else if(formato==='negativa') text = `${p} ${M("won't")} ${M('have')} ${ppM}`;
+      else if(formato==='pergunta') text = `${M('Will')} ${subjLower(p)} ${M('have')} ${ppM}`;
+      else text = `${M("Won't")} ${subjLower(p)} ${M('have')} ${ppM}`;
       structure = "Sujeito + will have + particípio";
     } else {
-      if(formato==='afirmativa') text = `${p} will have been ${ing}`;
-      else if(formato==='negativa') text = `${p} won't have been ${ing}`;
-      else text = `Will ${subjLower(p)} have been ${ing}`;
+      if(formato==='afirmativa') text = `${p} ${M('will')} ${M('have been')} ${ingM}`;
+      else if(formato==='negativa') text = `${p} ${M("won't")} ${M('have been')} ${ingM}`;
+      else if(formato==='pergunta') text = `${M('Will')} ${subjLower(p)} ${M('have been')} ${ingM}`;
+      else text = `${M("Won't")} ${subjLower(p)} ${M('have been')} ${ingM}`;
       structure = "Sujeito + will have been + V-ing";
     }
   }
@@ -523,98 +869,207 @@ function genFact(tempo,aspecto,formato,p){
 
 function genState(tempo,aspecto,formato,p){
   const adj="tired";
-  let text, structure; const q = formato==='pergunta';
+  let text, structure; const q = formato==='pergunta' || formato==='pergunta_negativa';
   if(tempo==='present'){
     if(aspecto==='simples'){
       const be=bePres(p);
-      if(formato==='afirmativa') text = `${p} ${be} ${adj}`;
-      else if(formato==='negativa') text = `${negBe(p,'present')} ${adj}`;
-      else text = `${cap(be)} ${subjLower(p)} ${adj}`;
+      if(formato==='afirmativa') text = `${p} ${M(be)} ${adj}`;
+      else if(formato==='negativa'){ const nb=negBe(p,'present'); text = `${nb.subj}${M(nb.marker)} ${adj}`; }
+      else if(formato==='pergunta') text = `${M(cap(be))} ${subjLower(p)} ${adj}`;
+      else { const nq=negBeQ(p,'present'); text = `${M(nq.marker)} ${nq.subj} ${adj}`; }
       structure = "Sujeito + am/is/are";
     } else {
       const h=havePres(p), hn=havePresNeg(p);
-      if(formato==='afirmativa') text = `${p} ${h} been ${adj}`;
-      else if(formato==='negativa') text = `${p} ${hn} been ${adj}`;
-      else text = `${cap(h)} ${subjLower(p)} been ${adj}`;
+      if(formato==='afirmativa') text = `${p} ${M(h)} ${M('been')} ${adj}`;
+      else if(formato==='negativa') text = `${p} ${M(hn)} ${M('been')} ${adj}`;
+      else if(formato==='pergunta') text = `${M(cap(h))} ${subjLower(p)} ${M('been')} ${adj}`;
+      else text = `${M(cap(hn))} ${subjLower(p)} ${M('been')} ${adj}`;
       structure = "Sujeito + have/has been + adjetivo";
     }
   } else if(tempo==='past'){
     if(aspecto==='simples'){
       const be=bePast(p);
-      if(formato==='afirmativa') text = `${p} ${be} ${adj}`;
-      else if(formato==='negativa') text = `${negBe(p,'past')} ${adj}`;
-      else text = `${cap(be)} ${subjLower(p)} ${adj}`;
+      if(formato==='afirmativa') text = `${p} ${M(be)} ${adj}`;
+      else if(formato==='negativa'){ const nb=negBe(p,'past'); text = `${nb.subj}${M(nb.marker)} ${adj}`; }
+      else if(formato==='pergunta') text = `${M(cap(be))} ${subjLower(p)} ${adj}`;
+      else { const nq=negBeQ(p,'past'); text = `${M(nq.marker)} ${nq.subj} ${adj}`; }
       structure = "Sujeito + was/were";
     } else {
-      if(formato==='afirmativa') text = `${p} had been ${adj}`;
-      else if(formato==='negativa') text = `${p} hadn't been ${adj}`;
-      else text = `Had ${subjLower(p)} been ${adj}`;
+      if(formato==='afirmativa') text = `${p} ${M('had')} ${M('been')} ${adj}`;
+      else if(formato==='negativa') text = `${p} ${M("hadn't")} ${M('been')} ${adj}`;
+      else if(formato==='pergunta') text = `${M('Had')} ${subjLower(p)} ${M('been')} ${adj}`;
+      else text = `${M("Hadn't")} ${subjLower(p)} ${M('been')} ${adj}`;
       structure = "Sujeito + had been + adjetivo";
     }
   } else {
     if(aspecto==='simples'){
-      if(formato==='afirmativa') text = `${p} will be ${adj}`;
-      else if(formato==='negativa') text = `${p} won't be ${adj}`;
-      else text = `Will ${subjLower(p)} be ${adj}`;
+      if(formato==='afirmativa') text = `${p} ${M('will')} ${M('be')} ${adj}`;
+      else if(formato==='negativa') text = `${p} ${M("won't")} ${M('be')} ${adj}`;
+      else if(formato==='pergunta') text = `${M('Will')} ${subjLower(p)} ${M('be')} ${adj}`;
+      else text = `${M("Won't")} ${subjLower(p)} ${M('be')} ${adj}`;
       structure = "Sujeito + will be";
     } else {
-      if(formato==='afirmativa') text = `${p} will have been ${adj}`;
-      else if(formato==='negativa') text = `${p} won't have been ${adj}`;
-      else text = `Will ${subjLower(p)} have been ${adj}`;
+      if(formato==='afirmativa') text = `${p} ${M('will')} ${M('have been')} ${adj}`;
+      else if(formato==='negativa') text = `${p} ${M("won't")} ${M('have been')} ${adj}`;
+      else if(formato==='pergunta') text = `${M('Will')} ${subjLower(p)} ${M('have been')} ${adj}`;
+      else text = `${M("Won't")} ${subjLower(p)} ${M('have been')} ${adj}`;
       structure = "Sujeito + will have been + adjetivo";
     }
   }
   return {text, isQuestion:q, structure};
 }
-function generate(categoria,tempo,aspecto,formato,pronoun){
-  return categoria==='fact' ? genFact(tempo,aspecto,formato,pronoun) : genState(tempo,aspecto,formato,pronoun);
+function generate(categoria,tempo,aspecto,formato,pronoun,verb){
+  return categoria==='fact' ? genFact(tempo,aspecto,formato,pronoun,verb) : genState(tempo,aspecto,formato,pronoun);
 }
 
 /* ---- PT translation engine ---- */
 const PT_PRONOUN = {I:"eu",You:"você",He:"ele",She:"ela",It:"ele/ela",We:"nós",They:"eles/elas"};
 function ptPerson(p){ if(p==="I") return "1s"; if(p==="We") return "1p"; if(p==="They") return "3p"; return "3s"; }
-const PT_TRABALHAR = { presente:{"1s":"trabalho","3s":"trabalha","1p":"trabalhamos","3p":"trabalham"}, pperf:{"1s":"trabalhei","3s":"trabalhou","1p":"trabalhamos","3p":"trabalharam"} };
+/* Conjugação PT (presente + pretérito perfeito, pessoas 1s/3s/1p/3p) + gerúndio/particípio/
+   infinitivo de cada verbo do banco VERBS — "you/he/she/it" colapsam em "3s" (registro
+   "você"), mesma simplificação já usada no resto do motor de tradução. */
+const PT_VERBS = {
+  work:  { presente:{"1s":"trabalho","3s":"trabalha","1p":"trabalhamos","3p":"trabalham"}, pperf:{"1s":"trabalhei","3s":"trabalhou","1p":"trabalhamos","3p":"trabalharam"}, ger:"trabalhando", part:"trabalhado", inf:"trabalhar" },
+  go:    { presente:{"1s":"vou","3s":"vai","1p":"vamos","3p":"vão"}, pperf:{"1s":"fui","3s":"foi","1p":"fomos","3p":"foram"}, ger:"indo", part:"ido", inf:"ir" },
+  eat:   { presente:{"1s":"como","3s":"come","1p":"comemos","3p":"comem"}, pperf:{"1s":"comi","3s":"comeu","1p":"comemos","3p":"comeram"}, ger:"comendo", part:"comido", inf:"comer" },
+  write: { presente:{"1s":"escrevo","3s":"escreve","1p":"escrevemos","3p":"escrevem"}, pperf:{"1s":"escrevi","3s":"escreveu","1p":"escrevemos","3p":"escreveram"}, ger:"escrevendo", part:"escrito", inf:"escrever" },
+  see:   { presente:{"1s":"vejo","3s":"vê","1p":"vemos","3p":"veem"}, pperf:{"1s":"vi","3s":"viu","1p":"vimos","3p":"viram"}, ger:"vendo", part:"visto", inf:"ver" },
+  take:  { presente:{"1s":"pego","3s":"pega","1p":"pegamos","3p":"pegam"}, pperf:{"1s":"peguei","3s":"pegou","1p":"pegamos","3p":"pegaram"}, ger:"pegando", part:"pegado", inf:"pegar" },
+  come:  { presente:{"1s":"venho","3s":"vem","1p":"vimos","3p":"vêm"}, pperf:{"1s":"vim","3s":"veio","1p":"viemos","3p":"vieram"}, ger:"vindo", part:"vindo", inf:"vir" },
+  run:   { presente:{"1s":"corro","3s":"corre","1p":"corremos","3p":"correm"}, pperf:{"1s":"corri","3s":"correu","1p":"corremos","3p":"correram"}, ger:"correndo", part:"corrido", inf:"correr" },
+  buy:   { presente:{"1s":"compro","3s":"compra","1p":"compramos","3p":"compram"}, pperf:{"1s":"comprei","3s":"comprou","1p":"compramos","3p":"compraram"}, ger:"comprando", part:"comprado", inf:"comprar" },
+  think: { presente:{"1s":"penso","3s":"pensa","1p":"pensamos","3p":"pensam"}, pperf:{"1s":"pensei","3s":"pensou","1p":"pensamos","3p":"pensaram"}, ger:"pensando", part:"pensado", inf:"pensar" },
+  put:   { presente:{"1s":"coloco","3s":"coloca","1p":"colocamos","3p":"colocam"}, pperf:{"1s":"coloquei","3s":"colocou","1p":"colocamos","3p":"colocaram"}, ger:"colocando", part:"colocado", inf:"colocar" },
+  speak: { presente:{"1s":"falo","3s":"fala","1p":"falamos","3p":"falam"}, pperf:{"1s":"falei","3s":"falou","1p":"falamos","3p":"falaram"}, ger:"falando", part:"falado", inf:"falar" },
+  say:    { presente:{"1s":"digo","3s":"diz","1p":"dizemos","3p":"dizem"}, pperf:{"1s":"disse","3s":"disse","1p":"dissemos","3p":"disseram"}, ger:"dizendo", part:"dito", inf:"dizer" },
+  get:    { presente:{"1s":"consigo","3s":"consegue","1p":"conseguimos","3p":"conseguem"}, pperf:{"1s":"consegui","3s":"conseguiu","1p":"conseguimos","3p":"conseguiram"}, ger:"conseguindo", part:"conseguido", inf:"conseguir" },
+  make:   { presente:{"1s":"faço","3s":"faz","1p":"fazemos","3p":"fazem"}, pperf:{"1s":"fiz","3s":"fez","1p":"fizemos","3p":"fizeram"}, ger:"fazendo", part:"feito", inf:"fazer" },
+  know:   { presente:{"1s":"sei","3s":"sabe","1p":"sabemos","3p":"sabem"}, pperf:{"1s":"soube","3s":"soube","1p":"soubemos","3p":"souberam"}, ger:"sabendo", part:"sabido", inf:"saber" },
+  give:   { presente:{"1s":"dou","3s":"dá","1p":"damos","3p":"dão"}, pperf:{"1s":"dei","3s":"deu","1p":"demos","3p":"deram"}, ger:"dando", part:"dado", inf:"dar" },
+  find:   { presente:{"1s":"encontro","3s":"encontra","1p":"encontramos","3p":"encontram"}, pperf:{"1s":"encontrei","3s":"encontrou","1p":"encontramos","3p":"encontraram"}, ger:"encontrando", part:"encontrado", inf:"encontrar" },
+  tell:   { presente:{"1s":"conto","3s":"conta","1p":"contamos","3p":"contam"}, pperf:{"1s":"contei","3s":"contou","1p":"contamos","3p":"contaram"}, ger:"contando", part:"contado", inf:"contar" },
+  become: { presente:{"1s":"fico","3s":"fica","1p":"ficamos","3p":"ficam"}, pperf:{"1s":"fiquei","3s":"ficou","1p":"ficamos","3p":"ficaram"}, ger:"ficando", part:"ficado", inf:"ficar" },
+  leave:  { presente:{"1s":"saio","3s":"sai","1p":"saímos","3p":"saem"}, pperf:{"1s":"saí","3s":"saiu","1p":"saímos","3p":"saíram"}, ger:"saindo", part:"saído", inf:"sair" },
+  feel:   { presente:{"1s":"sinto","3s":"sente","1p":"sentimos","3p":"sentem"}, pperf:{"1s":"senti","3s":"sentiu","1p":"sentimos","3p":"sentiram"}, ger:"sentindo", part:"sentido", inf:"sentir" },
+  bring:  { presente:{"1s":"trago","3s":"traz","1p":"trazemos","3p":"trazem"}, pperf:{"1s":"trouxe","3s":"trouxe","1p":"trouxemos","3p":"trouxeram"}, ger:"trazendo", part:"trazido", inf:"trazer" },
+  begin:  { presente:{"1s":"começo","3s":"começa","1p":"começamos","3p":"começam"}, pperf:{"1s":"comecei","3s":"começou","1p":"começamos","3p":"começaram"}, ger:"começando", part:"começado", inf:"começar" },
+  keep:   { presente:{"1s":"mantenho","3s":"mantém","1p":"mantemos","3p":"mantêm"}, pperf:{"1s":"mantive","3s":"manteve","1p":"mantivemos","3p":"mantiveram"}, ger:"mantendo", part:"mantido", inf:"manter" },
+  hold:   { presente:{"1s":"seguro","3s":"segura","1p":"seguramos","3p":"seguram"}, pperf:{"1s":"segurei","3s":"segurou","1p":"seguramos","3p":"seguraram"}, ger:"segurando", part:"segurado", inf:"segurar" },
+  meet:   { presente:{"1s":"encontro","3s":"encontra","1p":"encontramos","3p":"encontram"}, pperf:{"1s":"encontrei","3s":"encontrou","1p":"encontramos","3p":"encontraram"}, ger:"encontrando", part:"encontrado", inf:"encontrar" },
+  win:    { presente:{"1s":"ganho","3s":"ganha","1p":"ganhamos","3p":"ganham"}, pperf:{"1s":"ganhei","3s":"ganhou","1p":"ganhamos","3p":"ganharam"}, ger:"ganhando", part:"ganho", inf:"ganhar" },
+  teach:  { presente:{"1s":"ensino","3s":"ensina","1p":"ensinamos","3p":"ensinam"}, pperf:{"1s":"ensinei","3s":"ensinou","1p":"ensinamos","3p":"ensinaram"}, ger:"ensinando", part:"ensinado", inf:"ensinar" },
+  sell:   { presente:{"1s":"vendo","3s":"vende","1p":"vendemos","3p":"vendem"}, pperf:{"1s":"vendi","3s":"vendeu","1p":"vendemos","3p":"venderam"}, ger:"vendendo", part:"vendido", inf:"vender" },
+  send:   { presente:{"1s":"envio","3s":"envia","1p":"enviamos","3p":"enviam"}, pperf:{"1s":"enviei","3s":"enviou","1p":"enviamos","3p":"enviaram"}, ger:"enviando", part:"enviado", inf:"enviar" },
+  break:  { presente:{"1s":"quebro","3s":"quebra","1p":"quebramos","3p":"quebram"}, pperf:{"1s":"quebrei","3s":"quebrou","1p":"quebramos","3p":"quebraram"}, ger:"quebrando", part:"quebrado", inf:"quebrar" },
+  drive:  { presente:{"1s":"dirijo","3s":"dirige","1p":"dirigimos","3p":"dirigem"}, pperf:{"1s":"dirigi","3s":"dirigiu","1p":"dirigimos","3p":"dirigiram"}, ger:"dirigindo", part:"dirigido", inf:"dirigir" },
+  choose: { presente:{"1s":"escolho","3s":"escolhe","1p":"escolhemos","3p":"escolhem"}, pperf:{"1s":"escolhi","3s":"escolheu","1p":"escolhemos","3p":"escolheram"}, ger:"escolhendo", part:"escolhido", inf:"escolher" },
+  wear:   { presente:{"1s":"visto","3s":"veste","1p":"vestimos","3p":"vestem"}, pperf:{"1s":"vesti","3s":"vestiu","1p":"vestimos","3p":"vestiram"}, ger:"vestindo", part:"vestido", inf:"vestir" },
+  fall:   { presente:{"1s":"caio","3s":"cai","1p":"caímos","3p":"caem"}, pperf:{"1s":"caí","3s":"caiu","1p":"caímos","3p":"caíram"}, ger:"caindo", part:"caído", inf:"cair" },
+  forget: { presente:{"1s":"esqueço","3s":"esquece","1p":"esquecemos","3p":"esquecem"}, pperf:{"1s":"esqueci","3s":"esqueceu","1p":"esquecemos","3p":"esqueceram"}, ger:"esquecendo", part:"esquecido", inf:"esquecer" },
+  grow:   { presente:{"1s":"cresço","3s":"cresce","1p":"crescemos","3p":"crescem"}, pperf:{"1s":"cresci","3s":"cresceu","1p":"crescemos","3p":"cresceram"}, ger:"crescendo", part:"crescido", inf:"crescer" },
+  catch:  { presente:{"1s":"agarro","3s":"agarra","1p":"agarramos","3p":"agarram"}, pperf:{"1s":"agarrei","3s":"agarrou","1p":"agarramos","3p":"agarraram"}, ger:"agarrando", part:"agarrado", inf:"agarrar" },
+  sleep:  { presente:{"1s":"durmo","3s":"dorme","1p":"dormimos","3p":"dormem"}, pperf:{"1s":"dormi","3s":"dormiu","1p":"dormimos","3p":"dormiram"}, ger:"dormindo", part:"dormido", inf:"dormir" },
+  arise:      { presente:{"1s":"surjo","3s":"surge","1p":"surgimos","3p":"surgem"}, pperf:{"1s":"surgi","3s":"surgiu","1p":"surgimos","3p":"surgiram"}, ger:"surgindo", part:"surgido", inf:"surgir" },
+  imagine:    { presente:{"1s":"imagino","3s":"imagina","1p":"imaginamos","3p":"imaginam"}, pperf:{"1s":"imaginei","3s":"imaginou","1p":"imaginamos","3p":"imaginaram"}, ger:"imaginando", part:"imaginado", inf:"imaginar" },
+  join:       { presente:{"1s":"junto","3s":"junta","1p":"juntamos","3p":"juntam"}, pperf:{"1s":"juntei","3s":"juntou","1p":"juntamos","3p":"juntaram"}, ger:"juntando", part:"juntado", inf:"juntar" },
+  need:       { presente:{"1s":"preciso","3s":"precisa","1p":"precisamos","3p":"precisam"}, pperf:{"1s":"precisei","3s":"precisou","1p":"precisamos","3p":"precisaram"}, ger:"precisando", part:"precisado", inf:"precisar" },
+  overcome:   { presente:{"1s":"supero","3s":"supera","1p":"superamos","3p":"superam"}, pperf:{"1s":"superei","3s":"superou","1p":"superamos","3p":"superaram"}, ger:"superando", part:"superado", inf:"superar" },
+  quit:       { presente:{"1s":"desisto","3s":"desiste","1p":"desistimos","3p":"desistem"}, pperf:{"1s":"desisti","3s":"desistiu","1p":"desistimos","3p":"desistiram"}, ger:"desistindo", part:"desistido", inf:"desistir" },
+  understand: { presente:{"1s":"entendo","3s":"entende","1p":"entendemos","3p":"entendem"}, pperf:{"1s":"entendi","3s":"entendeu","1p":"entendemos","3p":"entenderam"}, ger:"entendendo", part:"entendido", inf:"entender" },
+  visit:      { presente:{"1s":"visito","3s":"visita","1p":"visitamos","3p":"visitam"}, pperf:{"1s":"visitei","3s":"visitou","1p":"visitamos","3p":"visitaram"}, ger:"visitando", part:"visitado", inf:"visitar" },
+  "x-ray":    { presente:{"1s":"radiografo","3s":"radiografa","1p":"radiografamos","3p":"radiografam"}, pperf:{"1s":"radiografei","3s":"radiografou","1p":"radiografamos","3p":"radiografaram"}, ger:"radiografando", part:"radiografado", inf:"radiografar" },
+  yell:       { presente:{"1s":"grito","3s":"grita","1p":"gritamos","3p":"gritam"}, pperf:{"1s":"gritei","3s":"gritou","1p":"gritamos","3p":"gritaram"}, ger:"gritando", part:"gritado", inf:"gritar" },
+  zoom:       { presente:{"1s":"disparo","3s":"dispara","1p":"disparamos","3p":"disparam"}, pperf:{"1s":"disparei","3s":"disparou","1p":"disparamos","3p":"dispararam"}, ger:"disparando", part:"disparado", inf:"disparar" },
+  "give-up": { presente:{"1s":"desisto","3s":"desiste","1p":"desistimos","3p":"desistem"}, pperf:{"1s":"desisti","3s":"desistiu","1p":"desistimos","3p":"desistiram"}, ger:"desistindo", part:"desistido", inf:"desistir" },
+  "find-out": { presente:{"1s":"descubro","3s":"descobre","1p":"descobrimos","3p":"descobrem"}, pperf:{"1s":"descobri","3s":"descobriu","1p":"descobrimos","3p":"descobriram"}, ger:"descobrindo", part:"descoberto", inf:"descobrir" },
+  "look-after": { presente:{"1s":"cuido","3s":"cuida","1p":"cuidamos","3p":"cuidam"}, pperf:{"1s":"cuidei","3s":"cuidou","1p":"cuidamos","3p":"cuidaram"}, ger:"cuidando", part:"cuidado", inf:"cuidar" },
+  "look-for": { presente:{"1s":"procuro","3s":"procura","1p":"procuramos","3p":"procuram"}, pperf:{"1s":"procurei","3s":"procurou","1p":"procuramos","3p":"procuraram"}, ger:"procurando", part:"procurado", inf:"procurar" },
+  "put-off": { presente:{"1s":"adio","3s":"adia","1p":"adiamos","3p":"adiam"}, pperf:{"1s":"adiei","3s":"adiou","1p":"adiamos","3p":"adiaram"}, ger:"adiando", part:"adiado", inf:"adiar" },
+  "get-up": { presente:{"1s":"levanto","3s":"levanta","1p":"levantamos","3p":"levantam"}, pperf:{"1s":"levantei","3s":"levantou","1p":"levantamos","3p":"levantaram"}, ger:"levantando", part:"levantado", inf:"levantar" },
+  "come-back": { presente:{"1s":"volto","3s":"volta","1p":"voltamos","3p":"voltam"}, pperf:{"1s":"voltei","3s":"voltou","1p":"voltamos","3p":"voltaram"}, ger:"voltando", part:"voltado", inf:"voltar" },
+  "turn-on": { presente:{"1s":"ligo","3s":"liga","1p":"ligamos","3p":"ligam"}, pperf:{"1s":"liguei","3s":"ligou","1p":"ligamos","3p":"ligaram"}, ger:"ligando", part:"ligado", inf:"ligar" },
+  "run-out": { presente:{"1s":"fico sem","3s":"fica sem","1p":"ficamos sem","3p":"ficam sem"}, pperf:{"1s":"fiquei sem","3s":"ficou sem","1p":"ficamos sem","3p":"ficaram sem"}, ger:"ficando sem", part:"ficado sem", inf:"ficar sem" },
+  "take-off": { presente:{"1s":"tiro","3s":"tira","1p":"tiramos","3p":"tiram"}, pperf:{"1s":"tirei","3s":"tirou","1p":"tiramos","3p":"tiraram"}, ger:"tirando", part:"tirado", inf:"tirar" },
+  "carry-on": { presente:{"1s":"continuo","3s":"continua","1p":"continuamos","3p":"continuam"}, pperf:{"1s":"continuei","3s":"continuou","1p":"continuamos","3p":"continuaram"}, ger:"continuando", part:"continuado", inf:"continuar" },
+  "work-out": { presente:{"1s":"malho","3s":"malha","1p":"malhamos","3p":"malham"}, pperf:{"1s":"malhei","3s":"malhou","1p":"malhamos","3p":"malharam"}, ger:"malhando", part:"malhado", inf:"malhar" }
+};
 const PT_ESTAR = { presente:{"1s":"estou","3s":"está","1p":"estamos","3p":"estão"}, imperf:{"1s":"estava","3s":"estava","1p":"estávamos","3p":"estavam"}, ir:{"1s":"vou","3s":"vai","1p":"vamos","3p":"vão"} };
 const PT_TER = { presente:{"1s":"tenho","3s":"tem","1p":"temos","3p":"têm"}, imperf:{"1s":"tinha","3s":"tinha","1p":"tínhamos","3p":"tinham"} };
 
 const SIGNAL_PT = {
   "always":"sempre","usually":"normalmente","often":"frequentemente","sometimes":"às vezes","occasionally":"ocasionalmente","rarely":"raramente","hardly ever":"quase nunca","never":"nunca",
+  "seldom":"raramente","frequently":"frequentemente","generally":"geralmente","constantly":"constantemente",
   "every day":"todo dia","every week":"toda semana","every month":"todo mês","twice a week":"duas vezes por semana","three times a day":"três vezes por dia","once a month":"uma vez por mês",
+  "every year":"todo ano","once a week":"uma vez por semana","twice a day":"duas vezes por dia","every morning":"toda manhã","every night":"toda noite",
   "right now":"agora mesmo","at the moment":"no momento","at present":"no presente","nowadays":"hoje em dia","today":"hoje","currently":"atualmente","still":"ainda",
+  "this week":"esta semana","this month":"este mês","this year":"este ano","these days":"hoje em dia","at this moment":"neste momento",
   "already":"já","just":"agora","yet":"ainda","ever":"já",
   "once":"uma vez","twice":"duas vezes","three times":"três vezes","several times":"várias vezes","many times":"muitas vezes",
+  "a few times":"algumas vezes","a lot":"muito","four times":"quatro vezes","five times":"cinco vezes",
   "since 2020":"desde 2020","since Monday":"desde segunda-feira","since last year":"desde o ano passado","for three years":"há três anos","for a long time":"por muito tempo","so far":"até agora","up to now":"até agora",
+  "since I was a child":"desde que eu era criança","since 2015":"desde 2015","for a week":"há uma semana","for months":"há meses","for ages":"há muito tempo","over the years":"ao longo dos anos","in the last few days":"nos últimos dias",
   "since morning":"desde a manhã","since 9 a.m.":"desde as 9h","for two hours":"há duas horas","for a while":"por um tempo","lately":"ultimamente","recently":"recentemente","all week":"a semana toda",
+  "for hours":"há horas","for days":"há dias","since breakfast":"desde o café da manhã","since 8 a.m.":"desde as 8h","all day":"o dia todo","all year":"o ano todo","for months now":"há meses","since the accident":"desde o acidente",
   "yesterday":"ontem","last week":"semana passada","last month":"mês passado","last year":"ano passado","two days ago":"dois dias atrás","a week ago":"uma semana atrás","in 2020":"em 2020","when I was young":"quando eu era jovem","back then":"naquela época",
+  "the day before yesterday":"anteontem","three years ago":"três anos atrás","a long time ago":"muito tempo atrás","in 1990":"em 1990","when I was a child":"quando eu era criança","last night":"ontem à noite","earlier today":"mais cedo hoje",
   "at that moment":"naquele momento","at 5 p.m. yesterday":"às 17h de ontem","all day yesterday":"o dia todo ontem",
+  "at noon yesterday":"ao meio-dia de ontem","while she was cooking":"enquanto ela cozinhava","the whole afternoon":"a tarde toda","all night":"a noite toda",
   "before I left":"antes de eu sair","by the time you arrived":"quando você chegou","already by 2010":"já em 2010","all morning":"a manhã toda",
+  "before the meeting started":"antes de a reunião começar","by the time she called":"quando ela ligou","by 2015":"até 2015","already by then":"já naquela época",
   "tomorrow":"amanhã","next week":"semana que vem","next month":"mês que vem","next year":"ano que vem","soon":"em breve","in a few days":"em alguns dias","later":"mais tarde",
+  "next weekend":"no próximo fim de semana","in the future":"no futuro","eventually":"eventualmente","someday":"algum dia","this evening":"hoje à noite",
   "at this time tomorrow":"a esta hora amanhã","this time next week":"a esta hora semana que vem","at 8 p.m. tomorrow":"às 20h de amanhã",
-  "by then":"até lá","by next year":"até o ano que vem","by the end of the month":"até o fim do mês","by 2030":"até 2030","for five years":"há cinco anos"
+  "at midnight tonight":"à meia-noite de hoje","at this time next month":"a esta hora no próximo mês","this time tomorrow":"a esta hora amanhã",
+  "by then":"até lá","by next year":"até o ano que vem","by the end of the month":"até o fim do mês","by 2030":"até 2030","for five years":"há cinco anos",
+  "by tonight":"até hoje à noite","by tomorrow":"até amanhã","by the end of the year":"até o fim do ano","by the time you arrive":"até você chegar","for over a decade":"há mais de uma década","by next summer":"até o próximo verão",
+  "easily":"facilmente","without help":"sem ajuda","by myself":"sozinho(a)","with practice":"com prática","if necessary":"se necessário",
+  "tonight":"hoje à noite","at any moment":"a qualquer momento","in theory":"em teoria","this weekend":"neste fim de semana",
+  "by law":"por lei","before Friday":"antes de sexta","no matter what":"de qualquer jeito","right away":"imediatamente",
+  "here":"aqui","after class":"depois da aula","on weekends":"nos fins de semana","in this building":"neste prédio","during the break":"durante o intervalo",
+  "more often":"com mais frequência","as soon as possible":"o quanto antes","before it gets worse":"antes que piore","at least once":"pelo menos uma vez",
+  "every summer":"todo verão","as a child":"quando criança","in those days":"naquele tempo",
+  "all day long":"o dia inteiro","all year long":"o ano inteiro","all night long":"a noite inteira","all week long":"a semana inteira","all the time":"o tempo todo",
+  "all of them":"todos eles","all of us":"todos nós","all my life":"a vida toda","all this time":"todo esse tempo","all summer":"o verão todo","all weekend":"o fim de semana todo",
+  "all along":"desde o início","all that time":"todo aquele tempo","all by myself":"totalmente sozinho(a)","all of a sudden":"de repente","all year round":"o ano inteiro","all summer long":"o verão inteiro",
+  "from time to time":"de vez em quando","on time":"na hora","every time":"toda vez","for the first time":"pela primeira vez","at the time":"na época","for the last time":"pela última vez","just in time":"bem a tempo","this time":"desta vez","next time":"da próxima vez","in time":"a tempo",
+  "my whole life":"minha vida inteira","this whole time":"esse tempo inteiro","the whole time":"o tempo inteiro","the whole day":"o dia inteiro","the whole week":"a semana inteira","the whole night":"a noite inteira","the whole year":"o ano inteiro",
+  "ever since":"desde então","never before":"nunca antes","forever":"para sempre","for good":"de vez",
+  "every single day":"todo santo dia","every other day":"dia sim, dia não","every now and then":"de vez em quando","every weekend":"todo fim de semana",
+  "again":"de novo","once again":"mais uma vez","again and again":"repetidamente","over and over again":"sem parar","all over again":"tudo de novo","yet again":"outra vez",
+  "as usual":"como sempre","as always":"como sempre","as a rule":"via de regra","as much as possible":"o máximo possível","as we speak":"neste exato momento",
+  "as far as I know":"até onde eu sei","as expected":"como esperado","as never before":"como nunca antes","as long as I can remember":"desde que me lembro",
+  "as planned":"conforme planejado","as agreed":"conforme combinado","as promised":"como prometido","as needed":"conforme necessário",
+  "at least":"pelo menos","at once":"de uma vez","at the same time":"ao mesmo tempo","at all times":"o tempo todo","at last":"finalmente","at some point":"em algum momento","at first":"a princípio","at that point":"naquele ponto",
+  "in general":"em geral","in advance":"com antecedência","in person":"pessoalmente","in a hurry":"com pressa","in silence":"em silêncio","in my life":"na minha vida","in the meantime":"enquanto isso","in the end":"no fim","in a rush":"às pressas","in fact":"na verdade",
+  "by heart":"de cor","by default":"por padrão","by myself":"sozinho(a)","by now":"a esta altura","by far":"de longe","by chance":"por acaso","by mistake":"por engano","by accident":"sem querer","by all means":"com certeza",
+  "for sure":"com certeza","for now":"por enquanto","for a living":"para viver","for fun":"por diversão","for a change":"para variar","for the most part":"na maior parte","for once":"pelo menos uma vez","for good measure":"por garantia",
+  "out loud":"em voz alta","off and on":"de vez em quando","out of nowhere":"do nada","off the record":"em off","out of habit":"por hábito","at any time":"a qualquer hora"
 };
-function ptFactParts(tempo,aspecto,pEN){
+function ptFactParts(tempo,aspecto,pEN,verbId){
+  const vpt = PT_VERBS[verbId] || PT_VERBS.work;
   const person = ptPerson(pEN), pron = PT_PRONOUN[pEN];
   let core;
   if(tempo==='present'){
-    if(aspecto==='simples') core = PT_TRABALHAR.presente[person];
-    else if(aspecto==='continuo') core = `${PT_ESTAR.presente[person]} trabalhando`;
-    else core = `${PT_TER.presente[person]} trabalhado`;
+    if(aspecto==='simples') core = vpt.presente[person];
+    else if(aspecto==='continuo') core = `${PT_ESTAR.presente[person]} ${vpt.ger}`;
+    else core = `${PT_TER.presente[person]} ${vpt.part}`;
   } else if(tempo==='past'){
-    if(aspecto==='simples') core = PT_TRABALHAR.pperf[person];
-    else if(aspecto==='continuo') core = `${PT_ESTAR.imperf[person]} trabalhando`;
-    else if(aspecto==='perfeito') core = `${PT_TER.imperf[person]} trabalhado`;
-    else core = `${PT_ESTAR.imperf[person]} trabalhando`;
+    if(aspecto==='simples') core = vpt.pperf[person];
+    else if(aspecto==='continuo') core = `${PT_ESTAR.imperf[person]} ${vpt.ger}`;
+    else if(aspecto==='perfeito') core = `${PT_TER.imperf[person]} ${vpt.part}`;
+    else core = `${PT_ESTAR.imperf[person]} ${vpt.ger}`;
   } else {
-    if(aspecto==='simples') core = `${PT_ESTAR.ir[person]} trabalhar`;
-    else if(aspecto==='continuo') core = `${PT_ESTAR.ir[person]} estar trabalhando`;
-    else if(aspecto==='perfeito') core = `${PT_ESTAR.ir[person]} ter trabalhado`;
-    else core = `${PT_ESTAR.ir[person]} ter estado trabalhando`;
+    if(aspecto==='simples') core = `${PT_ESTAR.ir[person]} ${vpt.inf}`;
+    else if(aspecto==='continuo') core = `${PT_ESTAR.ir[person]} estar ${vpt.ger}`;
+    else if(aspecto==='perfeito') core = `${PT_ESTAR.ir[person]} ter ${vpt.part}`;
+    else core = `${PT_ESTAR.ir[person]} ter estado ${vpt.ger}`;
   }
   return {pron, core};
 }
+function ptStateAdj(pEN){ return pEN==="She" ? "cansada" : pEN==="He" ? "cansado" : "cansado(a)"; }
 function ptStateParts(tempo,aspecto,pEN){
   const person = ptPerson(pEN), pron = PT_PRONOUN[pEN];
-  const adj = pEN==="She" ? "cansada" : pEN==="He" ? "cansado" : "cansado(a)";
+  const adj = ptStateAdj(pEN);
   let core;
   if(tempo==='present'){
     core = aspecto==='simples' ? `${PT_ESTAR.presente[person]} ${adj}` : `${PT_TER.presente[person]} estado ${adj}`;
@@ -625,17 +1080,73 @@ function ptStateParts(tempo,aspecto,pEN){
   }
   return {pron, core};
 }
-function buildPTSentence(parts, formato, signalMid, signalEnd){
-  const negPart = formato==='negativa' ? ' não' : '';
-  let body = parts.core;
-  if(signalMid) body = `${SIGNAL_PT[signalMid.w] || signalMid.w} ${body}`;
-  if(signalEnd) body = `${body} ${SIGNAL_PT[signalEnd.w] || signalEnd.w}`;
-  return `${cap(parts.pron)}${negPart} ${body}` + (formato==='pergunta' ? "?" : ".");
+function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit){
+  const isQ = formato==='pergunta' || formato==='pergunta_negativa';
+  const neg = (formato==='negativa' || formato==='pergunta_negativa');
+  const midPT = signalMid ? (SIGNAL_PT[signalMid.w] || signalMid.w) : null;
+  let body = parts.core, pre = '', prefixo = '';
+  if(signalSplit){
+    /* "Nunca mais" é uma peça única em português. Na afirmativa vem antes do verbo
+       ("Eu nunca mais vou trabalhar"); com a negação explícita, vai para o fim
+       ("Eu não vou trabalhar nunca mais") para não empilhar duas negativas no meio. */
+    if(signalSplit.ptEnd){ body = `${signalSplit.pt} ${body} ${signalSplit.ptEnd}`; pre = neg ? ' não' : ''; }
+    else if(neg){ pre = ' não'; body = `${body} ${signalSplit.pt}`; }
+    else { body = `${signalSplit.pt} ${body}`; }
+  } else if(midPT){
+    /* "já não" / "ainda não" / "nem sempre" são as ordens naturais do português. */
+    if(neg && (midPT==='já' || midPT==='ainda')){ pre = ` ${midPT} não`; }
+    else if(neg && midPT==='sempre'){ pre = ' nem sempre'; }
+    else if(signalMid.cls==='timeMid'){
+      /* Advérbios de TEMPO em posição média no inglês (currently) não aceitam essa posição
+         em português: "Eu atualmente estou trabalhando" soa errado. Eles vão para o início
+         da frase, que é onde o português os coloca naturalmente. Isso difere dos advérbios
+         de FREQUÊNCIA (sempre, nunca), que funcionam bem antes do verbo. */
+      prefixo = cap(midPT) + ', ';
+      pre = neg ? ' não' : '';
+    }
+    else { body = `${midPT} ${body}`; pre = neg ? ' não' : ''; }
+  } else { pre = neg ? ' não' : ''; }
+  if(col) body = `${body} ${col.pt}`;
+  if(signalEnd && !signalSplit) body = `${body} ${SIGNAL_PT[signalEnd.w] || signalEnd.w}`;
+  const frase = `${cap(parts.pron)}${pre} ${body}` + (isQ ? "?" : ".");
+  return prefixo ? prefixo + lowerFirst(frase) : frase;
 }
-function translate(categoria,tempo,aspecto,formato,pronoun,signalMid,signalEnd){
-  const parts = categoria==='fact' ? ptFactParts(tempo,aspecto,pronoun) : ptStateParts(tempo,aspecto,pronoun);
-  return buildPTSentence(parts, formato, signalMid || null, signalEnd || null);
+/* "Just" com aspecto perfeito é idiomático em português: vira "acabar de + infinitivo"
+   (present perfect → "acabei de trabalhar"; past perfect → "tinha acabado de trabalhar"),
+   nunca a tradução literal "agora". O sinal é absorvido na própria construção verbal,
+   então não é reinserido como palavra avulsa. "Just" só existe nas listas de
+   present_perfeito e past_perfeito, então esses dois ramos cobrem todas as ocorrências. */
+const PT_ACABAR_PPERF = {"1s":"acabei","3s":"acabou","1p":"acabamos","3p":"acabaram"};
+function translate(categoria,tempo,aspecto,formato,pronoun,signalMid,signalEnd,verbId,col,signalSplit){
+  const justIdiom = signalMid && signalMid.w==='just' && aspecto==='perfeito' && (tempo==='present' || tempo==='past');
+  if(justIdiom){
+    const person = ptPerson(pronoun), pron = PT_PRONOUN[pronoun];
+    const alvo = categoria==='fact' ? (PT_VERBS[verbId] || PT_VERBS.work).inf : `estar ${ptStateAdj(pronoun)}`;
+    const core = tempo==='present' ? `${PT_ACABAR_PPERF[person]} de ${alvo}` : `${PT_TER.imperf[person]} acabado de ${alvo}`;
+    return buildPTSentence({pron, core}, formato, null, signalEnd || null, col || null, null);
+  }
+  const parts = categoria==='fact' ? ptFactParts(tempo,aspecto,pronoun,verbId) : ptStateParts(tempo,aspecto,pronoun);
+  return buildPTSentence(parts, formato, signalMid || null, signalEnd || null, col || null, signalSplit || null);
 }
+
+/* Copiar (EN + PT) com feedback visual e fallback pra contextos sem Clipboard API */
+function fallbackCopy(text, done){
+  const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); done();
+}
+function copyFromBtn(btn){
+  const text = btn.dataset.text || '';
+  if(!text) return;
+  const done = ()=>{ btn.textContent='✓'; setTimeout(()=>{ btn.textContent='📋'; }, 1200); };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done)); }
+  else fallbackCopy(text, done);
+}
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('#copyMain, #copyModal, #copyPractice');
+  if(btn) copyFromBtn(btn);
+});
 
 /* ---- Wh-question engine ---- */
 const WH_SUBJECT = ["Who","What"];
@@ -647,19 +1158,19 @@ const WH_STATIC = {
   "How much": {en:"How much water do you need?", pt:"De quanta água você precisa?", structure:"How much + substantivo incontável (singular) — pergunta por quantidade não contável"},
   "How many": {en:"How many books did you read?", pt:"Quantos livros você leu?", structure:"How many + substantivo contável (plural) — pergunta por quantidade contável"}
 };
-function whGenerate(cat,tempo,aspecto,pronoun,whWord){
+function whGenerate(cat,tempo,aspecto,pronoun,whWord,verb){
   if(WH_STATIC[whWord]) return Object.assign({isStatic:true}, WH_STATIC[whWord]);
   if(WH_SUBJECT.includes(whWord)){
-    const g = generate(cat,tempo,aspecto,'afirmativa', whWord);
-    const en = g.text + "?";
-    const affPT = translate(cat,tempo,aspecto,'afirmativa','He');
+    const g = generate(cat,tempo,aspecto,'afirmativa', whWord, verb);
+    const en = stripMarks(g.text) + "?";
+    const affPT = translate(cat,tempo,aspecto,'afirmativa','He', null, null, verb && verb.id);
     const core = affPT.replace(/^Ele\s+/,'').replace(/\.$/,'');
     const pt = `${WH_PT_SUBJECT[whWord]} ${core}?`;
     return {en, pt, structure:`${whWord} (sujeito) + verbo — sem auxiliar, sem inversão`, isStatic:false};
   } else {
-    const g = generate(cat,tempo,aspecto,'pergunta', pronoun);
-    const en = `${whWord} ${lowerFirst(g.text)}?`;
-    const affPT = translate(cat,tempo,aspecto,'afirmativa',pronoun).replace(/\.$/,'');
+    const g = generate(cat,tempo,aspecto,'pergunta', pronoun, verb);
+    const en = `${whWord} ${lowerFirst(stripMarks(g.text))}?`;
+    const affPT = translate(cat,tempo,aspecto,'afirmativa',pronoun, null, null, verb && verb.id).replace(/\.$/,'');
     const pt = `${WH_PT_ADJUNCT[whWord]} ${lowerFirst(affPT)}?`;
     return {en, pt, structure:`${whWord} + estrutura de pergunta sim/não (auxiliar antes do sujeito)`, isStatic:false};
   }
@@ -673,61 +1184,131 @@ const TENSES = ["past","present","future"];
 const TENSE_LABEL = {past:"Passado", present:"Presente", future:"Futuro"};
 const ASPECT_LABEL = {simples:"Simples", continuo:"Contínuo", perfeito:"Perfeito", perfeito_continuo:"Perf. Contínuo"};
 const ASPECT_ICON = {simples:"▪️", continuo:"〰️", perfeito:"✅", perfeito_continuo:"⏳"};
-const FORMATOS = ["afirmativa","negativa","pergunta"];
+const FORMATOS = ["afirmativa","negativa","pergunta","pergunta_negativa"];
+const FORMATO_LABEL = {afirmativa:"Afirmativa", negativa:"Negativa", pergunta:"Pergunta", pergunta_negativa:"Pergunta negativa"};
 
 const CLASS_INFO = {
   freqIndef: {label:"Frequência indefinida — meio da frase"},
   freqDef: {label:"Frequência definida/numérica — fim da frase"},
-  perfectAdv: {label:"Advérbios de perfect — already/just/still: meio · yet: fim"},
-  timePoint: {label:"Ponto/expressão de tempo — fim da frase"}
+  perfectAdv: {label:"Advérbios de perfect — already/just/still/recently: meio · yet: fim"},
+  timeMid: {label:"Advérbio de tempo — meio da frase"},
+  timePoint: {label:"Ponto/expressão de tempo — fim da frase"},
+  allFam: {label:"Família do \"all\" — fim da frase"},
+  timeFam: {label:"Família do \"time\" — fim da frase"},
+  wholeFam: {label:"Família do \"whole\" — fim da frase"},
+  everFam: {label:"Família do \"ever/forever\" — fim da frase"},
+  everyFam: {label:"Família do \"every\" — fim da frase"},
+  againFam: {label:"Família do \"again\" — fim da frase"},
+  asFam: {label:"Família do \"as\" — fim da frase"},
+  atFam: {label:"Família do \"at\" — fim da frase"},
+  inFam: {label:"Família do \"in\" — fim da frase"},
+  byFam: {label:"Família do \"by\" — fim da frase"},
+  forFam: {label:"Família do \"for\" — fim da frase"},
+  outFam: {label:"Família do \"out/off\" — fim da frase"},
+  splitFam: {label:"Posição partida — uma parte no meio, outra no fim"}
+};
+
+/* Advérbios de posição partida: ocupam DOIS pontos da frase ao mesmo tempo
+   ("I will never work again"). Guardam a forma alternativa para contextos negativos,
+   porque "never" já carrega a negação — em frase negada o inglês troca por "ever"
+   ("I won't ever work again"), nunca "won't never". */
+const SPLIT_SIGNALS = {
+  present_simples: [{w:"never ... again", mid:"never", end:"again", negMid:"ever", pt:"nunca mais", cls:"splitFam", pl:"split"}],
+  past_simples: [{w:"never ... again", mid:"never", end:"again", negMid:"ever", pt:"nunca mais", cls:"splitFam", pl:"split"}],
+  present_perfeito: [{w:"never ... again", mid:"never", end:"again", negMid:"ever", pt:"nunca mais", cls:"splitFam", pl:"split"}],
+  future_simples: [
+    {w:"never ... again", mid:"never", end:"again", negMid:"ever", pt:"nunca mais", cls:"splitFam", pl:"split"},
+    {w:"always ... anyway", mid:"always", end:"anyway", negMid:"always", pt:"sempre", ptEnd:"de qualquer forma", cls:"splitFam", pl:"split"},
+    {w:"as soon as possible",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},{w:"as needed",pl:"end",cls:"asFam"},{w:"as usual",pl:"end",cls:"asFam"},
+    {w:"at some point",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"by all means",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"},{w:"out of habit",pl:"end",cls:"outFam"}
+  ]
 };
 const SIGNAL_WORDS = {
   present_simples: [
-    {w:"always",pl:"mid",cls:"freqIndef"},{w:"usually",pl:"mid",cls:"freqIndef"},{w:"often",pl:"mid",cls:"freqIndef"},{w:"sometimes",pl:"mid",cls:"freqIndef"},{w:"occasionally",pl:"mid",cls:"freqIndef"},{w:"rarely",pl:"mid",cls:"freqIndef"},{w:"hardly ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},
-    {w:"every day",pl:"end",cls:"freqDef"},{w:"every week",pl:"end",cls:"freqDef"},{w:"every month",pl:"end",cls:"freqDef"},{w:"twice a week",pl:"end",cls:"freqDef"},{w:"three times a day",pl:"end",cls:"freqDef"},{w:"once a month",pl:"end",cls:"freqDef"}
+    {w:"always",pl:"mid",cls:"freqIndef"},{w:"usually",pl:"mid",cls:"freqIndef"},{w:"often",pl:"mid",cls:"freqIndef"},{w:"sometimes",pl:"mid",cls:"freqIndef"},{w:"occasionally",pl:"mid",cls:"freqIndef"},{w:"rarely",pl:"mid",cls:"freqIndef"},{w:"hardly ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},{w:"seldom",pl:"mid",cls:"freqIndef"},{w:"frequently",pl:"mid",cls:"freqIndef"},{w:"generally",pl:"mid",cls:"freqIndef"},{w:"constantly",pl:"mid",cls:"freqIndef"},
+    {w:"every day",pl:"end",cls:"freqDef"},{w:"every week",pl:"end",cls:"freqDef"},{w:"every month",pl:"end",cls:"freqDef"},{w:"twice a week",pl:"end",cls:"freqDef"},{w:"three times a day",pl:"end",cls:"freqDef"},{w:"once a month",pl:"end",cls:"freqDef"},{w:"every year",pl:"end",cls:"freqDef"},{w:"once a week",pl:"end",cls:"freqDef"},{w:"twice a day",pl:"end",cls:"freqDef"},{w:"every morning",pl:"end",cls:"freqDef"},{w:"every night",pl:"end",cls:"freqDef"},
+    {w:"all the time",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},{w:"all of us",pl:"end",cls:"allFam"},
+    {w:"from time to time",pl:"end",cls:"timeFam"},{w:"on time",pl:"end",cls:"timeFam"},{w:"every time",pl:"end",cls:"timeFam"},{w:"every single day",pl:"end",cls:"everyFam"},{w:"every other day",pl:"end",cls:"everyFam"},{w:"every now and then",pl:"end",cls:"everyFam"},{w:"every weekend",pl:"end",cls:"everyFam"},{w:"again and again",pl:"end",cls:"againFam"},{w:"over and over again",pl:"end",cls:"againFam"},
+    {w:"as usual",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},{w:"as a rule",pl:"end",cls:"asFam"},{w:"as much as possible",pl:"end",cls:"asFam"},
+    {w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"at the same time",pl:"end",cls:"atFam"},{w:"at all times",pl:"end",cls:"atFam"},{w:"in general",pl:"end",cls:"inFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in a hurry",pl:"end",cls:"inFam"},{w:"by heart",pl:"end",cls:"byFam"},{w:"by default",pl:"end",cls:"byFam"},{w:"by myself",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a living",pl:"end",cls:"forFam"},{w:"for fun",pl:"end",cls:"forFam"},{w:"out loud",pl:"end",cls:"outFam"},{w:"off and on",pl:"end",cls:"outFam"}
   ],
   present_continuo: [
-    {w:"right now",pl:"end",cls:"timePoint"},{w:"at the moment",pl:"end",cls:"timePoint"},{w:"at present",pl:"end",cls:"timePoint"},{w:"nowadays",pl:"end",cls:"timePoint"},{w:"today",pl:"end",cls:"timePoint"},
-    {w:"currently",pl:"mid",cls:"timePoint"},{w:"still",pl:"mid",cls:"perfectAdv"}
+    {w:"right now",pl:"end",cls:"timePoint"},{w:"at the moment",pl:"end",cls:"timePoint"},{w:"at present",pl:"end",cls:"timePoint"},{w:"nowadays",pl:"end",cls:"timePoint"},{w:"today",pl:"end",cls:"timePoint"},{w:"this week",pl:"end",cls:"timePoint"},{w:"this month",pl:"end",cls:"timePoint"},{w:"this year",pl:"end",cls:"timePoint"},{w:"these days",pl:"end",cls:"timePoint"},{w:"at this moment",pl:"end",cls:"timePoint"},
+    {w:"currently",pl:"mid",cls:"timeMid"},{w:"still",pl:"mid",cls:"perfectAdv"},
+    {w:"all day long",pl:"end",cls:"allFam"},{w:"all the time",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},
+    {w:"as we speak",pl:"end",cls:"asFam"},{w:"as usual",pl:"end",cls:"asFam"},
+    {w:"at the moment",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"in a hurry",pl:"end",cls:"inFam"},{w:"in silence",pl:"end",cls:"inFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"}
   ],
   present_perfeito: [
     {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"yet",pl:"end",cls:"perfectAdv"},
-    {w:"ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},
-    {w:"once",pl:"end",cls:"freqDef"},{w:"twice",pl:"end",cls:"freqDef"},{w:"three times",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"},{w:"many times",pl:"end",cls:"freqDef"},
-    {w:"since 2020",pl:"end",cls:"timePoint"},{w:"since Monday",pl:"end",cls:"timePoint"},{w:"since last year",pl:"end",cls:"timePoint"},{w:"for three years",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},{w:"so far",pl:"end",cls:"timePoint"},{w:"up to now",pl:"end",cls:"timePoint"}
+    {w:"ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},{w:"hardly ever",pl:"mid",cls:"freqIndef"},{w:"seldom",pl:"mid",cls:"freqIndef"},
+    {w:"once",pl:"end",cls:"freqDef"},{w:"twice",pl:"end",cls:"freqDef"},{w:"three times",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"},{w:"many times",pl:"end",cls:"freqDef"},{w:"a few times",pl:"end",cls:"freqDef"},{w:"a lot",pl:"end",cls:"freqDef"},{w:"four times",pl:"end",cls:"freqDef"},{w:"five times",pl:"end",cls:"freqDef"},
+    {w:"since 2020",pl:"end",cls:"timePoint"},{w:"since Monday",pl:"end",cls:"timePoint"},{w:"since last year",pl:"end",cls:"timePoint"},{w:"for three years",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},{w:"so far",pl:"end",cls:"timePoint"},{w:"up to now",pl:"end",cls:"timePoint"},{w:"since I was a child",pl:"end",cls:"timePoint"},{w:"since 2015",pl:"end",cls:"timePoint"},{w:"for a week",pl:"end",cls:"timePoint"},{w:"for months",pl:"end",cls:"timePoint"},{w:"for ages",pl:"end",cls:"timePoint"},{w:"over the years",pl:"end",cls:"timePoint"},{w:"in the last few days",pl:"end",cls:"timePoint"},
+    {w:"all my life",pl:"end",cls:"allFam"},{w:"all this time",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},
+    {w:"for the first time",pl:"end",cls:"timeFam"},{w:"ever since",pl:"end",cls:"everFam"},{w:"never before",pl:"end",cls:"everFam"},{w:"my whole life",pl:"end",cls:"wholeFam"},{w:"this whole time",pl:"end",cls:"wholeFam"},{w:"yet again",pl:"end",cls:"againFam"},
+    {w:"as far as I know",pl:"end",cls:"asFam"},{w:"as expected",pl:"end",cls:"asFam"},{w:"as never before",pl:"end",cls:"asFam"},
+    {w:"at last",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at some point",pl:"end",cls:"atFam"},{w:"in my life",pl:"end",cls:"inFam"},{w:"in the meantime",pl:"end",cls:"inFam"},{w:"by now",pl:"end",cls:"byFam"},{w:"by far",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for the most part",pl:"end",cls:"forFam"},{w:"out of nowhere",pl:"end",cls:"outFam"}
   ],
   present_perfeito_continuo: [
-    {w:"since morning",pl:"end",cls:"timePoint"},{w:"since 9 a.m.",pl:"end",cls:"timePoint"},{w:"for two hours",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"lately",pl:"end",cls:"timePoint"},{w:"recently",pl:"end",cls:"timePoint"},{w:"all week",pl:"end",cls:"timePoint"}
+    {w:"since morning",pl:"end",cls:"timePoint"},{w:"since 9 a.m.",pl:"end",cls:"timePoint"},{w:"for two hours",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"lately",pl:"end",cls:"timePoint"},{w:"recently",pl:"end",cls:"timePoint"},{w:"all week",pl:"end",cls:"timePoint"},{w:"for hours",pl:"end",cls:"timePoint"},{w:"for days",pl:"end",cls:"timePoint"},{w:"since breakfast",pl:"end",cls:"timePoint"},{w:"since 8 a.m.",pl:"end",cls:"timePoint"},{w:"all day",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for months now",pl:"end",cls:"timePoint"},
+    {w:"all day long",pl:"end",cls:"allFam"},{w:"all year long",pl:"end",cls:"allFam"},{w:"all this time",pl:"end",cls:"allFam"},
+    {w:"the whole time",pl:"end",cls:"wholeFam"},{w:"the whole day",pl:"end",cls:"wholeFam"},
+    {w:"as long as I can remember",pl:"end",cls:"asFam"},
+    {w:"in the meantime",pl:"end",cls:"inFam"},{w:"for a change",pl:"end",cls:"forFam"}
   ],
   past_simples: [
-    {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},
-    {w:"once",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"}
+    {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},{w:"the day before yesterday",pl:"end",cls:"timePoint"},{w:"three years ago",pl:"end",cls:"timePoint"},{w:"a long time ago",pl:"end",cls:"timePoint"},{w:"in 1990",pl:"end",cls:"timePoint"},{w:"when I was a child",pl:"end",cls:"timePoint"},{w:"last night",pl:"end",cls:"timePoint"},{w:"earlier today",pl:"end",cls:"timePoint"},
+    {w:"once",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"},{w:"twice",pl:"end",cls:"freqDef"},{w:"three times",pl:"end",cls:"freqDef"},{w:"many times",pl:"end",cls:"freqDef"},
+    {w:"all day long",pl:"end",cls:"allFam"},{w:"all night long",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},{w:"all summer",pl:"end",cls:"allFam"},
+    {w:"at the time",pl:"end",cls:"timeFam"},{w:"for the last time",pl:"end",cls:"timeFam"},{w:"just in time",pl:"end",cls:"timeFam"},{w:"the whole day",pl:"end",cls:"wholeFam"},{w:"the whole week",pl:"end",cls:"wholeFam"},{w:"again",pl:"end",cls:"againFam"},{w:"once again",pl:"end",cls:"againFam"},
+    {w:"as usual",pl:"end",cls:"asFam"},{w:"as planned",pl:"end",cls:"asFam"},{w:"as expected",pl:"end",cls:"asFam"},{w:"as agreed",pl:"end",cls:"asFam"},
+    {w:"at first",pl:"end",cls:"atFam"},{w:"at last",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"at that point",pl:"end",cls:"atFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"in a rush",pl:"end",cls:"inFam"},{w:"in fact",pl:"end",cls:"inFam"},{w:"in the meantime",pl:"end",cls:"inFam"},{w:"by chance",pl:"end",cls:"byFam"},{w:"by mistake",pl:"end",cls:"byFam"},{w:"by accident",pl:"end",cls:"byFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"for a while",pl:"end",cls:"forFam"},{w:"for once",pl:"end",cls:"forFam"},{w:"out of nowhere",pl:"end",cls:"outFam"},{w:"off the record",pl:"end",cls:"outFam"}
   ],
   past_continuo: [
-    {w:"at that moment",pl:"end",cls:"timePoint"},{w:"at 5 p.m. yesterday",pl:"end",cls:"timePoint"},{w:"all day yesterday",pl:"end",cls:"timePoint"}
+    {w:"at that moment",pl:"end",cls:"timePoint"},{w:"at 5 p.m. yesterday",pl:"end",cls:"timePoint"},{w:"all day yesterday",pl:"end",cls:"timePoint"},{w:"at noon yesterday",pl:"end",cls:"timePoint"},{w:"while she was cooking",pl:"end",cls:"timePoint"},{w:"the whole afternoon",pl:"end",cls:"timePoint"},{w:"all night",pl:"end",cls:"timePoint"},
+    {w:"all night long",pl:"end",cls:"allFam"},{w:"all day long",pl:"end",cls:"allFam"},{w:"all the time",pl:"end",cls:"allFam"},
+    {w:"the whole time",pl:"end",cls:"wholeFam"},{w:"the whole night",pl:"end",cls:"wholeFam"},{w:"at the time",pl:"end",cls:"timeFam"},
+    {w:"as usual",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},
+    {w:"at the same time",pl:"end",cls:"atFam"},{w:"in silence",pl:"end",cls:"inFam"},{w:"in a hurry",pl:"end",cls:"inFam"}
   ],
   past_perfeito: [
-    {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"never",pl:"mid",cls:"freqIndef"},
-    {w:"before I left",pl:"end",cls:"timePoint"},{w:"by the time you arrived",pl:"end",cls:"timePoint"},{w:"by then",pl:"end",cls:"timePoint"},{w:"already by 2010",pl:"end",cls:"timePoint"}
+    {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"recently",pl:"mid",cls:"perfectAdv"},{w:"never",pl:"mid",cls:"freqIndef"},
+    {w:"before I left",pl:"end",cls:"timePoint"},{w:"by the time you arrived",pl:"end",cls:"timePoint"},{w:"by then",pl:"end",cls:"timePoint"},{w:"already by 2010",pl:"end",cls:"timePoint"},{w:"before the meeting started",pl:"end",cls:"timePoint"},{w:"by the time she called",pl:"end",cls:"timePoint"},{w:"by 2015",pl:"end",cls:"timePoint"},{w:"already by then",pl:"end",cls:"timePoint"},
+    {w:"all along",pl:"end",cls:"allFam"},{w:"all that time",pl:"end",cls:"allFam"},
+    {w:"as expected",pl:"end",cls:"asFam"},{w:"as promised",pl:"end",cls:"asFam"},
+    {w:"by mistake",pl:"end",cls:"byFam"},{w:"by chance",pl:"end",cls:"byFam"},{w:"at that point",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"}
   ],
   past_perfeito_continuo: [
-    {w:"for two hours",pl:"end",cls:"timePoint"},{w:"since morning",pl:"end",cls:"timePoint"},{w:"all morning",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"}
+    {w:"for two hours",pl:"end",cls:"timePoint"},{w:"since morning",pl:"end",cls:"timePoint"},{w:"all morning",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"for months",pl:"end",cls:"timePoint"},{w:"since the accident",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},
+    {w:"all night long",pl:"end",cls:"allFam"},{w:"all year long",pl:"end",cls:"allFam"},{w:"all along",pl:"end",cls:"allFam"},
+    {w:"the whole year",pl:"end",cls:"wholeFam"},
+    {w:"for a while",pl:"end",cls:"forFam"},{w:"in the meantime",pl:"end",cls:"inFam"}
   ],
   future_simples: [
-    {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"}
+    {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"},{w:"next weekend",pl:"end",cls:"timePoint"},{w:"in the future",pl:"end",cls:"timePoint"},{w:"eventually",pl:"end",cls:"timePoint"},{w:"someday",pl:"end",cls:"timePoint"},{w:"this evening",pl:"end",cls:"timePoint"},
+    {w:"all of them",pl:"end",cls:"allFam"},{w:"all summer",pl:"end",cls:"allFam"},{w:"all weekend",pl:"end",cls:"allFam"},
+    {w:"this time",pl:"end",cls:"timeFam"},{w:"next time",pl:"end",cls:"timeFam"},{w:"in time",pl:"end",cls:"timeFam"},{w:"forever",pl:"end",cls:"everFam"},{w:"for good",pl:"end",cls:"everFam"},{w:"again",pl:"end",cls:"againFam"},{w:"once again",pl:"end",cls:"againFam"},{w:"all over again",pl:"end",cls:"againFam"}
   ],
   future_continuo: [
-    {w:"at this time tomorrow",pl:"end",cls:"timePoint"},{w:"this time next week",pl:"end",cls:"timePoint"},{w:"at 8 p.m. tomorrow",pl:"end",cls:"timePoint"}
+    {w:"at this time tomorrow",pl:"end",cls:"timePoint"},{w:"this time next week",pl:"end",cls:"timePoint"},{w:"at 8 p.m. tomorrow",pl:"end",cls:"timePoint"},{w:"at midnight tonight",pl:"end",cls:"timePoint"},{w:"at this time next month",pl:"end",cls:"timePoint"},{w:"this time tomorrow",pl:"end",cls:"timePoint"},
+    {w:"all day long",pl:"end",cls:"allFam"},{w:"all night long",pl:"end",cls:"allFam"},{w:"all weekend",pl:"end",cls:"allFam"},
+    {w:"as usual",pl:"end",cls:"asFam"},
+    {w:"at the same time",pl:"end",cls:"atFam"},{w:"in person",pl:"end",cls:"inFam"}
   ],
   future_perfeito: [
-    {w:"by then",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},{w:"by 2030",pl:"end",cls:"timePoint"}
+    {w:"by then",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},{w:"by 2030",pl:"end",cls:"timePoint"},{w:"by tonight",pl:"end",cls:"timePoint"},{w:"by tomorrow",pl:"end",cls:"timePoint"},{w:"by the end of the year",pl:"end",cls:"timePoint"},{w:"by the time you arrive",pl:"end",cls:"timePoint"},
+    {w:"all of them",pl:"end",cls:"allFam"},
+    {w:"as planned",pl:"end",cls:"asFam"},
+    {w:"by then",pl:"end",cls:"byFam"},{w:"by far",pl:"end",cls:"byFam"},{w:"at last",pl:"end",cls:"atFam"}
   ],
   future_perfeito_continuo: [
-    {w:"by then",pl:"end",cls:"timePoint"},{w:"for five years",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"}
+    {w:"by then",pl:"end",cls:"timePoint"},{w:"for five years",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"for over a decade",pl:"end",cls:"timePoint"},{w:"by next summer",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},
+    {w:"all year long",pl:"end",cls:"allFam"},{w:"all this time",pl:"end",cls:"allFam"},
+    {w:"for good measure",pl:"end",cls:"forFam"}
   ]
 };
 
-let state = { pronome:"I", categoria:"fact", tempo:"present", aspecto:"simples", formato:"afirmativa", signalMid:null, signalEnd:null, whWord:null };
+let state = { pronome:"I", categoria:"fact", verbo:"work", verboLetter:"W", colocacao:null, tempo:"present", aspecto:"simples", formato:"afirmativa", signalMid:null, signalEnd:null, signalSplit:null, signalFam:null, whWord:null };
 
 function buildPronome(){
   const el = document.getElementById('pronomeRow'); el.innerHTML="";
@@ -736,6 +1317,74 @@ function buildPronome(){
     btn.dataset.active=(state.pronome===p); btn.textContent=p;
     btn.onclick=()=>{ state.pronome=p; render(); };
     el.appendChild(btn);
+  });
+}
+function verbLetters(){
+  const letters = [...new Set(VERBS.filter(v=>!v.phrasal).map(v=>v.base[0].toUpperCase()))].sort();
+  /* frasais ganham aba própria: agrupá-los pela inicial os esconderia no meio dos simples
+     (give up ficaria misturado com give), e eles são uma categoria de estudo à parte */
+  return VERBS.some(v=>v.phrasal) ? letters.concat(['⚡']) : letters;
+}
+function verbGroupOf(v){ return v.phrasal ? '⚡' : v.base[0].toUpperCase(); }
+function buildVerbo(){
+  const el = document.getElementById('verboRow'); el.innerHTML="";
+  if(!state.verboLetter) state.verboLetter = verbGroupOf(verbById(state.verbo));
+
+  const letterRow = document.createElement('div'); letterRow.className='pronome-row letter-row';
+  verbLetters().forEach(L=>{
+    const btn=document.createElement('div'); btn.className='pronome-pill letter-pill';
+    btn.dataset.active=(state.verboLetter===L); btn.textContent=L;
+    if(L==='⚡') btn.title = "Verbos frasais";
+    btn.onclick=()=>{ state.verboLetter=L; render(); };
+    letterRow.appendChild(btn);
+  });
+  el.appendChild(letterRow);
+
+  const verbRow = document.createElement('div'); verbRow.className='pronome-row verbo-choices';
+  VERBS.filter(v=>verbGroupOf(v)===state.verboLetter).forEach(v=>{
+    const btn=document.createElement('div'); btn.className='pronome-pill';
+    btn.dataset.active=(state.verbo===v.id); btn.textContent=v.label;
+    btn.onclick=()=>{ state.verbo=v.id; state.verboLetter=verbGroupOf(v); state.colocacao=null; render(); };
+    verbRow.appendChild(btn);
+  });
+  el.appendChild(verbRow);
+}
+/* Consulta ao banco de expressões para o verbo ativo. Não alimenta o gerador:
+   a tradução do banco cobre a expressão inteira e não compõe com a conjugação do motor,
+   então essas expressões aparecem como referência, exatamente como foram curadas. */
+let bankOpen = false;
+function verbBankFamily(verb){
+  const name = (verb.prt ? verb.base + ' ' + verb.prt : verb.base).toUpperCase();
+  if(!hasDb()) return null;
+  if(EXPR_DB[name]) return name;
+  const solo = verb.base.toUpperCase();
+  return EXPR_DB[solo] ? solo : null;
+}
+function buildVerbBank(){
+  const box = document.getElementById('verbBankPanel');
+  const verb = verbById(state.verbo);
+  const fam = verbBankFamily(verb);
+  if(!fam){ box.innerHTML = ""; return; }
+  const items = EXPR_DB[fam].items;
+  box.innerHTML = `<div class="bank-panel">
+    <button class="bank-toggle" id="bankToggle">${bankOpen ? '▾' : '▸'} <b>${items.length}</b> expressões de <b>${fam}</b> no seu banco — ${escapeHTML(EXPR_DB[fam].core)}</button>
+    ${bankOpen ? `<div class="bank-body">${items.map(it=>`
+      <div class="bank-line"><div class="bank-en">${escapeHTML(it.expression)}</div><div class="bank-pt">${escapeHTML(it.translation)}</div></div>`).join('')}</div>` : ''}
+  </div>`;
+  document.getElementById('bankToggle').onclick = ()=>{ bankOpen = !bankOpen; buildVerbBank(); };
+}
+function buildColocacao(){
+  const el = document.getElementById('colRow'); el.innerHTML="";
+  const verb = verbById(state.verbo);
+  const none = document.createElement('div'); none.className='signal-chip';
+  none.dataset.active = (state.colocacao===null); none.textContent = "sem complemento";
+  none.onclick = ()=>{ state.colocacao=null; render(); };
+  el.appendChild(none);
+  (verb.col || []).forEach((c,i)=>{
+    const chip = document.createElement('div'); chip.className='signal-chip';
+    chip.dataset.active = (state.colocacao===i); chip.textContent = `${verb.base} ${c.en}`;
+    chip.onclick = ()=>{ state.colocacao = (state.colocacao===i) ? null : i; render(); };
+    el.appendChild(chip);
   });
 }
 function buildCategoria(){
@@ -775,43 +1424,113 @@ function buildAspecto(){
     el.appendChild(btn);
   });
 }
+function signalFamilyLabel(cls){
+  /* rótulo curto para a fileira de famílias (o texto completo fica no cabeçalho do grupo) */
+  const short = { freqIndef:"frequência", freqDef:"nº de vezes", perfectAdv:"perfect", timeMid:"tempo (meio)",
+    timePoint:"tempo", allFam:"all", timeFam:"time", wholeFam:"whole", everFam:"ever", everyFam:"every",
+    againFam:"again", asFam:"as", atFam:"at", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
+    splitFam:"partidos" };
+  return short[cls] || cls;
+}
 function buildSignal(){
   const el = document.getElementById('signalRow'); const hint = document.getElementById('signalHint');
-  const key = `${state.tempo}_${state.aspecto}`; const words = SIGNAL_WORDS[key] || [];
+  const key = `${state.tempo}_${state.aspecto}`;
+  const words = (SIGNAL_WORDS[key] || []).concat(SPLIT_SIGNALS[key] || []);
   el.innerHTML="";
   const disabled = !!state.whWord;
-  const noneWrap = document.createElement('div'); noneWrap.className='signal-row-inner';
-  const none = document.createElement('div'); none.className='signal-chip';
-  none.dataset.active = (state.signalMid===null && state.signalEnd===null); none.textContent = "limpar tudo";
-  none.style.opacity = disabled ? .4 : 1;
-  none.onclick = ()=>{ if(disabled) return; state.signalMid=null; state.signalEnd=null; render(); };
-  noneWrap.appendChild(none); el.appendChild(noneWrap);
+
   const groups = {};
   words.forEach(sw=>{ (groups[sw.cls] = groups[sw.cls]||[]).push(sw); });
-  Object.keys(CLASS_INFO).forEach(clsKey=>{
-    if(!groups[clsKey]) return;
-    const label = document.createElement('div'); label.className='signal-group-label'; label.textContent = CLASS_INFO[clsKey].label;
-    el.appendChild(label);
-    const wrap = document.createElement('div'); wrap.className='signal-row-inner';
-    groups[clsKey].forEach(sw=>{
-      const chip = document.createElement('div'); chip.className='signal-chip';
-      const slot = sw.pl==='mid' ? 'signalMid' : 'signalEnd';
-      const isActive = state[slot] && state[slot].w===sw.w;
-      chip.dataset.active = isActive; chip.textContent = sw.w;
-      chip.style.opacity = disabled ? .4 : 1;
-      chip.onclick = ()=>{ if(disabled) return; state[slot] = isActive ? null : sw; render(); };
-      wrap.appendChild(chip);
-    });
-    el.appendChild(wrap);
+  const famKeys = Object.keys(CLASS_INFO).filter(k=>groups[k]);
+
+  /* A família ativa é escolha do usuário e não pode ser forçada a cada render: senão,
+     com um sinal de meio já selecionado, a fileira voltaria sempre para a família dele e
+     seria impossível navegar até a família do sinal de fim para combinar os dois.
+     O salto automático só acontece quando não há família válida escolhida (ex.: ao trocar
+     de tempo, quando a família anterior deixa de existir). */
+  const selected = state.signalSplit || state.signalMid || state.signalEnd;
+  if(!famKeys.includes(state.signalFam)){
+    state.signalFam = (selected && famKeys.includes(selected.cls)) ? selected.cls : famKeys[0];
+  }
+
+  const noneWrap = document.createElement('div'); noneWrap.className='signal-row-inner';
+  const none = document.createElement('div'); none.className='signal-chip';
+  none.dataset.active = (state.signalMid===null && state.signalEnd===null && state.signalSplit===null); none.textContent = "limpar tudo";
+  none.style.opacity = disabled ? .4 : 1;
+  none.onclick = ()=>{ if(disabled) return; state.signalMid=null; state.signalEnd=null; state.signalSplit=null; render(); };
+  noneWrap.appendChild(none); el.appendChild(noneWrap);
+
+  if(!famKeys.length){ hint.textContent = "Nenhuma palavra-sinal cadastrada para esta combinação ainda."; return; }
+
+  /* fileira 1: famílias (mesma navegação em dois níveis do seletor de verbos) */
+  const famRow = document.createElement('div'); famRow.className='signal-row-inner fam-row';
+  famKeys.forEach(cls=>{
+    const btn = document.createElement('div'); btn.className='signal-chip fam-chip';
+    /* qualquer sinal ativo (meio, fim ou partido) acende o ponto na sua família —
+       com dois selecionados, as duas famílias ficam marcadas ao mesmo tempo */
+    const hasActive = [state.signalSplit, state.signalMid, state.signalEnd].some(s=>s && s.cls===cls);
+    btn.dataset.active = (state.signalFam===cls);
+    btn.innerHTML = `${signalFamilyLabel(cls)}<span class="fam-count">${groups[cls].length}</span>${hasActive?'<span class="fam-dot"></span>':''}`;
+    btn.style.opacity = disabled ? .4 : 1;
+    btn.onclick = ()=>{ if(disabled) return; state.signalFam = cls; render(); };
+    famRow.appendChild(btn);
   });
-  hint.textContent = disabled ? "Desativado com interrogativa ativa — remova a palavra interrogativa para usar sinais." : (words.length ? "Meio e fim são complementares — dá pra combinar uma palavra de cada posição na mesma frase (ex.: already + twice)." : "Nenhuma palavra-sinal cadastrada para esta combinação ainda.");
+  el.appendChild(famRow);
+  /* mantém a família ativa visível na fileira rolável (importante com 13 famílias no celular) */
+  const activeFam = famRow.querySelector('[data-active="true"]');
+  if(activeFam && activeFam.scrollIntoView) { try{ activeFam.scrollIntoView({block:'nearest', inline:'nearest'}); }catch(e){} }
+
+  /* fileira 2: palavras da família ativa */
+  const cls = state.signalFam;
+  const label = document.createElement('div'); label.className='signal-group-label'; label.textContent = CLASS_INFO[cls].label;
+  el.appendChild(label);
+  const wrap = document.createElement('div'); wrap.className='signal-row-inner';
+  groups[cls].forEach(sw=>{
+    const chip = document.createElement('div'); chip.className='signal-chip';
+    const slot = sw.pl==='split' ? 'signalSplit' : (sw.pl==='mid' ? 'signalMid' : 'signalEnd');
+    const isActive = state[slot] && state[slot].w===sw.w;
+    chip.dataset.active = isActive; chip.textContent = sw.w;
+    chip.style.opacity = disabled ? .4 : 1;
+    chip.onclick = ()=>{
+      if(disabled) return;
+      if(sw.pl==='split'){
+        /* o partido ocupa meio E fim, então limpa os dois slots simples */
+        state.signalSplit = isActive ? null : sw; state.signalMid=null; state.signalEnd=null;
+      } else {
+        state[slot] = isActive ? null : sw; state.signalSplit=null;
+      }
+      render();
+    };
+    wrap.appendChild(chip);
+  });
+  el.appendChild(wrap);
+
+  /* resumo do que está ativo — some quando nada está selecionado, e cada etiqueta remove só o seu */
+  const actives = [];
+  if(state.signalSplit) actives.push({label:state.signalSplit.w, pos:"meio + fim", clear:()=>{ state.signalSplit=null; }});
+  if(state.signalMid) actives.push({label:state.signalMid.w, pos:"meio", clear:()=>{ state.signalMid=null; }});
+  if(state.signalEnd) actives.push({label:state.signalEnd.w, pos:"fim", clear:()=>{ state.signalEnd=null; }});
+  if(actives.length && !disabled){
+    const box = document.createElement('div'); box.className='signal-active';
+    const cap = document.createElement('span'); cap.textContent = "ativos:"; box.appendChild(cap);
+    actives.forEach(a=>{
+      const tag = document.createElement('span'); tag.className='tagx';
+      tag.innerHTML = `<b>${a.label}</b><span>${a.pos}</span>✕`;
+      tag.onclick = ()=>{ a.clear(); render(); };
+      box.appendChild(tag);
+    });
+    el.appendChild(box);
+  }
+
+  hint.textContent = disabled ? "Desativado com interrogativa ativa — remova a palavra interrogativa para usar sinais."
+    : "Escolha a família e depois a palavra. Meio e fim são complementares — dá pra combinar uma de cada posição (ex.: already + twice).";
 }
 function buildFormato(){
   const el = document.getElementById('formatoRow'); el.innerHTML="";
   FORMATOS.forEach(f=>{
     const s = document.createElement('div'); s.className='formato-switch';
     s.dataset.kind=f; s.dataset.active=(state.formato===f);
-    s.innerHTML = `<div class="lamp"></div><div class="lbl">${f.charAt(0).toUpperCase()+f.slice(1)}</div>`;
+    s.innerHTML = `<div class="lamp"></div><div class="lbl">${FORMATO_LABEL[f]}</div>`;
     s.onclick = ()=>{ state.formato=f; if(f!=='pergunta') state.whWord=null; render(); };
     el.appendChild(s);
   });
@@ -839,46 +1558,65 @@ function buildWh(){
   });
   hint.textContent = "Combinações servem para entender a estrutura — nem toda frase resultante é 100% natural semanticamente.";
 }
-function applySignal(text, signalMid, signalEnd){
+function applySignal(text, signalMid, signalEnd, col, signalSplit, formato){
   let words = text.split(" ");
-  if(signalMid) words.splice(words.length-1,0, signalMid.w);
-  if(signalEnd) words.push(signalEnd.w);
-  return words.join(" ");
+  const neg = formato==='negativa' || formato==='pergunta_negativa';
+  /* O sinal partido ocupa os dois pontos: a 1ª parte entra antes do verbo principal
+     (trocada por "ever" em contexto negado) e a 2ª vai para o fim, depois da regência. */
+  if(signalSplit) words.splice(words.length-1, 0, C(neg ? signalSplit.negMid : signalSplit.mid));
+  else if(signalMid) words.splice(words.length-1, 0, C(signalMid.w));
+  let t = words.join(" ");
+  if(col) t += ' ' + R(col.en);           /* regência/collocation cola no verbo, antes do sinal de fim */
+  if(signalSplit) t += ' ' + C(signalSplit.end);
+  else if(signalEnd) t += ' ' + C(signalEnd.w);
+  return t;
 }
 
 function render(){
-  buildPronome(); buildCategoria(); buildTempo(); buildAspecto(); buildSignal(); buildFormato(); buildWh(); updateTempoTrack();
+  buildPronome(); buildVerbo(); buildColocacao(); buildVerbBank(); buildCategoria(); buildTempo(); buildAspecto(); buildSignal(); buildFormato(); buildWh(); updateTempoTrack();
 
   document.getElementById('whDialGroup').style.display = state.formato==='pergunta' ? '' : 'none';
   document.getElementById('signalDialGroup').style.display = (state.formato==='pergunta' && state.whWord) ? 'none' : '';
+  document.getElementById('verboDialGroup').style.display = state.categoria==='fact' ? '' : 'none';
+  document.getElementById('colDialGroup').style.display = (state.categoria==='fact' && !(state.formato==='pergunta' && state.whWord)) ? '' : 'none';
 
-  let finalSentence, ptText, structureText, formulaExtra="";
+  const verb = state.categoria==='fact' ? verbById(state.verbo) : null;
+  const col = (verb && state.colocacao!==null) ? (verb.col || [])[state.colocacao] : null;
+  let sentenceHTML, audioText, ptText, structureText, formulaExtra="";
   if(state.formato==='pergunta' && state.whWord){
-    const w = whGenerate(state.categoria, state.tempo, state.aspecto, state.pronome, state.whWord);
-    finalSentence = w.en; ptText = w.pt; structureText = w.structure;
+    const w = whGenerate(state.categoria, state.tempo, state.aspecto, state.pronome, state.whWord, verb);
+    sentenceHTML = escapeHTML(w.en); audioText = w.en; ptText = w.pt; structureText = w.structure;
     formulaExtra = ` × <span>❓ ${state.whWord}</span>`;
   } else {
-    const g = generate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome);
-    const withSignal = applySignal(g.text, state.signalMid, state.signalEnd);
-    finalSentence = withSignal + (g.isQuestion ? "?" : ".");
-    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, state.signalMid, state.signalEnd);
-    const signalNote = [state.signalMid, state.signalEnd].filter(Boolean).map(s=>s.w).join(" + ");
-    structureText = g.structure + (signalNote ? ` + palavra-sinal (${signalNote})` : "");
+    const g = generate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, verb);
+    const withSignal = applySignal(g.text, state.signalMid, state.signalEnd, col, state.signalSplit, state.formato);
+    const finalRaw = withSignal + (g.isQuestion ? M("?") : ".");
+    sentenceHTML = markedToHTML(finalRaw, markColorVar(state.formato));
+    audioText = stripMarks(finalRaw);
+    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, state.signalMid, state.signalEnd, state.verbo, col, state.signalSplit);
+    const signalNote = state.signalSplit ? state.signalSplit.w : [state.signalMid, state.signalEnd].filter(Boolean).map(s=>s.w).join(" + ");
+    structureText = g.structure + (signalNote ? ` + palavra-sinal (${signalNote})` : "") + (col ? ` + regência/collocation` : "");
   }
-  document.getElementById('sentence').textContent = finalSentence;
+  document.getElementById('sentence').innerHTML = sentenceHTML;
   document.getElementById('translation').textContent = " " + ptText;
   document.getElementById('structure').textContent = structureText;
-  document.getElementById('formula').innerHTML = `<span>${state.pronome}</span> × <span>${CATEGORIES[state.categoria].label}</span> × <span>${TENSE_LABEL[state.tempo]}</span> × <span>${ASPECT_LABEL[state.aspecto]}</span> × <span>${state.formato.charAt(0).toUpperCase()+state.formato.slice(1)}</span>${formulaExtra}`;
-  document.getElementById('audioMain').dataset.text = finalSentence;
+  const verboExtra = verb ? ` × <span>${verb.base}</span>` : "";
+  document.getElementById('formula').innerHTML = `<span>${state.pronome}</span> × <span>${CATEGORIES[state.categoria].label}</span>${verboExtra} × <span>${TENSE_LABEL[state.tempo]}</span> × <span>${ASPECT_LABEL[state.aspecto]}</span> × <span>${FORMATO_LABEL[state.formato]}</span>${formulaExtra}`;
+  document.getElementById('audioMain').dataset.text = audioText;
+  document.getElementById('copyMain').dataset.text = audioText + "\n" + ptText;
 
   const isStaticWh = state.formato==='pergunta' && state.whWord && WH_STATIC[state.whWord];
   const note = isStaticWh ? "Exemplo fixo — How much/How many dependem do substantivo (contável/incontável), não do tempo verbal do motor." : getNote(state);
   const noteBox = document.getElementById('noteBox');
   if(note){ noteBox.innerHTML = "💡 " + note; noteBox.classList.add('show'); } else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
+  renderModal(); // mantém o motor de modais em sincronia com o verbo escolhido no dial ③
 }
 
 function getNote(s){
-  if(s.signalMid && s.signalMid.w==='just') return "\"Just\" (recém-feito) idiomaticamente vira <b>\"acabar de\" + infinitivo</b> em português — \"I have just worked\" soa melhor como \"Eu acabei de trabalhar\" do que uma tradução palavra por palavra.";
+  if(s.signalSplit && s.signalSplit.negMid !== s.signalSplit.mid && (s.formato==='negativa' || s.formato==='pergunta_negativa')) return `Repare na troca: <b>"${s.signalSplit.mid}"</b> já é negativo, então em frase negada o inglês usa <b>"${s.signalSplit.negMid} ... ${s.signalSplit.end}"</b> — \"won't <b>ever</b> work again\", nunca \"won't never\". Duas negativas não se somam em inglês padrão.`;
+  if(s.signalSplit) return `Advérbio de <b>posição partida</b>: \"${s.signalSplit.mid}\" fica antes do verbo principal e \"${s.signalSplit.end}\" no fim da frase — as duas partes formam uma única ideia.`;
+  if(s.formato==='pergunta_negativa' && s.pronome==='I' && s.tempo==='present' && ((s.categoria==='fact' && s.aspecto==='continuo') || (s.categoria==='state' && s.aspecto==='simples'))) return "<b>\"Aren't I\"</b> é a exceção idiomática do inglês: a forma logicamente regular seria \"Amn't I\" / \"Am I not\", mas a fala e a escrita naturais usam \"aren't\" nesse caso único da 1ª pessoa.";
+  if(s.signalMid && s.signalMid.w==='just') return "\"Just\" (recém-feito) idiomaticamente vira <b>\"acabar de\" + infinitivo</b> em português — por isso a tradução mostra \"acabei de\" (present perfect) ou \"tinha acabado de\" (past perfect), e não uma versão palavra por palavra.";
   if(s.signalMid && s.signalEnd) return "Meio + fim não competem entre si — cada palavra-sinal responde uma pergunta diferente (<b>com que frequência</b> vs. <b>quando/quantas vezes exatamente</b>), por isso podem conviver na mesma frase.";
   if(s.aspecto==='perfeito_continuo') return "O português normalmente não distingue Present/Past Perfect <b>Continuous</b> do Perfect simples na tradução — ambos tendem a virar \"tenho/tinha trabalhado\". A diferença (duração vs. simples completude) existe só no inglês.";
   if(s.tempo==='future' && s.aspecto==='simples') return "\"Vou trabalhar\" (futuro perifrástico, mais comum na fala) e \"trabalharei\" (futuro sintético, mais formal/escrito) traduzem o mesmo \"will work\".";
@@ -936,10 +1674,11 @@ function buildMatrix(){
     cat.aspects.forEach(asp=>{
       html += `<tr><td class="cat">${ASPECT_LABEL[asp]}</td>`;
       ["present","past","future"].forEach(t=>{
-        const aff = generate(catKey,t,asp,'afirmativa','I').text + ".";
-        const neg = generate(catKey,t,asp,'negativa','I').text + ".";
-        const per = generate(catKey,t,asp,'pergunta','I').text + "?";
-        html += `<td class="cell-lines"><div class="aff">${aff}</div><div class="neg">${neg}</div><div class="per">${per}</div></td>`;
+        const affHTML = markedToHTML(generate(catKey,t,asp,'afirmativa','I').text + ".", markColorVar('afirmativa'));
+        const negHTML = markedToHTML(generate(catKey,t,asp,'negativa','I').text + ".", markColorVar('negativa'));
+        const perHTML = markedToHTML(generate(catKey,t,asp,'pergunta','I').text + M("?"), markColorVar('pergunta'));
+        const perNegHTML = markedToHTML(generate(catKey,t,asp,'pergunta_negativa','I').text + M("?"), markColorVar('pergunta_negativa'));
+        html += `<td class="cell-lines"><div>${affHTML}</div><div>${negHTML}</div><div>${perHTML}</div><div>${perNegHTML}</div></td>`;
       });
       html += `</tr>`;
     });
@@ -971,61 +1710,237 @@ function buildErros(){
   `).join("");
 }
 
-const MODAL_DATA = {
-  capacidade: { label:"Capacidade", icon:"💪", rows:[
-    {tempo:"Presente", forma:"can", ex:"I can do it.", pt:"Eu consigo fazer isso.", nuance:"Capacidade real, no presente."},
-    {tempo:"Passado", forma:"could / was able to", ex:"I could swim. / I was able to finish it.", pt:"Eu conseguia nadar. / Eu consegui terminar isso.", nuance:"\"Could\" = capacidade geral e contínua. \"Was/were able to\" = conseguiu em uma ocasião específica."},
-    {tempo:"Futuro", forma:"will be able to", ex:"I will be able to do it.", pt:"Eu vou conseguir fazer isso.", nuance:"\"Can\" não tem forma de futuro própria."}
-  ]},
-  possibilidade: { label:"Possibilidade", icon:"🌫️", rows:[
-    {tempo:"Presente / Futuro", forma:"may / might / could", ex:"It may rain. / It might rain.", pt:"Pode ser que chova. / Talvez chova.", nuance:"\"May\" soa levemente mais provável que \"might\". \"Could\" marca possibilidade teórica."},
-    {tempo:"Passado (especulação)", forma:"may have / might have + particípio", ex:"It might have rained.", pt:"Pode ser que tenha chovido.", nuance:"Modal perfeito — dúvida sobre algo que já aconteceu."}
-  ]},
-  obrigacao: { label:"Obrigação", icon:"📌", rows:[
-    {tempo:"Presente", forma:"must / have to", ex:"I must finish this. / I have to finish this.", pt:"Eu preciso terminar isso. / Eu tenho que terminar isso.", nuance:"\"Must\" = obrigação que parte do próprio falante. \"Have to\" = imposta por regra externa."},
-    {tempo:"Passado", forma:"had to", ex:"I had to finish it.", pt:"Eu tive que terminar isso.", nuance:"\"Must\" não tem passado — usa-se sempre \"had to\"."},
-    {tempo:"Futuro", forma:"will have to", ex:"I will have to finish it.", pt:"Eu vou ter que terminar isso.", nuance:""}
-  ], alerta:"<b>\"Must not\"</b> = proibição (\"You must not smoke\"). <b>\"Don't have to\"</b> = ausência de obrigação (\"You don't have to come\"). São opostos, não sinônimos."},
-  permissao: { label:"Permissão", icon:"🔓", rows:[
-    {tempo:"Presente", forma:"can / may", ex:"Can I leave? / May I leave?", pt:"Posso sair? / Poderia sair? (formal)", nuance:"\"Can\" é informal, \"may\" é a forma educada/formal."},
-    {tempo:"Passado / pedido educado", forma:"could", ex:"Could I leave early?", pt:"Eu poderia sair mais cedo?", nuance:"\"Could\" como pedido soa mais educado que \"can\", mesmo falando do presente."},
-    {tempo:"Futuro", forma:"will be allowed to", ex:"I will be allowed to leave.", pt:"Eu terei permissão para sair.", nuance:""}
-  ]},
-  conselho: { label:"Conselho", icon:"💡", rows:[
-    {tempo:"Presente", forma:"should / ought to", ex:"You should rest. / You ought to rest.", pt:"Você deveria descansar.", nuance:"\"Ought to\" é mais formal e menos comum na fala."},
-    {tempo:"Passado (crítica)", forma:"should have + particípio", ex:"You should have rested.", pt:"Você deveria ter descansado.", nuance:"Conselho tardio — expressa arrependimento ou repreensão sobre algo que já passou."}
-  ]},
-  habito: { label:"Hábito passado", icon:"🕰️", rows:[
-    {tempo:"Passado", forma:"used to", ex:"I used to work here.", pt:"Eu costumava trabalhar aqui.", nuance:"Hábito ou estado que não existe mais. Funciona com ações e estados."},
-    {tempo:"Passado", forma:"would", ex:"I would often work late.", pt:"Eu costumava trabalhar até tarde, com frequência.", nuance:"Só para ações repetidas — nunca para estados."}
-  ], alerta:"Negativa de <b>\"used to\"</b>: \"I didn't use to work here\" — nunca \"usedn't\"."}
+/* ---- Motor de modais v2: gerador real (função × pronome × tempo × formato × sinal),
+   com a mesma marcação de cor por morfema do console principal. O trecho modal
+   (can/might/have to/should/used to...) é o marcador colorido por formato; sujeito e
+   raiz do verbo ficam neutros; a palavra-sinal da função entra em roxo no fim. ---- */
+const PT_PODER = { presente:{"1s":"posso","3s":"pode","1p":"podemos","3p":"podem"}, imperf:{"1s":"podia","3s":"podia","1p":"podíamos","3p":"podiam"} };
+const PT_CONSEGUIR = { presente:{"1s":"consigo","3s":"consegue","1p":"conseguimos","3p":"conseguem"}, imperf:{"1s":"conseguia","3s":"conseguia","1p":"conseguíamos","3p":"conseguiam"} };
+const PT_TER_PRET = {"1s":"tive","3s":"teve","1p":"tivemos","3p":"tiveram"};
+const PT_DEVER_COND = {"1s":"deveria","3s":"deveria","1p":"deveríamos","3p":"deveriam"};
+const PT_COSTUMAR_IMPERF = {"1s":"costumava","3s":"costumava","1p":"costumávamos","3p":"costumavam"};
+
+const MODAL_SIGNALS = {
+  capacidade: ["easily","without help","by myself","all by myself","with practice","if necessary","all the time","as always","by heart","out loud"],
+  possibilidade: ["tomorrow","tonight","at any moment","all of a sudden","in theory","this weekend","once again","by chance","out of nowhere","at some point"],
+  obrigacao: ["by law","before Friday","no matter what","right away","every day","all week long","on time","every single day","as agreed","in advance","at once"],
+  permissao: ["here","after class","on weekends","all weekend","in this building","during the break","this time","as needed","in person","at any time"],
+  conselho: ["more often","as soon as possible","before it gets worse","at least once","all year round","from time to time","as usual","in advance","for sure","at least"],
+  habito: ["when I was young","every summer","all summer long","back then","as a child","in those days","all the time","every single day","for fun","out of habit","off and on"]
 };
-let modalState = "capacidade";
+
+function bePastNeg(p){ return (IS_3SG(p)||p==='I') ? "wasn't" : "weren't"; }
+function haveToPres(p){ return IS_3SG(p) ? "has to" : "have to"; }
+
+const MODAL_ENGINE = {
+  capacidade: { label:"Capacidade", icon:"💪", tempos:[
+    { key:"present", label:"Presente",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('can')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("can't")} ${b}`};
+        if(f==='pergunta') return {text:`${M('Can')} ${s} ${b}`};
+        return {text:`${M("Can't")} ${s} ${b}`};
+      }, structure:"Sujeito + can + verbo (forma base)", note:"Capacidade real, no presente.",
+      pt:(per,vpt)=>`${PT_CONSEGUIR.presente[per]} ${vpt.inf}` },
+    { key:"past", label:"Passado",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('could')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("couldn't")} ${b}`};
+        if(f==='pergunta') return {text:`${M('Could')} ${s} ${b}`};
+        return {text:`${M("Couldn't")} ${s} ${b}`};
+      }, structure:"Sujeito + could + verbo (forma base)", note:"\"Could\" = capacidade geral e contínua no passado. Para uma ocasião específica, o inglês prefere <b>\"was/were able to\"</b>.",
+      pt:(per,vpt)=>`${PT_CONSEGUIR.imperf[per]} ${vpt.inf}` },
+    { key:"future", label:"Futuro",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('will')} ${M('be able to')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("won't")} ${M('be able to')} ${b}`};
+        if(f==='pergunta') return {text:`${M('Will')} ${s} ${M('be able to')} ${b}`};
+        return {text:`${M("Won't")} ${s} ${M('be able to')} ${b}`};
+      }, structure:"Sujeito + will be able to + verbo", note:"\"Can\" não tem forma de futuro própria — o inglês empresta \"be able to\".",
+      pt:(per,vpt)=>`${PT_ESTAR.ir[per]} conseguir ${vpt.inf}` }
+  ]},
+  possibilidade: { label:"Possibilidade", icon:"🌫️", tempos:[
+    { key:"present", label:"Presente / Futuro",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('might')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M('might not')} ${b}`};
+        if(f==='pergunta') return {text:`${M('Could')} ${s} ${b}`, extraNote:"Pergunta de possibilidade normalmente usa <b>could</b> — \"Might I...?\" existe, mas é raro e formalíssimo."};
+        return {text:`${M("Couldn't")} ${s} ${b}`, extraNote:"Pergunta de possibilidade normalmente usa <b>could</b> — \"Might I...?\" existe, mas é raro e formalíssimo."};
+      }, structure:"Sujeito + may/might + verbo (forma base)", note:"\"May\" soa levemente mais provável que \"might\". Em português, a ideia costuma sair como \"pode ser que\" / \"talvez\".",
+      pt:(per,vpt)=>`${PT_PODER.presente[per]} ${vpt.inf}` },
+    { key:"pastSpec", label:"Passado (especulação)",
+      gen:(p,v,f)=>{ const s=subjLower(p), ppM=markedForm(v.base, v.pp)+(v.prt?' '+v.prt:'');
+        if(f==='afirmativa') return {text:`${p} ${M('might have')} ${ppM}`};
+        if(f==='negativa') return {text:`${p} ${M('might not have')} ${ppM}`};
+        if(f==='pergunta') return {text:`${M('Could')} ${s} ${M('have')} ${ppM}`};
+        return {text:`${M("Couldn't")} ${s} ${M('have')} ${ppM}`};
+      }, structure:"Sujeito + might have + particípio", note:"Modal perfeito — dúvida sobre algo que já aconteceu.",
+      pt:(per,vpt)=>`${PT_PODER.presente[per]} ter ${vpt.part}` }
+  ]},
+  obrigacao: { label:"Obrigação", icon:"📌", alerta:"<b>\"Must not\"</b> = proibição (\"You must not smoke\"). <b>\"Don't have to\"</b> = ausência de obrigação (\"You don't have to come\"). São opostos, não sinônimos.", tempos:[
+    { key:"present", label:"Presente",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M(haveToPres(p))} ${b}`, extraNote:"\"Must\" também serve na afirmativa — \"must\" = obrigação que parte do próprio falante; \"have to\" = imposta por regra externa."};
+        if(f==='negativa') return {text:`${p} ${M(doPresNeg(p))} ${M('have to')} ${b}`};
+        if(f==='pergunta') return {text:`${M(cap(doPres(p)))} ${s} ${M('have to')} ${b}`};
+        return {text:`${M(cap(doPresNeg(p)))} ${s} ${M('have to')} ${b}`};
+      }, structure:"Sujeito + have/has to + verbo (do-support na negação/pergunta)", note:"",
+      pt:(per,vpt)=>`${PT_TER.presente[per]} que ${vpt.inf}` },
+    { key:"past", label:"Passado",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('had to')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("didn't")} ${M('have to')} ${b}`};
+        if(f==='pergunta') return {text:`${M('Did')} ${s} ${M('have to')} ${b}`};
+        return {text:`${M("Didn't")} ${s} ${M('have to')} ${b}`};
+      }, structure:"Sujeito + had to + verbo", note:"\"Must\" não tem passado — usa-se sempre \"had to\".",
+      pt:(per,vpt)=>`${PT_TER_PRET[per]} que ${vpt.inf}` },
+    { key:"future", label:"Futuro",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('will')} ${M('have to')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("won't")} ${M('have to')} ${b}`};
+        if(f==='pergunta') return {text:`${M('Will')} ${s} ${M('have to')} ${b}`};
+        return {text:`${M("Won't")} ${s} ${M('have to')} ${b}`};
+      }, structure:"Sujeito + will have to + verbo", note:"",
+      pt:(per,vpt)=>`${PT_ESTAR.ir[per]} ter que ${vpt.inf}` }
+  ]},
+  permissao: { label:"Permissão", icon:"🔓", tempos:[
+    { key:"present", label:"Presente",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('can')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("can't")} ${b}`};
+        if(f==='pergunta') return {text:`${M('Can')} ${s} ${b}`, extraNote:"\"<b>May</b> I...?\" é a versão educada/formal; \"<b>Could</b> I...?\" soa mais gentil que \"can\", mesmo falando do presente."};
+        return {text:`${M("Can't")} ${s} ${b}`};
+      }, structure:"Sujeito + can + verbo (forma base)", note:"\"Can\" para permissão é o uso informal do dia a dia.",
+      pt:(per,vpt)=>`${PT_PODER.presente[per]} ${vpt.inf}` },
+    { key:"past", label:"Passado",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M(bePast(p))} ${M('allowed to')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M(bePastNeg(p))} ${M('allowed to')} ${b}`};
+        if(f==='pergunta') return {text:`${M(cap(bePast(p)))} ${s} ${M('allowed to')} ${b}`};
+        return {text:`${M(cap(bePastNeg(p)))} ${s} ${M('allowed to')} ${b}`};
+      }, structure:"Sujeito + was/were allowed to + verbo", note:"Permissão concedida (ou não) no passado.",
+      pt:(per,vpt)=>`${PT_PODER.imperf[per]} ${vpt.inf}` },
+    { key:"future", label:"Futuro",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('will')} ${M('be allowed to')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("won't")} ${M('be allowed to')} ${b}`};
+        if(f==='pergunta') return {text:`${M('Will')} ${s} ${M('be allowed to')} ${b}`};
+        return {text:`${M("Won't")} ${s} ${M('be allowed to')} ${b}`};
+      }, structure:"Sujeito + will be allowed to + verbo", note:"",
+      pt:(per,vpt)=>`${PT_ESTAR.ir[per]} poder ${vpt.inf}` }
+  ]},
+  conselho: { label:"Conselho", icon:"💡", tempos:[
+    { key:"present", label:"Presente",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('should')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("shouldn't")} ${b}`};
+        if(f==='pergunta') return {text:`${M('Should')} ${s} ${b}`};
+        return {text:`${M("Shouldn't")} ${s} ${b}`};
+      }, structure:"Sujeito + should + verbo (forma base)", note:"\"Ought to\" é sinônimo mais formal e menos comum na fala.",
+      pt:(per,vpt)=>`${PT_DEVER_COND[per]} ${vpt.inf}` },
+    { key:"pastCrit", label:"Passado (crítica)",
+      gen:(p,v,f)=>{ const s=subjLower(p), ppM=markedForm(v.base, v.pp)+(v.prt?' '+v.prt:'');
+        if(f==='afirmativa') return {text:`${p} ${M('should have')} ${ppM}`};
+        if(f==='negativa') return {text:`${p} ${M("shouldn't have")} ${ppM}`};
+        if(f==='pergunta') return {text:`${M('Should')} ${s} ${M('have')} ${ppM}`};
+        return {text:`${M("Shouldn't")} ${s} ${M('have')} ${ppM}`};
+      }, structure:"Sujeito + should have + particípio", note:"Conselho tardio — expressa arrependimento ou repreensão sobre algo que já passou.",
+      pt:(per,vpt)=>`${PT_DEVER_COND[per]} ter ${vpt.part}` }
+  ]},
+  habito: { label:"Hábito passado", icon:"🕰️", alerta:"Negativa e pergunta de <b>\"used to\"</b> perdem o \"d\": \"didn't <b>use</b> to\", \"Did you <b>use</b> to...?\" — nunca \"usedn't\".", tempos:[
+    { key:"past", label:"Passado",
+      gen:(p,v,f)=>{ const b=v.base+(v.prt?' '+v.prt:''), s=subjLower(p);
+        if(f==='afirmativa') return {text:`${p} ${M('used to')} ${b}`};
+        if(f==='negativa') return {text:`${p} ${M("didn't")} ${M('use to')} ${b}`};
+        if(f==='pergunta') return {text:`${M('Did')} ${s} ${M('use to')} ${b}`};
+        return {text:`${M("Didn't")} ${s} ${M('use to')} ${b}`};
+      }, structure:"Sujeito + used to + verbo (forma base)", note:"Hábito ou estado que não existe mais. \"<b>Would</b>\" também marca hábito passado (\"I would often work late\"), mas só para ações repetidas — nunca para estados.",
+      pt:(per,vpt)=>`${PT_COSTUMAR_IMPERF[per]} ${vpt.inf}` }
+  ]}
+};
+
+let modalState = { funcao:"capacidade", tempo:"present", formato:"afirmativa", pronome:"I", signal:null };
+
+function modalTempoDef(){
+  const d = MODAL_ENGINE[modalState.funcao];
+  return d.tempos.find(t=>t.key===modalState.tempo) || d.tempos[0];
+}
 function buildModalGrid(){
   const el = document.getElementById('modalGrid'); el.innerHTML="";
-  Object.keys(MODAL_DATA).forEach(key=>{
-    const d = MODAL_DATA[key];
+  Object.keys(MODAL_ENGINE).forEach(key=>{
+    const d = MODAL_ENGINE[key];
     const btn = document.createElement('div'); btn.className='opt-btn';
     btn.style.setProperty('--accent', 'var(--amber)');
-    btn.dataset.active = (modalState===key);
+    btn.dataset.active = (modalState.funcao===key);
     btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
-    btn.onclick = ()=>{ modalState=key; renderModal(); };
+    btn.onclick = ()=>{ modalState.funcao=key; if(!MODAL_ENGINE[key].tempos.some(t=>t.key===modalState.tempo)) modalState.tempo = MODAL_ENGINE[key].tempos[0].key; modalState.signal=null; renderModal(); };
     el.appendChild(btn);
   });
 }
+function buildModalDials(){
+  const pr = document.getElementById('modalPronomeRow'); pr.innerHTML="";
+  PRONOUNS.forEach(p=>{
+    const btn=document.createElement('div'); btn.className='pronome-pill';
+    btn.dataset.active=(modalState.pronome===p); btn.textContent=p;
+    btn.onclick=()=>{ modalState.pronome=p; renderModal(); };
+    pr.appendChild(btn);
+  });
+  const tr = document.getElementById('modalTempoRow'); tr.innerHTML="";
+  MODAL_ENGINE[modalState.funcao].tempos.forEach(t=>{
+    const btn=document.createElement('div'); btn.className='pronome-pill';
+    btn.dataset.active=(modalState.tempo===t.key); btn.textContent=t.label;
+    btn.onclick=()=>{ modalState.tempo=t.key; renderModal(); };
+    tr.appendChild(btn);
+  });
+  const fr = document.getElementById('modalFormatoRow'); fr.innerHTML="";
+  FORMATOS.forEach(f=>{
+    const s = document.createElement('div'); s.className='formato-switch';
+    s.dataset.kind=f; s.dataset.active=(modalState.formato===f);
+    s.innerHTML = `<div class="lamp"></div><div class="lbl">${FORMATO_LABEL[f]}</div>`;
+    s.onclick = ()=>{ modalState.formato=f; renderModal(); };
+    fr.appendChild(s);
+  });
+  const sr = document.getElementById('modalSignalRow'); sr.innerHTML="";
+  const none = document.createElement('div'); none.className='signal-chip';
+  none.dataset.active = (modalState.signal===null); none.textContent = "sem sinal";
+  none.onclick = ()=>{ modalState.signal=null; renderModal(); };
+  sr.appendChild(none);
+  MODAL_SIGNALS[modalState.funcao].forEach(w=>{
+    const chip = document.createElement('div'); chip.className='signal-chip';
+    chip.dataset.active = (modalState.signal===w); chip.textContent = w;
+    chip.onclick = ()=>{ modalState.signal = (modalState.signal===w) ? null : w; renderModal(); };
+    sr.appendChild(chip);
+  });
+}
 function renderModal(){
-  buildModalGrid();
-  const d = MODAL_DATA[modalState];
-  document.getElementById('modalResultLabel').textContent = d.label;
-  document.getElementById('modalRows').innerHTML = d.rows.map(r=>`
-    <div class="modal-row">
-      <div class="tempo-tag">${r.tempo}</div>
-      <div class="forma">${r.forma}</div>
-      <div class="ex-row"><span class="ex">${r.ex}</span><button class="audio-btn sm" data-text="${r.ex.split(' / ')[0]}" title="Ouvir">🔊</button></div>
-      <div class="pt">${r.pt}</div>
-      ${r.nuance ? `<div class="nuance">${r.nuance}</div>` : ""}
-    </div>
-  `).join("");
+  buildModalGrid(); buildModalDials();
+  const tempoDef = modalTempoDef();
+  const verb = verbById(state.verbo);
+  const col = (state.colocacao!==null) ? (verb.col || [])[state.colocacao] : null;
+  const g = tempoDef.gen(modalState.pronome, verb, modalState.formato);
+  const isQ = modalState.formato==='pergunta' || modalState.formato==='pergunta_negativa';
+  let raw = g.text;
+  if(col) raw += ' ' + R(col.en);                 /* regência colada ao verbo, antes do sinal */
+  if(modalState.signal) raw += ' ' + C(modalState.signal);
+  raw += isQ ? M('?') : '.';
+  document.getElementById('modalSentence').innerHTML = markedToHTML(raw, markColorVar(modalState.formato));
+  document.getElementById('modalAudio').dataset.text = stripMarks(raw);
+  const per = ptPerson(modalState.pronome), pron = PT_PRONOUN[modalState.pronome];
+  const vpt = PT_VERBS[state.verbo] || PT_VERBS.work;
+  const neg = modalState.formato==='negativa' || modalState.formato==='pergunta_negativa';
+  let ptBody = tempoDef.pt(per, vpt);
+  if(col) ptBody += ' ' + col.pt;
+  if(modalState.signal) ptBody += ' ' + (SIGNAL_PT[modalState.signal] || modalState.signal);
+  document.getElementById('modalTranslation').textContent = ` ${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ ? '?' : '.');
+  document.getElementById('modalStructure').textContent = tempoDef.structure;
+  document.getElementById('copyModal').dataset.text = stripMarks(raw) + "\n" + `${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ ? '?' : '.');
+
+  const noteBits = [tempoDef.note, g.extraNote].filter(Boolean);
+  const noteBox = document.getElementById('modalNote');
+  if(noteBits.length){ noteBox.innerHTML = "💡 " + noteBits.join('<br>💡 '); noteBox.classList.add('show'); }
+  else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
+
+  const d = MODAL_ENGINE[modalState.funcao];
   document.getElementById('modalAlerta').innerHTML = d.alerta ? `<div class="modal-alerta">⚠️ ${d.alerta}</div>` : "";
 }
 
@@ -1045,10 +1960,449 @@ function toggleBlock(id){
 }
 
 buildMatrix();
+
+/* ---- Exportação da tabela-resumo como PNG (canvas nativo, sem dependências externas) ---- */
+function buildMatrixExportData(){
+  return Object.keys(CATEGORIES).map(catKey=>{
+    const cat = CATEGORIES[catKey];
+    const rows = cat.aspects.map(asp=>{
+      const cells = ["present","past","future"].map(t=>({
+        aff: generate(catKey,t,asp,'afirmativa','I').text + ".",
+        neg: generate(catKey,t,asp,'negativa','I').text + ".",
+        per: generate(catKey,t,asp,'pergunta','I').text + M("?"),
+        perneg: generate(catKey,t,asp,'pergunta_negativa','I').text + M("?")
+      }));
+      return { label: ASPECT_LABEL[asp], cells };
+    });
+    return { icon: cat.icon, label: cat.label, rows };
+  });
+}
+
+/* Desenha uma linha com marcação de cor por morfema no canvas — cada trecho marcado
+   usa markColor, o resto usa neutralColor — avançando o cursor x conforme a largura real. */
+function drawMarkedLine(ctx, text, x, y, neutralColor, markColor, complementColor){
+  let cx = x;
+  markedToSegments(text).forEach(seg=>{
+    ctx.fillStyle = seg.kind==='neutral' ? neutralColor : (seg.kind==='formato' ? markColor : (complementColor||markColor));
+    ctx.fillText(seg.t, cx, y);
+    cx += ctx.measureText(seg.t).width;
+  });
+}
+function downloadMatrixPNG(){
+  const btn = document.getElementById('downloadMatrixBtn');
+  const btnLabel = btn ? btn.textContent : null;
+  if(btn){ btn.setAttribute('disabled',''); btn.textContent = '⏳ Gerando...'; }
+
+  const data = buildMatrixExportData();
+  const BG="#10151c", LINE="rgba(237,230,214,0.16)", PAPER="#ede6d6", PAPER_DIM="#a9a294",
+        BRASS="#c9a34e", TEAL="#4fb6a6", RED="#c1483d", BURNT="#c9972c", ROSE="#c76d9e";
+  const headers = ["Presente","Passado","Futuro"];
+  const pad=26, colGap=14, rowPad=10, lineH=17, headH=30, capH=30, tableGap=26, titleH=50, colLabelMin=110;
+  const mono = size => `${size}px 'JetBrains Mono', monospace`;
+  const head = size => `700 ${size}px 'Space Grotesk', sans-serif`;
+
+  const meas = document.createElement('canvas').getContext('2d');
+  meas.font = mono(12.5);
+  let colW = [0,0,0];
+  headers.forEach((h,i)=>{ colW[i] = Math.max(colW[i], meas.measureText(h.toUpperCase()).width); });
+  data.forEach(cat=> cat.rows.forEach(r=> r.cells.forEach((c,i)=>{
+    [c.aff,c.neg,c.per,c.perneg].forEach(line=>{ colW[i] = Math.max(colW[i], meas.measureText(stripMarks(line)).width); });
+  })));
+  colW = colW.map(w=>w+22);
+
+  meas.font = "700 13px 'Inter', sans-serif";
+  let labelW = colLabelMin;
+  data.forEach(cat=> cat.rows.forEach(r=>{ labelW = Math.max(labelW, meas.measureText(r.label).width+16); }));
+
+  const tableW = labelW + colW.reduce((a,b)=>a+b,0) + colGap*3;
+  const totalW = tableW + pad*2;
+  const legendH = 26;
+  let totalH = pad + titleH;
+  data.forEach(cat=>{
+    totalH += capH + headH;
+    cat.rows.forEach(()=>{ totalH += rowPad*2 + lineH*4; });
+    totalH += tableGap;
+  });
+  totalH += legendH + pad;
+
+  const scale = 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.ceil(totalW*scale); canvas.height = Math.ceil(totalH*scale);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale,scale);
+  ctx.fillStyle = BG; ctx.fillRect(0,0,totalW,totalH);
+
+  let y = pad;
+  ctx.fillStyle = BRASS; ctx.font = head(19);
+  ctx.fillText("Painel Mestre do Inglês", pad, y+20);
+  ctx.fillStyle = PAPER_DIM; ctx.font = "12px 'Inter', sans-serif";
+  ctx.fillText("Tabela-resumo — tempos e aspectos (pronome: I)", pad, y+38);
+  y += titleH;
+
+  data.forEach(cat=>{
+    ctx.fillStyle = PAPER; ctx.font = head(15);
+    ctx.fillText(`${cat.icon}  ${cat.label}`, pad, y+18);
+    y += capH;
+
+    ctx.font = `700 10.5px 'JetBrains Mono', monospace`; ctx.fillStyle = BRASS;
+    let x = pad + labelW;
+    headers.forEach((h,i)=>{ ctx.fillText(h.toUpperCase(), x+8, y+18); x += colW[i]+colGap; });
+    y += headH;
+    ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(pad+tableW,y); ctx.stroke();
+
+    cat.rows.forEach(r=>{
+      const rowH = rowPad*2 + lineH*4;
+      ctx.fillStyle = PAPER; ctx.font = "700 13px 'Inter', sans-serif";
+      ctx.fillText(r.label, pad, y+rowPad+13);
+
+      let x2 = pad + labelW;
+      r.cells.forEach((c,i)=>{
+        ctx.font = mono(12.5);
+        [[c.aff,TEAL],[c.neg,RED],[c.per,BURNT],[c.perneg,ROSE]].forEach(([t,markColor],li)=>{
+          drawMarkedLine(ctx, t, x2+8, y+rowPad+12+li*lineH, PAPER, markColor);
+        });
+        x2 += colW[i]+colGap;
+      });
+      y += rowH;
+      ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(pad+tableW,y); ctx.stroke();
+    });
+    y += tableGap;
+  });
+
+  // legenda de cores no rodapé do PNG
+  const legend = [["sujeito + raiz", PAPER],["afirmativa", TEAL],["negativa", RED],["pergunta", BURNT],["pergunta negativa", ROSE]];
+  ctx.font = "10.5px 'Inter', sans-serif";
+  let lx = pad;
+  legend.forEach(([label,color])=>{
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(lx+4, y+8, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = PAPER_DIM; ctx.fillText(label, lx+13, y+12);
+    lx += 13 + ctx.measureText(label).width + 18;
+  });
+
+  canvas.toBlob(blob=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'painel-mestre-ingles-tabela.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    if(btn){ btn.removeAttribute('disabled'); btn.textContent = btnLabel; }
+  }, 'image/png');
+}
+/* ---- Modo prática: sorteia uma combinação, mostra o português e cobra o inglês.
+   Não tem banco próprio de frases — chama os mesmos geradores dos dois consoles,
+   então tudo que for adicionado a eles (verbos, sinais, regências) entra aqui de graça. ---- */
+const PRACTICE_LEVELS = [
+  { key:"basico", label:"Básico", tempos:["present","past"], aspectos:["simples"], formatos:["afirmativa","negativa"], signal:false, col:false, modal:false },
+  { key:"medio", label:"Médio", tempos:["present","past","future"], aspectos:["simples","continuo","perfeito"], formatos:["afirmativa","negativa","pergunta"], signal:true, col:true, modal:false },
+  { key:"avancado", label:"Avançado", tempos:["present","past","future"], aspectos:["simples","continuo","perfeito","perfeito_continuo"], formatos:FORMATOS, signal:true, col:true, modal:true }
+];
+let practiceState = { level:"medio", challenge:null, revealed:false, seen:0, hits:0, misses:0, missQueue:[] };
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+function newChallenge(){
+  const lv = PRACTICE_LEVELS.find(l=>l.key===practiceState.level) || PRACTICE_LEVELS[1];
+  const pronome = pick(PRONOUNS), verb = pick(VERBS), formato = pick(lv.formatos);
+  const useModal = lv.modal && Math.random() < 0.3;
+
+  if(useModal){
+    const fk = pick(Object.keys(MODAL_ENGINE)), fdef = MODAL_ENGINE[fk], tdef = pick(fdef.tempos);
+    const col = (lv.col && verb.col && Math.random()<0.5) ? pick(verb.col) : null;
+    const signal = Math.random()<0.4 ? pick(MODAL_SIGNALS[fk]) : null;
+    const g = tdef.gen(pronome, verb, formato);
+    const isQ = formato==='pergunta' || formato==='pergunta_negativa';
+    let raw = g.text;
+    if(col) raw += ' ' + R(col.en);
+    if(signal) raw += ' ' + C(signal);
+    raw += isQ ? M('?') : '.';
+    const per = ptPerson(pronome), pron = PT_PRONOUN[pronome], vpt = PT_VERBS[verb.id] || PT_VERBS.work;
+    const neg = formato==='negativa' || formato==='pergunta_negativa';
+    let ptBody = tdef.pt(per, vpt);
+    if(col) ptBody += ' ' + col.pt;
+    if(signal) ptBody += ' ' + (SIGNAL_PT[signal] || signal);
+    return { pt:`${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ?'?':'.'), raw, formato,
+      structure:tdef.structure, specs:["Modais", fdef.label, tdef.label, FORMATO_LABEL[formato]] };
+  }
+
+  const categoria = Math.random()<0.8 ? 'fact' : 'state';
+  const aspectos = categoria==='fact' ? lv.aspectos : lv.aspectos.filter(a=>a==='simples'||a==='perfeito');
+  const tempo = pick(lv.tempos), aspecto = pick(aspectos.length?aspectos:['simples']);
+  const v = categoria==='fact' ? verb : null;
+  const col = (lv.col && v && v.col && Math.random()<0.5) ? pick(v.col) : null;
+  const key = `${tempo}_${aspecto}`;
+  const pool = SIGNAL_WORDS[key] || [];
+  const sig = (lv.signal && pool.length && Math.random()<0.55) ? pick(pool) : null;
+  const signalMid = sig && sig.pl==='mid' ? sig : null, signalEnd = sig && sig.pl==='end' ? sig : null;
+
+  const g = generate(categoria, tempo, aspecto, formato, pronome, v);
+  const raw = applySignal(g.text, signalMid, signalEnd, col, null, formato) + (g.isQuestion ? M("?") : ".");
+  const pt = translate(categoria, tempo, aspecto, formato, pronome, signalMid, signalEnd, v ? v.id : null, col, null);
+  const specs = [CATEGORIES[categoria].label, TENSE_LABEL[tempo], ASPECT_LABEL[aspecto], FORMATO_LABEL[formato]];
+  if(col) specs.push("com regência");
+  if(sig) specs.push("com sinal");
+  return { pt, raw, formato, structure:g.structure, specs };
+}
+
+function renderPractice(){
+  const row = document.getElementById('practiceLevelRow'); row.innerHTML="";
+  PRACTICE_LEVELS.forEach(l=>{
+    const b=document.createElement('div'); b.className='pronome-pill';
+    b.dataset.active=(practiceState.level===l.key); b.textContent=l.label;
+    b.onclick=()=>{ practiceState.level=l.key; practiceState.challenge=null;
+      practiceState.hits=0; practiceState.misses=0; practiceState.missQueue=[]; practiceState.seen=0;
+      nextChallenge(); };
+    row.appendChild(b);
+  });
+  const c = practiceState.challenge;
+  if(!c) return;
+  document.getElementById('practicePT').textContent = c.pt;
+  document.getElementById('practiceSpecs').innerHTML = c.specs.map(s=>`<span>${s}</span>`).join('');
+  const ans = document.getElementById('practiceAnswer'), audio = document.getElementById('practiceAudio');
+  ans.hidden = !practiceState.revealed; audio.hidden = !practiceState.revealed;
+  if(practiceState.revealed){
+    document.getElementById('practiceEN').innerHTML = markedToHTML(c.raw, markColorVar(c.formato));
+    document.getElementById('practiceStructure').textContent = c.structure;
+    audio.dataset.text = stripMarks(c.raw);
+    const cp = document.getElementById('copyPractice');
+    cp.hidden = false; cp.dataset.text = stripMarks(c.raw) + "\n" + c.pt;
+  } else { document.getElementById('copyPractice').hidden = true; }
+  /* antes de revelar: ver/pular. depois de revelar: autoavaliação — é ela que alimenta o placar */
+  document.getElementById('practiceActionsReveal').hidden = practiceState.revealed;
+  document.getElementById('practiceActionsScore').hidden = !practiceState.revealed;
+
+  const respondidos = practiceState.hits + practiceState.misses;
+  const bar = document.getElementById('practiceBar');
+  bar.hidden = !respondidos;
+  if(respondidos){
+    const pct = Math.round(practiceState.hits / respondidos * 100);
+    bar.firstElementChild.style.width = pct + '%';
+    const fila = practiceState.missQueue.length ? ` · ${practiceState.missQueue.length} p/ revisar` : '';
+    document.getElementById('practiceScore').textContent = `${practiceState.hits}/${respondidos} corretas (${pct}%)${fila}`;
+  } else {
+    document.getElementById('practiceScore').textContent = practiceState.seen ? 'Responda para começar o placar.' : '';
+  }
+}
+function nextChallenge(){
+  /* o que o usuário errou volta a aparecer (1 em cada 3 sorteios), em vez de sumir para sempre */
+  if(practiceState.missQueue.length && Math.random() < 0.34){
+    practiceState.challenge = practiceState.missQueue.shift();
+  } else {
+    practiceState.challenge = newChallenge();
+  }
+  practiceState.revealed = false;
+  practiceState.seen++;
+  renderPractice();
+}
+document.getElementById('practiceReveal').onclick = ()=>{ practiceState.revealed = true; renderPractice(); };
+document.getElementById('practiceNext').onclick = nextChallenge;
+document.getElementById('practiceHit').onclick = ()=>{ practiceState.hits++; nextChallenge(); };
+document.getElementById('practiceMiss').onclick = ()=>{
+  practiceState.misses++;
+  if(practiceState.challenge && practiceState.missQueue.length < 12) practiceState.missQueue.push(practiceState.challenge);
+  nextChallenge();
+};
+
+/* ---- Banco de expressões (English Overdrive Word Families) ----
+   Camada de consulta: navega o banco por tipo → família → grupo semântico, ou busca em
+   inglês e português ao mesmo tempo. Os dados vêm de expressoes.js e não são alterados —
+   a curadoria, os grupos e a rastreabilidade até a página do material original são preservados. */
+/* O banco de expressões vem de expressoes.js, um arquivo à parte, OPCIONAL e carregado
+   DEPOIS que o app já está na tela: são ~300 KB, e carregá-lo junto atrasava a abertura
+   no celular. Enquanto não chega (ou se não existir no deploy), a aba mostra o estado e
+   todo o resto do app funciona normalmente. */
+let dbStatus = 'carregando'; // carregando | pronto | ausente
+function hasDb(){ return typeof EXPR_DB !== 'undefined' && EXPR_DB && Object.keys(EXPR_DB).length > 0; }
+function loadExprDb(){
+  const s = document.createElement('script');
+  s.src = 'expressoes.js';
+  s.async = true;
+  s.onload = ()=>{
+    dbStatus = hasDb() ? 'pronto' : 'ausente';
+    if(dbStatus === 'pronto') dbState.family = dbFamiliesOfType('Verbos')[0];
+    renderDb();
+    buildVerbBank(); // o painel do dial ④ passa a existir assim que o banco chega
+  };
+  s.onerror = ()=>{ dbStatus = 'ausente'; renderDb(); };
+  document.body.appendChild(s);
+}
+const DB_TYPES = ["Verbos","Conceituais","Estruturais","Frases prontas"];
+/* Frases prontas: unidades fechadas ("Take care!", "Let's go!") que não entram em nenhum
+   motor — se aprendem inteiras. Identificadas por começarem com maiúscula no banco. */
+const DB_PHRASES = "Frases prontas";
+function dbIsPhrase(it){ return /^[A-Z]/.test(it.expression); }
+function dbAllPhrases(){
+  const out = [];
+  Object.keys(EXPR_DB).forEach(fam=> EXPR_DB[fam].items.forEach(it=>{ if(dbIsPhrase(it)) out.push({fam, it}); }));
+  return out;
+}
+let dbState = { type:"Verbos", family:null, group:null, query:"", limit:60 };
+const DB_PAGE = 60;
+
+function dbFamiliesOfType(t){ return Object.keys(EXPR_DB).filter(k => EXPR_DB[k].type === t); }
+function dbNorm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+/* Busca varre as 1.668 expressões nos dois idiomas; fora da busca, mostra a família aberta. */
+function dbResults(){
+  const q = dbNorm(dbState.query.trim());
+  if(q){
+    const out = [];
+    Object.keys(EXPR_DB).forEach(fam=>{
+      EXPR_DB[fam].items.forEach(it=>{
+        if(dbNorm(it.expression).includes(q) || dbNorm(it.translation).includes(q)) out.push({fam, it});
+      });
+    });
+    return out;
+  }
+  if(dbState.type === DB_PHRASES){
+    return dbAllPhrases().filter(r => !dbState.group || r.fam === dbState.group);
+  }
+  const fam = dbState.family;
+  if(!fam || !EXPR_DB[fam]) return [];
+  return EXPR_DB[fam].items
+    .filter(it => !dbState.group || it.group === dbState.group)
+    .map(it => ({fam, it}));
+}
+
+function buildDbTypes(){
+  const el = document.getElementById('dbTypeRow'); el.innerHTML="";
+  DB_TYPES.forEach(t=>{
+    const n = (t===DB_PHRASES) ? dbAllPhrases().length : dbFamiliesOfType(t).length;
+    const b = document.createElement('div'); b.className='pronome-pill';
+    b.dataset.active = (dbState.type===t && !dbState.query);
+    b.textContent = `${t} (${n})`;
+    b.onclick = ()=>{ dbState.type=t; dbState.family = (t===DB_PHRASES) ? null : dbFamiliesOfType(t)[0];
+      dbState.group=null; dbState.query=""; document.getElementById('dbSearch').value=""; dbState.limit=DB_PAGE; renderDb(); };
+    el.appendChild(b);
+  });
+}
+function buildDbFamilies(){
+  const el = document.getElementById('dbFamilyRow'); el.innerHTML="";
+  const wrap = document.getElementById('dbFamilyGroup');
+  wrap.style.display = (dbState.type === DB_PHRASES) ? 'none' : '';
+  if(dbState.type === DB_PHRASES) return;
+  dbFamiliesOfType(dbState.type).forEach(fam=>{
+    const b = document.createElement('div'); b.className='signal-chip fam-chip';
+    b.dataset.active = (dbState.family===fam && !dbState.query);
+    b.innerHTML = `${fam}<span class="fam-count">${EXPR_DB[fam].items.length}</span>`;
+    b.onclick = ()=>{ dbState.family=fam; dbState.group=null; dbState.query="";
+      document.getElementById('dbSearch').value=""; dbState.limit=DB_PAGE; renderDb(); };
+    el.appendChild(b);
+  });
+  const act = el.querySelector('[data-active="true"]');
+  if(act && act.scrollIntoView){ try{ act.scrollIntoView({block:'nearest', inline:'nearest'}); }catch(e){} }
+}
+function buildDbGroups(){
+  const wrap = document.getElementById('dbGroupWrap');
+  const el = document.getElementById('dbGroupRow'); el.innerHTML="";
+  if(dbState.type === DB_PHRASES && !dbState.query){
+    /* nas frases prontas, o filtro é por família de origem */
+    wrap.style.display = '';
+    const all = dbAllPhrases();
+    const fams = [...new Set(all.map(r=>r.fam))];
+    const b0 = document.createElement('div'); b0.className='signal-chip';
+    b0.dataset.active = (dbState.group===null); b0.textContent = `todas (${all.length})`;
+    b0.onclick = ()=>{ dbState.group=null; dbState.limit=DB_PAGE; renderDb(); };
+    el.appendChild(b0);
+    fams.forEach(f=>{
+      const n = all.filter(r=>r.fam===f).length;
+      const c = document.createElement('div'); c.className='signal-chip';
+      c.dataset.active = (dbState.group===f); c.textContent = `${f} (${n})`;
+      c.onclick = ()=>{ dbState.group = (dbState.group===f) ? null : f; dbState.limit=DB_PAGE; renderDb(); };
+      el.appendChild(c);
+    });
+    return;
+  }
+  const fam = EXPR_DB[dbState.family];
+  if(dbState.query || !fam){ wrap.style.display='none'; return; }
+  const groups = [...new Set(fam.items.map(i=>i.group))];
+  wrap.style.display = groups.length > 1 ? '' : 'none';
+  if(groups.length <= 1) return;
+  const all = document.createElement('div'); all.className='signal-chip';
+  all.dataset.active = (dbState.group===null); all.textContent = `todos (${fam.items.length})`;
+  all.onclick = ()=>{ dbState.group=null; dbState.limit=DB_PAGE; renderDb(); };
+  el.appendChild(all);
+  groups.forEach(g=>{
+    const n = fam.items.filter(i=>i.group===g).length;
+    const c = document.createElement('div'); c.className='signal-chip';
+    c.dataset.active = (dbState.group===g); c.textContent = `${g} (${n})`;
+    c.onclick = ()=>{ dbState.group = (dbState.group===g) ? null : g; dbState.limit=DB_PAGE; renderDb(); };
+    el.appendChild(c);
+  });
+}
+function buildDbHead(){
+  const box = document.getElementById('dbFamilyHead');
+  const fam = EXPR_DB[dbState.family];
+  if(dbState.query || dbState.type === DB_PHRASES || !fam){ box.innerHTML=""; return; }
+  box.innerHTML = `<div class="db-fam-head">
+    <div class="db-fam-name">${dbState.family}</div>
+    <div class="db-fam-core">${escapeHTML(fam.core)}</div>
+    <div class="db-fam-pages">${escapeHTML(fam.pages)}</div>
+    <div class="db-maps">${fam.maps.map(m=>`<div class="db-map"><b>${escapeHTML(m[0])}</b><span>${escapeHTML(m[1])}</span></div>`).join('')}</div>
+  </div>`;
+}
+function renderDb(){
+  const sec = document.getElementById('console-expressoes');
+  const pill = document.getElementById('navExpressoes');
+  if(!hasDb()){
+    /* ausente: esconde a aba. carregando: mantém visível com aviso, para o usuário
+       saber que o banco está a caminho em vez de achar que sumiu. */
+    if(dbStatus === 'ausente'){
+      if(sec) sec.style.display = 'none';
+      if(pill) pill.style.display = 'none';
+    } else {
+      if(sec) sec.style.display = '';
+      if(pill) pill.style.display = '';
+      const list = document.getElementById('dbList');
+      if(list) list.innerHTML = '<div class="db-empty">Carregando o banco de expressões…</div>';
+      const st = document.getElementById('dbStats');
+      if(st) st.textContent = '';
+    }
+    return;
+  }
+  if(sec) sec.style.display = '';
+  if(pill) pill.style.display = '';
+  buildDbTypes(); buildDbFamilies(); buildDbHead(); buildDbGroups();
+  const res = dbResults();
+  const list = document.getElementById('dbList');
+  const total = Object.values(EXPR_DB).reduce((a,v)=>a+v.items.length,0);
+  document.getElementById('dbStats').textContent = dbState.query
+    ? `${res.length} resultado(s) para "${dbState.query}" · ${total} expressões no banco`
+    : `${res.length} expressão(ões) nesta seleção · ${total} no banco · ${Object.keys(EXPR_DB).length} famílias`;
+
+  if(!res.length){ list.innerHTML = `<div class="db-empty">Nada encontrado. Tente outra palavra, em inglês ou português.</div>`; return; }
+  const slice = res.slice(0, dbState.limit);
+  list.innerHTML = slice.map(({fam,it})=>`
+    <div class="db-item">
+      ${(dbState.query || dbState.type === DB_PHRASES) ? `<div class="db-hit">${fam}</div>` : ``}
+      <div class="db-expr-row">
+        <div class="db-expr">${escapeHTML(it.expression)}</div>
+        <button class="audio-btn sm" data-text="${escapeHTML(it.expression.replace(/^to /,''))}" title="Ouvir">🔊</button>
+      </div>
+      <div class="db-trans">${escapeHTML(it.translation)}</div>
+      <div class="db-meta">
+        <span class="db-tag">${escapeHTML(it.group)}</span>
+        <span class="db-tag src">${escapeHTML(it.source)} p.${escapeHTML(it.page)}</span>
+        ${it.note ? `<span class="db-note">${escapeHTML(it.note)}</span>` : ``}
+      </div>
+    </div>`).join('');
+  if(res.length > slice.length){
+    const btn = document.createElement('button'); btn.className='db-more';
+    btn.textContent = `Mostrar mais (${res.length - slice.length} restantes)`;
+    btn.onclick = ()=>{ dbState.limit += DB_PAGE; renderDb(); };
+    list.appendChild(btn);
+  }
+}
+const dbSearchEl = document.getElementById('dbSearch');
+if(dbSearchEl) dbSearchEl.addEventListener('input', e=>{
+  dbState.query = e.target.value; dbState.limit = DB_PAGE; renderDb();
+});
+
+
 buildAdverbsList();
 buildErros();
 render();
-renderModal();
+nextChallenge();
+renderDb();
+loadExprDb();
 setTimeout(()=>{
   document.querySelectorAll('.block[data-open="true"] .block-body').forEach(b=>{ b.style.maxHeight='none'; });
 },50);

@@ -1,6 +1,7 @@
-const CACHE_NAME = "painel-mestre-ingles-v2";
+const CACHE_NAME = "painel-mestre-ingles-v28";
 const ASSETS = [
   "./index.html",
+  "./expressoes.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
