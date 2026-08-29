@@ -1,7 +1,10 @@
-const CACHE_NAME = "painel-mestre-ingles-v28";
+const CACHE_NAME = "painel-mestre-ingles-v41";
 const ASSETS = [
   "./index.html",
   "./expressoes.js",
+  "./inter-latin-wght-normal.woff2",
+  "./jetbrains-mono-latin-wght-normal.woff2",
+  "./space-grotesk-latin-wght-normal.woff2",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",

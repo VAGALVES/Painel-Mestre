@@ -13,10 +13,21 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <title>Painel Mestre do Inglês</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* ---- Fontes locais (subconjunto latino, arquivos variáveis) ----
+     Antes vinham do Google Fonts: offline o app trocava de cara justamente quando
+     mais se depende dele. Agora acompanham o pacote e são cacheadas pelo service
+     worker. São variáveis, então um arquivo cobre todos os pesos — 110 KB no total.
+     As pilhas de fallback continuam valendo se algo falhar. */
+  @font-face{font-family:'Inter'; src:url('inter-latin-wght-normal.woff2') format('woff2-variations');
+    font-weight:100 900; font-style:normal; font-display:swap;}
+  @font-face{font-family:'JetBrains Mono'; src:url('jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+    font-weight:100 800; font-style:normal; font-display:swap;}
+  @font-face{font-family:'Space Grotesk'; src:url('space-grotesk-latin-wght-normal.woff2') format('woff2-variations');
+    font-weight:300 700; font-style:normal; font-display:swap;}
+
   :root{
     --panel-deep:#10151c; --panel:#1b2430; --panel-raised:#242f3d;
     --brass:#c9a34e; --brass-dim:#8a744f; --teal:#4fb6a6; --red:#c1483d;
@@ -31,26 +42,40 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{background: radial-gradient(ellipse at top, var(--bg-top) 0%, var(--panel-deep) 55%); color: var(--paper); font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased; padding: 20px 14px calc(60px + env(safe-area-inset-bottom, 0px)) 14px; min-height:100vh; transition:background .25s ease, color .25s ease;}
+  /* [hidden] precisa vencer os display:flex/grid definidos nas classes abaixo —
+     sem isso, blocos marcados como ocultos continuam aparecendo. */
+  [hidden]{display:none !important;}
+  /* Voltar ao topo: com ~7 telas de conteúdo, rolar de volta na mão é penoso.
+     Só aparece depois que a rolagem justifica sua presença. */
+  .to-top{position:fixed; right:16px; bottom:calc(18px + env(safe-area-inset-bottom, 0px)); z-index:40;
+    width:46px; height:46px; border-radius:50%; border:1px solid var(--line); background:var(--panel-raised);
+    color:var(--brass); font-size:19px; cursor:pointer; box-shadow:0 8px 22px -8px rgba(0,0,0,0.5);
+    opacity:0; pointer-events:none; transform:translateY(8px); transition:opacity .2s ease, transform .2s ease;}
+  .to-top[data-show="true"]{opacity:1; pointer-events:auto; transform:none;}
+  /* seção atual destacada na barra — orienta em um documento longo */
+  .nav-pill[data-current="true"]{border-color:var(--brass); color:var(--brass); background:var(--panel-raised);}
+  /* foco de teclado bem visível — sem isso, navegar por Tab é às cegas */
+  :focus-visible{outline:2px solid var(--brass); outline-offset:2px; border-radius:8px;}
+  body{background: radial-gradient(ellipse at top, var(--bg-top) 0%, var(--panel-deep) 55%); color: var(--paper); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing:antialiased; padding: 20px 14px calc(60px + env(safe-area-inset-bottom, 0px)) 14px; min-height:100vh; transition:background .25s ease, color .25s ease;}
   .app{max-width:640px; margin:0 auto; width:100%;}
 
   header{text-align:center; margin-bottom:18px;}
 
   .topnav{position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:calc(10px + env(safe-area-inset-top, 0px)) 4px 10px; margin:0 -14px 18px; background:linear-gradient(180deg, color-mix(in srgb, var(--panel-deep) 97%, transparent), color-mix(in srgb, var(--panel-deep) 90%, transparent)); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
   .nav-pills{display:flex; gap:8px; overflow-x:auto; padding:0 10px;}
-  .nav-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:11.5px; font-weight:600; color:var(--paper-dim); font-family:'JetBrains Mono'; cursor:pointer; transition:all .18s ease; flex-shrink:0; white-space:nowrap;}
+  .nav-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:11.5px; font-weight:600; color:var(--paper-dim); font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; cursor:pointer; transition:all .18s ease; flex-shrink:0; white-space:nowrap;}
   .nav-pill:active{color:var(--brass); border-color:var(--brass);}
   .theme-toggle{width:32px; height:32px; border-radius:50%; background:var(--panel-raised); border:1px solid var(--line); color:var(--paper); font-size:15px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .18s ease; margin-right:10px;}
   .theme-toggle:active{border-color:var(--brass); transform:scale(0.92);}
-  .eyebrow{font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass); margin-bottom:8px;}
-  h1{font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:clamp(28px,7vw,40px); margin:0 0 6px; letter-spacing:-0.01em;}
+  .eyebrow{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass); margin-bottom:8px;}
+  h1{font-family:'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight:700; font-size:clamp(28px,7vw,40px); margin:0 0 6px; letter-spacing:-0.01em;}
   header p{color:var(--paper-dim); font-size:14px; margin:0; line-height:1.5;}
   header p b{color:var(--teal); font-weight:600;}
   header p .b2{color:var(--brass);}
   header p .b3{color:var(--violet);}
 
   .console{background: linear-gradient(180deg, var(--panel) 0%, var(--panel-deep) 100%); border:1px solid var(--line); border-radius: 20px; padding: 18px 16px 20px; box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03); margin-bottom:16px;}
-  .console-label{font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.14em; color:var(--paper-dim); text-transform:uppercase; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;}
+  .console-label{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10.5px; letter-spacing:0.14em; color:var(--paper-dim); text-transform:uppercase; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;}
   .console-label .pulse{width:6px;height:6px;border-radius:50%;background:var(--teal); box-shadow:0 0 8px var(--teal); animation:blink 2.2s ease-in-out infinite;}
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
 
@@ -58,7 +83,7 @@
   .dial-group-title{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:8px; font-weight:600;}
   .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
   .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
-  .opt-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:10px 8px; color:var(--paper-dim); font-family:'Inter'; font-size:12px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; transition: all .18s ease; text-align:center;}
+  .opt-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:10px 8px; color:var(--paper-dim); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size:12px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; transition: all .18s ease; text-align:center;}
   .opt-btn .ic{font-size:18px; filter:grayscale(1); opacity:.6; transition:all .18s ease;}
   .opt-btn[data-active="true"]{color:var(--paper); border-color: var(--accent, var(--brass)); background: linear-gradient(180deg, color-mix(in srgb, var(--accent,var(--brass)) 16%, transparent), transparent); box-shadow: 0 0 0 1px var(--accent, var(--brass)) inset, 0 0 18px -4px var(--accent, var(--brass));}
   .opt-btn[data-active="true"] .ic{filter:none; opacity:1;}
@@ -67,7 +92,7 @@
   .letter-row{margin-bottom:10px;}
   .letter-pill{min-width:32px; text-align:center; padding:6px 0;}
   .verbo-choices{padding-top:2px; border-top:1px dashed var(--line);}
-  .pronome-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:12.5px; font-weight:600; color:var(--paper-dim); cursor:pointer; transition:all .18s ease; font-family:'JetBrains Mono';}
+  .pronome-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:12.5px; font-weight:600; color:var(--paper-dim); cursor:pointer; transition:all .18s ease; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace;}
   .pronome-pill[data-active="true"]{color:var(--panel-deep); background:var(--brass); border-color:var(--brass);}
 
   .tempo-track{position:relative; background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:14px 10px 10px;}
@@ -107,7 +132,7 @@
   .fam-chip{position:relative; display:inline-flex; align-items:center; gap:5px;}
   .fam-count{font-size:9px; opacity:.6; font-variant-numeric:tabular-nums;}
   .fam-dot{width:5px; height:5px; border-radius:50%; background:var(--violet); display:inline-block;}
-  .signal-chip{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:6px 11px; font-size:11.5px; font-family:'JetBrains Mono'; color:var(--paper-dim); cursor:pointer; transition:all .18s ease;}
+  .signal-chip{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:6px 11px; font-size:11.5px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; color:var(--paper-dim); cursor:pointer; transition:all .18s ease;}
   .signal-chip[data-active="true"]{color:var(--panel-deep); background:var(--teal); border-color:var(--teal);}
   .signal-hint{font-size:11px; color:var(--paper-dim); margin-top:6px; line-height:1.4;}
   .signal-rule{font-size:10.5px; color:var(--paper-dim); margin:2px 0 4px; line-height:1.4;}
@@ -119,16 +144,16 @@
   .readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none;}
   .readout-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
   .readout-btns{display:flex; gap:6px; position:relative; z-index:1;}
-  .readout-label{font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase;}
+  .readout-label{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase;}
   .audio-btn{position:relative; z-index:1; width:30px; height:30px; border-radius:50%; background:var(--panel-raised); border:1px solid var(--line); color:var(--teal); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .18s ease; flex-shrink:0;}
   .audio-btn:hover{border-color:var(--teal); box-shadow:0 0 12px -2px var(--teal);}
   .audio-btn.sm{width:24px; height:24px; font-size:11px;}
-  .readout-sentence{font-family:'JetBrains Mono'; font-size:clamp(17px,5.2vw,23px); font-weight:600; color:var(--paper); text-shadow:0 0 16px rgba(237,230,214,0.25); margin-bottom:6px; min-height:30px;}
+  .readout-sentence{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:clamp(17px,5.2vw,23px); font-weight:600; color:var(--paper); text-shadow:0 0 16px rgba(237,230,214,0.25); margin-bottom:6px; min-height:30px;}
   .readout-translation{font-size:13px; color:var(--paper-dim); font-style:italic; margin-bottom:10px;}
-  .readout-translation b{color:var(--amber); font-style:normal; font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; margin-right:6px;}
+  .readout-translation b{color:var(--amber); font-style:normal; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; margin-right:6px;}
   .readout-formula{font-size:11.5px; color:var(--paper-dim); letter-spacing:0.03em; margin-bottom:6px;}
   .readout-formula span{color:var(--brass); font-weight:600;}
-  .readout-structure{font-family:'JetBrains Mono'; font-size:12px; color:var(--teal);}
+  .readout-structure{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:12px; color:var(--teal);}
   .note-box{margin-top:10px; padding:9px 11px; background:rgba(143,143,214,0.1); border:1px solid rgba(143,143,214,0.3); border-radius:9px; font-size:11.5px; color:var(--paper); line-height:1.5; display:none;}
   .note-box.show{display:block;}
   .note-box b{color:var(--violet);}
@@ -137,11 +162,11 @@
   .modal-result{margin-top:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 14px 8px;}
   .modal-readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .modal-readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none; border-radius:12px;}
-  .modal-result-label{font-family:'JetBrains Mono'; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase; margin-bottom:10px;}
+  .modal-result-label{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase; margin-bottom:10px;}
   .modal-row{padding:9px 0; border-top:1px solid var(--line);}
   .modal-row:first-of-type{border-top:none;}
   .modal-row .tempo-tag{font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--violet); font-weight:700; margin-bottom:3px;}
-  .modal-row .forma{font-family:'JetBrains Mono'; font-size:14px; color:var(--paper); margin-bottom:3px;}
+  .modal-row .forma{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:14px; color:var(--paper); margin-bottom:3px;}
   .modal-row .ex-row{display:flex; align-items:center; gap:8px; margin-bottom:3px;}
   .modal-row .ex{font-size:12px; color:var(--teal);}
   .modal-row .pt{font-size:11.5px; color:var(--paper-dim); font-style:italic; margin-bottom:3px;}
@@ -152,8 +177,8 @@
   section.block{background:var(--panel); border:1px solid var(--line); border-radius:16px; margin-bottom:16px; overflow:hidden;}
   .block-head{padding:14px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none;}
   .block-head-title{display:flex; align-items:center; gap:10px;}
-  .block-num{font-family:'JetBrains Mono'; font-size:11px; color:var(--panel-deep); background:var(--brass); width:22px;height:22px;border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;}
-  .block-head h2{font-family:'Space Grotesk'; font-size:15px; margin:0; font-weight:600;}
+  .block-num{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:11px; color:var(--panel-deep); background:var(--brass); width:22px;height:22px;border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;}
+  .block-head h2{font-family:'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:15px; margin:0; font-weight:600;}
   .chev{color:var(--paper-dim); transition:transform .2s ease; font-size:12px;}
   .block[data-open="true"] .chev{transform:rotate(180deg);}
   .block-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px;}
@@ -162,45 +187,46 @@
 
   table.matrix{width:100%; border-collapse:collapse; font-size:12px; margin-bottom:14px; min-width:460px;}
   #matrixWrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
-  table.matrix caption{text-align:left; font-family:'Space Grotesk'; font-size:12.5px; color:var(--paper); margin-bottom:8px; font-weight:600;}
-  table.matrix th{font-family:'JetBrains Mono'; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--brass); text-align:left; padding:6px 5px; border-bottom:1px solid var(--line);}
+  table.matrix caption{text-align:left; font-family:'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:12.5px; color:var(--paper); margin-bottom:8px; font-weight:600;}
+  table.matrix th{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--brass); text-align:left; padding:6px 5px; border-bottom:1px solid var(--line);}
   table.matrix td{padding:7px 5px; border-bottom:1px solid var(--line); vertical-align:top; font-size:11.5px;}
   table.matrix td.cat{font-weight:600; color:var(--paper); white-space:nowrap;}
-  table.matrix .cell-lines div{margin-bottom:3px; font-family:'JetBrains Mono'; font-size:10.8px; line-height:1.45; color:var(--paper);}
-  .matrix-note{font-size:11px; color:var(--paper-dim); margin:-4px 0 14px;}
+  table.matrix .cell-lines div{margin-bottom:3px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10.8px; line-height:1.45; color:var(--paper);}
+  .matrix-note{font-size:11px; color:var(--paper-dim); display:block; margin:-4px 0 8px;}
+  .matrix-source{margin-bottom:14px;}
   .color-legend{display:flex; flex-wrap:wrap; gap:6px 14px; margin:0 0 12px; font-size:10.5px; color:var(--paper-dim);}
   .color-legend span{display:inline-flex; align-items:center; gap:5px;}
   .color-legend i{width:9px; height:9px; border-radius:50%; display:inline-block; font-style:normal; flex-shrink:0;}
-  .download-btn{display:inline-flex; align-items:center; gap:7px; background:var(--panel-raised); border:1px solid var(--brass); border-radius:20px; padding:9px 15px; font-family:'JetBrains Mono'; font-size:12px; font-weight:600; color:var(--brass); cursor:pointer; margin-bottom:14px; transition:all .18s ease;}
+  .download-btn{display:inline-flex; align-items:center; gap:7px; background:var(--panel-raised); border:1px solid var(--brass); border-radius:20px; padding:9px 15px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:12px; font-weight:600; color:var(--brass); cursor:pointer; margin-bottom:14px; transition:all .18s ease;}
   .download-btn:active{background:var(--brass); color:var(--panel-deep); transform:scale(0.97);}
   .download-btn[disabled]{opacity:.6; pointer-events:none;}
 
   .ref-tense-block{margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--line);}
   .ref-tense-block:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
-  .ref-tense-title{font-family:'Space Grotesk'; font-size:14px; font-weight:700; color:var(--paper); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .ref-tense-title{font-family:'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:14px; font-weight:700; color:var(--paper); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
   .ref-subhead{font-size:11px; font-weight:700; color:var(--paper); margin:8px 0 4px; display:flex; align-items:center; gap:5px;}
   .ref-class-label{font-size:9.5px; color:var(--brass-dim); text-transform:uppercase; letter-spacing:0.06em; margin:5px 0 3px;}
-  .ref-tag{display:inline-block; background:var(--panel-raised); border:1px solid var(--line); border-radius:14px; padding:4px 10px; font-size:11px; font-family:'JetBrains Mono'; color:var(--paper-dim); margin:0 5px 5px 0;}
+  .ref-tag{display:inline-block; background:var(--panel-raised); border:1px solid var(--line); border-radius:14px; padding:4px 10px; font-size:11px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; color:var(--paper-dim); margin:0 5px 5px 0;}
   .ref-tag i{opacity:.65; font-style:normal; color:var(--paper-dim);}
   .ref-conj-note{font-size:11px; color:var(--paper-dim); line-height:1.5; margin-top:6px; font-style:italic;}
 
   .erro-grid{display:grid; grid-template-columns:1fr; gap:8px;}
   .erro-card{background:var(--panel-raised); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:12.5px; line-height:1.5;}
-  .erro-card .no{color:var(--red); font-family:'JetBrains Mono'; display:block;}
+  .erro-card .no{color:var(--red); font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; display:block;}
   .erro-card .yes-row{display:flex; align-items:center; gap:6px; margin-top:3px;}
-  .erro-card .yes{color:var(--teal); font-family:'JetBrains Mono';}
+  .erro-card .yes{color:var(--teal); font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace;}
   .erro-card .why{color:var(--paper-dim); font-size:11.5px; margin-top:4px;}
 
   .conj-card{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px;}
   .conj-card:last-child{margin-bottom:0;}
-  .conj-card h3{font-family:'Space Grotesk'; font-size:13.5px; margin:0 0 6px; color:var(--paper);}
+  .conj-card h3{font-family:'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:13.5px; margin:0 0 6px; color:var(--paper);}
   .conj-card p{font-size:12.5px; line-height:1.55; color:var(--paper-dim); margin:0 0 6px;}
-  .conj-card .ex{font-family:'JetBrains Mono'; font-size:12px; color:var(--teal); display:block; margin-bottom:2px;}
+  .conj-card .ex{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:12px; color:var(--teal); display:block; margin-bottom:2px;}
   .conj-card .ex.no{color:var(--red);}
 
   .algo-flow{display:flex; flex-direction:column; gap:0;}
   .algo-step{display:flex; gap:12px; align-items:flex-start; padding:10px 0;}
-  .algo-step .n{width:26px;height:26px;border-radius:50%; background:var(--panel-raised); border:1px solid var(--brass); color:var(--brass); font-family:'JetBrains Mono'; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .algo-step .n{width:26px;height:26px;border-radius:50%; background:var(--panel-raised); border:1px solid var(--brass); color:var(--brass); font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
   .algo-step .t{font-size:13px; padding-top:3px;}
   .algo-step .t b{display:block; color:var(--paper); font-size:13.5px; margin-bottom:2px;}
   .algo-step .t span{color:var(--paper-dim); font-size:12px;}
@@ -215,7 +241,7 @@
   .bank-body{margin-top:8px; max-height:260px; overflow-y:auto;}
   .bank-line{padding:7px 2px; border-bottom:1px solid var(--line);}
   .bank-line:last-child{border-bottom:0;}
-  .bank-en{font-family:'JetBrains Mono'; font-size:12px; color:var(--blue);}
+  .bank-en{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:12px; color:var(--blue);}
   .bank-pt{font-size:11px; color:var(--paper-dim); margin-top:2px;}
   .db-toolbar{display:flex; flex-direction:column; gap:8px; margin-bottom:14px;}
   .db-search{width:100%; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px;
@@ -223,17 +249,17 @@
   .db-search::placeholder{color:var(--paper-dim);}
   .db-stats{font-size:10.5px; color:var(--paper-dim); font-variant-numeric:tabular-nums;}
   .db-fam-head{background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:14px;}
-  .db-fam-name{font-family:'JetBrains Mono'; font-size:19px; color:var(--brass); font-weight:600; letter-spacing:0.02em;}
+  .db-fam-name{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:19px; color:var(--brass); font-weight:600; letter-spacing:0.02em;}
   .db-fam-core{font-size:12.5px; color:var(--paper); margin-top:6px; line-height:1.45;}
   .db-fam-pages{font-size:10px; color:var(--paper-dim); margin-top:6px;}
   .db-maps{display:grid; grid-template-columns:1fr; gap:6px; margin-top:12px;}
   .db-map{border:1px solid var(--line); background:var(--panel-raised); border-radius:10px; padding:8px 10px;}
   .db-map b{display:block; color:var(--teal); font-size:10px; letter-spacing:0.06em; text-transform:uppercase;}
-  .db-map span{font-family:'JetBrains Mono'; font-size:11px; color:var(--paper-dim); line-height:1.5;}
+  .db-map span{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:11px; color:var(--paper-dim); line-height:1.5;}
   .db-item{border-bottom:1px solid var(--line); padding:11px 2px;}
   .db-item:last-child{border-bottom:0;}
   .db-expr-row{display:flex; align-items:flex-start; gap:8px;}
-  .db-expr{font-family:'JetBrains Mono'; font-size:13.5px; color:var(--blue); font-weight:600; flex:1; line-height:1.4;}
+  .db-expr{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:13.5px; color:var(--blue); font-weight:600; flex:1; line-height:1.4;}
   .db-trans{font-size:12.5px; color:var(--paper); margin-top:3px; line-height:1.45;}
   .db-meta{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; align-items:center;}
   .db-tag{font-size:9px; text-transform:uppercase; letter-spacing:0.05em; color:var(--paper-dim);
@@ -243,7 +269,7 @@
   .db-empty{padding:26px 4px; text-align:center; color:var(--paper-dim); font-size:12px;}
   .db-more{width:100%; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px;
     padding:10px; color:var(--paper); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; margin-top:12px;}
-  .db-hit{font-family:'JetBrains Mono'; font-size:10px; color:var(--brass-dim); margin-bottom:2px;}
+  .db-hit{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; color:var(--brass-dim); margin-bottom:2px;}
   .practice-card{background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px;
     position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .practice-prompt-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin-bottom:8px;}
@@ -252,7 +278,7 @@
   .practice-specs span{font-size:9.5px; text-transform:uppercase; letter-spacing:0.05em; color:var(--paper-dim);
     background:var(--panel-raised); border:1px solid var(--line); border-radius:999px; padding:3px 8px;}
   .practice-answer{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);}
-  .practice-en{font-family:'JetBrains Mono'; font-size:15px; line-height:1.5;}
+  .practice-en{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:15px; line-height:1.5;}
   .practice-structure{font-size:10.5px; color:var(--paper-dim); margin-top:6px;}
   .practice-actions{display:flex; align-items:center; gap:8px; margin-top:14px;}
   .practice-btn{flex:1; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px; padding:10px;
@@ -263,9 +289,136 @@
   .practice-btn.miss{border-color:var(--red); color:var(--red);}
   .practice-bar{height:4px; border-radius:999px; background:var(--panel-raised); overflow:hidden; margin-top:10px;}
   .practice-bar i{display:block; height:100%; background:var(--teal); transition:width .3s ease;}
+  .practice-input-row{display:flex; gap:8px; margin-top:14px;}
+  .practice-input{flex:1; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px;
+    padding:11px 12px; color:var(--paper); font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:13px; min-width:0;}
+  .practice-input::placeholder{color:var(--paper-dim); font-family:inherit;}
+  .practice-input-row .practice-btn{flex:0 0 auto; padding:10px 14px;}
+  .practice-verdict{margin-top:10px; font-size:12px; line-height:1.5; padding:9px 11px; border-radius:10px; border:1px solid var(--line);}
+  .practice-verdict.ok{color:var(--teal); border-color:var(--teal);}
+  .practice-verdict.almost{color:var(--burnt-yellow); border-color:var(--burnt-yellow);}
+  .practice-verdict.no{color:var(--red); border-color:var(--red);}
+  .practice-verdict .yours{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; color:var(--paper-dim); display:block; margin-top:4px; font-size:11px;}
+  .practice-accept{background:none; border:0; color:var(--paper-dim); font-size:10.5px; text-decoration:underline;
+    cursor:pointer; font-family:inherit; margin-top:6px; padding:0;}
+  .practice-reset{display:block; margin:8px auto 0; background:none; border:0; color:var(--paper-dim);
+    font-size:10px; text-decoration:underline; cursor:pointer; font-family:inherit;}
   .practice-score{font-size:10.5px; color:var(--paper-dim); margin-top:10px; text-align:center; font-variant-numeric:tabular-nums;}
-  footer .formula{font-family:'JetBrains Mono'; font-size:12px; color:var(--brass); letter-spacing:0.02em;}
-  footer .version{font-family:'JetBrains Mono'; font-size:10px; color:var(--paper-dim); margin-top:10px; letter-spacing:0.08em; text-transform:uppercase;}
+  footer .formula{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:12px; color:var(--brass); letter-spacing:0.02em;}
+  footer .version{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; color:var(--paper-dim); margin-top:10px; letter-spacing:0.08em; text-transform:uppercase;}
+
+  /* ---- ALVOS DE TOQUE ----
+     Em telas de toque o dedo precisa de área maior que o cursor. As pastilhas nascem
+     compactas para caber muita opção na tela; aqui elas ganham altura mínima confortável
+     sem mudar a tipografia, valendo só onde o ponteiro é impreciso. */
+  @media (pointer: coarse){
+    .pronome-pill, .letter-pill{min-height:38px; display:inline-flex; align-items:center; justify-content:center;}
+    .signal-chip{min-height:36px; display:inline-flex; align-items:center;}
+    .nav-pill{min-height:38px;}
+    .audio-btn{width:38px; height:38px;}
+    .audio-btn.sm{width:34px; height:34px;} /* variante compacta das listas, ainda tocável */
+    .practice-btn{min-height:44px;}
+    .db-search, .practice-input{min-height:46px;}
+    .bank-toggle{min-height:42px;}
+  }
+
+  /* A tabela-resumo é mais larga que um celular: ela rola dentro do próprio bloco.
+     A sombra à direita avisa que há mais conteúdo fora da vista — sem ela, a rolagem
+     passa despercebida e o usuário acha que a tabela está cortada. */
+  #matrixWrap{position:relative;}
+  .matrix-scroll-hint{display:none; font-size:10px; color:var(--paper-dim); margin:-6px 0 10px; letter-spacing:0.03em;}
+  @media (max-width: 759px){ .matrix-scroll-hint{display:block;} }
+
+  /* ============================================================
+     RESPONSIVIDADE PROGRESSIVA — mobile first
+     A base (acima) é a experiência no celular. Daqui para baixo, cada faixa
+     APROVEITA o espaço extra em vez de apenas esticar: mais colunas, painéis
+     lado a lado e tipografia maior. Nada é reposicionado por JavaScript —
+     a mesma marcação serve às três larguras.
+     ============================================================ */
+
+  /* ---- TABLET retrato (≥ 760px) ---- */
+  @media (min-width: 760px){
+    body{padding: 28px 24px calc(70px + env(safe-area-inset-bottom, 0px)) 24px;}
+    .app{max-width:860px;}
+    .console{padding:24px 22px 26px; border-radius:24px;}
+    /* os 4 formatos deixam de quebrar em 2×2 e ficam numa linha só */
+    .formato-row{grid-template-columns:repeat(4,1fr);}
+    .modal-grid{grid-template-columns:repeat(3,1fr);}
+    .db-maps{grid-template-columns:repeat(2,1fr);}
+    .erro-grid{grid-template-columns:repeat(2,1fr);}
+    .readout-sentence{font-size:26px;}
+    .practice-pt{font-size:20px;}
+    .bank-body{max-height:340px;}
+    .db-item{padding:13px 4px;}
+    .color-legend{gap:8px 20px; font-size:11.5px;}
+  }
+
+  /* ---- NOTEBOOK / DESKTOP (≥ 1080px) ----
+     Os consoles passam a duas colunas: a frase resultante ocupa a largura toda
+     e continua fixa no topo, enquanto os dials se distribuem ao lado dela.
+     Assim a frase permanece visível enquanto se mexe em qualquer controle —
+     que é o gesto central do app. */
+  @media (min-width: 1080px){
+    body{padding: 36px 32px 80px;}
+    .app{max-width:1180px;}
+    .console{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:0 26px; align-items:start;}
+    .console > .console-label,
+    .console > .readout,
+    .console > .modal-readout,
+    .console > .practice-card,
+    .console > .db-toolbar,
+    .console > #modalAlerta,
+    .console > #dbList,
+    .console > #dbFamilyHead{grid-column:1 / -1;}
+    .console > .dial-group{margin-bottom:20px;}
+    /* seletores largos (verbos, sinais, regência) merecem a linha inteira */
+    #verboDialGroup, #signalDialGroup, #bankDialGroup, #colDialGroup{grid-column:1 / -1;}
+    /* a aba de expressões é navegação sequencial: tipo → família → grupo → lista.
+       Dividi-la em colunas quebraria a leitura, então tudo ocupa a largura toda. */
+    #console-expressoes > *{grid-column:1 / -1;}
+    .readout-sentence{font-size:30px;}
+    .practice-pt{font-size:22px;}
+    .practice-card{max-width:none;}
+    .modal-grid{grid-template-columns:repeat(6,1fr);}
+    .db-maps{grid-template-columns:repeat(3,1fr);}
+    .bank-body{max-height:420px;}
+    /* a lista do banco em duas colunas aproveita a altura da tela */
+    /* rolagem lateral é gesto de toque; com mouse, o natural é ver tudo de uma vez */
+    .fam-row{flex-wrap:wrap; overflow-x:visible;}
+    .letter-row{flex-wrap:wrap;}
+    #dbList{column-count:2; column-gap:32px;}
+    #dbList .db-item{break-inside:avoid;}
+    #dbList .db-more{column-span:all;}
+    table.matrix{font-size:12px;}
+  }
+
+  /* ---- MONITOR GRANDE (≥ 1500px) ---- */
+  @media (min-width: 1500px){
+    .app{max-width:1360px;}
+    .readout-sentence{font-size:34px;}
+    #dbList{column-count:3;}
+  }
+
+  /* ---- Dispositivos com mouse: estados de hover que o toque não tem ---- */
+  @media (hover: hover) and (pointer: fine){
+    .pronome-pill:hover, .signal-chip:hover, .opt-btn:hover, .nav-pill:hover,
+    .formato-switch:hover, .practice-btn:hover, .db-more:hover, .bank-toggle:hover{
+      border-color:var(--brass-dim); transform:translateY(-1px);
+    }
+    .pronome-pill, .signal-chip, .opt-btn, .nav-pill, .formato-switch,
+    .practice-btn, .db-more, .bank-toggle{transition:all .16s ease;}
+    .db-item:hover{background:rgba(255,255,255,0.02);}
+    .audio-btn:hover{transform:scale(1.08);}
+  }
+
+  /* Respeita quem pediu menos movimento no sistema: transições e o pulso dos consoles
+     saem de cena, mas nada de conteúdo muda. */
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{animation-duration:.001ms !important; animation-iteration-count:1 !important;
+      transition-duration:.001ms !important; scroll-behavior:auto !important;}
+    .pulse{animation:none !important;}
+  }
 
   @media (max-height: 480px) and (orientation: landscape){
     .topnav{position:relative; top:auto;}
@@ -284,11 +437,11 @@
 
   <div class="topnav">
     <div class="nav-pills">
-      <button class="nav-pill" onclick="document.getElementById('console-tempos').scrollIntoView({behavior:'smooth'})">⚙️ Tempos</button>
-      <button class="nav-pill" onclick="document.getElementById('console-modais').scrollIntoView({behavior:'smooth'})">🗣️ Modais</button>
-      <button class="nav-pill" onclick="document.getElementById('console-pratica').scrollIntoView({behavior:'smooth'})">🎯 Praticar</button>
-      <button class="nav-pill" id="navExpressoes" onclick="document.getElementById('console-expressoes').scrollIntoView({behavior:'smooth'})">🗃️ Expressões</button>
-      <button class="nav-pill" onclick="document.getElementById('block-matrix').scrollIntoView({behavior:'smooth'})">📚 Referência</button>
+      <button class="nav-pill" data-section="console-tempos" onclick="document.getElementById('console-tempos').scrollIntoView({behavior:'smooth'})">⚙️ Tempos</button>
+      <button class="nav-pill" data-section="console-modais" onclick="document.getElementById('console-modais').scrollIntoView({behavior:'smooth'})">🗣️ Modais</button>
+      <button class="nav-pill" data-section="console-pratica" onclick="document.getElementById('console-pratica').scrollIntoView({behavior:'smooth'})">🎯 Praticar</button>
+      <button class="nav-pill" id="navExpressoes" data-section="console-expressoes" onclick="document.getElementById('console-expressoes').scrollIntoView({behavior:'smooth'})">🗃️ Expressões</button>
+      <button class="nav-pill" data-section="block-matrix" onclick="document.getElementById('block-matrix').scrollIntoView({behavior:'smooth'})">📚 Referência</button>
     </div>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
   </div>
@@ -329,6 +482,9 @@
     <div class="dial-group" id="colDialGroup">
       <div class="dial-group-title">④ Regência / collocation do verbo (opcional)</div>
       <div class="signal-row-inner" id="colRow"></div>
+    </div>
+
+    <div class="dial-group" id="bankDialGroup">
       <div id="verbBankPanel"></div>
     </div>
 
@@ -349,6 +505,7 @@
       <div class="dial-group-title">⑦ Palavras-sinal (meio + fim, opcional)</div>
       <div class="signal-row" id="signalRow"></div>
       <div class="signal-hint" id="signalHint"></div>
+      <div id="signalBankPanel"></div>
     </div>
 
     <div class="dial-group">
@@ -360,6 +517,7 @@
       <div class="dial-group-title">⑨ Palavra interrogativa (só em perguntas)</div>
       <div id="whGrid"></div>
       <div class="signal-hint" id="whHint"></div>
+      <div id="whBankPanel"></div>
     </div>
   </div>
 
@@ -390,8 +548,13 @@
       <div class="dial-group-title">Ⓓ Qual formato?</div>
       <div class="formato-row" id="modalFormatoRow"></div>
     </div>
+    <div class="dial-group" id="modalWhGroup">
+      <div class="dial-group-title">Ⓔ Palavra interrogativa (só em perguntas)</div>
+      <div class="pronome-row" id="modalWhRow"></div>
+    </div>
+
     <div class="dial-group" style="margin-bottom:0;">
-      <div class="dial-group-title">Ⓔ Palavras-sinal da função (fim da frase, opcional)</div>
+      <div class="dial-group-title">Ⓕ Palavras-sinal da função (fim da frase, opcional)</div>
       <div class="signal-row-inner" id="modalSignalRow"></div>
       <div class="signal-hint">O verbo principal e a regência/collocation são os mesmos escolhidos no console de tempos (dials ③ e ④).</div>
     </div>
@@ -414,8 +577,14 @@
         <div class="practice-structure" id="practiceStructure"></div>
       </div>
 
+      <div class="practice-input-row" id="practiceInputRow">
+        <input type="text" id="practiceInput" class="practice-input" placeholder="Escreva em inglês…"
+               autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+        <button class="practice-btn primary" id="practiceCheck">Conferir</button>
+      </div>
+      <div class="practice-verdict" id="practiceVerdict" hidden></div>
       <div class="practice-actions" id="practiceActionsReveal">
-        <button class="practice-btn primary" id="practiceReveal">👁️ Ver resposta</button>
+        <button class="practice-btn" id="practiceReveal">👁️ Ver resposta</button>
         <button class="practice-btn" id="practiceNext">🎲 Pular</button>
       </div>
       <div class="practice-actions" id="practiceActionsScore" hidden>
@@ -423,14 +592,24 @@
         <button class="practice-btn miss" id="practiceMiss">↻ Errei</button>
         <button class="audio-btn" id="practiceAudio" title="Ouvir">🔊</button>
       </div>
+      <div class="practice-actions" id="practiceActionsNext" hidden>
+        <button class="practice-btn primary" id="practiceContinue">Próxima →</button>
+        <button class="audio-btn" id="practiceAudio2" title="Ouvir">🔊</button>
+      </div>
       <div class="practice-bar" id="practiceBar" hidden><i></i></div>
       <div class="practice-score" id="practiceScore"></div>
+      <button class="practice-reset" id="practiceReset" hidden>zerar placar e fila de revisão</button>
     </div>
 
-    <div class="dial-group" style="margin-bottom:0;">
+    <div class="dial-group">
+      <div class="dial-group-title">Origem dos desafios</div>
+      <div class="pronome-row" id="practiceSourceRow"></div>
+    </div>
+
+    <div class="dial-group" id="practiceLevelGroup" style="margin-bottom:0;">
       <div class="dial-group-title">Nível do desafio</div>
       <div class="pronome-row" id="practiceLevelRow"></div>
-      <div class="signal-hint">Os desafios são gerados pelos mesmos motores — nada é fixo.</div>
+      <div class="signal-hint" id="practiceHint">Os desafios são gerados pelos mesmos motores — nada é fixo.</div>
     </div>
   </div>
 
@@ -468,7 +647,10 @@
       <span class="chev">▾</span>
     </div>
     <div class="block-body"><div class="block-body-inner">
-      <div class="matrix-note">Referência fixa com o pronome <b style="color:var(--brass)">I</b>. Use o console acima para pronomes, verbos, interrogativas, tradução e áudio.</div>
+      <div class="matrix-source">
+        <span class="matrix-note" id="matrixNote"></span>
+        <div class="pronome-row" id="matrixSourceRow"></div>
+      </div>
       <div class="color-legend">
         <span><i style="background:var(--paper)"></i>sujeito + raiz</span>
         <span><i style="background:var(--teal)"></i>afirmativa</span>
@@ -479,6 +661,7 @@
         <span><i style="background:var(--violet)"></i>complemento (advérbio/tempo)</span>
       </div>
       <button class="download-btn" id="downloadMatrixBtn" onclick="downloadMatrixPNG()">⬇️ Baixar tabela (PNG)</button>
+      <div class="matrix-scroll-hint">↔ arraste a tabela para o lado para ver passado, presente e futuro</div>
       <div id="matrixWrap"></div>
     </div></div>
   </section>
@@ -599,6 +782,8 @@
 
 </div>
 
+<button class="to-top" id="toTop" aria-label="Voltar ao topo" title="Voltar ao topo">↑</button>
+
 <script>
 function speak(text, lang){
   if(!('speechSynthesis' in window) || !text) return;
@@ -612,12 +797,105 @@ document.addEventListener('click', function(e){
   const btn = e.target.closest('.audio-btn');
   if(btn && btn.dataset.text) speak(btn.dataset.text, btn.dataset.lang || 'en-US');
 });
+/* ---- Persistência local ----
+   Guarda no dispositivo o que o usuário construiu ao longo do estudo: tema, configuração
+   dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
+   Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
+   negada), o app funciona igual, só sem lembrar entre sessões. */
+const STORE_KEY = 'painel-mestre-ingles';
+function storeAvailable(){
+  try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
+}
+const CAN_STORE = storeAvailable();
+function saveState(){
+  if(!CAN_STORE) return;
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      v: 1,
+      theme: document.documentElement.getAttribute('data-theme') || 'dark',
+      state: state,
+      modal: modalState,
+      practice: { level: practiceState.level, source: practiceState.source, hits: practiceState.hits,
+                  misses: practiceState.misses, seen: practiceState.seen,
+                  missQueue: practiceState.missQueue },
+      db: { type: dbState.type, family: dbState.family, group: dbState.group },
+      matrixFollow: matrixFollow
+    }));
+  }catch(e){}
+}
+function loadState(){
+  if(!CAN_STORE) return null;
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); }catch(e){ return null; }
+}
+function clearState(){
+  if(!CAN_STORE) return;
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+}
+/* ---- Acessibilidade por teclado ----
+   As pastilhas e chips são <div> com clique (escolha de estilo, feita lá no início).
+   Em vez de reescrever todos os construtores, esta passagem única marca cada um como
+   botão focável depois de cada render. Enter e Espaço disparam o mesmo clique, que é
+   o que um <button> faria nativamente. */
+function applyA11y(){
+  document.querySelectorAll('.pronome-pill, .signal-chip, .opt-btn, .formato-switch, .letter-pill')
+    .forEach(el=>{
+      if(el.getAttribute('role') === 'button') return;
+      el.setAttribute('role','button');
+      el.setAttribute('tabindex','0');
+    });
+}
+document.addEventListener('keydown', e=>{
+  const el = e.target;
+  if(!el || !el.getAttribute || el.getAttribute('role') !== 'button') return;
+  if(e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){
+    e.preventDefault();
+    el.click();
+  }
+});
+/* ---- Orientação em documento longo ----
+   O app tem ~7 telas no celular. Um observador marca na barra a seção que está em
+   vista e mostra o botão de voltar ao topo depois da primeira tela. Usa
+   IntersectionObserver (nada de listener de scroll disparando a cada pixel) e
+   degrada em silêncio onde a API não existir. */
+function setupNavSpy(){
+  const pills = [...document.querySelectorAll('.nav-pill[data-section]')];
+  const alvos = pills.map(p=>document.getElementById(p.dataset.section)).filter(Boolean);
+  const marcar = (id)=> pills.forEach(p=> p.setAttribute('data-current', String(p.dataset.section === id)));
+
+  if('IntersectionObserver' in window && alvos.length){
+    const visiveis = new Map();
+    const io = new IntersectionObserver(entradas=>{
+      entradas.forEach(e=> visiveis.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+      let melhor = null, maior = 0;
+      visiveis.forEach((r,id)=>{ if(r > maior){ maior = r; melhor = id; } });
+      if(melhor) marcar(melhor);
+    }, { rootMargin: '-64px 0px -55% 0px', threshold: [0, .15, .4, .75] });
+    alvos.forEach(a=>io.observe(a));
+  }
+
+  const btn = document.getElementById('toTop');
+  if(btn){
+    btn.onclick = ()=> window.scrollTo({top:0, behavior:'smooth'});
+    let pendente = false;
+    const atualizar = ()=>{
+      btn.setAttribute('data-show', String(window.scrollY > window.innerHeight * 0.8));
+      pendente = false;
+    };
+    window.addEventListener('scroll', ()=>{
+      if(pendente) return;
+      pendente = true;
+      requestAnimationFrame(atualizar);
+    }, {passive:true});
+    atualizar();
+  }
+}
 function toggleTheme(){
   const html = document.documentElement;
   const isLight = html.getAttribute('data-theme') === 'light';
   const btn = document.getElementById('themeToggle');
   if(isLight){ html.removeAttribute('data-theme'); btn.textContent = '🌙'; }
   else { html.setAttribute('data-theme','light'); btn.textContent = '☀️'; }
+  saveState();
 }
 
 const PRONOUNS = ["I","You","He","She","It","We","They"];
@@ -697,6 +975,13 @@ function markColorVar(formato){
    funciona tanto pra verbos regulares (work→worked: raiz "work" + marcado "ed") quanto
    irregulares, onde o prefixo comum pode ser parcial (go→went: "g"+"ent") ou inexistente
    (eat→ate: marca a palavra inteira), já que verbos irregulares não têm uma terminação fixa. */
+/* lowerFirst em texto marcado: a primeira letra pode estar depois de um delimitador
+   invisível de cor, então rebaixar text[0] cegamente não funciona — é preciso achar
+   o primeiro caractere alfabético de verdade. */
+function lowerFirstMarked(s){
+  const i = s.search(/[A-Za-z]/);
+  return i < 0 ? s : s.slice(0,i) + s[i].toLowerCase() + s.slice(i+1);
+}
 function markedForm(base, inflected){
   let i=0;
   while(i<base.length && i<inflected.length && base[i]===inflected[i]) i++;
@@ -768,7 +1053,58 @@ const VERBS = [
   { id:"run-out", label:"run out → ran out → run out", base:"run", s3:"runs", ing:"running", past:"ran", pp:"run", prt:"out", phrasal:true, col:[{en:"of time", pt:"de tempo"},{en:"of money", pt:"de dinheiro"},{en:"of patience", pt:"de paciência"}] },
   { id:"take-off", label:"take off → took off → taken off", base:"take", s3:"takes", ing:"taking", past:"took", pp:"taken", prt:"off", phrasal:true, col:[{en:"your shoes", pt:"os sapatos"},{en:"the jacket", pt:"a jaqueta"},{en:"on time", pt:"no horário"}] },
   { id:"carry-on", label:"carry on → carried on → carried on", base:"carry", s3:"carries", ing:"carrying", past:"carried", pp:"carried", prt:"on", phrasal:true, col:[{en:"with the plan", pt:"com o plano"},{en:"as usual", pt:"normalmente"},{en:"without me", pt:"sem mim"}] },
-  { id:"work-out", label:"work out → worked out → worked out", base:"work", s3:"works", ing:"working", past:"worked", pp:"worked", prt:"out", phrasal:true, col:[{en:"at the gym", pt:"na academia"},{en:"every morning", pt:"toda manhã"},{en:"the details", pt:"os detalhes"}] }
+  { id:"work-out", label:"work out → worked out → worked out", base:"work", s3:"works", ing:"working", past:"worked", pp:"worked", prt:"out", phrasal:true, col:[{en:"at the gym", pt:"na academia"},{en:"every morning", pt:"toda manhã"},{en:"the details", pt:"os detalhes"}] },
+  { id:"agree", label:"agree · regular", base:"agree", s3:"agrees", ing:"agreeing", past:"agreed", pp:"agreed", col:[{en:"with the plan", pt:"com o plano"},{en:"on the price", pt:"com o preço"},{en:"completely", pt:"completamente"}] },
+  { id:"call", label:"call · regular", base:"call", s3:"calls", ing:"calling", past:"called", pp:"called", col:[{en:"the office", pt:"para o escritório"},{en:"a friend", pt:"para um amigo"},{en:"later", pt:"mais tarde"}] },
+  { id:"carry", label:"carry · regular", base:"carry", s3:"carries", ing:"carrying", past:"carried", pp:"carried", col:[{en:"the bags", pt:"as sacolas"},{en:"the weight", pt:"o peso"},{en:"everything", pt:"tudo"}] },
+  { id:"check", label:"check · regular", base:"check", s3:"checks", ing:"checking", past:"checked", pp:"checked", col:[{en:"the results", pt:"os resultados"},{en:"the email", pt:"o e-mail"},{en:"twice", pt:"duas vezes"}] },
+  { id:"clean", label:"clean · regular", base:"clean", s3:"cleans", ing:"cleaning", past:"cleaned", pp:"cleaned", col:[{en:"the house", pt:"a casa"},{en:"the kitchen", pt:"a cozinha"},{en:"everything", pt:"tudo"}] },
+  { id:"close", label:"close · regular", base:"close", s3:"closes", ing:"closing", past:"closed", pp:"closed", col:[{en:"the door", pt:"a porta"},{en:"the deal", pt:"o negócio"},{en:"the account", pt:"a conta"}] },
+  { id:"count", label:"count · regular", base:"count", s3:"counts", ing:"counting", past:"counted", pp:"counted", col:[{en:"on you", pt:"com você"},{en:"the money", pt:"o dinheiro"},{en:"the votes", pt:"os votos"}] },
+  { id:"cross", label:"cross · regular", base:"cross", s3:"crosses", ing:"crossing", past:"crossed", pp:"crossed", col:[{en:"the street", pt:"a rua"},{en:"the border", pt:"a fronteira"},{en:"the bridge", pt:"a ponte"}] },
+  { id:"cut", label:"cut → cut → cut", base:"cut", s3:"cuts", ing:"cutting", past:"cut", pp:"cut", col:[{en:"the costs", pt:"os custos"},{en:"the paper", pt:"o papel"},{en:"my hair", pt:"meu cabelo"}] },
+  { id:"deal", label:"deal → dealt → dealt", base:"deal", s3:"deals", ing:"dealing", past:"dealt", pp:"dealt", col:[{en:"with the problem", pt:"com o problema"},{en:"with clients", pt:"com clientes"},{en:"with pressure", pt:"com pressão"}] },
+  { id:"decide", label:"decide · regular", base:"decide", s3:"decides", ing:"deciding", past:"decided", pp:"decided", col:[{en:"the case", pt:"o caso"},{en:"everything", pt:"tudo"},{en:"quickly", pt:"rápido"}] },
+  { id:"do", label:"do → did → done", base:"do", s3:"does", ing:"doing", past:"did", pp:"done", col:[{en:"the work", pt:"o trabalho"},{en:"my best", pt:"o meu melhor"},{en:"the dishes", pt:"a louça"}] },
+  { id:"draw", label:"draw → drew → drawn", base:"draw", s3:"draws", ing:"drawing", past:"drew", pp:"drawn", col:[{en:"a picture", pt:"uma figura"},{en:"a map", pt:"um mapa"},{en:"a line", pt:"uma linha"}] },
+  { id:"dream", label:"dream · regular", base:"dream", s3:"dreams", ing:"dreaming", past:"dreamed", pp:"dreamed", col:[{en:"about the future", pt:"com o futuro"},{en:"of a better life", pt:"com uma vida melhor"},{en:"every night", pt:"toda noite"}] },
+  { id:"drink", label:"drink → drank → drunk", base:"drink", s3:"drinks", ing:"drinking", past:"drank", pp:"drunk", col:[{en:"water", pt:"água"},{en:"coffee", pt:"café"},{en:"too much", pt:"demais"}] },
+  { id:"drop", label:"drop · regular", base:"drop", s3:"drops", ing:"dropping", past:"dropped", pp:"dropped", col:[{en:"the glass", pt:"o copo"},{en:"the keys", pt:"as chaves"},{en:"everything", pt:"tudo"}] },
+  { id:"face", label:"face · regular", base:"face", s3:"faces", ing:"facing", past:"faced", pp:"faced", col:[{en:"the problem", pt:"o problema"},{en:"the truth", pt:"a verdade"},{en:"the consequences", pt:"as consequências"}] },
+  { id:"fight", label:"fight → fought → fought", base:"fight", s3:"fights", ing:"fighting", past:"fought", pp:"fought", col:[{en:"for my rights", pt:"pelos meus direitos"},{en:"against injustice", pt:"contra a injustiça"},{en:"hard", pt:"muito"}] },
+  { id:"figure", label:"figure · regular", base:"figure", s3:"figures", ing:"figuring", past:"figured", pp:"figured", col:[{en:"the answer", pt:"a resposta"},{en:"the solution", pt:"a solução"},{en:"the reason", pt:"o motivo"}] },
+  { id:"fill", label:"fill · regular", base:"fill", s3:"fills", ing:"filling", past:"filled", pp:"filled", col:[{en:"the form", pt:"o formulário"},{en:"the gap", pt:"a lacuna"},{en:"the glass", pt:"o copo"}] },
+  { id:"follow", label:"follow · regular", base:"follow", s3:"follows", ing:"following", past:"followed", pp:"followed", col:[{en:"the rules", pt:"as regras"},{en:"the instructions", pt:"as instruções"},{en:"the news", pt:"as notícias"}] },
+  { id:"have", label:"have → had → had", base:"have", s3:"has", ing:"having", past:"had", pp:"had", col:[{en:"time", pt:"tempo"},{en:"a meeting", pt:"uma reunião"},{en:"an idea", pt:"uma ideia"}] },
+  { id:"lay", label:"lay → laid → laid", base:"lay", s3:"lays", ing:"laying", past:"laid", pp:"laid", col:[{en:"the table", pt:"a mesa"},{en:"the foundation", pt:"a base"},{en:"the blame on me", pt:"a culpa em mim"}] },
+  { id:"let", label:"let → let → let", base:"let", s3:"lets", ing:"letting", past:"let", pp:"let", col:[{en:"it go", pt:"pra lá"},{en:"me know", pt:"eu saber"},{en:"them decide", pt:"eles decidirem"}] },
+  { id:"like", label:"like · regular", base:"like", s3:"likes", ing:"liking", past:"liked", pp:"liked", col:[{en:"the idea", pt:"da ideia"},{en:"this place", pt:"deste lugar"},{en:"the music", pt:"da música"}] },
+  { id:"live", label:"live · regular", base:"live", s3:"lives", ing:"living", past:"lived", pp:"lived", col:[{en:"in peace", pt:"em paz"},{en:"abroad", pt:"no exterior"},{en:"alone", pt:"sozinho(a)"}] },
+  { id:"look", label:"look · regular", base:"look", s3:"looks", ing:"looking", past:"looked", pp:"looked", col:[{en:"at the screen", pt:"para a tela"},{en:"in the mirror", pt:"no espelho"},{en:"carefully", pt:"com atenção"}] },
+  { id:"lose", label:"lose → lost → lost", base:"lose", s3:"loses", ing:"losing", past:"lost", pp:"lost", col:[{en:"the keys", pt:"as chaves"},{en:"the game", pt:"o jogo"},{en:"my patience", pt:"a paciência"}] },
+  { id:"pass", label:"pass · regular", base:"pass", s3:"passes", ing:"passing", past:"passed", pp:"passed", col:[{en:"the test", pt:"na prova"},{en:"the salt", pt:"o sal"},{en:"the ball", pt:"a bola"}] },
+  { id:"pay", label:"pay → paid → paid", base:"pay", s3:"pays", ing:"paying", past:"paid", pp:"paid", col:[{en:"the bill", pt:"a conta"},{en:"the rent", pt:"o aluguel"},{en:"in cash", pt:"à vista"}] },
+  { id:"pick", label:"pick · regular", base:"pick", s3:"picks", ing:"picking", past:"picked", pp:"picked", col:[{en:"the best one", pt:"o melhor"},{en:"a color", pt:"uma cor"},{en:"a team", pt:"um time"}] },
+  { id:"play", label:"play · regular", base:"play", s3:"plays", ing:"playing", past:"played", pp:"played", col:[{en:"football", pt:"futebol"},{en:"chess", pt:"xadrez"},{en:"with friends", pt:"com os amigos"}] },
+  { id:"pull", label:"pull · regular", base:"pull", s3:"pulls", ing:"pulling", past:"pulled", pp:"pulled", col:[{en:"the rope", pt:"a corda"},{en:"the door", pt:"a porta"},{en:"hard", pt:"com força"}] },
+  { id:"push", label:"push · regular", base:"push", s3:"pushes", ing:"pushing", past:"pushed", pp:"pushed", col:[{en:"the button", pt:"o botão"},{en:"the car", pt:"o carro"},{en:"too hard", pt:"forte demais"}] },
+  { id:"raise", label:"raise · regular", base:"raise", s3:"raises", ing:"raising", past:"raised", pp:"raised", col:[{en:"my hand", pt:"a mão"},{en:"the flag", pt:"a bandeira"},{en:"the bar", pt:"o nível"}] },
+  { id:"read", label:"read → read → read", base:"read", s3:"reads", ing:"reading", past:"read", pp:"read", col:[{en:"the book", pt:"o livro"},{en:"the news", pt:"as notícias"},{en:"out loud", pt:"em voz alta"}] },
+  { id:"return", label:"return · regular", base:"return", s3:"returns", ing:"returning", past:"returned", pp:"returned", col:[{en:"home", pt:"para casa"},{en:"to work", pt:"ao trabalho"},{en:"next week", pt:"semana que vem"}] },
+  { id:"ride", label:"ride → rode → ridden", base:"ride", s3:"rides", ing:"riding", past:"rode", pp:"ridden", col:[{en:"a bike", pt:"de bicicleta"},{en:"a horse", pt:"a cavalo"},{en:"to school", pt:"até a escola"}] },
+  { id:"save", label:"save · regular", base:"save", s3:"saves", ing:"saving", past:"saved", pp:"saved", col:[{en:"the file", pt:"o arquivo"},{en:"a life", pt:"uma vida"},{en:"the project", pt:"o projeto"}] },
+  { id:"set", label:"set → set → set", base:"set", s3:"sets", ing:"setting", past:"set", pp:"set", col:[{en:"the rules", pt:"as regras"},{en:"a goal", pt:"uma meta"},{en:"the date", pt:"a data"}] },
+  { id:"show", label:"show → showed → shown", base:"show", s3:"shows", ing:"showing", past:"showed", pp:"shown", col:[{en:"the results", pt:"os resultados"},{en:"the way", pt:"o caminho"},{en:"the photos", pt:"as fotos"}] },
+  { id:"stand", label:"stand → stood → stood", base:"stand", s3:"stands", ing:"standing", past:"stood", pp:"stood", col:[{en:"the pressure", pt:"a pressão"},{en:"the noise", pt:"o barulho"},{en:"the pain", pt:"a dor"}] },
+  { id:"stay", label:"stay · regular", base:"stay", s3:"stays", ing:"staying", past:"stayed", pp:"stayed", col:[{en:"at home", pt:"em casa"},{en:"in a hotel", pt:"em um hotel"},{en:"calm", pt:"calmo(a)"}] },
+  { id:"step", label:"step · regular", base:"step", s3:"steps", ing:"stepping", past:"stepped", pp:"stepped", col:[{en:"on the brake", pt:"no freio"},{en:"carefully", pt:"com cuidado"},{en:"forward", pt:"à frente"}] },
+  { id:"stop", label:"stop · regular", base:"stop", s3:"stops", ing:"stopping", past:"stopped", pp:"stopped", col:[{en:"the car", pt:"o carro"},{en:"the noise", pt:"o barulho"},{en:"immediately", pt:"imediatamente"}] },
+  { id:"talk", label:"talk · regular", base:"talk", s3:"talks", ing:"talking", past:"talked", pp:"talked", col:[{en:"about work", pt:"sobre trabalho"},{en:"with the team", pt:"com a equipe"},{en:"openly", pt:"abertamente"}] },
+  { id:"throw", label:"throw → threw → thrown", base:"throw", s3:"throws", ing:"throwing", past:"threw", pp:"thrown", col:[{en:"the ball", pt:"a bola"},{en:"a party", pt:"uma festa"},{en:"the rope", pt:"a corda"}] },
+  { id:"turn", label:"turn · regular", base:"turn", s3:"turns", ing:"turning", past:"turned", pp:"turned", col:[{en:"the page", pt:"a página"},{en:"left", pt:"à esquerda"},{en:"the key", pt:"a chave"}] },
+  { id:"wait", label:"wait · regular", base:"wait", s3:"waits", ing:"waiting", past:"waited", pp:"waited", col:[{en:"for the bus", pt:"o ônibus"},{en:"for an answer", pt:"uma resposta"},{en:"in line", pt:"na fila"}] },
+  { id:"walk", label:"walk · regular", base:"walk", s3:"walks", ing:"walking", past:"walked", pp:"walked", col:[{en:"to work", pt:"até o trabalho"},{en:"in the park", pt:"no parque"},{en:"every morning", pt:"toda manhã"}] },
+  { id:"wash", label:"wash · regular", base:"wash", s3:"washes", ing:"washing", past:"washed", pp:"washed", col:[{en:"the car", pt:"o carro"},{en:"the dishes", pt:"a louça"},{en:"my hands", pt:"as mãos"}] }
 ];
 function verbById(id){ return VERBS.find(v=>v.id===id) || VERBS[0]; }
 
@@ -991,7 +1327,58 @@ const PT_VERBS = {
   "run-out": { presente:{"1s":"fico sem","3s":"fica sem","1p":"ficamos sem","3p":"ficam sem"}, pperf:{"1s":"fiquei sem","3s":"ficou sem","1p":"ficamos sem","3p":"ficaram sem"}, ger:"ficando sem", part:"ficado sem", inf:"ficar sem" },
   "take-off": { presente:{"1s":"tiro","3s":"tira","1p":"tiramos","3p":"tiram"}, pperf:{"1s":"tirei","3s":"tirou","1p":"tiramos","3p":"tiraram"}, ger:"tirando", part:"tirado", inf:"tirar" },
   "carry-on": { presente:{"1s":"continuo","3s":"continua","1p":"continuamos","3p":"continuam"}, pperf:{"1s":"continuei","3s":"continuou","1p":"continuamos","3p":"continuaram"}, ger:"continuando", part:"continuado", inf:"continuar" },
-  "work-out": { presente:{"1s":"malho","3s":"malha","1p":"malhamos","3p":"malham"}, pperf:{"1s":"malhei","3s":"malhou","1p":"malhamos","3p":"malharam"}, ger:"malhando", part:"malhado", inf:"malhar" }
+  "work-out": { presente:{"1s":"malho","3s":"malha","1p":"malhamos","3p":"malham"}, pperf:{"1s":"malhei","3s":"malhou","1p":"malhamos","3p":"malharam"}, ger:"malhando", part:"malhado", inf:"malhar" },
+  "agree": { presente:{"1s":"concordo","3s":"concorda","1p":"concordamos","3p":"concordam"}, pperf:{"1s":"concordei","3s":"concordou","1p":"concordamos","3p":"concordaram"}, ger:"concordando", part:"concordado", inf:"concordar" },
+  "call": { presente:{"1s":"ligo","3s":"liga","1p":"ligamos","3p":"ligam"}, pperf:{"1s":"liguei","3s":"ligou","1p":"ligamos","3p":"ligaram"}, ger:"ligando", part:"ligado", inf:"ligar" },
+  "carry": { presente:{"1s":"carrego","3s":"carrega","1p":"carregamos","3p":"carregam"}, pperf:{"1s":"carreguei","3s":"carregou","1p":"carregamos","3p":"carregaram"}, ger:"carregando", part:"carregado", inf:"carregar" },
+  "check": { presente:{"1s":"verifico","3s":"verifica","1p":"verificamos","3p":"verificam"}, pperf:{"1s":"verifiquei","3s":"verificou","1p":"verificamos","3p":"verificaram"}, ger:"verificando", part:"verificado", inf:"verificar" },
+  "clean": { presente:{"1s":"limpo","3s":"limpa","1p":"limpamos","3p":"limpam"}, pperf:{"1s":"limpei","3s":"limpou","1p":"limpamos","3p":"limparam"}, ger:"limpando", part:"limpado", inf:"limpar" },
+  "close": { presente:{"1s":"fecho","3s":"fecha","1p":"fechamos","3p":"fecham"}, pperf:{"1s":"fechei","3s":"fechou","1p":"fechamos","3p":"fecharam"}, ger:"fechando", part:"fechado", inf:"fechar" },
+  "count": { presente:{"1s":"conto","3s":"conta","1p":"contamos","3p":"contam"}, pperf:{"1s":"contei","3s":"contou","1p":"contamos","3p":"contaram"}, ger:"contando", part:"contado", inf:"contar" },
+  "cross": { presente:{"1s":"atravesso","3s":"atravessa","1p":"atravessamos","3p":"atravessam"}, pperf:{"1s":"atravessei","3s":"atravessou","1p":"atravessamos","3p":"atravessaram"}, ger:"atravessando", part:"atravessado", inf:"atravessar" },
+  "cut": { presente:{"1s":"corto","3s":"corta","1p":"cortamos","3p":"cortam"}, pperf:{"1s":"cortei","3s":"cortou","1p":"cortamos","3p":"cortaram"}, ger:"cortando", part:"cortado", inf:"cortar" },
+  "deal": { presente:{"1s":"lido","3s":"lida","1p":"lidamos","3p":"lidam"}, pperf:{"1s":"lidei","3s":"lidou","1p":"lidamos","3p":"lidaram"}, ger:"lidando", part:"lidado", inf:"lidar" },
+  "decide": { presente:{"1s":"decido","3s":"decide","1p":"decidimos","3p":"decidem"}, pperf:{"1s":"decidi","3s":"decidiu","1p":"decidimos","3p":"decidiram"}, ger:"decidindo", part:"decidido", inf:"decidir" },
+  "do": { presente:{"1s":"faço","3s":"faz","1p":"fazemos","3p":"fazem"}, pperf:{"1s":"fiz","3s":"fez","1p":"fizemos","3p":"fizeram"}, ger:"fazendo", part:"feito", inf:"fazer" },
+  "draw": { presente:{"1s":"desenho","3s":"desenha","1p":"desenhamos","3p":"desenham"}, pperf:{"1s":"desenhei","3s":"desenhou","1p":"desenhamos","3p":"desenharam"}, ger:"desenhando", part:"desenhado", inf:"desenhar" },
+  "dream": { presente:{"1s":"sonho","3s":"sonha","1p":"sonhamos","3p":"sonham"}, pperf:{"1s":"sonhei","3s":"sonhou","1p":"sonhamos","3p":"sonharam"}, ger:"sonhando", part:"sonhado", inf:"sonhar" },
+  "drink": { presente:{"1s":"bebo","3s":"bebe","1p":"bebemos","3p":"bebem"}, pperf:{"1s":"bebi","3s":"bebeu","1p":"bebemos","3p":"beberam"}, ger:"bebendo", part:"bebido", inf:"beber" },
+  "drop": { presente:{"1s":"derrubo","3s":"derruba","1p":"derrubamos","3p":"derrubam"}, pperf:{"1s":"derrubei","3s":"derrubou","1p":"derrubamos","3p":"derrubaram"}, ger:"derrubando", part:"derrubado", inf:"derrubar" },
+  "face": { presente:{"1s":"enfrento","3s":"enfrenta","1p":"enfrentamos","3p":"enfrentam"}, pperf:{"1s":"enfrentei","3s":"enfrentou","1p":"enfrentamos","3p":"enfrentaram"}, ger:"enfrentando", part:"enfrentado", inf:"enfrentar" },
+  "fight": { presente:{"1s":"luto","3s":"luta","1p":"lutamos","3p":"lutam"}, pperf:{"1s":"lutei","3s":"lutou","1p":"lutamos","3p":"lutaram"}, ger:"lutando", part:"lutado", inf:"lutar" },
+  "figure": { presente:{"1s":"deduzo","3s":"deduz","1p":"deduzimos","3p":"deduzem"}, pperf:{"1s":"deduzi","3s":"deduziu","1p":"deduzimos","3p":"deduziram"}, ger:"deduzindo", part:"deduzido", inf:"deduzir" },
+  "fill": { presente:{"1s":"preencho","3s":"preenche","1p":"preenchemos","3p":"preenchem"}, pperf:{"1s":"preenchi","3s":"preencheu","1p":"preenchemos","3p":"preencheram"}, ger:"preenchendo", part:"preenchido", inf:"preencher" },
+  "follow": { presente:{"1s":"sigo","3s":"segue","1p":"seguimos","3p":"seguem"}, pperf:{"1s":"segui","3s":"seguiu","1p":"seguimos","3p":"seguiram"}, ger:"seguindo", part:"seguido", inf:"seguir" },
+  "have": { presente:{"1s":"tenho","3s":"tem","1p":"temos","3p":"têm"}, pperf:{"1s":"tive","3s":"teve","1p":"tivemos","3p":"tiveram"}, ger:"tendo", part:"tido", inf:"ter" },
+  "lay": { presente:{"1s":"ponho","3s":"põe","1p":"pomos","3p":"põem"}, pperf:{"1s":"pus","3s":"pôs","1p":"pusemos","3p":"puseram"}, ger:"pondo", part:"posto", inf:"pôr" },
+  "let": { presente:{"1s":"deixo","3s":"deixa","1p":"deixamos","3p":"deixam"}, pperf:{"1s":"deixei","3s":"deixou","1p":"deixamos","3p":"deixaram"}, ger:"deixando", part:"deixado", inf:"deixar" },
+  "like": { presente:{"1s":"gosto","3s":"gosta","1p":"gostamos","3p":"gostam"}, pperf:{"1s":"gostei","3s":"gostou","1p":"gostamos","3p":"gostaram"}, ger:"gostando", part:"gostado", inf:"gostar" },
+  "live": { presente:{"1s":"vivo","3s":"vive","1p":"vivemos","3p":"vivem"}, pperf:{"1s":"vivi","3s":"viveu","1p":"vivemos","3p":"viveram"}, ger:"vivendo", part:"vivido", inf:"viver" },
+  "look": { presente:{"1s":"olho","3s":"olha","1p":"olhamos","3p":"olham"}, pperf:{"1s":"olhei","3s":"olhou","1p":"olhamos","3p":"olharam"}, ger:"olhando", part:"olhado", inf:"olhar" },
+  "lose": { presente:{"1s":"perco","3s":"perde","1p":"perdemos","3p":"perdem"}, pperf:{"1s":"perdi","3s":"perdeu","1p":"perdemos","3p":"perderam"}, ger:"perdendo", part:"perdido", inf:"perder" },
+  "pass": { presente:{"1s":"passo","3s":"passa","1p":"passamos","3p":"passam"}, pperf:{"1s":"passei","3s":"passou","1p":"passamos","3p":"passaram"}, ger:"passando", part:"passado", inf:"passar" },
+  "pay": { presente:{"1s":"pago","3s":"paga","1p":"pagamos","3p":"pagam"}, pperf:{"1s":"paguei","3s":"pagou","1p":"pagamos","3p":"pagaram"}, ger:"pagando", part:"pago", inf:"pagar" },
+  "pick": { presente:{"1s":"seleciono","3s":"seleciona","1p":"selecionamos","3p":"selecionam"}, pperf:{"1s":"selecionei","3s":"selecionou","1p":"selecionamos","3p":"selecionaram"}, ger:"selecionando", part:"selecionado", inf:"selecionar" },
+  "play": { presente:{"1s":"jogo","3s":"joga","1p":"jogamos","3p":"jogam"}, pperf:{"1s":"joguei","3s":"jogou","1p":"jogamos","3p":"jogaram"}, ger:"jogando", part:"jogado", inf:"jogar" },
+  "pull": { presente:{"1s":"puxo","3s":"puxa","1p":"puxamos","3p":"puxam"}, pperf:{"1s":"puxei","3s":"puxou","1p":"puxamos","3p":"puxaram"}, ger:"puxando", part:"puxado", inf:"puxar" },
+  "push": { presente:{"1s":"empurro","3s":"empurra","1p":"empurramos","3p":"empurram"}, pperf:{"1s":"empurrei","3s":"empurrou","1p":"empurramos","3p":"empurraram"}, ger:"empurrando", part:"empurrado", inf:"empurrar" },
+  "raise": { presente:{"1s":"ergo","3s":"ergue","1p":"erguemos","3p":"erguem"}, pperf:{"1s":"ergui","3s":"ergueu","1p":"erguemos","3p":"ergueram"}, ger:"erguendo", part:"erguido", inf:"erguer" },
+  "read": { presente:{"1s":"leio","3s":"lê","1p":"lemos","3p":"leem"}, pperf:{"1s":"li","3s":"leu","1p":"lemos","3p":"leram"}, ger:"lendo", part:"lido", inf:"ler" },
+  "return": { presente:{"1s":"retorno","3s":"retorna","1p":"retornamos","3p":"retornam"}, pperf:{"1s":"retornei","3s":"retornou","1p":"retornamos","3p":"retornaram"}, ger:"retornando", part:"retornado", inf:"retornar" },
+  "ride": { presente:{"1s":"ando","3s":"anda","1p":"andamos","3p":"andam"}, pperf:{"1s":"andei","3s":"andou","1p":"andamos","3p":"andaram"}, ger:"andando", part:"andado", inf:"andar" },
+  "save": { presente:{"1s":"salvo","3s":"salva","1p":"salvamos","3p":"salvam"}, pperf:{"1s":"salvei","3s":"salvou","1p":"salvamos","3p":"salvaram"}, ger:"salvando", part:"salvado", inf:"salvar" },
+  "set": { presente:{"1s":"defino","3s":"define","1p":"definimos","3p":"definem"}, pperf:{"1s":"defini","3s":"definiu","1p":"definimos","3p":"definiram"}, ger:"definindo", part:"definido", inf:"definir" },
+  "show": { presente:{"1s":"mostro","3s":"mostra","1p":"mostramos","3p":"mostram"}, pperf:{"1s":"mostrei","3s":"mostrou","1p":"mostramos","3p":"mostraram"}, ger:"mostrando", part:"mostrado", inf:"mostrar" },
+  "stand": { presente:{"1s":"suporto","3s":"suporta","1p":"suportamos","3p":"suportam"}, pperf:{"1s":"suportei","3s":"suportou","1p":"suportamos","3p":"suportaram"}, ger:"suportando", part:"suportado", inf:"suportar" },
+  "stay": { presente:{"1s":"fico","3s":"fica","1p":"ficamos","3p":"ficam"}, pperf:{"1s":"fiquei","3s":"ficou","1p":"ficamos","3p":"ficaram"}, ger:"ficando", part:"ficado", inf:"ficar" },
+  "step": { presente:{"1s":"piso","3s":"pisa","1p":"pisamos","3p":"pisam"}, pperf:{"1s":"pisei","3s":"pisou","1p":"pisamos","3p":"pisaram"}, ger:"pisando", part:"pisado", inf:"pisar" },
+  "stop": { presente:{"1s":"paro","3s":"para","1p":"paramos","3p":"param"}, pperf:{"1s":"parei","3s":"parou","1p":"paramos","3p":"pararam"}, ger:"parando", part:"parado", inf:"parar" },
+  "talk": { presente:{"1s":"converso","3s":"conversa","1p":"conversamos","3p":"conversam"}, pperf:{"1s":"conversei","3s":"conversou","1p":"conversamos","3p":"conversaram"}, ger:"conversando", part:"conversado", inf:"conversar" },
+  "throw": { presente:{"1s":"lanço","3s":"lança","1p":"lançamos","3p":"lançam"}, pperf:{"1s":"lancei","3s":"lançou","1p":"lançamos","3p":"lançaram"}, ger:"lançando", part:"lançado", inf:"lançar" },
+  "turn": { presente:{"1s":"viro","3s":"vira","1p":"viramos","3p":"viram"}, pperf:{"1s":"virei","3s":"virou","1p":"viramos","3p":"viraram"}, ger:"virando", part:"virado", inf:"virar" },
+  "wait": { presente:{"1s":"espero","3s":"espera","1p":"esperamos","3p":"esperam"}, pperf:{"1s":"esperei","3s":"esperou","1p":"esperamos","3p":"esperaram"}, ger:"esperando", part:"esperado", inf:"esperar" },
+  "walk": { presente:{"1s":"caminho","3s":"caminha","1p":"caminhamos","3p":"caminham"}, pperf:{"1s":"caminhei","3s":"caminhou","1p":"caminhamos","3p":"caminharam"}, ger:"caminhando", part:"caminhado", inf:"caminhar" },
+  "wash": { presente:{"1s":"lavo","3s":"lava","1p":"lavamos","3p":"lavam"}, pperf:{"1s":"lavei","3s":"lavou","1p":"lavamos","3p":"lavaram"}, ger:"lavando", part:"lavado", inf:"lavar" }
 };
 const PT_ESTAR = { presente:{"1s":"estou","3s":"está","1p":"estamos","3p":"estão"}, imperf:{"1s":"estava","3s":"estava","1p":"estávamos","3p":"estavam"}, ir:{"1s":"vou","3s":"vai","1p":"vamos","3p":"vão"} };
 const PT_TER = { presente:{"1s":"tenho","3s":"tem","1p":"temos","3p":"têm"}, imperf:{"1s":"tinha","3s":"tinha","1p":"tínhamos","3p":"tinham"} };
@@ -1043,6 +1430,14 @@ const SIGNAL_PT = {
   "in general":"em geral","in advance":"com antecedência","in person":"pessoalmente","in a hurry":"com pressa","in silence":"em silêncio","in my life":"na minha vida","in the meantime":"enquanto isso","in the end":"no fim","in a rush":"às pressas","in fact":"na verdade",
   "by heart":"de cor","by default":"por padrão","by myself":"sozinho(a)","by now":"a esta altura","by far":"de longe","by chance":"por acaso","by mistake":"por engano","by accident":"sem querer","by all means":"com certeza",
   "for sure":"com certeza","for now":"por enquanto","for a living":"para viver","for fun":"por diversão","for a change":"para variar","for the most part":"na maior parte","for once":"pelo menos uma vez","for good measure":"por garantia",
+  "from home":"de casa","from experience":"por experiência","from scratch":"do zero","from the start":"desde o início","from day one":"desde o primeiro dia","from the beginning":"desde o começo","from memory":"de memória","from a distance":"de longe","from now on":"de agora em diante","from tomorrow":"a partir de amanhã",
+  "over and over":"repetidas vezes","over time":"com o tempo","over the phone":"por telefone","over there":"lá","all over the place":"por toda parte","over the weekend":"no fim de semana",
+  "with pleasure":"com prazer","with care":"com cuidado","without a doubt":"sem dúvida","without fail":"sem falta","without warning":"sem aviso","without thinking":"sem pensar",
+  "around the clock":"24 horas por dia","around here":"por aqui","around noon":"por volta do meio-dia","around the corner":"logo ali",
+  "back and forth":"de um lado para o outro","back home":"de volta para casa","back in the day":"naquela época","way back":"lá atrás",
+  "once in a while":"de vez em quando","once and for all":"de uma vez por todas","once in a lifetime":"uma vez na vida","more than once":"mais de uma vez","just once":"só uma vez",
+  "little by little":"pouco a pouco","step by step":"passo a passo","day by day":"dia após dia","one by one":"um por um","side by side":"lado a lado",
+  "on purpose":"de propósito","on foot":"a pé","on my own":"por conta própria","on average":"em média","on the way":"a caminho","on several occasions":"em várias ocasiões","on and on":"sem parar","on the spot":"na hora","on schedule":"dentro do prazo",
   "out loud":"em voz alta","off and on":"de vez em quando","out of nowhere":"do nada","off the record":"em off","out of habit":"por hábito","at any time":"a qualquer hora"
 };
 function ptFactParts(tempo,aspecto,pEN,verbId){
@@ -1080,6 +1475,11 @@ function ptStateParts(tempo,aspecto,pEN){
   }
   return {pron, core};
 }
+/* Advérbios cuja tradução PT não aceita a posição média do inglês: "Eu recentemente
+   tinha ido" soa errado, o natural é "Recentemente, eu tinha ido". Vale pela palavra em
+   português, não pela classe do sinal em inglês — "recently" é advérbio de perfect lá,
+   mas advérbio de tempo aqui. */
+const PT_ADV_INICIO = new Set(["atualmente","recentemente","ultimamente","hoje em dia"]);
 function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit){
   const isQ = formato==='pergunta' || formato==='pergunta_negativa';
   const neg = (formato==='negativa' || formato==='pergunta_negativa');
@@ -1096,7 +1496,7 @@ function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit)
     /* "já não" / "ainda não" / "nem sempre" são as ordens naturais do português. */
     if(neg && (midPT==='já' || midPT==='ainda')){ pre = ` ${midPT} não`; }
     else if(neg && midPT==='sempre'){ pre = ' nem sempre'; }
-    else if(signalMid.cls==='timeMid'){
+    else if(signalMid.cls==='timeMid' || PT_ADV_INICIO.has(midPT)){
       /* Advérbios de TEMPO em posição média no inglês (currently) não aceitam essa posição
          em português: "Eu atualmente estou trabalhando" soa errado. Eles vão para o início
          da frase, que é onde o português os coloca naturalmente. Isso difere dos advérbios
@@ -1200,12 +1600,20 @@ const CLASS_INFO = {
   everyFam: {label:"Família do \"every\" — fim da frase"},
   againFam: {label:"Família do \"again\" — fim da frase"},
   asFam: {label:"Família do \"as\" — fim da frase"},
+  fromFam: {label:"Família do \"from\" — fim da frase"},
+  onFam: {label:"Família do \"on\" — fim da frase"},
+  overFam: {label:"Família do \"over\" — fim da frase"},
+  withFam: {label:"Família do \"with/without\" — fim da frase"},
+  aroundFam: {label:"Família do \"around\" — fim da frase"},
+  backFam: {label:"Família do \"back\" — fim da frase"},
+  onceFam: {label:"Família do \"once\" — fim da frase"},
   atFam: {label:"Família do \"at\" — fim da frase"},
   inFam: {label:"Família do \"in\" — fim da frase"},
   byFam: {label:"Família do \"by\" — fim da frase"},
   forFam: {label:"Família do \"for\" — fim da frase"},
   outFam: {label:"Família do \"out/off\" — fim da frase"},
-  splitFam: {label:"Posição partida — uma parte no meio, outra no fim"}
+  splitFam: {label:"Posição partida — uma parte no meio, outra no fim"},
+  outrosFam: {label:"Diversos — expressões próprias desta função"}
 };
 
 /* Advérbios de posição partida: ocupam DOIS pontos da frase ao mesmo tempo
@@ -1220,7 +1628,9 @@ const SPLIT_SIGNALS = {
     {w:"never ... again", mid:"never", end:"again", negMid:"ever", pt:"nunca mais", cls:"splitFam", pl:"split"},
     {w:"always ... anyway", mid:"always", end:"anyway", negMid:"always", pt:"sempre", ptEnd:"de qualquer forma", cls:"splitFam", pl:"split"},
     {w:"as soon as possible",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},{w:"as needed",pl:"end",cls:"asFam"},{w:"as usual",pl:"end",cls:"asFam"},
-    {w:"at some point",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"by all means",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"},{w:"out of habit",pl:"end",cls:"outFam"}
+    {w:"at some point",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"by all means",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"},{w:"out of habit",pl:"end",cls:"outFam"},
+    {w:"from now on",pl:"end",cls:"fromFam"},{w:"from tomorrow",pl:"end",cls:"fromFam"},{w:"from scratch",pl:"end",cls:"fromFam"},{w:"on time",pl:"end",cls:"onFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on purpose",pl:"end",cls:"onFam"},
+    {w:"over the weekend",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"around noon",pl:"end",cls:"aroundFam"},{w:"around the corner",pl:"end",cls:"aroundFam"},{w:"back home",pl:"end",cls:"backFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"once in a lifetime",pl:"end",cls:"onceFam"},{w:"step by step",pl:"end",cls:"byFam"}
   ]
 };
 const SIGNAL_WORDS = {
@@ -1230,14 +1640,18 @@ const SIGNAL_WORDS = {
     {w:"all the time",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},{w:"all of us",pl:"end",cls:"allFam"},
     {w:"from time to time",pl:"end",cls:"timeFam"},{w:"on time",pl:"end",cls:"timeFam"},{w:"every time",pl:"end",cls:"timeFam"},{w:"every single day",pl:"end",cls:"everyFam"},{w:"every other day",pl:"end",cls:"everyFam"},{w:"every now and then",pl:"end",cls:"everyFam"},{w:"every weekend",pl:"end",cls:"everyFam"},{w:"again and again",pl:"end",cls:"againFam"},{w:"over and over again",pl:"end",cls:"againFam"},
     {w:"as usual",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},{w:"as a rule",pl:"end",cls:"asFam"},{w:"as much as possible",pl:"end",cls:"asFam"},
-    {w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"at the same time",pl:"end",cls:"atFam"},{w:"at all times",pl:"end",cls:"atFam"},{w:"in general",pl:"end",cls:"inFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in a hurry",pl:"end",cls:"inFam"},{w:"by heart",pl:"end",cls:"byFam"},{w:"by default",pl:"end",cls:"byFam"},{w:"by myself",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a living",pl:"end",cls:"forFam"},{w:"for fun",pl:"end",cls:"forFam"},{w:"out loud",pl:"end",cls:"outFam"},{w:"off and on",pl:"end",cls:"outFam"}
+    {w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"at the same time",pl:"end",cls:"atFam"},{w:"at all times",pl:"end",cls:"atFam"},{w:"in general",pl:"end",cls:"inFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in a hurry",pl:"end",cls:"inFam"},{w:"by heart",pl:"end",cls:"byFam"},{w:"by default",pl:"end",cls:"byFam"},{w:"by myself",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a living",pl:"end",cls:"forFam"},{w:"for fun",pl:"end",cls:"forFam"},{w:"out loud",pl:"end",cls:"outFam"},{w:"off and on",pl:"end",cls:"outFam"},
+    {w:"from home",pl:"end",cls:"fromFam"},{w:"from experience",pl:"end",cls:"fromFam"},{w:"from scratch",pl:"end",cls:"fromFam"},{w:"on purpose",pl:"end",cls:"onFam"},{w:"on foot",pl:"end",cls:"onFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on average",pl:"end",cls:"onFam"},
+    {w:"over and over",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"all over the place",pl:"end",cls:"overFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"with care",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"around the clock",pl:"end",cls:"aroundFam"},{w:"around here",pl:"end",cls:"aroundFam"},{w:"once in a while",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},{w:"step by step",pl:"end",cls:"byFam"},{w:"day by day",pl:"end",cls:"byFam"}
   ],
   present_continuo: [
     {w:"right now",pl:"end",cls:"timePoint"},{w:"at the moment",pl:"end",cls:"timePoint"},{w:"at present",pl:"end",cls:"timePoint"},{w:"nowadays",pl:"end",cls:"timePoint"},{w:"today",pl:"end",cls:"timePoint"},{w:"this week",pl:"end",cls:"timePoint"},{w:"this month",pl:"end",cls:"timePoint"},{w:"this year",pl:"end",cls:"timePoint"},{w:"these days",pl:"end",cls:"timePoint"},{w:"at this moment",pl:"end",cls:"timePoint"},
     {w:"currently",pl:"mid",cls:"timeMid"},{w:"still",pl:"mid",cls:"perfectAdv"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all the time",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},
     {w:"as we speak",pl:"end",cls:"asFam"},{w:"as usual",pl:"end",cls:"asFam"},
-    {w:"at the moment",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"in a hurry",pl:"end",cls:"inFam"},{w:"in silence",pl:"end",cls:"inFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"}
+    {w:"at the moment",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"in a hurry",pl:"end",cls:"inFam"},{w:"in silence",pl:"end",cls:"inFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"},
+    {w:"from home",pl:"end",cls:"fromFam"},{w:"on the way",pl:"end",cls:"onFam"},{w:"on purpose",pl:"end",cls:"onFam"},
+    {w:"over the phone",pl:"end",cls:"overFam"},{w:"over there",pl:"end",cls:"overFam"},{w:"with care",pl:"end",cls:"withFam"},{w:"without thinking",pl:"end",cls:"withFam"},{w:"around here",pl:"end",cls:"aroundFam"}
   ],
   present_perfeito: [
     {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"yet",pl:"end",cls:"perfectAdv"},
@@ -1247,14 +1661,18 @@ const SIGNAL_WORDS = {
     {w:"all my life",pl:"end",cls:"allFam"},{w:"all this time",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},
     {w:"for the first time",pl:"end",cls:"timeFam"},{w:"ever since",pl:"end",cls:"everFam"},{w:"never before",pl:"end",cls:"everFam"},{w:"my whole life",pl:"end",cls:"wholeFam"},{w:"this whole time",pl:"end",cls:"wholeFam"},{w:"yet again",pl:"end",cls:"againFam"},
     {w:"as far as I know",pl:"end",cls:"asFam"},{w:"as expected",pl:"end",cls:"asFam"},{w:"as never before",pl:"end",cls:"asFam"},
-    {w:"at last",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at some point",pl:"end",cls:"atFam"},{w:"in my life",pl:"end",cls:"inFam"},{w:"in the meantime",pl:"end",cls:"inFam"},{w:"by now",pl:"end",cls:"byFam"},{w:"by far",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for the most part",pl:"end",cls:"forFam"},{w:"out of nowhere",pl:"end",cls:"outFam"}
+    {w:"at last",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at some point",pl:"end",cls:"atFam"},{w:"in my life",pl:"end",cls:"inFam"},{w:"in the meantime",pl:"end",cls:"inFam"},{w:"by now",pl:"end",cls:"byFam"},{w:"by far",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for the most part",pl:"end",cls:"forFam"},{w:"out of nowhere",pl:"end",cls:"outFam"},
+    {w:"from the start",pl:"end",cls:"fromFam"},{w:"from day one",pl:"end",cls:"fromFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on several occasions",pl:"end",cls:"onFam"},
+    {w:"over time",pl:"end",cls:"overFam"},{w:"over and over",pl:"end",cls:"overFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"once in a lifetime",pl:"end",cls:"onceFam"},{w:"more than once",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},{w:"one by one",pl:"end",cls:"byFam"}
   ],
   present_perfeito_continuo: [
     {w:"since morning",pl:"end",cls:"timePoint"},{w:"since 9 a.m.",pl:"end",cls:"timePoint"},{w:"for two hours",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"lately",pl:"end",cls:"timePoint"},{w:"recently",pl:"end",cls:"timePoint"},{w:"all week",pl:"end",cls:"timePoint"},{w:"for hours",pl:"end",cls:"timePoint"},{w:"for days",pl:"end",cls:"timePoint"},{w:"since breakfast",pl:"end",cls:"timePoint"},{w:"since 8 a.m.",pl:"end",cls:"timePoint"},{w:"all day",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for months now",pl:"end",cls:"timePoint"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all year long",pl:"end",cls:"allFam"},{w:"all this time",pl:"end",cls:"allFam"},
     {w:"the whole time",pl:"end",cls:"wholeFam"},{w:"the whole day",pl:"end",cls:"wholeFam"},
     {w:"as long as I can remember",pl:"end",cls:"asFam"},
-    {w:"in the meantime",pl:"end",cls:"inFam"},{w:"for a change",pl:"end",cls:"forFam"}
+    {w:"in the meantime",pl:"end",cls:"inFam"},{w:"for a change",pl:"end",cls:"forFam"},
+    {w:"from the beginning",pl:"end",cls:"fromFam"},{w:"on and on",pl:"end",cls:"onFam"},
+    {w:"over time",pl:"end",cls:"overFam"},{w:"around the clock",pl:"end",cls:"aroundFam"},{w:"step by step",pl:"end",cls:"byFam"}
   ],
   past_simples: [
     {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},{w:"the day before yesterday",pl:"end",cls:"timePoint"},{w:"three years ago",pl:"end",cls:"timePoint"},{w:"a long time ago",pl:"end",cls:"timePoint"},{w:"in 1990",pl:"end",cls:"timePoint"},{w:"when I was a child",pl:"end",cls:"timePoint"},{w:"last night",pl:"end",cls:"timePoint"},{w:"earlier today",pl:"end",cls:"timePoint"},
@@ -1262,27 +1680,35 @@ const SIGNAL_WORDS = {
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all night long",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},{w:"all summer",pl:"end",cls:"allFam"},
     {w:"at the time",pl:"end",cls:"timeFam"},{w:"for the last time",pl:"end",cls:"timeFam"},{w:"just in time",pl:"end",cls:"timeFam"},{w:"the whole day",pl:"end",cls:"wholeFam"},{w:"the whole week",pl:"end",cls:"wholeFam"},{w:"again",pl:"end",cls:"againFam"},{w:"once again",pl:"end",cls:"againFam"},
     {w:"as usual",pl:"end",cls:"asFam"},{w:"as planned",pl:"end",cls:"asFam"},{w:"as expected",pl:"end",cls:"asFam"},{w:"as agreed",pl:"end",cls:"asFam"},
-    {w:"at first",pl:"end",cls:"atFam"},{w:"at last",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"at that point",pl:"end",cls:"atFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"in a rush",pl:"end",cls:"inFam"},{w:"in fact",pl:"end",cls:"inFam"},{w:"in the meantime",pl:"end",cls:"inFam"},{w:"by chance",pl:"end",cls:"byFam"},{w:"by mistake",pl:"end",cls:"byFam"},{w:"by accident",pl:"end",cls:"byFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"for a while",pl:"end",cls:"forFam"},{w:"for once",pl:"end",cls:"forFam"},{w:"out of nowhere",pl:"end",cls:"outFam"},{w:"off the record",pl:"end",cls:"outFam"}
+    {w:"at first",pl:"end",cls:"atFam"},{w:"at last",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"at that point",pl:"end",cls:"atFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"in a rush",pl:"end",cls:"inFam"},{w:"in fact",pl:"end",cls:"inFam"},{w:"in the meantime",pl:"end",cls:"inFam"},{w:"by chance",pl:"end",cls:"byFam"},{w:"by mistake",pl:"end",cls:"byFam"},{w:"by accident",pl:"end",cls:"byFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"for a while",pl:"end",cls:"forFam"},{w:"for once",pl:"end",cls:"forFam"},{w:"out of nowhere",pl:"end",cls:"outFam"},{w:"off the record",pl:"end",cls:"outFam"},
+    {w:"from scratch",pl:"end",cls:"fromFam"},{w:"from memory",pl:"end",cls:"fromFam"},{w:"from the start",pl:"end",cls:"fromFam"},{w:"on purpose",pl:"end",cls:"onFam"},{w:"on foot",pl:"end",cls:"onFam"},{w:"on time",pl:"end",cls:"onFam"},{w:"on the spot",pl:"end",cls:"onFam"},
+    {w:"over the weekend",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"over there",pl:"end",cls:"overFam"},{w:"without warning",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"around noon",pl:"end",cls:"aroundFam"},{w:"around the corner",pl:"end",cls:"aroundFam"},{w:"back home",pl:"end",cls:"backFam"},{w:"back in the day",pl:"end",cls:"backFam"},{w:"way back",pl:"end",cls:"backFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"just once",pl:"end",cls:"onceFam"},{w:"one by one",pl:"end",cls:"byFam"},{w:"side by side",pl:"end",cls:"byFam"}
   ],
   past_continuo: [
     {w:"at that moment",pl:"end",cls:"timePoint"},{w:"at 5 p.m. yesterday",pl:"end",cls:"timePoint"},{w:"all day yesterday",pl:"end",cls:"timePoint"},{w:"at noon yesterday",pl:"end",cls:"timePoint"},{w:"while she was cooking",pl:"end",cls:"timePoint"},{w:"the whole afternoon",pl:"end",cls:"timePoint"},{w:"all night",pl:"end",cls:"timePoint"},
     {w:"all night long",pl:"end",cls:"allFam"},{w:"all day long",pl:"end",cls:"allFam"},{w:"all the time",pl:"end",cls:"allFam"},
     {w:"the whole time",pl:"end",cls:"wholeFam"},{w:"the whole night",pl:"end",cls:"wholeFam"},{w:"at the time",pl:"end",cls:"timeFam"},
     {w:"as usual",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},
-    {w:"at the same time",pl:"end",cls:"atFam"},{w:"in silence",pl:"end",cls:"inFam"},{w:"in a hurry",pl:"end",cls:"inFam"}
+    {w:"at the same time",pl:"end",cls:"atFam"},{w:"in silence",pl:"end",cls:"inFam"},{w:"in a hurry",pl:"end",cls:"inFam"},
+    {w:"from a distance",pl:"end",cls:"fromFam"},{w:"on the way",pl:"end",cls:"onFam"},{w:"on and on",pl:"end",cls:"onFam"},
+    {w:"over the phone",pl:"end",cls:"overFam"},{w:"over there",pl:"end",cls:"overFam"},{w:"back and forth",pl:"end",cls:"backFam"},{w:"around the clock",pl:"end",cls:"aroundFam"}
   ],
   past_perfeito: [
     {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"recently",pl:"mid",cls:"perfectAdv"},{w:"never",pl:"mid",cls:"freqIndef"},
     {w:"before I left",pl:"end",cls:"timePoint"},{w:"by the time you arrived",pl:"end",cls:"timePoint"},{w:"by then",pl:"end",cls:"timePoint"},{w:"already by 2010",pl:"end",cls:"timePoint"},{w:"before the meeting started",pl:"end",cls:"timePoint"},{w:"by the time she called",pl:"end",cls:"timePoint"},{w:"by 2015",pl:"end",cls:"timePoint"},{w:"already by then",pl:"end",cls:"timePoint"},
     {w:"all along",pl:"end",cls:"allFam"},{w:"all that time",pl:"end",cls:"allFam"},
     {w:"as expected",pl:"end",cls:"asFam"},{w:"as promised",pl:"end",cls:"asFam"},
-    {w:"by mistake",pl:"end",cls:"byFam"},{w:"by chance",pl:"end",cls:"byFam"},{w:"at that point",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"}
+    {w:"by mistake",pl:"end",cls:"byFam"},{w:"by chance",pl:"end",cls:"byFam"},{w:"at that point",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"},
+    {w:"from the beginning",pl:"end",cls:"fromFam"},{w:"on my own",pl:"end",cls:"onFam"},
+    {w:"over time",pl:"end",cls:"overFam"},{w:"without warning",pl:"end",cls:"withFam"},{w:"more than once",pl:"end",cls:"onceFam"}
   ],
   past_perfeito_continuo: [
     {w:"for two hours",pl:"end",cls:"timePoint"},{w:"since morning",pl:"end",cls:"timePoint"},{w:"all morning",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"for months",pl:"end",cls:"timePoint"},{w:"since the accident",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},
     {w:"all night long",pl:"end",cls:"allFam"},{w:"all year long",pl:"end",cls:"allFam"},{w:"all along",pl:"end",cls:"allFam"},
     {w:"the whole year",pl:"end",cls:"wholeFam"},
-    {w:"for a while",pl:"end",cls:"forFam"},{w:"in the meantime",pl:"end",cls:"inFam"}
+    {w:"for a while",pl:"end",cls:"forFam"},{w:"in the meantime",pl:"end",cls:"inFam"},
+    {w:"on and on",pl:"end",cls:"onFam"},
+    {w:"over the years",pl:"end",cls:"overFam"},{w:"back and forth",pl:"end",cls:"backFam"},{w:"day by day",pl:"end",cls:"byFam"}
   ],
   future_simples: [
     {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"},{w:"next weekend",pl:"end",cls:"timePoint"},{w:"in the future",pl:"end",cls:"timePoint"},{w:"eventually",pl:"end",cls:"timePoint"},{w:"someday",pl:"end",cls:"timePoint"},{w:"this evening",pl:"end",cls:"timePoint"},
@@ -1293,18 +1719,23 @@ const SIGNAL_WORDS = {
     {w:"at this time tomorrow",pl:"end",cls:"timePoint"},{w:"this time next week",pl:"end",cls:"timePoint"},{w:"at 8 p.m. tomorrow",pl:"end",cls:"timePoint"},{w:"at midnight tonight",pl:"end",cls:"timePoint"},{w:"at this time next month",pl:"end",cls:"timePoint"},{w:"this time tomorrow",pl:"end",cls:"timePoint"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all night long",pl:"end",cls:"allFam"},{w:"all weekend",pl:"end",cls:"allFam"},
     {w:"as usual",pl:"end",cls:"asFam"},
-    {w:"at the same time",pl:"end",cls:"atFam"},{w:"in person",pl:"end",cls:"inFam"}
+    {w:"at the same time",pl:"end",cls:"atFam"},{w:"in person",pl:"end",cls:"inFam"},
+    {w:"on the way",pl:"end",cls:"onFam"},
+    {w:"over the weekend",pl:"end",cls:"overFam"},{w:"around here",pl:"end",cls:"aroundFam"}
   ],
   future_perfeito: [
     {w:"by then",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},{w:"by 2030",pl:"end",cls:"timePoint"},{w:"by tonight",pl:"end",cls:"timePoint"},{w:"by tomorrow",pl:"end",cls:"timePoint"},{w:"by the end of the year",pl:"end",cls:"timePoint"},{w:"by the time you arrive",pl:"end",cls:"timePoint"},
     {w:"all of them",pl:"end",cls:"allFam"},
     {w:"as planned",pl:"end",cls:"asFam"},
-    {w:"by then",pl:"end",cls:"byFam"},{w:"by far",pl:"end",cls:"byFam"},{w:"at last",pl:"end",cls:"atFam"}
+    {w:"by then",pl:"end",cls:"byFam"},{w:"by far",pl:"end",cls:"byFam"},{w:"at last",pl:"end",cls:"atFam"},
+    {w:"from now on",pl:"end",cls:"fromFam"},{w:"on schedule",pl:"end",cls:"onFam"},
+    {w:"over time",pl:"end",cls:"overFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"}
   ],
   future_perfeito_continuo: [
     {w:"by then",pl:"end",cls:"timePoint"},{w:"for five years",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"for over a decade",pl:"end",cls:"timePoint"},{w:"by next summer",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},
     {w:"all year long",pl:"end",cls:"allFam"},{w:"all this time",pl:"end",cls:"allFam"},
-    {w:"for good measure",pl:"end",cls:"forFam"}
+    {w:"for good measure",pl:"end",cls:"forFam"},
+    {w:"over the years",pl:"end",cls:"overFam"},{w:"day by day",pl:"end",cls:"byFam"}
   ]
 };
 
@@ -1352,26 +1783,57 @@ function buildVerbo(){
 /* Consulta ao banco de expressões para o verbo ativo. Não alimenta o gerador:
    a tradução do banco cobre a expressão inteira e não compõe com a conjugação do motor,
    então essas expressões aparecem como referência, exatamente como foram curadas. */
-let bankOpen = false;
+let bankOpen = false, bankOpenSignal = false, bankOpenWh = false;
+
+/* As famílias de palavras-sinal que construí têm correspondentes diretos no banco:
+   a família do "all" do dial ⑦ e a família ALL do banco descrevem o mesmo recorte.
+   O mesmo vale para o dial de interrogativas, que corresponde à família HOW/WHAT/WHERE/WHY.
+   Em vez de duplicar conteúdo, cada dial ganha acesso à sua família no banco. */
+const SIGNAL_BANK_MAP = { allFam:'ALL', atFam:'AT', byFam:'BY', forFam:'FOR', inFam:'IN', timeFam:'TIME', fromFam:'FROM', onFam:'ON' };
+const WH_BANK_FAMILY = 'HOW / WHAT / WHERE / WHY';
+
+/* Painel de consulta reutilizável: mesma aparência nos dials ④, ⑦ e ⑨. */
+function renderBankPanel(boxId, fam, isOpen, onToggle, rotulo){
+  const box = document.getElementById(boxId);
+  if(!box) return;
+  if(!hasDb() || !fam || !EXPR_DB[fam]){ box.innerHTML = ""; return; }
+  const items = EXPR_DB[fam].items;
+  const toggleId = boxId + 'Toggle';
+  box.innerHTML = `<div class="bank-panel">
+    <button class="bank-toggle" id="${toggleId}">${isOpen ? '▾' : '▸'} <b>${items.length}</b> ${rotulo} <b>${escapeHTML(fam)}</b> no seu banco — ${escapeHTML(EXPR_DB[fam].core)}</button>
+    ${isOpen ? `<div class="bank-body">${items.map(it=>`
+      <div class="bank-line"><div class="bank-en">${escapeHTML(it.expression)}</div><div class="bank-pt">${escapeHTML(it.translation)}</div></div>`).join('')}</div>` : ''}
+  </div>`;
+  document.getElementById(toggleId).onclick = onToggle;
+}
+function buildSignalBank(){
+  const fam = SIGNAL_BANK_MAP[state.signalFam];
+  renderBankPanel('signalBankPanel', fam, bankOpenSignal,
+    ()=>{ bankOpenSignal = !bankOpenSignal; buildSignalBank(); }, 'expressões de');
+}
+function buildWhBank(){
+  renderBankPanel('whBankPanel', WH_BANK_FAMILY, bankOpenWh,
+    ()=>{ bankOpenWh = !bankOpenWh; buildWhBank(); }, 'expressões da família');
+}
 function verbBankFamily(verb){
-  const name = (verb.prt ? verb.base + ' ' + verb.prt : verb.base).toUpperCase();
   if(!hasDb()) return null;
+  /* Ser/Estar É o verbo BE: em vez de colocá-lo no seletor de verbos de ação — onde
+     produziria "I be" / "I am being" — suas 76 expressões aparecem justamente na
+     categoria a que pertencem. */
+  if(state.categoria === 'state') return EXPR_DB['BE'] ? 'BE' : null;
+  if(!verb) return null;
+  const name = (verb.prt ? verb.base + ' ' + verb.prt : verb.base).toUpperCase();
   if(EXPR_DB[name]) return name;
   const solo = verb.base.toUpperCase();
   return EXPR_DB[solo] ? solo : null;
 }
 function buildVerbBank(){
-  const box = document.getElementById('verbBankPanel');
-  const verb = verbById(state.verbo);
+  const wrap = document.getElementById('bankDialGroup');
+  const verb = state.categoria === 'fact' ? verbById(state.verbo) : null;
   const fam = verbBankFamily(verb);
-  if(!fam){ box.innerHTML = ""; return; }
-  const items = EXPR_DB[fam].items;
-  box.innerHTML = `<div class="bank-panel">
-    <button class="bank-toggle" id="bankToggle">${bankOpen ? '▾' : '▸'} <b>${items.length}</b> expressões de <b>${fam}</b> no seu banco — ${escapeHTML(EXPR_DB[fam].core)}</button>
-    ${bankOpen ? `<div class="bank-body">${items.map(it=>`
-      <div class="bank-line"><div class="bank-en">${escapeHTML(it.expression)}</div><div class="bank-pt">${escapeHTML(it.translation)}</div></div>`).join('')}</div>` : ''}
-  </div>`;
-  document.getElementById('bankToggle').onclick = ()=>{ bankOpen = !bankOpen; buildVerbBank(); };
+  if(wrap) wrap.style.display = (hasDb() && fam) ? '' : 'none';
+  renderBankPanel('verbBankPanel', fam, bankOpen,
+    ()=>{ bankOpen = !bankOpen; buildVerbBank(); }, 'expressões de');
 }
 function buildColocacao(){
   const el = document.getElementById('colRow'); el.innerHTML="";
@@ -1395,7 +1857,7 @@ function buildCategoria(){
     btn.style.setProperty('--accent', d.accent);
     btn.dataset.active = (state.categoria===key);
     btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
-    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMid=null; state.signalEnd=null; render(); };
+    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMid=null; state.signalEnd=null; state.signalSplit=null; bankOpen=false; render(); };
     el.appendChild(btn);
   });
 }
@@ -1424,12 +1886,21 @@ function buildAspecto(){
     el.appendChild(btn);
   });
 }
+/* Rola SÓ a fileira, nunca a página. scrollIntoView (mesmo com block:'nearest') move o
+   documento inteiro quando o elemento está fora da vista vertical — era o que fazia o app
+   abrir já rolado alguns milhares de pixels. Aqui ajustamos apenas o scrollLeft da faixa. */
+function scrollChipIntoRow(row, chip){
+  if(!row || !chip) return;
+  const rRect = row.getBoundingClientRect(), cRect = chip.getBoundingClientRect();
+  if(cRect.left < rRect.left){ row.scrollLeft -= (rRect.left - cRect.left) + 12; }
+  else if(cRect.right > rRect.right){ row.scrollLeft += (cRect.right - rRect.right) + 12; }
+}
 function signalFamilyLabel(cls){
   /* rótulo curto para a fileira de famílias (o texto completo fica no cabeçalho do grupo) */
   const short = { freqIndef:"frequência", freqDef:"nº de vezes", perfectAdv:"perfect", timeMid:"tempo (meio)",
     timePoint:"tempo", allFam:"all", timeFam:"time", wholeFam:"whole", everFam:"ever", everyFam:"every",
-    againFam:"again", asFam:"as", atFam:"at", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
-    splitFam:"partidos" };
+    againFam:"again", asFam:"as", atFam:"at", fromFam:"from", onFam:"on", overFam:"over", withFam:"with/without", aroundFam:"around", backFam:"back", onceFam:"once", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
+    splitFam:"partidos", outrosFam:"diversos" };
   return short[cls] || cls;
 }
 function buildSignal(){
@@ -1472,13 +1943,12 @@ function buildSignal(){
     btn.dataset.active = (state.signalFam===cls);
     btn.innerHTML = `${signalFamilyLabel(cls)}<span class="fam-count">${groups[cls].length}</span>${hasActive?'<span class="fam-dot"></span>':''}`;
     btn.style.opacity = disabled ? .4 : 1;
-    btn.onclick = ()=>{ if(disabled) return; state.signalFam = cls; render(); };
+    btn.onclick = ()=>{ if(disabled) return; state.signalFam = cls; bankOpenSignal = false; render(); };
     famRow.appendChild(btn);
   });
   el.appendChild(famRow);
-  /* mantém a família ativa visível na fileira rolável (importante com 13 famílias no celular) */
-  const activeFam = famRow.querySelector('[data-active="true"]');
-  if(activeFam && activeFam.scrollIntoView) { try{ activeFam.scrollIntoView({block:'nearest', inline:'nearest'}); }catch(e){} }
+  /* mantém a família ativa visível na fileira rolável (importante com 20 famílias no celular) */
+  scrollChipIntoRow(famRow, famRow.querySelector('[data-active="true"]'));
 
   /* fileira 2: palavras da família ativa */
   const cls = state.signalFam;
@@ -1522,6 +1992,7 @@ function buildSignal(){
     el.appendChild(box);
   }
 
+  buildSignalBank();
   hint.textContent = disabled ? "Desativado com interrogativa ativa — remova a palavra interrogativa para usar sinais."
     : "Escolha a família e depois a palavra. Meio e fim são complementares — dá pra combinar uma de cada posição (ex.: already + twice).";
 }
@@ -1573,7 +2044,7 @@ function applySignal(text, signalMid, signalEnd, col, signalSplit, formato){
 }
 
 function render(){
-  buildPronome(); buildVerbo(); buildColocacao(); buildVerbBank(); buildCategoria(); buildTempo(); buildAspecto(); buildSignal(); buildFormato(); buildWh(); updateTempoTrack();
+  buildPronome(); buildVerbo(); buildColocacao(); buildVerbBank(); buildWhBank(); buildCategoria(); buildTempo(); buildAspecto(); buildSignal(); buildFormato(); buildWh(); updateTempoTrack();
 
   document.getElementById('whDialGroup').style.display = state.formato==='pergunta' ? '' : 'none';
   document.getElementById('signalDialGroup').style.display = (state.formato==='pergunta' && state.whWord) ? 'none' : '';
@@ -1610,6 +2081,9 @@ function render(){
   const noteBox = document.getElementById('noteBox');
   if(note){ noteBox.innerHTML = "💡 " + note; noteBox.classList.add('show'); } else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
   renderModal(); // mantém o motor de modais em sincronia com o verbo escolhido no dial ③
+  if(matrixFollow){ buildMatrix(); buildMatrixSource(); }
+  applyA11y();
+  saveState();
 }
 
 function getNote(s){
@@ -1666,6 +2140,29 @@ function buildAdverbsList(){
   </div><div class="ref-conj-note">💡 "Since" marca o ponto de partida (desde X); "for" marca a duração (por/há X). Combinam com o perfeito em qualquer tempo — presente, passado ou futuro.</div></div>`;
   wrap.innerHTML = html;
 }
+/* A tabela nasceu como referência fixa (work / I) — um ponto de comparação estável.
+   Com 114 verbos no banco, faz sentido poder vê-la com o verbo e o pronome do console:
+   ver a matriz inteira de um irregular é justamente onde ela ensina mais. A escolha fica
+   guardada, e o PNG exportado acompanha. */
+let matrixFollow = false;
+function matrixVerb(){ return matrixFollow ? verbById(state.verbo) : verbById('work'); }
+function matrixPronoun(){ return matrixFollow ? state.pronome : 'I'; }
+function buildMatrixSource(){
+  const row = document.getElementById('matrixSourceRow');
+  const note = document.getElementById('matrixNote');
+  if(!row) return;
+  row.innerHTML = "";
+  [[false,'Padrão: work · I'],[true,'Seguir o console']].forEach(([val,label])=>{
+    const b = document.createElement('div'); b.className='pronome-pill';
+    b.dataset.active = (matrixFollow === val); b.textContent = label;
+    b.onclick = ()=>{ matrixFollow = val; buildMatrix(); buildMatrixSource(); applyA11y(); saveState(); };
+    row.appendChild(b);
+  });
+  const v = matrixVerb();
+  note.innerHTML = matrixFollow
+    ? `Mostrando <b style="color:var(--brass)">${escapeHTML(v.label.split(' ')[0])}${v.prt ? ' ' + v.prt : ''}</b> com o pronome <b style="color:var(--brass)">${matrixPronoun()}</b>, conforme os dials ① e ③.`
+    : `Referência fixa: verbo <b style="color:var(--brass)">work</b> com o pronome <b style="color:var(--brass)">I</b>.`;
+}
 function buildMatrix(){
   const wrap = document.getElementById('matrixWrap'); let html = "";
   Object.keys(CATEGORIES).forEach(catKey=>{
@@ -1674,10 +2171,11 @@ function buildMatrix(){
     cat.aspects.forEach(asp=>{
       html += `<tr><td class="cat">${ASPECT_LABEL[asp]}</td>`;
       ["present","past","future"].forEach(t=>{
-        const affHTML = markedToHTML(generate(catKey,t,asp,'afirmativa','I').text + ".", markColorVar('afirmativa'));
-        const negHTML = markedToHTML(generate(catKey,t,asp,'negativa','I').text + ".", markColorVar('negativa'));
-        const perHTML = markedToHTML(generate(catKey,t,asp,'pergunta','I').text + M("?"), markColorVar('pergunta'));
-        const perNegHTML = markedToHTML(generate(catKey,t,asp,'pergunta_negativa','I').text + M("?"), markColorVar('pergunta_negativa'));
+        const v = matrixVerb(), pr = matrixPronoun();
+        const affHTML = markedToHTML(generate(catKey,t,asp,'afirmativa',pr,v).text + ".", markColorVar('afirmativa'));
+        const negHTML = markedToHTML(generate(catKey,t,asp,'negativa',pr,v).text + ".", markColorVar('negativa'));
+        const perHTML = markedToHTML(generate(catKey,t,asp,'pergunta',pr,v).text + M("?"), markColorVar('pergunta'));
+        const perNegHTML = markedToHTML(generate(catKey,t,asp,'pergunta_negativa',pr,v).text + M("?"), markColorVar('pergunta_negativa'));
         html += `<td class="cell-lines"><div>${affHTML}</div><div>${negHTML}</div><div>${perHTML}</div><div>${perNegHTML}</div></td>`;
       });
       html += `</tr>`;
@@ -1721,12 +2219,12 @@ const PT_DEVER_COND = {"1s":"deveria","3s":"deveria","1p":"deveríamos","3p":"de
 const PT_COSTUMAR_IMPERF = {"1s":"costumava","3s":"costumava","1p":"costumávamos","3p":"costumavam"};
 
 const MODAL_SIGNALS = {
-  capacidade: ["easily","without help","by myself","all by myself","with practice","if necessary","all the time","as always","by heart","out loud"],
-  possibilidade: ["tomorrow","tonight","at any moment","all of a sudden","in theory","this weekend","once again","by chance","out of nowhere","at some point"],
-  obrigacao: ["by law","before Friday","no matter what","right away","every day","all week long","on time","every single day","as agreed","in advance","at once"],
-  permissao: ["here","after class","on weekends","all weekend","in this building","during the break","this time","as needed","in person","at any time"],
-  conselho: ["more often","as soon as possible","before it gets worse","at least once","all year round","from time to time","as usual","in advance","for sure","at least"],
-  habito: ["when I was young","every summer","all summer long","back then","as a child","in those days","all the time","every single day","for fun","out of habit","off and on"]
+  capacidade: ["easily","without help","by myself","all by myself","with practice","if necessary","all the time","as always","by heart","out loud","from memory","on my own","without a doubt","little by little"],
+  possibilidade: ["tomorrow","tonight","at any moment","all of a sudden","in theory","this weekend","once again","by chance","out of nowhere","at some point","without warning","over the phone"],
+  obrigacao: ["by law","before Friday","no matter what","right away","every day","all week long","on time","every single day","as agreed","in advance","at once","from now on","on schedule"],
+  permissao: ["here","after class","on weekends","all weekend","in this building","during the break","this time","as needed","in person","at any time","over the weekend","around here"],
+  conselho: ["more often","as soon as possible","before it gets worse","at least once","all year round","from time to time","as usual","in advance","for sure","at least","step by step","once and for all"],
+  habito: ["when I was young","every summer","all summer long","back then","as a child","in those days","all the time","every single day","for fun","out of habit","off and on","on my own","back in the day","once in a while"]
 };
 
 function bePastNeg(p){ return (IS_3SG(p)||p==='I') ? "wasn't" : "weren't"; }
@@ -1859,8 +2357,37 @@ const MODAL_ENGINE = {
   ]}
 };
 
-let modalState = { funcao:"capacidade", tempo:"present", formato:"afirmativa", pronome:"I", signal:null };
+let modalState = { funcao:"capacidade", tempo:"present", formato:"afirmativa", pronome:"I", signal:null, signalFam:null, whWord:null };
+/* WH nos modais: as de adjunto (Where/When/Why/How...) usam a pergunta pronta e só
+   ganham a palavra na frente — "Should I go?" → "Where should I go?". As de sujeito
+   (Who/What) NÃO invertem: o WH ocupa o lugar do sujeito, com o verbo na 3ª pessoa
+   ("Who should go?"). How much/How many ficam de fora: dependem do substantivo, não
+   do modal. */
+const MODAL_WH = WH_ADJUNCT.concat(WH_SUBJECT);
 
+/* Classificação dos sinais modais por família.
+   Em vez de rotular os 77 à mão (e ter que lembrar de atualizar quando um novo entrar),
+   a família sai do próprio banco de palavras-sinal: se a expressão já existe lá, herda a
+   classe dela; senão, é inferida pela palavra-âncora. O que não se encaixa cai em
+   "diversos" — honesto, e evita forçar uma família que não descreve o item. */
+const MODAL_FAM_CACHE = {};
+const ANCORA_FAM = { all:'allFam', at:'atFam', by:'byFam', for:'forFam', from:'fromFam', in:'inFam',
+  on:'onFam', over:'overFam', with:'withFam', without:'withFam', around:'aroundFam', back:'backFam',
+  once:'onceFam', as:'asFam', every:'everyFam', time:'timeFam', out:'outFam', off:'outFam', whole:'wholeFam' };
+function modalSignalFam(w){
+  if(MODAL_FAM_CACHE[w]) return MODAL_FAM_CACHE[w];
+  let cls = null;
+  for(const k in SIGNAL_WORDS){
+    const hit = SIGNAL_WORDS[k].find(s=>s.w === w);
+    if(hit){ cls = hit.cls; break; }
+  }
+  if(!cls){
+    const primeira = w.toLowerCase().split(' ')[0];
+    cls = ANCORA_FAM[primeira] || 'outrosFam';
+  }
+  MODAL_FAM_CACHE[w] = cls;
+  return cls;
+}
 function modalTempoDef(){
   const d = MODAL_ENGINE[modalState.funcao];
   return d.tempos.find(t=>t.key===modalState.tempo) || d.tempos[0];
@@ -1873,7 +2400,7 @@ function buildModalGrid(){
     btn.style.setProperty('--accent', 'var(--amber)');
     btn.dataset.active = (modalState.funcao===key);
     btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
-    btn.onclick = ()=>{ modalState.funcao=key; if(!MODAL_ENGINE[key].tempos.some(t=>t.key===modalState.tempo)) modalState.tempo = MODAL_ENGINE[key].tempos[0].key; modalState.signal=null; renderModal(); };
+    btn.onclick = ()=>{ modalState.funcao=key; if(!MODAL_ENGINE[key].tempos.some(t=>t.key===modalState.tempo)) modalState.tempo = MODAL_ENGINE[key].tempos[0].key; modalState.signal=null; modalState.signalFam=null; renderModal(); };
     el.appendChild(btn);
   });
 }
@@ -1897,32 +2424,92 @@ function buildModalDials(){
     const s = document.createElement('div'); s.className='formato-switch';
     s.dataset.kind=f; s.dataset.active=(modalState.formato===f);
     s.innerHTML = `<div class="lamp"></div><div class="lbl">${FORMATO_LABEL[f]}</div>`;
-    s.onclick = ()=>{ modalState.formato=f; renderModal(); };
+    s.onclick = ()=>{ modalState.formato=f; if(f!=='pergunta') modalState.whWord=null; renderModal(); };
     fr.appendChild(s);
   });
+  const wr = document.getElementById('modalWhRow'); wr.innerHTML="";
+  const whNone = document.createElement('div'); whNone.className='pronome-pill';
+  whNone.dataset.active = (modalState.whWord===null); whNone.textContent = "sem WH";
+  whNone.onclick = ()=>{ modalState.whWord=null; renderModal(); };
+  wr.appendChild(whNone);
+  MODAL_WH.forEach(w=>{
+    const b = document.createElement('div'); b.className='pronome-pill';
+    b.dataset.active = (modalState.whWord===w); b.textContent = w;
+    b.onclick = ()=>{ modalState.whWord = (modalState.whWord===w) ? null : w; renderModal(); };
+    wr.appendChild(b);
+  });
+
+  /* mesma navegação em dois níveis do dial ⑦: família primeiro, palavra depois */
   const sr = document.getElementById('modalSignalRow'); sr.innerHTML="";
+  const palavras = MODAL_SIGNALS[modalState.funcao];
+  const brutos = {};
+  palavras.forEach(w=>{ const c = modalSignalFam(w); (brutos[c] = brutos[c]||[]).push(w); });
+  /* Família com um único item vira aba de um clique só — mais navegação que a lista
+     corrida que ela deveria substituir. Aqui elas se juntam em "diversos": a paginação
+     só compensa onde há de fato um grupo. */
+  const grupos = {};
+  Object.keys(brutos).forEach(c=>{
+    if(brutos[c].length >= 2) grupos[c] = brutos[c];
+    else (grupos.outrosFam = grupos.outrosFam || []).push(...brutos[c]);
+  });
+  if(grupos.outrosFam) grupos.outrosFam.sort();
+  const famKeys = Object.keys(CLASS_INFO).filter(k=>grupos[k]);
+
+  const selFamBruto = modalState.signal ? modalSignalFam(modalState.signal) : null;
+  const selFam = (selFamBruto && grupos[selFamBruto]) ? selFamBruto : (modalState.signal ? 'outrosFam' : null);
+  if(!famKeys.includes(modalState.signalFam)){
+    modalState.signalFam = (selFam && famKeys.includes(selFam)) ? selFam : famKeys[0];
+  }
+
+  const linhaNone = document.createElement('div'); linhaNone.className='signal-row-inner';
   const none = document.createElement('div'); none.className='signal-chip';
   none.dataset.active = (modalState.signal===null); none.textContent = "sem sinal";
   none.onclick = ()=>{ modalState.signal=null; renderModal(); };
-  sr.appendChild(none);
-  MODAL_SIGNALS[modalState.funcao].forEach(w=>{
+  linhaNone.appendChild(none); sr.appendChild(linhaNone);
+
+  if(famKeys.length > 1){
+    const famRow = document.createElement('div'); famRow.className='signal-row-inner fam-row';
+    famKeys.forEach(cls=>{
+      const b = document.createElement('div'); b.className='signal-chip fam-chip';
+      b.dataset.active = (modalState.signalFam === cls);
+      b.innerHTML = `${signalFamilyLabel(cls)}<span class="fam-count">${grupos[cls].length}</span>${selFam===cls?'<span class="fam-dot"></span>':''}`;
+      b.onclick = ()=>{ modalState.signalFam = cls; renderModal(); };
+      famRow.appendChild(b);
+    });
+    sr.appendChild(famRow);
+    scrollChipIntoRow(famRow, famRow.querySelector('[data-active="true"]'));
+
+    const lbl = document.createElement('div'); lbl.className='signal-group-label';
+    lbl.textContent = CLASS_INFO[modalState.signalFam].label;
+    sr.appendChild(lbl);
+  }
+
+  const linha = document.createElement('div'); linha.className='signal-row-inner';
+  (grupos[modalState.signalFam] || []).forEach(w=>{
     const chip = document.createElement('div'); chip.className='signal-chip';
     chip.dataset.active = (modalState.signal===w); chip.textContent = w;
     chip.onclick = ()=>{ modalState.signal = (modalState.signal===w) ? null : w; renderModal(); };
-    sr.appendChild(chip);
+    linha.appendChild(chip);
   });
+  sr.appendChild(linha);
 }
 function renderModal(){
   buildModalGrid(); buildModalDials();
   const tempoDef = modalTempoDef();
   const verb = verbById(state.verbo);
   const col = (state.colocacao!==null) ? (verb.col || [])[state.colocacao] : null;
-  const g = tempoDef.gen(modalState.pronome, verb, modalState.formato);
   const isQ = modalState.formato==='pergunta' || modalState.formato==='pergunta_negativa';
+  const wh = (modalState.formato==='pergunta') ? modalState.whWord : null;
+  document.getElementById('modalWhGroup').style.display = (modalState.formato==='pergunta') ? '' : 'none';
+
+  const isSubjWh = wh && WH_SUBJECT.includes(wh);
+  /* WH de sujeito não inverte: gera a afirmativa com o WH no lugar do sujeito. */
+  const g = isSubjWh ? tempoDef.gen(wh, verb, 'afirmativa') : tempoDef.gen(modalState.pronome, verb, modalState.formato);
   let raw = g.text;
   if(col) raw += ' ' + R(col.en);                 /* regência colada ao verbo, antes do sinal */
   if(modalState.signal) raw += ' ' + C(modalState.signal);
-  raw += isQ ? M('?') : '.';
+  if(wh && !isSubjWh) raw = M(wh) + ' ' + lowerFirstMarked(raw);
+  raw += (isQ || wh) ? M('?') : '.';
   document.getElementById('modalSentence').innerHTML = markedToHTML(raw, markColorVar(modalState.formato));
   document.getElementById('modalAudio').dataset.text = stripMarks(raw);
   const per = ptPerson(modalState.pronome), pron = PT_PRONOUN[modalState.pronome];
@@ -1931,15 +2518,33 @@ function renderModal(){
   let ptBody = tempoDef.pt(per, vpt);
   if(col) ptBody += ' ' + col.pt;
   if(modalState.signal) ptBody += ' ' + (SIGNAL_PT[modalState.signal] || modalState.signal);
-  document.getElementById('modalTranslation').textContent = ` ${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ ? '?' : '.');
-  document.getElementById('modalStructure').textContent = tempoDef.structure;
-  document.getElementById('copyModal').dataset.text = stripMarks(raw) + "\n" + `${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ ? '?' : '.');
+  let ptFrase;
+  if(isSubjWh){
+    /* "Quem deveria ir?" — o WH é o sujeito, então a conjugação vai na 3ª pessoa */
+    const pt3 = tempoDef.pt('3s', vpt);
+    let corpo = pt3;
+    if(col) corpo += ' ' + col.pt;
+    if(modalState.signal) corpo += ' ' + (SIGNAL_PT[modalState.signal] || modalState.signal);
+    ptFrase = `${WH_PT_SUBJECT[wh]} ${corpo}?`;
+  } else if(wh){
+    ptFrase = `${WH_PT_ADJUNCT[wh]} ${lowerFirst(cap(pron))}${neg?' não':''} ${ptBody}?`;
+  } else {
+    ptFrase = `${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ ? '?' : '.');
+  }
+  document.getElementById('modalTranslation').textContent = ' ' + ptFrase;
+  document.getElementById('modalStructure').textContent = tempoDef.structure
+    + (wh ? (isSubjWh ? ` + ${wh} como sujeito (sem inversão)` : ` + ${wh} antes do modal`) : '');
+  document.getElementById('copyModal').dataset.text = stripMarks(raw) + "\n" + ptFrase;
 
-  const noteBits = [tempoDef.note, g.extraNote].filter(Boolean);
+  const whNote = isSubjWh
+    ? `Com <b>${wh}</b> como sujeito não há inversão: o modal fica logo depois do WH, igual a uma afirmativa — "${stripMarks(raw).replace(/\?$/,'')}?"`
+    : (wh ? `A palavra interrogativa entra <b>antes do modal</b>; o resto da pergunta continua igual.` : null);
+  const noteBits = [tempoDef.note, g.extraNote, whNote].filter(Boolean);
   const noteBox = document.getElementById('modalNote');
   if(noteBits.length){ noteBox.innerHTML = "💡 " + noteBits.join('<br>💡 '); noteBox.classList.add('show'); }
   else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
 
+  applyA11y();
   const d = MODAL_ENGINE[modalState.funcao];
   document.getElementById('modalAlerta').innerHTML = d.alerta ? `<div class="modal-alerta">⚠️ ${d.alerta}</div>` : "";
 }
@@ -1966,11 +2571,12 @@ function buildMatrixExportData(){
   return Object.keys(CATEGORIES).map(catKey=>{
     const cat = CATEGORIES[catKey];
     const rows = cat.aspects.map(asp=>{
+      const v = matrixVerb(), pr = matrixPronoun();
       const cells = ["present","past","future"].map(t=>({
-        aff: generate(catKey,t,asp,'afirmativa','I').text + ".",
-        neg: generate(catKey,t,asp,'negativa','I').text + ".",
-        per: generate(catKey,t,asp,'pergunta','I').text + M("?"),
-        perneg: generate(catKey,t,asp,'pergunta_negativa','I').text + M("?")
+        aff: generate(catKey,t,asp,'afirmativa',pr,v).text + ".",
+        neg: generate(catKey,t,asp,'negativa',pr,v).text + ".",
+        per: generate(catKey,t,asp,'pergunta',pr,v).text + M("?"),
+        perneg: generate(catKey,t,asp,'pergunta_negativa',pr,v).text + M("?")
       }));
       return { label: ASPECT_LABEL[asp], cells };
     });
@@ -1994,12 +2600,28 @@ function downloadMatrixPNG(){
   if(btn){ btn.setAttribute('disabled',''); btn.textContent = '⏳ Gerando...'; }
 
   const data = buildMatrixExportData();
-  const BG="#10151c", LINE="rgba(237,230,214,0.16)", PAPER="#ede6d6", PAPER_DIM="#a9a294",
-        BRASS="#c9a34e", TEAL="#4fb6a6", RED="#c1483d", BURNT="#c9972c", ROSE="#c76d9e";
+  /* O PNG acompanha o tema ativo: exportar uma imagem escura enquanto a tela está clara
+     (ou o contrário) quebra a expectativa de "baixar o que estou vendo". As cores saem
+     das mesmas variáveis CSS que pintam a tabela na tela, então tema e arquivo nunca
+     divergem — se a paleta mudar um dia, o export muda junto. */
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const cssVar = (name, fallback) => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  };
+  const BG = isLight ? cssVar('--bg-top', '#fbf7ee') : '#10151c';
+  const LINE = isLight ? 'rgba(33,28,20,0.18)' : 'rgba(237,230,214,0.16)';
+  const PAPER = cssVar('--paper', isLight ? '#211c14' : '#ede6d6');
+  const PAPER_DIM = cssVar('--paper-dim', isLight ? '#6e6656' : '#a9a294');
+  const BRASS = cssVar('--brass', isLight ? '#a8762c' : '#c9a34e');
+  const TEAL = cssVar('--teal', isLight ? '#227b6b' : '#4fb6a6');
+  const RED = cssVar('--red', isLight ? '#a83527' : '#c1483d');
+  const BURNT = cssVar('--burnt-yellow', isLight ? '#96650f' : '#c9972c');
+  const ROSE = cssVar('--rose', isLight ? '#a03a6e' : '#c76d9e');
   const headers = ["Presente","Passado","Futuro"];
   const pad=26, colGap=14, rowPad=10, lineH=17, headH=30, capH=30, tableGap=26, titleH=50, colLabelMin=110;
-  const mono = size => `${size}px 'JetBrains Mono', monospace`;
-  const head = size => `700 ${size}px 'Space Grotesk', sans-serif`;
+  const mono = size => `${size}px 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', monospace`;
+  const head = size => `700 ${size}px 'Space Grotesk', 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif`;
 
   const meas = document.createElement('canvas').getContext('2d');
   meas.font = mono(12.5);
@@ -2010,7 +2632,7 @@ function downloadMatrixPNG(){
   })));
   colW = colW.map(w=>w+22);
 
-  meas.font = "700 13px 'Inter', sans-serif";
+  meas.font = "700 13px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
   let labelW = colLabelMin;
   data.forEach(cat=> cat.rows.forEach(r=>{ labelW = Math.max(labelW, meas.measureText(r.label).width+16); }));
 
@@ -2035,8 +2657,8 @@ function downloadMatrixPNG(){
   let y = pad;
   ctx.fillStyle = BRASS; ctx.font = head(19);
   ctx.fillText("Painel Mestre do Inglês", pad, y+20);
-  ctx.fillStyle = PAPER_DIM; ctx.font = "12px 'Inter', sans-serif";
-  ctx.fillText("Tabela-resumo — tempos e aspectos (pronome: I)", pad, y+38);
+  ctx.fillStyle = PAPER_DIM; ctx.font = "12px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  ctx.fillText(`Tabela-resumo — tempos e aspectos (verbo: ${matrixVerb().base}${matrixVerb().prt ? " " + matrixVerb().prt : ""} · pronome: ${matrixPronoun()})`, pad, y+38);
   y += titleH;
 
   data.forEach(cat=>{
@@ -2044,7 +2666,7 @@ function downloadMatrixPNG(){
     ctx.fillText(`${cat.icon}  ${cat.label}`, pad, y+18);
     y += capH;
 
-    ctx.font = `700 10.5px 'JetBrains Mono', monospace`; ctx.fillStyle = BRASS;
+    ctx.font = `700 10.5px 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', monospace`; ctx.fillStyle = BRASS;
     let x = pad + labelW;
     headers.forEach((h,i)=>{ ctx.fillText(h.toUpperCase(), x+8, y+18); x += colW[i]+colGap; });
     y += headH;
@@ -2052,7 +2674,7 @@ function downloadMatrixPNG(){
 
     cat.rows.forEach(r=>{
       const rowH = rowPad*2 + lineH*4;
-      ctx.fillStyle = PAPER; ctx.font = "700 13px 'Inter', sans-serif";
+      ctx.fillStyle = PAPER; ctx.font = "700 13px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
       ctx.fillText(r.label, pad, y+rowPad+13);
 
       let x2 = pad + labelW;
@@ -2071,7 +2693,7 @@ function downloadMatrixPNG(){
 
   // legenda de cores no rodapé do PNG
   const legend = [["sujeito + raiz", PAPER],["afirmativa", TEAL],["negativa", RED],["pergunta", BURNT],["pergunta negativa", ROSE]];
-  ctx.font = "10.5px 'Inter', sans-serif";
+  ctx.font = "10.5px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
   let lx = pad;
   legend.forEach(([label,color])=>{
     ctx.fillStyle = color; ctx.beginPath(); ctx.arc(lx+4, y+8, 4, 0, Math.PI*2); ctx.fill();
@@ -2096,10 +2718,50 @@ const PRACTICE_LEVELS = [
   { key:"medio", label:"Médio", tempos:["present","past","future"], aspectos:["simples","continuo","perfeito"], formatos:["afirmativa","negativa","pergunta"], signal:true, col:true, modal:false },
   { key:"avancado", label:"Avançado", tempos:["present","past","future"], aspectos:["simples","continuo","perfeito","perfeito_continuo"], formatos:FORMATOS, signal:true, col:true, modal:true }
 ];
-let practiceState = { level:"medio", challenge:null, revealed:false, seen:0, hits:0, misses:0, missQueue:[] };
+/* Origem dos desafios: os motores (gerados), o banco de expressões (curados por você)
+   ou a mistura dos dois. O banco só entra quando expressoes.js já carregou. */
+const PRACTICE_SOURCES = [
+  { key:"misto", label:"Misto" },
+  { key:"motores", label:"Motores" },
+  { key:"expressoes", label:"Expressões" }
+];
+let practiceState = { level:"medio", source:"misto", challenge:null, revealed:false, checked:null, typed:'', seen:0, hits:0, misses:0, missQueue:[] };
 const pick = arr => arr[Math.floor(Math.random()*arr.length)];
 
+/* Desafio vindo do banco: a expressão inteira é a resposta — não passa por nenhum motor,
+   porque essas unidades se aprendem fechadas. No nível Básico ficam só as frases prontas
+   ("Take care!"), que são as mais curtas e diretas. */
+function newExprChallenge(){
+  if(!hasDb()) return null;
+  const lv = practiceState.level;
+  let pool = [];
+  Object.keys(EXPR_DB).forEach(fam=>{
+    EXPR_DB[fam].items.forEach(it=>{
+      if(lv === 'basico' && !dbIsPhrase(it)) return;
+      pool.push({fam, it});
+    });
+  });
+  if(!pool.length) return null;
+  const {fam, it} = pick(pool);
+  const specs = ["Banco", fam, it.group];
+  if(dbIsPhrase(it)) specs.push("frase pronta");
+  return {
+    pt: it.translation,
+    raw: R(it.expression),          /* azul: unidade lexical vinda do banco */
+    formato: 'afirmativa',
+    structure: it.note ? `${it.note} · ${EXPR_DB[fam].core}` : EXPR_DB[fam].core,
+    specs, isExpr: true
+  };
+}
+
 function newChallenge(){
+  /* Misto tenta o banco em ~35% dos sorteios; se o banco não estiver disponível,
+     cai nos motores sem avisar — o estudo não pode parar por causa de um arquivo. */
+  const src = practiceState.source;
+  if(src === 'expressoes' || (src === 'misto' && Math.random() < 0.35)){
+    const c = newExprChallenge();
+    if(c) return c;
+  }
   const lv = PRACTICE_LEVELS.find(l=>l.key===practiceState.level) || PRACTICE_LEVELS[1];
   const pronome = pick(PRONOUNS), verb = pick(VERBS), formato = pick(lv.formatos);
   const useModal = lv.modal && Math.random() < 0.3;
@@ -2142,7 +2804,82 @@ function newChallenge(){
   return { pt, raw, formato, structure:g.structure, specs };
 }
 
+/* ---- Verificação da resposta digitada ----
+   A comparação é tolerante ao que não é erro de inglês: maiúsculas, acentos, pontuação
+   final, espaços repetidos e contrações (don't = do not). O "to" inicial das expressões
+   do banco é opcional, porque é notação de dicionário, não parte da frase. Quando o banco
+   traz variantes separadas por ";", qualquer uma delas vale. */
+function normAnswer(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[’´`]/g, "'")
+    .replace(/\bdo not\b/g,"don't").replace(/\bdoes not\b/g,"doesn't").replace(/\bdid not\b/g,"didn't")
+    .replace(/\bis not\b/g,"isn't").replace(/\bare not\b/g,"aren't").replace(/\bwas not\b/g,"wasn't")
+    .replace(/\bwere not\b/g,"weren't").replace(/\bhave not\b/g,"haven't").replace(/\bhas not\b/g,"hasn't")
+    .replace(/\bhad not\b/g,"hadn't").replace(/\bwill not\b/g,"won't").replace(/\bcannot\b/g,"can't")
+    .replace(/\bcan not\b/g,"can't").replace(/\bcould not\b/g,"couldn't").replace(/\bshould not\b/g,"shouldn't")
+    .replace(/\bi am\b/g,"i'm").replace(/\bmight not\b/g,"might not")
+    .replace(/[.,;:!?"]/g,'')
+    .replace(/\s+/g,' ').trim();
+}
+function expectedAnswers(c){
+  const base = stripMarks(c.raw);
+  const out = [base];
+  if(c.isExpr && /^to /i.test(base)) out.push(base.replace(/^to /i,''));
+  return out.map(normAnswer);
+}
+/* Distância de edição só para distinguir "quase certo" de "errado" — um erro de digitação
+   não deveria dar a mesma resposta que uma frase completamente diferente. */
+function editDistance(a,b){
+  const m=a.length, n=b.length;
+  if(!m||!n) return Math.max(m,n);
+  let prev=Array.from({length:n+1},(_,j)=>j), cur=new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0]=i;
+    for(let j=1;j<=n;j++){
+      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1]===b[j-1]?0:1));
+    }
+    [prev,cur]=[cur,prev];
+  }
+  return prev[n];
+}
+function checkAnswer(){
+  const c = practiceState.challenge;
+  const input = document.getElementById('practiceInput');
+  const typed = (input.value || '').trim();
+  if(!c || !typed) return;
+  const norm = normAnswer(typed);
+  const exp = expectedAnswers(c);
+  const exact = exp.includes(norm);
+  const dist = Math.min(...exp.map(e=>editDistance(norm, e)));
+  const near = !exact && dist <= Math.max(2, Math.round(exp[0].length * 0.12));
+
+  practiceState.revealed = true;
+  practiceState.checked = exact ? 'ok' : (near ? 'almost' : 'no');
+  practiceState.typed = typed;
+  if(exact){ practiceState.hits++; }
+  else if(!near){
+    practiceState.misses++;
+    if(practiceState.missQueue.length < 12) practiceState.missQueue.push(c);
+  }
+  renderPractice(); saveState();
+}
+
 function renderPractice(){
+  const srow = document.getElementById('practiceSourceRow'); srow.innerHTML="";
+  PRACTICE_SOURCES.forEach(s=>{
+    const disabled = (s.key !== 'motores') && !hasDb();
+    const b=document.createElement('div'); b.className='pronome-pill';
+    b.dataset.active=(practiceState.source===s.key); b.textContent=s.label;
+    b.style.opacity = disabled ? .4 : 1;
+    b.onclick=()=>{ if(disabled) return; practiceState.source=s.key; nextChallenge(); saveState(); };
+    srow.appendChild(b);
+  });
+  document.getElementById('practiceHint').textContent = practiceState.source === 'expressoes'
+    ? 'Expressões do seu banco — a resposta é a unidade inteira, sem conjugação.'
+    : (practiceState.source === 'misto'
+        ? 'Mistura frases geradas pelos motores com expressões do seu banco.'
+        : 'Os desafios são gerados pelos mesmos motores — nada é fixo.');
   const row = document.getElementById('practiceLevelRow'); row.innerHTML="";
   PRACTICE_LEVELS.forEach(l=>{
     const b=document.createElement('div'); b.className='pronome-pill';
@@ -2165,9 +2902,27 @@ function renderPractice(){
     const cp = document.getElementById('copyPractice');
     cp.hidden = false; cp.dataset.text = stripMarks(c.raw) + "\n" + c.pt;
   } else { document.getElementById('copyPractice').hidden = true; }
-  /* antes de revelar: ver/pular. depois de revelar: autoavaliação — é ela que alimenta o placar */
+  /* Três estados: respondendo (campo + conferir), conferido (veredito + próxima) e
+     revelado sem conferir (autoavaliação, para quem preferiu só ver a resposta). */
+  const checked = practiceState.checked;
+  document.getElementById('practiceInputRow').hidden = practiceState.revealed;
   document.getElementById('practiceActionsReveal').hidden = practiceState.revealed;
-  document.getElementById('practiceActionsScore').hidden = !practiceState.revealed;
+  document.getElementById('practiceActionsScore').hidden = !(practiceState.revealed && !checked);
+  document.getElementById('practiceActionsNext').hidden = !(practiceState.revealed && checked);
+
+  const vd = document.getElementById('practiceVerdict');
+  vd.hidden = !checked;
+  if(checked){
+    vd.className = 'practice-verdict ' + (checked === 'ok' ? 'ok' : (checked === 'almost' ? 'almost' : 'no'));
+    if(checked === 'ok'){
+      vd.innerHTML = '✅ Certo!';
+    } else if(checked === 'almost'){
+      vd.innerHTML = '🟡 Quase — diferença mínima, provavelmente digitação.<span class="yours">você escreveu: ' + escapeHTML(practiceState.typed) + '</span>' +
+        '<button class="practice-accept" id="practiceAcceptHit">contar como acerto</button> · <button class="practice-accept" id="practiceAcceptMiss">contar como erro</button>';
+    } else {
+      vd.innerHTML = '❌ Não foi dessa vez.<span class="yours">você escreveu: ' + escapeHTML(practiceState.typed) + '</span>';
+    }
+  }
 
   const respondidos = practiceState.hits + practiceState.misses;
   const bar = document.getElementById('practiceBar');
@@ -2180,8 +2935,29 @@ function renderPractice(){
   } else {
     document.getElementById('practiceScore').textContent = practiceState.seen ? 'Responda para começar o placar.' : '';
   }
+  const acceptHit = document.getElementById('practiceAcceptHit');
+  if(acceptHit) acceptHit.onclick = ()=>{ practiceState.hits++; practiceState.checked='ok'; renderPractice(); saveState(); };
+  const acceptMiss = document.getElementById('practiceAcceptMiss');
+  if(acceptMiss) acceptMiss.onclick = ()=>{
+    practiceState.misses++; practiceState.checked='no';
+    if(practiceState.challenge && practiceState.missQueue.length < 12) practiceState.missQueue.push(practiceState.challenge);
+    renderPractice(); saveState();
+  };
+  const a2 = document.getElementById('practiceAudio2');
+  if(a2 && practiceState.challenge) a2.dataset.text = stripMarks(practiceState.challenge.raw);
+
+  applyA11y();
+  const reset = document.getElementById('practiceReset');
+  reset.hidden = !respondidos;
+  reset.onclick = ()=>{
+    practiceState.hits = 0; practiceState.misses = 0; practiceState.seen = 0; practiceState.missQueue = [];
+    nextChallenge(); saveState();
+  };
 }
 function nextChallenge(){
+  practiceState.checked = null; practiceState.typed = '';
+  const inp = document.getElementById('practiceInput');
+  if(inp) inp.value = '';
   /* o que o usuário errou volta a aparecer (1 em cada 3 sorteios), em vez de sumir para sempre */
   if(practiceState.missQueue.length && Math.random() < 0.34){
     practiceState.challenge = practiceState.missQueue.shift();
@@ -2191,14 +2967,18 @@ function nextChallenge(){
   practiceState.revealed = false;
   practiceState.seen++;
   renderPractice();
+  saveState();
 }
 document.getElementById('practiceReveal').onclick = ()=>{ practiceState.revealed = true; renderPractice(); };
 document.getElementById('practiceNext').onclick = nextChallenge;
-document.getElementById('practiceHit').onclick = ()=>{ practiceState.hits++; nextChallenge(); };
+document.getElementById('practiceCheck').onclick = checkAnswer;
+document.getElementById('practiceContinue').onclick = nextChallenge;
+document.getElementById('practiceInput').addEventListener('keydown', e=>{ if(e.key === 'Enter') checkAnswer(); });
+document.getElementById('practiceHit').onclick = ()=>{ practiceState.hits++; nextChallenge(); saveState(); };
 document.getElementById('practiceMiss').onclick = ()=>{
   practiceState.misses++;
   if(practiceState.challenge && practiceState.missQueue.length < 12) practiceState.missQueue.push(practiceState.challenge);
-  nextChallenge();
+  nextChallenge(); saveState();
 };
 
 /* ---- Banco de expressões (English Overdrive Word Families) ----
@@ -2217,9 +2997,10 @@ function loadExprDb(){
   s.async = true;
   s.onload = ()=>{
     dbStatus = hasDb() ? 'pronto' : 'ausente';
-    if(dbStatus === 'pronto') dbState.family = dbFamiliesOfType('Verbos')[0];
+    if(dbStatus === 'pronto' && (!dbState.family || !EXPR_DB[dbState.family])) dbState.family = dbFamiliesOfType(dbState.type === DB_PHRASES ? 'Verbos' : dbState.type)[0];
     renderDb();
-    buildVerbBank(); // o painel do dial ④ passa a existir assim que o banco chega
+    buildVerbBank(); buildSignalBank(); buildWhBank(); // os painéis passam a existir assim que o banco chega
+    renderPractice(); // habilita as origens que dependem do banco
   };
   s.onerror = ()=>{ dbStatus = 'ausente'; renderDb(); };
   document.body.appendChild(s);
@@ -2287,8 +3068,7 @@ function buildDbFamilies(){
       document.getElementById('dbSearch').value=""; dbState.limit=DB_PAGE; renderDb(); };
     el.appendChild(b);
   });
-  const act = el.querySelector('[data-active="true"]');
-  if(act && act.scrollIntoView){ try{ act.scrollIntoView({block:'nearest', inline:'nearest'}); }catch(e){} }
+  scrollChipIntoRow(el, el.querySelector('[data-active="true"]'));
 }
 function buildDbGroups(){
   const wrap = document.getElementById('dbGroupWrap');
@@ -2361,6 +3141,7 @@ function renderDb(){
   if(sec) sec.style.display = '';
   if(pill) pill.style.display = '';
   buildDbTypes(); buildDbFamilies(); buildDbHead(); buildDbGroups();
+  saveState(); applyA11y();
   const res = dbResults();
   const list = document.getElementById('dbList');
   const total = Object.values(EXPR_DB).reduce((a,v)=>a+v.items.length,0);
@@ -2397,12 +3178,51 @@ if(dbSearchEl) dbSearchEl.addEventListener('input', e=>{
 });
 
 
+buildMatrixSource();
 buildAdverbsList();
 buildErros();
+/* Restaura a sessão anterior antes do primeiro render. Cada bloco é validado: um estado
+   salvo por uma versão antiga (verbo que não existe mais, tempo removido) é descartado
+   em silêncio em vez de quebrar a abertura. */
+(function restoreState(){
+  const saved = loadState();
+  if(!saved) return;
+  try{
+    if(saved.theme === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      const b = document.getElementById('themeToggle'); if(b) b.textContent = '☀️';
+    }
+    const s = saved.state;
+    if(s && CATEGORIES[s.categoria] && TENSE_LABEL[s.tempo] && verbById(s.verbo).id === s.verbo){
+      Object.assign(state, s);
+      if(!CATEGORIES[state.categoria].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[state.categoria].aspects[0];
+      if(!FORMATOS.includes(state.formato)) state.formato = 'afirmativa';
+      const v = verbById(state.verbo);
+      if(state.colocacao !== null && !(v.col || [])[state.colocacao]) state.colocacao = null;
+    }
+    const m = saved.modal;
+    if(m && MODAL_ENGINE[m.funcao] && MODAL_ENGINE[m.funcao].tempos.some(t=>t.key===m.tempo) && FORMATOS.includes(m.formato)){
+      Object.assign(modalState, m);
+    }
+    const p = saved.practice;
+    if(p && PRACTICE_LEVELS.some(l=>l.key===p.level)){
+      practiceState.level = p.level;
+      if(PRACTICE_SOURCES.some(s=>s.key===p.source)) practiceState.source = p.source;
+      practiceState.hits = p.hits|0; practiceState.misses = p.misses|0; practiceState.seen = p.seen|0;
+      practiceState.missQueue = Array.isArray(p.missQueue) ? p.missQueue.filter(c=>c && c.pt && c.raw) : [];
+    }
+    if(typeof saved.matrixFollow === 'boolean') matrixFollow = saved.matrixFollow;
+    if(saved.db && DB_TYPES.includes(saved.db.type)){
+      dbState.type = saved.db.type; dbState.family = saved.db.family; dbState.group = saved.db.group;
+    }
+  }catch(e){ /* estado corrompido: segue com os padrões */ }
+})();
+
 render();
 nextChallenge();
 renderDb();
 loadExprDb();
+setupNavSpy();
 setTimeout(()=>{
   document.querySelectorAll('.block[data-open="true"] .block-body').forEach(b=>{ b.style.maxHeight='none'; });
 },50);
