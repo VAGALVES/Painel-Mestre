@@ -260,6 +260,20 @@
   .mont-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:9px; padding:7px 11px;
     color:var(--paper-dim); font-size:11px; font-family:inherit; cursor:pointer;}
   .mont-conta{font-size:10.5px; color:var(--paper-dim); font-variant-numeric:tabular-nums;}
+  .gloss-head{font-size:11.5px; color:var(--paper-dim); margin:10px 0 8px; line-height:1.45;}
+  .gloss-fechar{background:none; border:0; color:var(--paper-dim); font-size:10px; text-decoration:underline;
+    cursor:pointer; font-family:inherit; margin-left:8px; padding:0;}
+  .gloss-grid{display:grid; grid-template-columns:1fr; gap:0;}
+  .gloss-item{display:flex; justify-content:space-between; gap:12px; padding:7px 2px; border-bottom:1px solid var(--line);}
+  .gloss-item:last-child{border-bottom:0;}
+  .gloss-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+  .anat-frase-row{display:flex; align-items:flex-start; gap:10px;}
+  .anat-frase-row .anat-frase, .anat-frase-row .mont-frase{flex:1; min-width:0;}
+  .anat-frase-row .audio-btn{flex-shrink:0; margin-top:2px;}
+  .gloss-en{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px; color:var(--cat);}
+  .gloss-pt{font-size:11px; color:var(--paper-dim); text-align:right;}
+  @media (min-width:760px){ .gloss-grid{grid-template-columns:1fr 1fr; gap:0 26px;} }
+  @media (min-width:1080px){ .gloss-grid{grid-template-columns:1fr 1fr 1fr;} }
   .slot-table{width:100%; border-collapse:collapse; margin:10px 0 4px; font-size:11.5px;}
   .slot-table th{text-align:left; font-size:9.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--brass-dim); padding:0 6px 6px 0; font-weight:600;}
   .slot-table td{padding:6px 6px 6px 0; border-top:1px solid var(--line); vertical-align:top;}
@@ -3821,9 +3835,46 @@ const ANAT_EXEMPLOS = [
   { titulo:"Perfect: frequência + marco temporal",
     t:"present", a:"perfeito", f:"afirmativa", v:"visit", ends:["twice","so far"],
     why:"Combinação típica do present perfect: contagem + o recorte \"até agora\"." },
+
+  { titulo:"Frequência + lugar — a rotina",
+    t:"present", a:"simples", f:"afirmativa", v:"work", ends:["every day","at home"],
+    why:"Descreve hábito com precisão: com que frequência e onde. Note a ordem — lugar antes de frequência." },
+  { titulo:"Duração + tempo",
+    t:"past", a:"continuo", f:"afirmativa", v:"read", ends:["all night long","at that moment"],
+    why:"Por quanto tempo e quando: dois violetas de encaixes vizinhos, muito usados juntos em relatos." },
+  { titulo:"Comparação + tempo",
+    t:"present", a:"perfeito", f:"afirmativa", v:"sleep", ends:["better than ever","so far"],
+    why:"O encaixe de comparação é subaproveitado e muda o tom da frase: introduz progresso." },
+  { titulo:"Modo + frequência + tempo",
+    t:"past", a:"simples", f:"afirmativa", v:"call", ends:["quickly","twice","last week"],
+    why:"Trio sem lugar: quando o onde é óbvio pelo contexto, a frase ganha precisão sem ficar longa." },
+  { titulo:"Grau + comparação",
+    t:"present", a:"simples", f:"afirmativa", v:"work", ends:["a bit","more than usual"],
+    why:"Dois laranjas de encaixes distintos. \"Um pouco mais que o normal\" — nuance difícil sem essa dupla." },
+  { titulo:"Sequência + lugar",
+    t:"past", a:"simples", f:"afirmativa", v:"eat", ends:["first","at home"],
+    why:"Sequência é o último encaixe, mas na fala costuma abrir a frase. Aqui fica no fim, que é o padrão do motor." },
+  { titulo:"Negativa: polaridade fecha a frase",
+    t:"past", a:"simples", f:"negativa", v:"sleep", ends:["well","at all"],
+    why:"\"At all\" só existe em negativa e sempre vai por último, reforçando a negação de tudo que veio antes." },
+  { titulo:"Aproximação + lugar",
+    t:"past", a:"simples", f:"afirmativa", v:"go", ends:["about an hour ago","downtown"],
+    why:"Quando não se sabe a hora exata. \"About\" ocupa encaixe próprio, distinto do tempo definido." },
+  { titulo:"O trio MPT no presente contínuo",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", ends:["quickly","at home","right now"],
+    why:"A mesma fórmula MPT funciona em qualquer tempo — aqui com o agora explícito." },
+  { titulo:"Modo + duração no perfect contínuo",
+    t:"present", a:"perfeito_continuo", f:"afirmativa", v:"work", ends:["hard","for two hours"],
+    why:"O aspecto perfeito contínuo já carrega duração; o adjunto a torna exata." },
 ];
 
 function anatFrase(cfg){
+  /* Guarda de integridade: se um verbo ou sinal do exemplo não existir no banco, o motor
+     cairia no padrão silenciosamente e o card mostraria outra frase. Melhor gritar. */
+  if(verbById(cfg.v).id !== cfg.v) console.warn('[anatomia] verbo inexistente:', cfg.v, '→', cfg.titulo);
+  const faltando = (cfg.ends || []).concat(cfg.mid ? [cfg.mid] : [])
+    .filter(x => !(SIGNAL_WORDS[`${cfg.t}_${cfg.a}`] || []).some(s => s.w === x));
+  if(faltando.length) console.warn('[anatomia] sinais ausentes em', `${cfg.t}_${cfg.a}`, ':', faltando, '→', cfg.titulo);
   const verb = verbById(cfg.v);
   const key = `${cfg.t}_${cfg.a}`;
   const mid = cfg.mid ? (SIGNAL_WORDS[key]||[]).find(s=>s.w===cfg.mid) : null;
@@ -3880,7 +3931,10 @@ function buildMontador(){
   });
 
   box.innerHTML = `<div class="montador">
-    <div class="mont-frase">${markedToHTML(raw, markColorVar(formato))}</div>
+    <div class="anat-frase-row">
+      <div class="mont-frase">${markedToHTML(raw, markColorVar(formato))}</div>
+      <button class="audio-btn sm" data-text="${escapeHTML(stripMarks(raw))}" title="Ouvir">🔊</button>
+    </div>
     <div class="mont-pt">${escapeHTML(pt)}</div>
     <div class="mont-slots">${sockets}</div>
     <div class="mont-acoes">
@@ -3905,6 +3959,77 @@ function buildMontador(){
       else montOn = new Set([2, 4, 8]);
       buildMontador();
     };
+  });
+}
+
+/* ---- Glossário por encaixe ----
+   O banco inteiro reorganizado pela pergunta que cada expressão responde, e não pelo
+   tempo verbal em que aparece. É a visão que faltava: quero preencher o encaixe "modo",
+   quais peças tenho? Junta todas as combinações, sem repetir. */
+/* Nenhum encaixe aberto de início: com 251 expressões só em "tempo", abrir algo por
+   padrão empurraria o resto do guia para fora da tela. O glossário começa recolhido e
+   expande sob demanda. */
+let glossSlot = null;
+function glossPorEncaixe(){
+  const mapa = {};
+  Object.keys(SIGNAL_WORDS).forEach(k=>{
+    SIGNAL_WORDS[k].forEach(s=>{
+      const r = endRank(s);
+      (mapa[r] = mapa[r] || new Map()).set(s.w, s);
+    });
+  });
+  return mapa;
+}
+function buildGlossario(){
+  const box = document.getElementById('glossarioWrap');
+  if(!box) return;
+  const mapa = glossPorEncaixe();
+  const slots = Object.keys(mapa).map(Number).sort((a,b)=>a-b);
+  if(glossSlot !== null && !slots.includes(glossSlot)) glossSlot = null;
+
+  const PERGUNTA = { 1:'quanto?', 2:'como?', 3:'comparado a quê?', 4:'onde?', 5:'com que frequência?',
+                     6:'por quanto tempo?', 7:'aproximadamente quando?', 8:'quando?', 9:'em que ordem?',
+                     10:'nega o quê? (só em negativas e perguntas)' };
+
+  const abas = slots.map(r=>{
+    const s0 = mapa[r].values().next().value;
+    const k = adjKind(s0.cls, s0.w);
+    return `<div class="signal-chip fam-chip" data-gloss="${r}" data-active="${glossSlot===r}"
+      style="--cat:${ADJ_COLOR[k]}" data-cat="${k}">${END_SLOT_NOME[r]}<span class="fam-count">${mapa[r].size}</span></div>`;
+  }).join('');
+
+  let corpo = `<div class="gloss-head">Toque em um encaixe acima para ver as expressões que o preenchem.</div>`;
+  if(glossSlot !== null){
+    const itens = [...mapa[glossSlot].values()]
+      .sort((a,b)=> a.w.localeCompare(b.w))
+      .map(s=>{
+        const k = adjKind(s.cls, s.w);
+        const pos = s.pl === 'mid' ? ' · meio' : (s.pl === 'split' ? ' · partido' : '');
+        /* o partido guarda as duas metades; fala a forma unida, que é como se ouve */
+        const falar = s.pl === 'split' ? `${s.mid} ${s.end}` : s.w;
+        return `<div class="gloss-item" style="--cat:${ADJ_COLOR[k]}">
+          <span class="gloss-en">${escapeHTML(s.w)}</span>
+          <span class="gloss-right">
+            <span class="gloss-pt">${escapeHTML(SIGNAL_PT[s.w] || '—')}${pos}</span>
+            <button class="audio-btn sm" data-text="${escapeHTML(falar)}" title="Ouvir">🔊</button>
+          </span></div>`;
+      }).join('');
+    const s0 = mapa[glossSlot].values().next().value;
+    const k0 = adjKind(s0.cls, s0.w);
+    corpo = `<div class="gloss-head">
+        <b style="color:${ADJ_COLOR[k0]}">${glossSlot}. ${END_SLOT_NOME[glossSlot]}</b>
+        — responde <i>${PERGUNTA[glossSlot] || ''}</i> · ${mapa[glossSlot].size} expressões
+        <button class="gloss-fechar" data-gloss-close="1">recolher ✕</button>
+      </div>
+      <div class="gloss-grid">${itens}</div>`;
+  }
+
+  box.innerHTML = `<div class="signal-row-inner fam-row" id="glossAbas">${abas}</div>${corpo}`;
+  const fechar = box.querySelector('[data-gloss-close]');
+  if(fechar) fechar.onclick = ()=>{ glossSlot = null; buildGlossario(); updateScrollShadows(); };
+
+  box.querySelectorAll('[data-gloss]').forEach(b=>{
+    b.onclick = ()=>{ const r = +b.dataset.gloss; glossSlot = (glossSlot === r) ? null : r; buildGlossario(); updateScrollShadows(); };
   });
 }
 
@@ -3936,7 +4061,10 @@ function buildAnatomia(){
     const r = anatFrase(cfg);
     cards += `<div class="anat-card">
       <h4>${cfg.titulo}</h4>
-      <div class="anat-frase">${r.en}</div>
+      <div class="anat-frase-row">
+        <div class="anat-frase">${r.en}</div>
+        <button class="audio-btn sm" data-text="${escapeHTML(r.texto)}" title="Ouvir">🔊</button>
+      </div>
       <div class="anat-pt">${escapeHTML(r.pt)}</div>
       <div class="why">${r.slots}<br>${cfg.why}</div>
     </div>`;
@@ -3990,11 +4118,21 @@ function buildAnatomia(){
       <b>6</b> <span style="color:${ADJ_COLOR.quando}">violetas</span> na mesma frase.
     </div>
 
+    <div class="ref-class-label">Glossário por encaixe</div>
+    <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:2px;">
+      O banco inteiro reorganizado pela pergunta que cada expressão responde — útil quando
+      você sabe qual encaixe quer preencher e precisa da peça.
+    </div>
+    <div id="glossarioWrap"></div>
+
     <div class="ref-class-label">Combinações que valem a pena</div>
     ${cards}
 
     <div class="ref-class-label">O limite — e por que não usá-lo</div>
-    <div class="anat-frase">${mx.en}</div>
+    <div class="anat-frase-row">
+      <div class="anat-frase">${mx.en}</div>
+      <button class="audio-btn sm" data-text="${escapeHTML(mx.texto)}" title="Ouvir">🔊</button>
+    </div>
     <div class="anat-pt">${escapeHTML(mx.pt)}</div>
     <div class="anat-aviso">
       Esta frase é <b>gramaticalmente correta</b>: 9 encaixes ocupados, todos na ordem certa.
@@ -4003,6 +4141,7 @@ function buildAnatomia(){
       a <b>coerência</b> é sua. Na prática, o ponto ideal fica entre <b>2 e 4</b> encaixes.
     </div>`;
   buildMontador();
+  buildGlossario();
 }
 
 buildAnatomia();
