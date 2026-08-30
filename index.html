@@ -128,13 +128,18 @@
   .signal-row-inner.wrap-row{flex-wrap:wrap; overflow-x:visible;}
   /* Sombra nas bordas das faixas roláveis: sem esse aviso, o conteúdo à direita
      simplesmente não é descoberto — foi o que aconteceu com o "by law". */
-  .scroll-shadow{position:relative;}
-  .scroll-shadow::before, .scroll-shadow::after{content:""; position:absolute; top:0; bottom:0; width:26px;
-    pointer-events:none; opacity:0; transition:opacity .18s ease; z-index:2;}
-  .scroll-shadow::before{left:0; background:linear-gradient(to right, var(--panel), transparent);}
-  .scroll-shadow::after{right:0; background:linear-gradient(to left, var(--panel), transparent);}
-  .scroll-shadow[data-more-left="true"]::before{opacity:1;}
-  .scroll-shadow[data-more-right="true"]::after{opacity:1;}
+  /* Sombra de rolagem via box-shadow INSET: pseudo-elementos absolutos dentro de um
+     contêiner rolável andam junto com o conteúdo e reaparecem no meio da faixa — a
+     sombra interna fica presa à borda do elemento, que é o comportamento desejado. */
+  .scroll-shadow{transition:box-shadow .18s ease;}
+  .scroll-shadow[data-more-left="true"]{box-shadow:inset 16px 0 12px -12px rgba(0,0,0,0.55);}
+  .scroll-shadow[data-more-right="true"]{box-shadow:inset -16px 0 12px -12px rgba(0,0,0,0.55);}
+  .scroll-shadow[data-more-left="true"][data-more-right="true"]{
+    box-shadow:inset 16px 0 12px -12px rgba(0,0,0,0.55), inset -16px 0 12px -12px rgba(0,0,0,0.55);}
+  :root[data-theme="light"] .scroll-shadow[data-more-left="true"]{box-shadow:inset 16px 0 12px -12px rgba(33,28,20,0.22);}
+  :root[data-theme="light"] .scroll-shadow[data-more-right="true"]{box-shadow:inset -16px 0 12px -12px rgba(33,28,20,0.22);}
+  :root[data-theme="light"] .scroll-shadow[data-more-left="true"][data-more-right="true"]{
+    box-shadow:inset 16px 0 12px -12px rgba(33,28,20,0.22), inset -16px 0 12px -12px rgba(33,28,20,0.22);}
   .signal-row-inner::-webkit-scrollbar{height:4px;}
   .signal-row-inner::-webkit-scrollbar-thumb{background:var(--line); border-radius:2px;}
   .signal-chip{flex-shrink:0;}
