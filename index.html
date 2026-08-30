@@ -31,13 +31,13 @@
   :root{
     --panel-deep:#10151c; --panel:#1b2430; --panel-raised:#242f3d;
     --brass:#c9a34e; --brass-dim:#8a744f; --teal:#4fb6a6; --red:#c1483d;
-    --amber:#e0a458; --violet:#8f8fd6; --burnt-yellow:#c9972c; --rose:#c76d9e; --blue:#6b9fd8; --paper:#ede6d6; --paper-dim:#a9a294;
+    --amber:#e0a458; --violet:#8f8fd6; --burnt-yellow:#c9972c; --rose:#c76d9e; --blue:#6b9fd8; --lime:#b9cf5c; --orange:#e09a5f; --paper:#ede6d6; --paper-dim:#a9a294;
     --line: rgba(237,230,214,0.10); --bg-top:#182130;
   }
   :root[data-theme="light"]{
     --panel-deep:#f4f0e6; --panel:#ffffff; --panel-raised:#efe9db;
     --brass:#a8762c; --brass-dim:#8a744f; --teal:#227b6b; --red:#a83527;
-    --amber:#b06f22; --violet:#5f57ad; --burnt-yellow:#96650f; --rose:#a03a6e; --blue:#2f5f9e; --paper:#211c14; --paper-dim:#6e6656;
+    --amber:#b06f22; --violet:#5f57ad; --burnt-yellow:#96650f; --rose:#a03a6e; --blue:#2f5f9e; --lime:#5c6b18; --orange:#b3601a; --paper:#211c14; --paper-dim:#6e6656;
     --line: rgba(33,28,20,0.12); --bg-top:#fbf7ee;
   }
   *{box-sizing:border-box;}
@@ -153,6 +153,13 @@
   .fam-dot{width:5px; height:5px; border-radius:50%; background:var(--violet); display:inline-block;}
   .signal-chip{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:6px 11px; font-size:11.5px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; color:var(--paper-dim); cursor:pointer; transition:all .18s ease;}
   .signal-chip[data-active="true"]{color:var(--panel-deep); background:var(--teal); border-color:var(--teal);}
+  /* Cada chip carrega a cor do encaixe a que pertence, então a categoria é visível
+     já na escolha — e não só depois, na frase montada. Ativo inverte para fundo cheio. */
+  .signal-chip[data-cat]{color:var(--cat); border-color:color-mix(in srgb, var(--cat) 45%, var(--line));}
+  .signal-chip[data-cat][data-active="true"]{background:var(--cat); border-color:var(--cat); color:var(--panel-deep);}
+  /* chip que disputa encaixe já ocupado: borda tracejada = "entra no lugar do outro" */
+  .signal-chip[data-rival="true"]{border-style:dashed; opacity:.75;}
+  .signal-active .tagx[data-cat]{color:var(--cat); border-color:color-mix(in srgb, var(--cat) 45%, var(--line));}
   .signal-hint{font-size:11px; color:var(--paper-dim); margin-top:6px; line-height:1.4;}
   .signal-rule{font-size:10.5px; color:var(--paper-dim); margin:2px 0 4px; line-height:1.4;}
 
@@ -226,6 +233,44 @@
   .ref-subhead{font-size:11px; font-weight:700; color:var(--paper); margin:8px 0 4px; display:flex; align-items:center; gap:5px;}
   .ref-class-label{font-size:9.5px; color:var(--brass-dim); text-transform:uppercase; letter-spacing:0.06em; margin:5px 0 3px;}
   .ref-tag{display:inline-block; background:var(--panel-raised); border:1px solid var(--line); border-radius:14px; padding:4px 10px; font-size:11px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; color:var(--paper-dim); margin:0 5px 5px 0;}
+  .ref-tag[data-cat]{color:var(--cat); border-color:color-mix(in srgb, var(--cat) 40%, var(--line));}
+  /* legenda no topo da referência, para a cor ser legível sem consultar a tabela */
+  /* ---- Montador de encaixes: tabela viva ---- */
+  .cor-resumo{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0;}
+  .cor-card{border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center; background:var(--panel-raised);}
+  .cor-card .bolha{width:14px; height:14px; border-radius:50%; margin:0 auto 6px;}
+  .cor-card .n{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:22px; font-weight:600; line-height:1;}
+  .cor-card .rot{font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--paper-dim); margin-top:3px;}
+  .cor-card .quais{font-size:9.5px; color:var(--paper-dim); margin-top:6px; line-height:1.35;}
+  .montador{border:1px solid var(--line); border-radius:12px; padding:12px; margin:12px 0; background:var(--panel-deep);}
+  .mont-frase{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:14px; line-height:1.6; min-height:44px; margin-bottom:4px;}
+  .mont-pt{font-size:11.5px; color:var(--paper-dim); font-style:italic; margin-bottom:10px; min-height:16px;}
+  .mont-slots{display:flex; flex-wrap:wrap; gap:6px;}
+  .socket{border:1px dashed var(--line); border-radius:10px; padding:6px 9px; cursor:pointer; font-size:10.5px;
+    color:var(--paper-dim); background:transparent; font-family:inherit; transition:all .16s ease; text-align:left; min-height:38px;}
+  .socket b{display:block; font-size:9px; text-transform:uppercase; letter-spacing:0.05em; opacity:.75;}
+  .socket span{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11px;}
+  .socket[data-on="true"]{border-style:solid; border-color:var(--cat); color:var(--cat); background:color-mix(in srgb, var(--cat) 12%, transparent);}
+  .mont-acoes{display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap;}
+  .mont-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:9px; padding:7px 11px;
+    color:var(--paper-dim); font-size:11px; font-family:inherit; cursor:pointer;}
+  .mont-conta{font-size:10.5px; color:var(--paper-dim); font-variant-numeric:tabular-nums;}
+  .slot-table{width:100%; border-collapse:collapse; margin:10px 0 4px; font-size:11.5px;}
+  .slot-table th{text-align:left; font-size:9.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--brass-dim); padding:0 6px 6px 0; font-weight:600;}
+  .slot-table td{padding:6px 6px 6px 0; border-top:1px solid var(--line); vertical-align:top;}
+  .slot-n{font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--paper-dim); font-size:10.5px; width:18px;}
+  .slot-nome{font-weight:600;}
+  .slot-ex{font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--paper-dim); font-size:11px;}
+  .anat-frase{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13.5px; line-height:1.55; margin:2px 0 3px;}
+  .anat-pt{font-size:11.5px; color:var(--paper-dim); margin-bottom:12px; font-style:italic;}
+  .anat-card{border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:10px 0; background:var(--panel-raised);}
+  .anat-card h4{margin:0 0 4px; font-size:12px; color:var(--brass); letter-spacing:0.03em;}
+  .anat-card .why{font-size:11px; color:var(--paper-dim); line-height:1.45;}
+  .anat-atalho{border-left:3px solid var(--brass); padding:8px 0 8px 12px; margin:14px 0; font-size:12.5px; line-height:1.55;}
+  .anat-aviso{border:1px solid var(--red); border-radius:10px; padding:10px 12px; margin:12px 0; font-size:11.5px; color:var(--paper-dim); line-height:1.5;}
+  .ref-legend{display:flex; flex-wrap:wrap; gap:6px 16px; margin:6px 0 14px; font-size:10.5px; color:var(--paper-dim);}
+  .ref-legend span{display:inline-flex; align-items:center; gap:5px;}
+  .ref-legend i{width:9px; height:9px; border-radius:50%; display:inline-block; font-style:normal;}
   .ref-tag i{opacity:.65; font-style:normal; color:var(--paper-dim);}
   .ref-conj-note{font-size:11px; color:var(--paper-dim); line-height:1.5; margin-top:6px; font-style:italic;}
 
@@ -677,7 +722,9 @@
         <span><i style="background:var(--burnt-yellow)"></i>pergunta</span>
         <span><i style="background:var(--rose)"></i>pergunta negativa</span>
         <span><i style="background:var(--blue)"></i>regência / collocation</span>
-        <span><i style="background:var(--violet)"></i>complemento (advérbio/tempo)</span>
+        <span><i style="background:var(--orange)"></i>como / quanto</span>
+        <span><i style="background:var(--lime)"></i>onde</span>
+        <span><i style="background:var(--violet)"></i>quando</span>
       </div>
       <button class="download-btn" id="downloadMatrixBtn" onclick="downloadMatrixPNG()">⬇️ Baixar tabela (PNG)</button>
       <div class="matrix-scroll-hint">↔ arraste a tabela para o lado para ver passado, presente e futuro</div>
@@ -719,6 +766,17 @@
         <p><b style="color:var(--paper)">How much</b> + substantivo incontável (singular). <b style="color:var(--paper)">How many</b> + substantivo contável (plural). Por isso não entram no motor de conjugação acima — a escolha depende do tipo de palavra que vem depois, não do tempo verbal.</p>
         <span class="ex">How much water do you need? · How many books did you read?</span>
       </div>
+    </div></div>
+  </section>
+
+  <section class="block" data-open="false" id="block-anatomia">
+    <div class="block-head" onclick="toggleBlock('block-anatomia')">
+      <div class="block-head-title"><div class="block-num">🧩</div><h2>Anatomia da frase — os encaixes</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div class="matrix-note">Quantas peças cabem numa frase, em que ordem elas entram e quais combinações valem a pena. Todos os exemplos são gerados pelo motor — nada aqui é texto fixo.</div>
+      <div id="anatomiaWrap"></div>
     </div></div>
   </section>
 
@@ -984,29 +1042,61 @@ function negBeQ(p, when){
    Sujeito e raiz do verbo nunca são marcados. markedToHTML()/drawMarkedLine() leem essa
    marcação para colorir na tela e no canvas. */
 const MARK_OPEN = '\u0001', MARK_CLOSE = '\u0002', COMP_OPEN = '\u0003', COMP_CLOSE = '\u0004', REG_OPEN = '\u0005', REG_CLOSE = '\u0006';
+/* Encaixes 2 (como/quanto) e 3 (onde) ganham delimitadores próprios: cada posição da
+   ordem canônica recebe uma cor, de modo que a frase mostra visualmente a montagem —
+   quanto → como → onde → quando. */
+const COMO_OPEN = '\u0007', COMO_CLOSE = '\u0008', ONDE_OPEN = '\u000B', ONDE_CLOSE = '\u000C';
 function M(s){ return MARK_OPEN + s + MARK_CLOSE; }
-function C(s){ return COMP_OPEN + s + COMP_CLOSE; }
+/* categoria visual do adjunto — segue os mesmos grupos que definem a ordem na frase */
+const ADJ_COMO_FAM = new Set(['bitFam','mannerFam','compareFam','certaintyFam']);
+const ADJ_ONDE_FAM = new Set(['placeFam']);
+/* As famílias preposicionais são heterogêneas: "by heart" é modo e "by then" é tempo,
+   mesma família. Por isso a categoria é propriedade da EXPRESSÃO, não da família —
+   estas listas cobrem os casos em que a família não decide. */
+const ADJ_COMO_W = new Set(["by heart", "by default", "by myself", "little by little", "step by step", "day by day", "one by one", "by chance", "by mistake", "by accident", "side by side", "by all means", "by far", "from home", "from experience", "from scratch", "from memory", "from a distance", "with pleasure", "with care", "without a doubt", "without fail", "without thinking", "without warning", "in general", "in person", "in a hurry", "in silence", "in a rush", "in fact", "on purpose", "on foot", "on my own", "on average", "on the spot", "out loud", "off the record", "out of nowhere", "out of habit", "under pressure", "under the radar", "under the table", "under those circumstances", "against the clock", "against my will", "against all odds", "against the odds", "to some extent", "to the fullest", "to no avail", "of my own accord", "as usual", "as always", "as a rule", "as much as possible", "as far as I know", "as expected", "as planned", "as agreed", "as promised", "as needed", "as never before", "through thick and thin", "through it all", "within reason", "within budget", "more than usual", "less than usual", "harder than ever", "better than before", "more than ever", "better than ever", "like never before", "as much as ever", "more than before", "about half the time", "at least", "at once", "over the phone", "up close"]);
+const ADJ_ONDE_W = new Set(["at home", "at work", "around here", "around the corner", "over there", "all over the place", "back home", "across the country", "along the river", "along the way", "here", "there", "everywhere", "nearby", "outside", "abroad", "online", "downtown", "upstairs", "remotely", "in this building", "on the way"]);
+function adjKind(cls, w){
+  if(w){
+    if(ADJ_COMO_W.has(w)) return 'como';
+    if(ADJ_ONDE_W.has(w)) return 'onde';
+  }
+  return ADJ_COMO_FAM.has(cls) ? 'como' : (ADJ_ONDE_FAM.has(cls) ? 'onde' : 'quando');
+}
+function C(s, cls){
+  const k = adjKind(cls, s);
+  if(k === 'como') return COMO_OPEN + s + COMO_CLOSE;
+  if(k === 'onde') return ONDE_OPEN + s + ONDE_CLOSE;
+  return COMP_OPEN + s + COMP_CLOSE;
+}
 function R(s){ return REG_OPEN + s + REG_CLOSE; } /* regência / collocation — azul */
-function stripMarks(s){ return s.replace(/[\u0001-\u0006]/g, ''); }
+function stripMarks(s){ return s.replace(/[\u0001-\u0008\u000B\u000C]/g, ''); }
 function markedToSegments(s){
   const segments = [];
-  const re = /\u0001([^\u0002]*)\u0002|\u0003([^\u0004]*)\u0004|\u0005([^\u0006]*)\u0006/g;
+  const re = /\u0001([^\u0002]*)\u0002|\u0003([^\u0004]*)\u0004|\u0005([^\u0006]*)\u0006|\u0007([^\u0008]*)\u0008|\u000B([^\u000C]*)\u000C/g;
   let last = 0, m;
   while((m = re.exec(s))){
     if(m.index > last) segments.push({t: s.slice(last, m.index), kind:'neutral'});
     if(m[1] !== undefined) segments.push({t: m[1], kind:'formato'});
-    else if(m[2] !== undefined) segments.push({t: m[2], kind:'complemento'});
-    else segments.push({t: m[3], kind:'regencia'});
+    else if(m[2] !== undefined) segments.push({t: m[2], kind:'quando'});
+    else if(m[3] !== undefined) segments.push({t: m[3], kind:'regencia'});
+    else if(m[4] !== undefined) segments.push({t: m[4], kind:'como'});
+    else segments.push({t: m[5], kind:'onde'});
     last = re.lastIndex;
   }
   if(last < s.length) segments.push({t: s.slice(last), kind:'neutral'});
   return segments;
 }
 function escapeHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+/* ---- PALETA ÚNICA DOS ENCAIXES ----
+   Fonte única de verdade das cores de complemento: usada no HTML, nos chips do dial,
+   nas etiquetas de ativos e no canvas do PNG. Mudar aqui muda tudo.
+   O verde saiu: era próximo demais do teal das terminações verbais (-ed, -ing). */
+const ADJ_COLOR = { quando:'var(--violet)', como:'var(--orange)', onde:'var(--lime)', regencia:'var(--blue)' };
+const ADJ_NOME  = { quando:'quando', como:'como / quanto', onde:'onde', regencia:'regência' };
 function markedToHTML(s, formatoColorVar){
   return markedToSegments(s).map(seg => {
     if(seg.kind==='neutral') return escapeHTML(seg.t);
-    const color = seg.kind==='formato' ? formatoColorVar : (seg.kind==='complemento' ? 'var(--violet)' : 'var(--blue)');
+    const color = seg.kind==='formato' ? formatoColorVar : ADJ_COLOR[seg.kind];
     return `<span style="color:${color}">${escapeHTML(seg.t)}</span>`;
   }).join('');
 }
@@ -1648,6 +1738,63 @@ const SIGNAL_PT = {
   "per month":"por mês",
   "straight away":"imediatamente",
   "straight to the point":"direto ao ponto",
+  "a bit":"um pouco",
+  "a little":"um pouco",
+  "a little bit":"um pouquinho",
+  "quite a bit":"bastante",
+  "very little":"muito pouco",
+  "a fair bit":"bastante",
+  "a bit longer":"um pouco mais",
+  "a little longer":"mais um pouco",
+  "hard":"duro",
+  "fast":"rápido",
+  "well":"bem",
+  "badly":"mal",
+  "quickly":"rapidamente",
+  "slowly":"devagar",
+  "carefully":"com cuidado",
+  "together":"juntos",
+  "alone":"sozinho(a)",
+  "quietly":"em silêncio",
+  "successfully":"com sucesso",
+  "there":"lá",
+  "everywhere":"em todo lugar",
+  "at home":"em casa",
+  "at work":"no trabalho",
+  "online":"online",
+  "abroad":"no exterior",
+  "nearby":"por perto",
+  "outside":"lá fora",
+  "downtown":"no centro",
+  "upstairs":"lá em cima",
+  "remotely":"remotamente",
+  "probably":"provavelmente",
+  "definitely":"com certeza",
+  "certainly":"certamente",
+  "obviously":"obviamente",
+  "apparently":"aparentemente",
+  "clearly":"claramente",
+  "surely":"seguramente",
+  "more than usual":"mais que o normal",
+  "less than usual":"menos que o normal",
+  "harder than ever":"mais duro do que nunca",
+  "better than before":"melhor do que antes",
+  "more than ever":"mais do que nunca",
+  "better than ever":"melhor do que nunca",
+  "like never before":"como nunca antes",
+  "as much as ever":"tanto quanto sempre",
+  "more than before":"mais do que antes",
+  "first":"primeiro",
+  "then":"depois",
+  "next":"em seguida",
+  "after that":"depois disso",
+  "afterwards":"depois",
+  "before that":"antes disso",
+  "later on":"mais tarde",
+  "from then on":"daí em diante",
+  "meanwhile":"enquanto isso",
+  
+  "up to then":"até então",
   "on purpose":"de propósito","on foot":"a pé","on my own":"por conta própria","on average":"em média","on the way":"a caminho","on several occasions":"em várias ocasiões","on and on":"sem parar","on the spot":"na hora","on schedule":"dentro do prazo",
   "out loud":"em voz alta","off and on":"de vez em quando","out of nowhere":"do nada","off the record":"em off","out of habit":"por hábito","at any time":"a qualquer hora"
 };
@@ -1707,6 +1854,10 @@ function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit)
     /* "já não" / "ainda não" / "nem sempre" são as ordens naturais do português. */
     if(neg && (midPT==='já' || midPT==='ainda')){ pre = ` ${midPT} não`; }
     else if(neg && midPT==='sempre'){ pre = ' nem sempre'; }
+    else if(signalMid.cls === 'certaintyFam'){
+      /* o português espelha o inglês aqui: o advérbio vem antes da negação */
+      pre = ` ${midPT}` + (neg ? ' não' : '');
+    }
     else if(signalMid.cls==='timeMid' || PT_ADV_INICIO.has(midPT)){
       /* Advérbios de TEMPO em posição média no inglês (currently) não aceitam essa posição
          em português: "Eu atualmente estou trabalhando" soa errado. Eles vão para o início
@@ -1718,7 +1869,10 @@ function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit)
     else { body = `${midPT} ${body}`; pre = neg ? ' não' : ''; }
   } else { pre = neg ? ' não' : ''; }
   if(col) body = `${body} ${col.pt}`;
-  if(signalEnd && !signalSplit) body = `${body} ${SIGNAL_PT[signalEnd.w] || signalEnd.w}`;
+  if(!signalSplit){
+    const ends = Array.isArray(signalEnd) ? signalEnd : (signalEnd ? [signalEnd] : []);
+    sortEnds(ends).forEach(s=>{ body = `${body} ${SIGNAL_PT[s.w] || s.w}`; });
+  }
   const frase = `${cap(parts.pron)}${pre} ${body}` + (isQ ? "?" : ".");
   return prefixo ? prefixo + lowerFirst(frase) : frase;
 }
@@ -1819,6 +1973,12 @@ const CLASS_INFO = {
   backFam: {label:"Família do \"back\" — fim da frase"},
   onceFam: {label:"Família do \"once\" — fim da frase"},
   aboutFam: {label:"Família do \"about\" — aproximação, fim da frase"},
+  bitFam: {label:"Família do \"bit/little\" — grau e quantidade, fim da frase"},
+  mannerFam: {label:"Modo — como se faz, fim da frase"},
+  placeFam: {label:"Lugar — onde, fim da frase"},
+  certaintyFam: {label:"Certeza — meio da frase (antes do \"not\" na negativa)"},
+  compareFam: {label:"Comparação — fim da frase"},
+  seqFam: {label:"Sequência — ordem dos acontecimentos, fim da frase"},
   npiFam: {label:"Só em negativas e perguntas — at all, anymore, either…"},
   rightFam: {label:"Família do \"right\" — imediatez, fim da frase"},
   underFam: {label:"Família do \"under\" — fim da frase"},
@@ -1864,7 +2024,10 @@ const SIGNAL_WORDS = {
     {w:"about twice a week",pl:"end",cls:"aboutFam"},{w:"about three times a month",pl:"end",cls:"aboutFam"},{w:"about every day",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in the least",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right now",pl:"end",cls:"rightFam"},{w:"right away",pl:"end",cls:"rightFam"},{w:"right here",pl:"end",cls:"rightFam"},{w:"normally",pl:"end",cls:"freqIndef"},{w:"typically",pl:"end",cls:"freqIndef"},{w:"regularly",pl:"end",cls:"freqIndef"},{w:"hardly",pl:"end",cls:"freqIndef"},{w:"daily",pl:"end",cls:"freqDef"},{w:"weekly",pl:"end",cls:"freqDef"},{w:"monthly",pl:"end",cls:"freqDef"},{w:"twice a month",pl:"end",cls:"freqDef"},{w:"every other week",pl:"end",cls:"freqDef"},{w:"once in a blue moon",pl:"end",cls:"freqDef"},{w:"these days",pl:"end",cls:"timePoint"},{w:"on a daily basis",pl:"end",cls:"timePoint"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the radar",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"against the clock",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"up close",pl:"end",cls:"updownFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"of my own accord",pl:"end",cls:"ofFam"},{w:"straight away",pl:"end",cls:"rightFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the radar",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"against the clock",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"up close",pl:"end",cls:"updownFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"of my own accord",pl:"end",cls:"ofFam"},{w:"straight away",pl:"end",cls:"rightFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},{w:"a little bit",pl:"end",cls:"bitFam"},{w:"quite a bit",pl:"end",cls:"bitFam"},{w:"very little",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"fast",pl:"end",cls:"mannerFam"},{w:"well",pl:"end",cls:"mannerFam"},{w:"quickly",pl:"end",cls:"mannerFam"},{w:"slowly",pl:"end",cls:"mannerFam"},{w:"carefully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"everywhere",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"at work",pl:"end",cls:"placeFam"},{w:"online",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"nearby",pl:"end",cls:"placeFam"},{w:"outside",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"definitely",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"certainly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"obviously",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than usual",pl:"end",cls:"compareFam"},{w:"less than usual",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"better than before",pl:"end",cls:"compareFam"},{w:"first",pl:"end",cls:"seqFam"},{w:"next",pl:"end",cls:"seqFam"},{w:"after that",pl:"end",cls:"seqFam"},{w:"from then on",pl:"end",cls:"seqFam"}
   ],
   present_continuo: [
     {w:"right now",pl:"end",cls:"timePoint"},{w:"at the moment",pl:"end",cls:"timePoint"},{w:"at present",pl:"end",cls:"timePoint"},{w:"nowadays",pl:"end",cls:"timePoint"},{w:"today",pl:"end",cls:"timePoint"},{w:"this week",pl:"end",cls:"timePoint"},{w:"this month",pl:"end",cls:"timePoint"},{w:"this year",pl:"end",cls:"timePoint"},{w:"these days",pl:"end",cls:"timePoint"},{w:"at this moment",pl:"end",cls:"timePoint"},
@@ -1877,7 +2040,10 @@ const SIGNAL_WORDS = {
     {w:"about now",pl:"end",cls:"aboutFam"},{w:"about half the time",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right this minute",pl:"end",cls:"rightFam"},{w:"this very moment",pl:"end",cls:"timePoint"},{w:"as of now",pl:"end",cls:"timePoint"},{w:"for the time being",pl:"end",cls:"timePoint"},{w:"this semester",pl:"end",cls:"timePoint"},
     {w:"all week long",pl:"end",cls:"allFam"},{w:"all afternoon long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},{w:"a little bit",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"quickly",pl:"end",cls:"mannerFam"},{w:"carefully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"online",pl:"end",cls:"placeFam"},{w:"outside",pl:"end",cls:"placeFam"},{w:"upstairs",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"definitely",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"apparently",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than usual",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"meanwhile",pl:"end",cls:"seqFam"}
   ],
   present_perfeito: [
     {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"yet",pl:"end",cls:"perfectAdv", only:["negativa","pergunta","pergunta_negativa"]},
@@ -1892,7 +2058,10 @@ const SIGNAL_WORDS = {
     {w:"over time",pl:"end",cls:"overFam"},{w:"over and over",pl:"end",cls:"overFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"once in a lifetime",pl:"end",cls:"onceFam"},{w:"more than once",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},{w:"one by one",pl:"end",cls:"byFam"},
     {w:"about ten times",pl:"end",cls:"aboutFam"},{w:"about twice",pl:"end",cls:"aboutFam"},{w:"about a hundred times",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in years",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in ages",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"finally",pl:"mid",cls:"perfectAdv"},{w:"time and again",pl:"end",cls:"freqDef"},{w:"countless times",pl:"end",cls:"freqDef"},{w:"until now",pl:"end",cls:"timePoint"},{w:"up until now",pl:"end",cls:"timePoint"},{w:"to this day",pl:"end",cls:"timePoint"},{w:"ever since then",pl:"end",cls:"timePoint"},{w:"in recent years",pl:"end",cls:"timePoint"},{w:"this whole year",pl:"end",cls:"timePoint"},
-    {w:"through thick and thin",pl:"end",cls:"throughFam"},{w:"all the way through",pl:"end",cls:"throughFam"},{w:"within reason",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"against all odds",pl:"end",cls:"againstFam"},{w:"ahead of time",pl:"end",cls:"aheadFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"},{w:"to date",pl:"end",cls:"toFam"},{w:"to no avail",pl:"end",cls:"toFam"},{w:"to this point",pl:"end",cls:"toFam"},{w:"of late",pl:"end",cls:"ofFam"}
+    {w:"through thick and thin",pl:"end",cls:"throughFam"},{w:"all the way through",pl:"end",cls:"throughFam"},{w:"within reason",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"against all odds",pl:"end",cls:"againstFam"},{w:"ahead of time",pl:"end",cls:"aheadFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"},{w:"to date",pl:"end",cls:"toFam"},{w:"to no avail",pl:"end",cls:"toFam"},{w:"to this point",pl:"end",cls:"toFam"},{w:"of late",pl:"end",cls:"ofFam"},
+    {w:"quite a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},{w:"very little",pl:"end",cls:"bitFam"},{w:"a fair bit",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"well",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"successfully",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"everywhere",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"certainly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"apparently",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"obviously",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than ever",pl:"end",cls:"compareFam"},{w:"better than ever",pl:"end",cls:"compareFam"},{w:"like never before",pl:"end",cls:"compareFam"},{w:"as much as ever",pl:"end",cls:"compareFam"},{w:"more than before",pl:"end",cls:"compareFam"},{w:"from then on",pl:"end",cls:"seqFam"},{w:"after that",pl:"end",cls:"seqFam"}
   ],
   present_perfeito_continuo: [
     {w:"since morning",pl:"end",cls:"timePoint"},{w:"since 9 a.m.",pl:"end",cls:"timePoint"},{w:"for two hours",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"lately",pl:"end",cls:"timePoint"},{w:"recently",pl:"end",cls:"timePoint"},{w:"all week",pl:"end",cls:"timePoint"},{w:"for hours",pl:"end",cls:"timePoint"},{w:"for days",pl:"end",cls:"timePoint"},{w:"since breakfast",pl:"end",cls:"timePoint"},{w:"since 8 a.m.",pl:"end",cls:"timePoint"},{w:"all day",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for months now",pl:"end",cls:"timePoint"},
@@ -1905,7 +2074,10 @@ const SIGNAL_WORDS = {
     {w:"about an hour",pl:"end",cls:"aboutFam"},{w:"about two months",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"non-stop",pl:"end",cls:"timePoint"},{w:"since then",pl:"end",cls:"timePoint"},{w:"for quite a while",pl:"end",cls:"timePoint"},{w:"all this week",pl:"end",cls:"timePoint"},{w:"for the past few days",pl:"end",cls:"timePoint"},{w:"since last month",pl:"end",cls:"timePoint"},
     {w:"all week long",pl:"end",cls:"allFam"},{w:"all month long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"quite a bit",pl:"end",cls:"bitFam"},{w:"a bit longer",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"online",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"clearly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than ever",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"from then on",pl:"end",cls:"seqFam"}
   ],
   past_simples: [
     {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},{w:"the day before yesterday",pl:"end",cls:"timePoint"},{w:"three years ago",pl:"end",cls:"timePoint"},{w:"a long time ago",pl:"end",cls:"timePoint"},{w:"in 1990",pl:"end",cls:"timePoint"},{w:"when I was a child",pl:"end",cls:"timePoint"},{w:"last night",pl:"end",cls:"timePoint"},{w:"earlier today",pl:"end",cls:"timePoint"},
@@ -1919,7 +2091,10 @@ const SIGNAL_WORDS = {
     {w:"about an hour ago",pl:"end",cls:"aboutFam"},{w:"about a month ago",pl:"end",cls:"aboutFam"},{w:"about a year ago",pl:"end",cls:"aboutFam"},{w:"about twice",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"one bit",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in the slightest",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right away",pl:"end",cls:"rightFam"},{w:"right then",pl:"end",cls:"rightFam"},{w:"right after that",pl:"end",cls:"rightFam"},{w:"that day",pl:"end",cls:"timePoint"},{w:"that night",pl:"end",cls:"timePoint"},{w:"the other day",pl:"end",cls:"timePoint"},{w:"years ago",pl:"end",cls:"timePoint"},{w:"months ago",pl:"end",cls:"timePoint"},{w:"ages ago",pl:"end",cls:"timePoint"},{w:"last summer",pl:"end",cls:"timePoint"},{w:"this morning",pl:"end",cls:"timePoint"},{w:"only once",pl:"end",cls:"freqDef"},{w:"a couple of times",pl:"end",cls:"freqDef"},{w:"over and over",pl:"end",cls:"freqDef"},
     {w:"all week long",pl:"end",cls:"allFam"},{w:"all summer long",pl:"end",cls:"allFam"},{w:"all winter long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the table",pl:"end",cls:"underFam"},{w:"under those circumstances",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"across the country",pl:"end",cls:"throughFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"within minutes",pl:"end",cls:"withinFam"},{w:"within a week",pl:"end",cls:"withinFam"},{w:"within hours",pl:"end",cls:"withinFam"},{w:"against the odds",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"ahead of time",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},{w:"to no avail",pl:"end",cls:"toFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"straight away",pl:"end",cls:"rightFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the table",pl:"end",cls:"underFam"},{w:"under those circumstances",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"across the country",pl:"end",cls:"throughFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"within minutes",pl:"end",cls:"withinFam"},{w:"within a week",pl:"end",cls:"withinFam"},{w:"within hours",pl:"end",cls:"withinFam"},{w:"against the odds",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"ahead of time",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},{w:"to no avail",pl:"end",cls:"toFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"straight away",pl:"end",cls:"rightFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},{w:"a little bit",pl:"end",cls:"bitFam"},{w:"quite a bit",pl:"end",cls:"bitFam"},{w:"very little",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"fast",pl:"end",cls:"mannerFam"},{w:"well",pl:"end",cls:"mannerFam"},{w:"badly",pl:"end",cls:"mannerFam"},{w:"quickly",pl:"end",cls:"mannerFam"},{w:"slowly",pl:"end",cls:"mannerFam"},{w:"carefully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"quietly",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"everywhere",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"at work",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"downtown",pl:"end",cls:"placeFam"},{w:"outside",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"definitely",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"certainly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"obviously",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"apparently",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than usual",pl:"end",cls:"compareFam"},{w:"less than usual",pl:"end",cls:"compareFam"},{w:"better than before",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"like never before",pl:"end",cls:"compareFam"},{w:"first",pl:"end",cls:"seqFam"},{w:"then",pl:"end",cls:"seqFam"},{w:"next",pl:"end",cls:"seqFam"},{w:"after that",pl:"end",cls:"seqFam"},{w:"afterwards",pl:"end",cls:"seqFam"},{w:"before that",pl:"end",cls:"seqFam"},{w:"later on",pl:"end",cls:"seqFam"}
   ],
   past_continuo: [
     {w:"at that moment",pl:"end",cls:"timePoint"},{w:"at 5 p.m. yesterday",pl:"end",cls:"timePoint"},{w:"all day yesterday",pl:"end",cls:"timePoint"},{w:"at noon yesterday",pl:"end",cls:"timePoint"},{w:"while she was cooking",pl:"end",cls:"timePoint"},{w:"the whole afternoon",pl:"end",cls:"timePoint"},{w:"all night",pl:"end",cls:"timePoint"},
@@ -1932,7 +2107,10 @@ const SIGNAL_WORDS = {
     {w:"about an hour ago",pl:"end",cls:"aboutFam"},{w:"about that time",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"at that exact moment",pl:"end",cls:"timePoint"},{w:"the entire time",pl:"end",cls:"timePoint"},{w:"that afternoon",pl:"end",cls:"timePoint"},{w:"earlier that day",pl:"end",cls:"timePoint"},{w:"when it happened",pl:"end",cls:"timePoint"},
     {w:"all afternoon long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},{w:"all evening long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"along the river",pl:"end",cls:"throughFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"along the river",pl:"end",cls:"throughFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},
+    {w:"quietly",pl:"end",cls:"mannerFam"},{w:"carefully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"upstairs",pl:"end",cls:"placeFam"},{w:"outside",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"apparently",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than usual",pl:"end",cls:"compareFam"},{w:"meanwhile",pl:"end",cls:"seqFam"},{w:"at that point",pl:"end",cls:"seqFam"},{w:"in the meantime",pl:"end",cls:"seqFam"}
   ],
   past_perfeito: [
     {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"recently",pl:"mid",cls:"perfectAdv"},{w:"never",pl:"mid",cls:"freqIndef"},
@@ -1944,7 +2122,10 @@ const SIGNAL_WORDS = {
     {w:"over time",pl:"end",cls:"overFam"},{w:"without warning",pl:"end",cls:"withFam"},{w:"more than once",pl:"end",cls:"onceFam"},
     {w:"about a week before",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"finally",pl:"mid",cls:"perfectAdv"},{w:"never before",pl:"end",cls:"perfectAdv"},{w:"by that point",pl:"end",cls:"perfectAdv"},{w:"until that day",pl:"end",cls:"timePoint"},{w:"up to that point",pl:"end",cls:"timePoint"},{w:"the night before",pl:"end",cls:"timePoint"},{w:"long before that",pl:"end",cls:"timePoint"},
-    {w:"within days",pl:"end",cls:"withinFam"},{w:"within a month",pl:"end",cls:"withinFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},{w:"to that point",pl:"end",cls:"toFam"},{w:"to no avail",pl:"end",cls:"toFam"}
+    {w:"within days",pl:"end",cls:"withinFam"},{w:"within a month",pl:"end",cls:"withinFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},{w:"to that point",pl:"end",cls:"toFam"},{w:"to no avail",pl:"end",cls:"toFam"},
+    {w:"quite a bit",pl:"end",cls:"bitFam"},{w:"very little",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},
+    {w:"well",pl:"end",cls:"mannerFam"},{w:"carefully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"clearly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"obviously",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than ever",pl:"end",cls:"compareFam"},{w:"better than before",pl:"end",cls:"compareFam"},{w:"before that",pl:"end",cls:"seqFam"},{w:"first",pl:"end",cls:"seqFam"}
   ],
   past_perfeito_continuo: [
     {w:"for two hours",pl:"end",cls:"timePoint"},{w:"since morning",pl:"end",cls:"timePoint"},{w:"all morning",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"for months",pl:"end",cls:"timePoint"},{w:"since the accident",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},
@@ -1956,7 +2137,10 @@ const SIGNAL_WORDS = {
     {w:"about three hours",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"for quite some time",pl:"end",cls:"timePoint"},{w:"up until then",pl:"end",cls:"timePoint"},{w:"that entire week",pl:"end",cls:"timePoint"},{w:"since early morning",pl:"end",cls:"timePoint"},{w:"non-stop",pl:"end",cls:"timePoint"},
     {w:"all week long",pl:"end",cls:"allFam"},{w:"all day long",pl:"end",cls:"allFam"},{w:"all month long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the whole night",pl:"end",cls:"throughFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the whole night",pl:"end",cls:"throughFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"quite a bit",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"apparently",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than ever",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"up to then",pl:"end",cls:"seqFam"},{w:"before that",pl:"end",cls:"seqFam"}
   ],
   future_simples: [
     {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"},{w:"next weekend",pl:"end",cls:"timePoint"},{w:"in the future",pl:"end",cls:"timePoint"},{w:"eventually",pl:"end",cls:"timePoint"},{w:"someday",pl:"end",cls:"timePoint"},{w:"this evening",pl:"end",cls:"timePoint"},
@@ -1964,7 +2148,10 @@ const SIGNAL_WORDS = {
     {w:"this time",pl:"end",cls:"timeFam"},{w:"next time",pl:"end",cls:"timeFam"},{w:"in time",pl:"end",cls:"timeFam"},{w:"forever",pl:"end",cls:"everFam"},{w:"for good",pl:"end",cls:"everFam"},{w:"again",pl:"end",cls:"againFam"},{w:"once again",pl:"end",cls:"againFam"},{w:"all over again",pl:"end",cls:"againFam"},
     {w:"as soon as possible",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},{w:"as needed",pl:"end",cls:"asFam"},{w:"as usual",pl:"end",cls:"asFam"},{w:"at some point",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"by all means",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"},{w:"out of habit",pl:"end",cls:"outFam"},{w:"from now on",pl:"end",cls:"fromFam"},{w:"from tomorrow",pl:"end",cls:"fromFam"},{w:"from scratch",pl:"end",cls:"fromFam"},{w:"on time",pl:"end",cls:"onFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on purpose",pl:"end",cls:"onFam"},{w:"over the weekend",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"around noon",pl:"end",cls:"aroundFam"},{w:"around the corner",pl:"end",cls:"aroundFam"},{w:"back home",pl:"end",cls:"backFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"once in a lifetime",pl:"end",cls:"onceFam"},{w:"step by step",pl:"end",cls:"byFam"},{w:"about noon",pl:"end",cls:"aboutFam"},{w:"about this time",pl:"end",cls:"aboutFam"},{w:"in about an hour",pl:"end",cls:"aboutFam"},{w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right away",pl:"end",cls:"rightFam"},{w:"right after work",pl:"end",cls:"rightFam"},{w:"right on time",pl:"end",cls:"rightFam"},{w:"first thing tomorrow",pl:"end",cls:"timePoint"},{w:"sooner or later",pl:"end",cls:"timePoint"},{w:"one of these days",pl:"end",cls:"timePoint"},{w:"before long",pl:"end",cls:"timePoint"},{w:"any minute now",pl:"end",cls:"timePoint"},{w:"the day after tomorrow",pl:"end",cls:"timePoint"},{w:"in a couple of days",pl:"end",cls:"timePoint"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},
-    {w:"along the way",pl:"end",cls:"throughFam"},{w:"within a week",pl:"end",cls:"withinFam"},{w:"within the hour",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"against all odds",pl:"end",cls:"againstFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"down the road",pl:"end",cls:"updownFam"},{w:"down the line",pl:"end",cls:"updownFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"to some extent",pl:"end",cls:"toFam"}
+    {w:"along the way",pl:"end",cls:"throughFam"},{w:"within a week",pl:"end",cls:"withinFam"},{w:"within the hour",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"against all odds",pl:"end",cls:"againstFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"down the road",pl:"end",cls:"updownFam"},{w:"down the line",pl:"end",cls:"updownFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"to some extent",pl:"end",cls:"toFam"},
+    {w:"a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},{w:"a bit longer",pl:"end",cls:"bitFam"},{w:"a little longer",pl:"end",cls:"bitFam"},{w:"quite a bit",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"fast",pl:"end",cls:"mannerFam"},{w:"well",pl:"end",cls:"mannerFam"},{w:"carefully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"remotely",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"there",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"online",pl:"end",cls:"placeFam"},{w:"nearby",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"definitely",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"certainly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"surely",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than usual",pl:"end",cls:"compareFam"},{w:"better than ever",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"first",pl:"end",cls:"seqFam"},{w:"next",pl:"end",cls:"seqFam"},{w:"after that",pl:"end",cls:"seqFam"},{w:"afterwards",pl:"end",cls:"seqFam"},{w:"later on",pl:"end",cls:"seqFam"}
   ],
   future_continuo: [
     {w:"at this time tomorrow",pl:"end",cls:"timePoint"},{w:"this time next week",pl:"end",cls:"timePoint"},{w:"at 8 p.m. tomorrow",pl:"end",cls:"timePoint"},{w:"at midnight tonight",pl:"end",cls:"timePoint"},{w:"at this time next month",pl:"end",cls:"timePoint"},{w:"this time tomorrow",pl:"end",cls:"timePoint"},
@@ -1976,7 +2163,10 @@ const SIGNAL_WORDS = {
     {w:"about this time tomorrow",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"all afternoon tomorrow",pl:"end",cls:"timePoint"},{w:"when you arrive",pl:"end",cls:"timePoint"},{w:"this time on Friday",pl:"end",cls:"timePoint"},{w:"during the meeting",pl:"end",cls:"timePoint"},
     {w:"all morning long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all evening long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},
+    {w:"a bit longer",pl:"end",cls:"bitFam"},{w:"a little longer",pl:"end",cls:"bitFam"},
+    {w:"together",pl:"end",cls:"mannerFam"},{w:"alone",pl:"end",cls:"mannerFam"},{w:"remotely",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"at home",pl:"end",cls:"placeFam"},{w:"online",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"definitely",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than usual",pl:"end",cls:"compareFam"},{w:"meanwhile",pl:"end",cls:"seqFam"},{w:"in the meantime",pl:"end",cls:"seqFam"}
   ],
   future_perfeito: [
     {w:"by then",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},{w:"by 2030",pl:"end",cls:"timePoint"},{w:"by tonight",pl:"end",cls:"timePoint"},{w:"by tomorrow",pl:"end",cls:"timePoint"},{w:"by the end of the year",pl:"end",cls:"timePoint"},{w:"by the time you arrive",pl:"end",cls:"timePoint"},
@@ -1987,7 +2177,10 @@ const SIGNAL_WORDS = {
     {w:"over time",pl:"end",cls:"overFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},
     {w:"about then",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"by the time we meet",pl:"end",cls:"timePoint"},{w:"by this time next year",pl:"end",cls:"timePoint"},{w:"before you know it",pl:"end",cls:"timePoint"},{w:"by the deadline",pl:"end",cls:"timePoint"},
-    {w:"within a year",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"to that point",pl:"end",cls:"toFam"}
+    {w:"within a year",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"to that point",pl:"end",cls:"toFam"},
+    {w:"quite a bit",pl:"end",cls:"bitFam"},{w:"a fair bit",pl:"end",cls:"bitFam"},
+    {w:"well",pl:"end",cls:"mannerFam"},{w:"successfully",pl:"end",cls:"mannerFam"},{w:"together",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},{w:"certainly",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than ever",pl:"end",cls:"compareFam"},{w:"better than before",pl:"end",cls:"compareFam"},{w:"first",pl:"end",cls:"seqFam"}
   ],
   future_perfeito_continuo: [
     {w:"by then",pl:"end",cls:"timePoint"},{w:"for five years",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"for over a decade",pl:"end",cls:"timePoint"},{w:"by next summer",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},
@@ -1996,11 +2189,14 @@ const SIGNAL_WORDS = {
     {w:"over the years",pl:"end",cls:"overFam"},{w:"day by day",pl:"end",cls:"byFam"},
     {w:"by this time next year",pl:"end",cls:"timePoint"},{w:"for quite some time",pl:"end",cls:"timePoint"},{w:"non-stop",pl:"end",cls:"timePoint"},
     {w:"all month long",pl:"end",cls:"allFam"},{w:"all winter long",pl:"end",cls:"allFam"},
-    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through it all",pl:"end",cls:"throughFam"}
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through it all",pl:"end",cls:"throughFam"},
+    {w:"a bit longer",pl:"end",cls:"bitFam"},
+    {w:"hard",pl:"end",cls:"mannerFam"},{w:"here",pl:"end",cls:"placeFam"},{w:"abroad",pl:"end",cls:"placeFam"},{w:"probably",pl:"mid",cls:"certaintyFam", only:["afirmativa","negativa"]},
+    {w:"more than ever",pl:"end",cls:"compareFam"}
   ]
 };
 
-let state = { pronome:"I", categoria:"fact", verbo:"work", verboLetter:"W", colocacao:null, tempo:"present", aspecto:"simples", formato:"afirmativa", signalMid:null, signalEnd:null, signalSplit:null, signalFam:null, whWord:null };
+let state = { pronome:"I", categoria:"fact", verbo:"work", verboLetter:"W", colocacao:null, tempo:"present", aspecto:"simples", formato:"afirmativa", signalMid:null, signalEnds:[], signalSplit:null, signalFam:null, whWord:null };
 
 function buildPronome(){
   const el = document.getElementById('pronomeRow'); el.innerHTML="";
@@ -2106,6 +2302,7 @@ function buildColocacao(){
   (verb.col || []).forEach((c,i)=>{
     const chip = document.createElement('div'); chip.className='signal-chip';
     chip.dataset.active = (state.colocacao===i); chip.textContent = `${verb.base} ${c.en}`;
+    chip.dataset.cat = 'regencia'; chip.style.setProperty('--cat', ADJ_COLOR.regencia);
     chip.onclick = ()=>{ state.colocacao = (state.colocacao===i) ? null : i; render(); };
     el.appendChild(chip);
   });
@@ -2118,7 +2315,7 @@ function buildCategoria(){
     btn.style.setProperty('--accent', d.accent);
     btn.dataset.active = (state.categoria===key);
     btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
-    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMid=null; state.signalEnd=null; state.signalSplit=null; bankOpen=false; render(); };
+    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMid=null; state.signalEnds=[]; state.signalSplit=null; bankOpen=false; render(); };
     el.appendChild(btn);
   });
 }
@@ -2127,7 +2324,7 @@ function buildTempo(){
   TENSES.forEach(t=>{
     const s = document.createElement('div'); s.className='tempo-label';
     s.dataset.active = (state.tempo===t); s.textContent = TENSE_LABEL[t];
-    s.onclick = ()=>{ state.tempo=t; state.signalMid=null; state.signalEnd=null; render(); };
+    s.onclick = ()=>{ state.tempo=t; state.signalMid=null; state.signalEnds=[]; render(); };
     labelsEl.appendChild(s);
   });
 }
@@ -2143,7 +2340,7 @@ function buildAspecto(){
     btn.style.setProperty('--accent', 'var(--violet)');
     btn.dataset.active = (state.aspecto===a);
     btn.innerHTML = `<span class="ic">${ASPECT_ICON[a]}</span><span>${ASPECT_LABEL[a]}</span>`;
-    btn.onclick = ()=>{ state.aspecto=a; state.signalMid=null; state.signalEnd=null; render(); };
+    btn.onclick = ()=>{ state.aspecto=a; state.signalMid=null; state.signalEnds=[]; render(); };
     el.appendChild(btn);
   });
 }
@@ -2160,7 +2357,7 @@ function signalFamilyLabel(cls){
   /* rótulo curto para a fileira de famílias (o texto completo fica no cabeçalho do grupo) */
   const short = { freqIndef:"frequência", freqDef:"nº de vezes", perfectAdv:"perfect", timeMid:"tempo (meio)",
     timePoint:"tempo", allFam:"all", timeFam:"time", wholeFam:"whole", everFam:"ever", everyFam:"every",
-    againFam:"again", asFam:"as", atFam:"at", fromFam:"from", onFam:"on", overFam:"over", withFam:"with/without", aroundFam:"around", backFam:"back", onceFam:"once", aboutFam:"about", npiFam:"só em neg./perg.", rightFam:"right", underFam:"under", throughFam:"through", withinFam:"within", againstFam:"against", aheadFam:"ahead/behind", updownFam:"up/down", toFam:"to", ofFam:"of", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
+    againFam:"again", asFam:"as", atFam:"at", fromFam:"from", onFam:"on", overFam:"over", withFam:"with/without", aroundFam:"around", backFam:"back", onceFam:"once", aboutFam:"about", bitFam:"bit/little", mannerFam:"modo", placeFam:"lugar", certaintyFam:"certeza", compareFam:"comparação", seqFam:"sequência", npiFam:"só em neg./perg.", rightFam:"right", underFam:"under", throughFam:"through", withinFam:"within", againstFam:"against", aheadFam:"ahead/behind", updownFam:"up/down", toFam:"to", ofFam:"of", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
     splitFam:"partidos", outrosFam:"diversos" };
   return short[cls] || cls;
 }
@@ -2170,8 +2367,16 @@ function buildSignal(){
   const words = (SIGNAL_WORDS[key] || []).concat(SPLIT_SIGNALS[key] || [])
                   .filter(sw => signalAllowed(sw, state.formato));
   /* se o formato mudou e o sinal escolhido não vale mais aqui, ele sai de cena */
-  ['signalMid','signalEnd','signalSplit'].forEach(slot=>{
+  ['signalMid','signalSplit'].forEach(slot=>{
     if(state[slot] && !signalAllowed(state[slot], state.formato)) state[slot] = null;
+  });
+  /* vale também para estados restaurados: um ocupante por encaixe, o resto sai */
+  const vistosSlot = new Set();
+  state.signalEnds = endList().filter(s=>{
+    if(!signalAllowed(s, state.formato)) return false;
+    const r = endRank(s);
+    if(vistosSlot.has(r)) return false;
+    vistosSlot.add(r); return true;
   });
   el.innerHTML="";
   const disabled = !!state.whWord;
@@ -2185,16 +2390,16 @@ function buildSignal(){
      seria impossível navegar até a família do sinal de fim para combinar os dois.
      O salto automático só acontece quando não há família válida escolhida (ex.: ao trocar
      de tempo, quando a família anterior deixa de existir). */
-  const selected = state.signalSplit || state.signalMid || state.signalEnd;
+  const selected = state.signalSplit || state.signalMid || endList()[0];
   if(!famKeys.includes(state.signalFam)){
     state.signalFam = (selected && famKeys.includes(selected.cls)) ? selected.cls : famKeys[0];
   }
 
   const noneWrap = document.createElement('div'); noneWrap.className='signal-row-inner';
   const none = document.createElement('div'); none.className='signal-chip';
-  none.dataset.active = (state.signalMid===null && state.signalEnd===null && state.signalSplit===null); none.textContent = "limpar tudo";
+  none.dataset.active = (state.signalMid===null && !endList().length && state.signalSplit===null); none.textContent = "limpar tudo";
   none.style.opacity = disabled ? .4 : 1;
-  none.onclick = ()=>{ if(disabled) return; state.signalMid=null; state.signalEnd=null; state.signalSplit=null; render(); };
+  none.onclick = ()=>{ if(disabled) return; state.signalMid=null; state.signalEnds=[]; state.signalSplit=null; render(); };
   noneWrap.appendChild(none); el.appendChild(noneWrap);
 
   if(!famKeys.length){ hint.textContent = "Nenhuma palavra-sinal cadastrada para esta combinação ainda."; return; }
@@ -2205,7 +2410,7 @@ function buildSignal(){
     const btn = document.createElement('div'); btn.className='signal-chip fam-chip';
     /* qualquer sinal ativo (meio, fim ou partido) acende o ponto na sua família —
        com dois selecionados, as duas famílias ficam marcadas ao mesmo tempo */
-    const hasActive = [state.signalSplit, state.signalMid, state.signalEnd].some(s=>s && s.cls===cls);
+    const hasActive = [state.signalSplit, state.signalMid].concat(endList()).some(s=>s && s.cls===cls);
     btn.dataset.active = (state.signalFam===cls);
     btn.innerHTML = `${signalFamilyLabel(cls)}<span class="fam-count">${groups[cls].length}</span>${hasActive?'<span class="fam-dot"></span>':''}`;
     btn.style.opacity = disabled ? .4 : 1;
@@ -2223,17 +2428,37 @@ function buildSignal(){
   const wrap = document.createElement('div'); wrap.className='signal-row-inner wrap-row';
   groups[cls].forEach(sw=>{
     const chip = document.createElement('div'); chip.className='signal-chip';
-    const slot = sw.pl==='split' ? 'signalSplit' : (sw.pl==='mid' ? 'signalMid' : 'signalEnd');
-    const isActive = state[slot] && state[slot].w===sw.w;
+    const isEnd = sw.pl === 'end';
+    const isActive = sw.pl==='split' ? (state.signalSplit && state.signalSplit.w===sw.w)
+                   : (isEnd ? endList().some(s=>s.w===sw.w)
+                            : (state.signalMid && state.signalMid.w===sw.w));
     chip.dataset.active = isActive; chip.textContent = sw.w;
+    paintCat(chip, sw);
+    /* marca visualmente quem disputa o mesmo encaixe de um adjunto já escolhido:
+       clicar aqui substitui, e o usuário vê isso antes de clicar */
+    if(isEnd && !isActive){
+      const ocupante = endList().find(s=>endRank(s)===endRank(sw));
+      if(ocupante){
+        chip.dataset.rival = 'true';
+        chip.title = `Ocupa o mesmo encaixe (${END_SLOT_NOME[endRank(sw)] || 'adjunto'}) de "${ocupante.w}" — substitui`;
+      }
+    }
     chip.style.opacity = disabled ? .4 : 1;
     chip.onclick = ()=>{
       if(disabled) return;
       if(sw.pl==='split'){
         /* o partido ocupa meio E fim, então limpa os dois slots simples */
-        state.signalSplit = isActive ? null : sw; state.signalMid=null; state.signalEnd=null;
+        state.signalSplit = isActive ? null : sw; state.signalMid=null; state.signalEnds=[];
+      } else if(isEnd){
+        /* Um ocupante por encaixe: escolher outro adjunto do MESMO encaixe substitui o
+           anterior (dois lugares não se somam); encaixes diferentes convivem. */
+        const atual = endList();
+        const slot = endRank(sw);
+        state.signalEnds = isActive ? atual.filter(s=>s.w!==sw.w)
+                                    : atual.filter(s=>endRank(s)!==slot).concat([sw]);
+        state.signalSplit=null;
       } else {
-        state[slot] = isActive ? null : sw; state.signalSplit=null;
+        state.signalMid = isActive ? null : sw; state.signalSplit=null;
       }
       render();
     };
@@ -2243,15 +2468,19 @@ function buildSignal(){
 
   /* resumo do que está ativo — some quando nada está selecionado, e cada etiqueta remove só o seu */
   const actives = [];
-  if(state.signalSplit) actives.push({label:state.signalSplit.w, pos:"meio + fim", clear:()=>{ state.signalSplit=null; }});
-  if(state.signalMid) actives.push({label:state.signalMid.w, pos:"meio", clear:()=>{ state.signalMid=null; }});
-  if(state.signalEnd) actives.push({label:state.signalEnd.w, pos:"fim", clear:()=>{ state.signalEnd=null; }});
+  if(state.signalSplit) actives.push({label:state.signalSplit.w, pos:"meio + fim", sw:state.signalSplit, clear:()=>{ state.signalSplit=null; }});
+  if(state.signalMid) actives.push({label:state.signalMid.w, pos:adjKind(state.signalMid.cls, state.signalMid.w)+" · meio", sw:state.signalMid, clear:()=>{ state.signalMid=null; }});
+  sortEnds(endList()).forEach((s,i)=> actives.push({
+    label: s.w, pos: END_SLOT_NOME[endRank(s)] || adjKind(s.cls, s.w), sw: s,
+    clear: ()=>{ state.signalEnds = endList().filter(x=>x.w!==s.w); }
+  }));
   if(actives.length && !disabled){
     const box = document.createElement('div'); box.className='signal-active';
     const cap = document.createElement('span'); cap.textContent = "ativos:"; box.appendChild(cap);
     actives.forEach(a=>{
       const tag = document.createElement('span'); tag.className='tagx';
       tag.innerHTML = `<b>${a.label}</b><span>${a.pos}</span>✕`;
+      paintCat(tag, a.sw);
       tag.onclick = ()=>{ a.clear(); render(); };
       box.appendChild(tag);
     });
@@ -2299,6 +2528,43 @@ function buildWh(){
    ou interrogativas. "I don't work at all" e "Do you work at all?" são naturais;
    "I work at all" não existe. O campo `only` marca esses sinais, e o dial ⑦ só os oferece
    nos formatos onde são gramaticais — em vez de deixar o motor produzir inglês inválido. */
+/* ---- Ordem dos adjuntos no fim da frase ----
+   Quando vários coexistem, o inglês segue uma ordem canônica — grau → modo → lugar →
+   frequência → duração → tempo → sequência ("I work hard at home every day"). O usuário
+   escolhe livremente; o motor ordena. O português segue a mesma sequência, o que torna a
+   regra ensinável nas duas línguas ao mesmo tempo. */
+/* Cada POSIÇÃO da ordem canônica aceita um ocupante. Duas expressões do mesmo encaixe
+   competem ("everywhere there" — dois lugares); de encaixes diferentes, somam
+   ("a bit quickly", "twice yesterday"), ainda que sejam da mesma cor. Por isso o limite
+   é por encaixe, e não um teto global: 9 encaixes = até 9 adjuntos que se complementam. */
+const END_SLOT_NOME = { 1:'grau', 2:'modo', 3:'comparação', 4:'lugar', 5:'frequência',
+                        6:'duração', 7:'aproximação', 8:'tempo', 9:'sequência', 10:'polaridade' };
+const END_RANK = {
+  bitFam:1, mannerFam:2, compareFam:3, placeFam:4,
+  freqDef:5, everyFam:5, freqIndef:5,
+  allFam:6, wholeFam:6, aboutFam:7,
+  timePoint:8, timeFam:8, withinFam:8, onceFam:8, againFam:8, everFam:8,
+  seqFam:9, npiFam:10
+};
+function endRank(sw){
+  /* a posição segue a categoria real: "by heart" (modo) vem antes de "at home" (lugar),
+     que vem antes de "by then" (tempo) — mesmo vindo de famílias diferentes */
+  const k = adjKind(sw.cls, sw.w);
+  if(k === 'como') return END_RANK[sw.cls] && END_RANK[sw.cls] <= 3 ? END_RANK[sw.cls] : 2;
+  if(k === 'onde') return 4;
+  return END_RANK[sw.cls] || 8;
+}
+function sortEnds(list){ return list.slice().sort((a,b)=> endRank(a)-endRank(b)); }
+function endList(){ return Array.isArray(state.signalEnds) ? state.signalEnds : []; }
+
+/* Pinta um elemento (chip, etiqueta) com a cor do encaixe do sinal. As famílias
+   continuam neutras: elas são navegação, não conteúdo. */
+function paintCat(el, sw){
+  if(!el || !sw) return;
+  const k = adjKind(sw.cls, sw.w);
+  el.dataset.cat = k;
+  el.style.setProperty('--cat', ADJ_COLOR[k]);
+}
 function signalAllowed(sw, formato){
   return !sw.only || sw.only.includes(formato);
 }
@@ -2307,12 +2573,22 @@ function applySignal(text, signalMid, signalEnd, col, signalSplit, formato){
   const neg = formato==='negativa' || formato==='pergunta_negativa';
   /* O sinal partido ocupa os dois pontos: a 1ª parte entra antes do verbo principal
      (trocada por "ever" em contexto negado) e a 2ª vai para o fim, depois da regência. */
-  if(signalSplit) words.splice(words.length-1, 0, C(neg ? signalSplit.negMid : signalSplit.mid));
-  else if(signalMid) words.splice(words.length-1, 0, C(signalMid.w));
+  if(signalSplit) words.splice(words.length-1, 0, C(neg ? signalSplit.negMid : signalSplit.mid, signalSplit.cls));
+  else if(signalMid){
+    /* Advérbios de certeza mudam de lugar conforme a polaridade: na afirmativa ficam
+       depois do auxiliar ("I will probably work"), mas na negativa vêm ANTES dele
+       ("I probably won't work" — nunca "I won't probably work"). Os de frequência não
+       fazem isso ("I don't always work" é natural), por isso a regra é só desta família. */
+    if(signalMid.cls === 'certaintyFam' && neg) words.splice(1, 0, C(signalMid.w, signalMid.cls));
+    else words.splice(words.length-1, 0, C(signalMid.w, signalMid.cls));
+  }
   let t = words.join(" ");
-  if(col) t += ' ' + R(col.en);           /* regência/collocation cola no verbo, antes do sinal de fim */
-  if(signalSplit) t += ' ' + C(signalSplit.end);
-  else if(signalEnd) t += ' ' + C(signalEnd.w);
+  if(col) t += ' ' + R(col.en);           /* regência/collocation cola no verbo, antes dos sinais de fim */
+  if(signalSplit) t += ' ' + C(signalSplit.end, signalSplit.cls);
+  else {
+    const ends = Array.isArray(signalEnd) ? signalEnd : (signalEnd ? [signalEnd] : []);
+    sortEnds(ends).forEach(s=>{ t += ' ' + C(s.w, s.cls); });
+  }
   return t;
 }
 
@@ -2333,12 +2609,12 @@ function render(){
     formulaExtra = ` × <span>❓ ${state.whWord}</span>`;
   } else {
     const g = generate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, verb);
-    const withSignal = applySignal(g.text, state.signalMid, state.signalEnd, col, state.signalSplit, state.formato);
+    const withSignal = applySignal(g.text, state.signalMid, endList(), col, state.signalSplit, state.formato);
     const finalRaw = withSignal + (g.isQuestion ? M("?") : ".");
     sentenceHTML = markedToHTML(finalRaw, markColorVar(state.formato));
     audioText = stripMarks(finalRaw);
-    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, state.signalMid, state.signalEnd, state.verbo, col, state.signalSplit);
-    const signalNote = state.signalSplit ? state.signalSplit.w : [state.signalMid, state.signalEnd].filter(Boolean).map(s=>s.w).join(" + ");
+    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, state.signalMid, endList(), state.verbo, col, state.signalSplit);
+    const signalNote = state.signalSplit ? state.signalSplit.w : [state.signalMid].concat(sortEnds(endList())).filter(Boolean).map(s=>s.w).join(" + ");
     structureText = g.structure + (signalNote ? ` + palavra-sinal (${signalNote})` : "") + (col ? ` + regência/collocation` : "");
   }
   document.getElementById('sentence').innerHTML = sentenceHTML;
@@ -2359,7 +2635,41 @@ function render(){
   saveState();
 }
 
+const END_RANK_NOME = { bitFam:'grau', mannerFam:'modo', compareFam:'comparação', placeFam:'lugar',
+  freqDef:'frequência', everyFam:'frequência', freqIndef:'frequência', allFam:'duração', wholeFam:'duração',
+  aboutFam:'aproximação', timePoint:'tempo', timeFam:'tempo', withinFam:'prazo', onceFam:'tempo',
+  againFam:'repetição', everFam:'tempo', seqFam:'sequência', npiFam:'polaridade' };
 function getNote(s){
+  const ends = Array.isArray(s.signalEnds) ? s.signalEnds : [];
+  if(ends.length > 1){
+    const ordenados = sortEnds(ends);
+    const NOME_CAT = { como:'como', onde:'onde', quando:'quando' };
+    /* cada nome de categoria sai na cor do seu encaixe, então a nota funciona também
+       como legenda: o leitor liga o rótulo à cor que acabou de ver na frase */
+    const pinta = (txt, kind)=> `<b style="color:${ADJ_COLOR[kind]}">${txt}</b>`;
+    const KIND_DE_NOME = { grau:'como', modo:'como', comparação:'como', como:'como',
+      lugar:'onde', onde:'onde',
+      frequência:'quando', duração:'quando', tempo:'quando', quando:'quando',
+      prazo:'quando', repetição:'quando', aproximação:'quando', sequência:'quando', polaridade:'quando' };
+    const regra = ['grau','modo','lugar','frequência','duração','tempo']
+      .map(n=> pinta(n, KIND_DE_NOME[n])).join(' → ');
+    /* o rótulo é o ENCAIXE (grau, modo, lugar, frequência...), que é a unidade da regra —
+       dizer "como → como" para grau + modo esconderia justamente por que eles se somam */
+    const cats = ordenados.map(x=>{
+      const nome = END_SLOT_NOME[endRank(x)] || adjKind(x.cls, x.w);
+      return pinta(nome, KIND_DE_NOME[nome] || adjKind(x.cls, x.w));
+    });
+    const iguais = ordenados.map(x=>x.w).join(' + ') === ends.map(x=>x.w).join(' + ');
+    return `Vários adjuntos convivem no fim da frase, mas em <b>ordem fixa</b>: ${regra}. Aqui a ordem é ${cats.join(' → ')}, então sai "${ordenados.map(x=>x.w).join(' ')}"` +
+           (iguais ? '.' : ' — o motor reordenou o que você escolheu.') +
+           ' Cada encaixe aceita um ocupante: escolher outro do mesmo encaixe substitui, mas encaixes diferentes se somam.';
+  }
+  if(s.signalMid && s.signalMid.cls === 'certaintyFam'){
+    const neg = s.formato==='negativa' || s.formato==='pergunta_negativa';
+    return neg
+      ? `Advérbios de certeza como <b>"${s.signalMid.w}"</b> ficam <b>antes</b> do auxiliar negativo: "I ${s.signalMid.w} won't work" — nunca "I won't ${s.signalMid.w} work". Compare com os de frequência, que vão depois ("I don't always work").`
+      : `<b>"${s.signalMid.w}"</b> ocupa a mesma posição média dos advérbios de frequência: depois do auxiliar, antes do verbo principal.`;
+  }
   const npi = [s.signalMid, s.signalEnd].find(x=>x && x.cls==='npiFam');
   if(npi) return `<b>"${npi.w}"</b> é um advérbio de polaridade negativa: só aparece em frases negativas e interrogativas. "I don't work ${npi.w}" ✓ · "I work ${npi.w}" ✗ — por isso ele some do dial quando você volta para a afirmativa.`;
   if(s.signalSplit && s.signalSplit.negMid !== s.signalSplit.mid && (s.formato==='negativa' || s.formato==='pergunta_negativa')) return `Repare na troca: <b>"${s.signalSplit.mid}"</b> já é negativo, então em frase negada o inglês usa <b>"${s.signalSplit.negMid} ... ${s.signalSplit.end}"</b> — \"won't <b>ever</b> work again\", nunca \"won't never\". Duas negativas não se somam em inglês padrão.`;
@@ -2387,7 +2697,11 @@ function buildAdverbsList(){
   /* Ordem cronológica em toda a referência: o eixo do app é passado → presente →
      futuro, igual ao dial ⑤. Manter "presente" primeiro aqui contradizia a linha do tempo. */
   const tenseOrder = ["past","present","future"];
-  let html = "";
+  let html = `<div class="ref-legend">
+    <span><i style="background:${ADJ_COLOR.como}"></i>como / quanto</span>
+    <span><i style="background:${ADJ_COLOR.onde}"></i>onde</span>
+    <span><i style="background:${ADJ_COLOR.quando}"></i>quando</span>
+  </div>`;
   tenseOrder.forEach(t=>{
     html += `<div class="ref-tense-block"><div class="ref-tense-title">${TENSE_ICON[t]} ${TENSE_LABEL[t]}</div>`;
     aspectOrder.forEach(asp=>{
@@ -2395,11 +2709,16 @@ function buildAdverbsList(){
       if(!words || !words.length) return;
       html += `<div class="ref-subhead">${ASPECT_ICON[asp]} ${ASPECT_LABEL[asp]}</div>`;
       const groups = {};
-      words.forEach(w=>{ (groups[w.cls]=groups[w.cls]||[]).push(w); });
+      words.concat(SPLIT_SIGNALS[key] || []).forEach(w=>{ (groups[w.cls]=groups[w.cls]||[]).push(w); });
       Object.keys(CLASS_INFO).forEach(cls=>{
         if(!groups[cls]) return;
         html += `<div class="ref-class-label">${CLASS_INFO[cls].label}</div><div>`;
-        groups[cls].forEach(w=>{ html += `<span class="ref-tag">${w.w}</span>`; });
+        /* mesma cor de encaixe do console: a lista deixa de ser uma parede cinza e passa
+           a mostrar, de relance, que categoria cada expressão ocupa na frase */
+        groups[cls].forEach(w=>{
+          const k = adjKind(w.cls, w.w);
+          html += `<span class="ref-tag" data-cat="${k}" style="--cat:${ADJ_COLOR[k]}">${escapeHTML(w.w)}</span>`;
+        });
         html += `</div>`;
       });
     });
@@ -2496,11 +2815,11 @@ const PT_DEVER_COND = {"1s":"deveria","3s":"deveria","1p":"deveríamos","3p":"de
 const PT_COSTUMAR_IMPERF = {"1s":"costumava","3s":"costumava","1p":"costumávamos","3p":"costumavam"};
 
 const MODAL_SIGNALS = {
-  capacidade: ["easily","without help","by myself","all by myself","with practice","if necessary","all the time","as always","by heart","out loud","from memory","on my own","without a doubt","little by little","about half the time"],
+  capacidade: ["easily","without help","by myself","all by myself","with practice","if necessary","all the time","as always","by heart","out loud","from memory","on my own","without a doubt","little by little","about half the time","a bit","quite a bit"],
   possibilidade: ["tomorrow","tonight","at any moment","all of a sudden","in theory","this weekend","once again","by chance","out of nowhere","at some point","without warning","over the phone","about now","about twice"],
   obrigacao: ["by law","before Friday","no matter what","right away","every day","all week long","on time","every single day","as agreed","in advance","at once","from now on","on schedule"],
   permissao: ["here","after class","on weekends","all weekend","in this building","during the break","this time","as needed","in person","at any time","over the weekend","around here"],
-  conselho: ["more often","as soon as possible","before it gets worse","at least once","all year round","from time to time","as usual","in advance","for sure","at least","step by step","once and for all"],
+  conselho: ["more often","as soon as possible","before it gets worse","at least once","all year round","from time to time","as usual","in advance","for sure","at least","step by step","once and for all","a little","a bit longer"],
   habito: ["when I was young","every summer","all summer long","back then","as a child","in those days","all the time","every single day","for fun","out of habit","off and on","on my own","back in the day","once in a while"]
 };
 
@@ -2648,7 +2967,7 @@ const MODAL_WH = WH_ADJUNCT.concat(WH_SUBJECT);
    classe dela; senão, é inferida pela palavra-âncora. O que não se encaixa cai em
    "diversos" — honesto, e evita forçar uma família que não descreve o item. */
 const MODAL_FAM_CACHE = {};
-const ANCORA_FAM = { under:'underFam', through:'throughFam', across:'throughFam', along:'throughFam', within:'withinFam', against:'againstFam', ahead:'aheadFam', behind:'aheadFam', up:'updownFam', down:'updownFam', to:'toFam', of:'ofFam', about:'aboutFam', all:'allFam', at:'atFam', by:'byFam', for:'forFam', from:'fromFam', in:'inFam',
+const ANCORA_FAM = { bit:'bitFam', little:'bitFam', under:'underFam', through:'throughFam', across:'throughFam', along:'throughFam', within:'withinFam', against:'againstFam', ahead:'aheadFam', behind:'aheadFam', up:'updownFam', down:'updownFam', to:'toFam', of:'ofFam', about:'aboutFam', all:'allFam', at:'atFam', by:'byFam', for:'forFam', from:'fromFam', in:'inFam',
   on:'onFam', over:'overFam', with:'withFam', without:'withFam', around:'aroundFam', back:'backFam',
   once:'onceFam', as:'asFam', every:'everyFam', time:'timeFam', out:'outFam', off:'outFam', whole:'wholeFam' };
 function modalSignalFam(w){
@@ -2771,6 +3090,7 @@ function buildModalDials(){
   (grupos[modalState.signalFam] || []).forEach(w=>{
     const chip = document.createElement('div'); chip.className='signal-chip';
     chip.dataset.active = (modalState.signal===w); chip.textContent = w;
+    paintCat(chip, {cls: modalSignalFam(w), w});
     chip.onclick = ()=>{ modalState.signal = (modalState.signal===w) ? null : w; renderModal(); };
     linha.appendChild(chip);
   });
@@ -2790,7 +3110,7 @@ function renderModal(){
   const g = isSubjWh ? tempoDef.gen(wh, verb, 'afirmativa') : tempoDef.gen(modalState.pronome, verb, modalState.formato);
   let raw = g.text;
   if(col) raw += ' ' + R(col.en);                 /* regência colada ao verbo, antes do sinal */
-  if(modalState.signal) raw += ' ' + C(modalState.signal);
+  if(modalState.signal) raw += ' ' + C(modalState.signal, modalSignalFam(modalState.signal));
   if(wh && !isSubjWh) raw = M(wh) + ' ' + lowerFirstMarked(raw);
   raw += (isQ || wh) ? M('?') : '.';
   document.getElementById('modalSentence').innerHTML = markedToHTML(raw, markColorVar(modalState.formato));
@@ -2869,10 +3189,12 @@ function buildMatrixExportData(){
 
 /* Desenha uma linha com marcação de cor por morfema no canvas — cada trecho marcado
    usa markColor, o resto usa neutralColor — avançando o cursor x conforme a largura real. */
-function drawMarkedLine(ctx, text, x, y, neutralColor, markColor, complementColor){
+function drawMarkedLine(ctx, text, x, y, neutralColor, markColor, cores){
   let cx = x;
+  const paleta = cores || {};
   markedToSegments(text).forEach(seg=>{
-    ctx.fillStyle = seg.kind==='neutral' ? neutralColor : (seg.kind==='formato' ? markColor : (complementColor||markColor));
+    ctx.fillStyle = seg.kind==='neutral' ? neutralColor
+                  : (seg.kind==='formato' ? markColor : (paleta[seg.kind] || markColor));
     ctx.fillText(seg.t, cx, y);
     cx += ctx.measureText(seg.t).width;
   });
@@ -2888,6 +3210,9 @@ function downloadMatrixPNG(){
      das mesmas variáveis CSS que pintam a tabela na tela, então tema e arquivo nunca
      divergem — se a paleta mudar um dia, o export muda junto. */
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  /* a tabela não usa adjuntos hoje, mas a paleta acompanha caso passe a usar */
+  const ADJ_PNG = { quando: isLight ? '#5f57ad' : '#8f8fd6', como: isLight ? '#b3601a' : '#e09a5f',
+                    onde: isLight ? '#5c6b18' : '#b9cf5c', regencia: isLight ? '#2f5f9e' : '#6b9fd8' };
   const cssVar = (name, fallback) => {
     const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     return v || fallback;
@@ -2964,7 +3289,7 @@ function downloadMatrixPNG(){
       r.cells.forEach((c,i)=>{
         ctx.font = mono(12.5);
         [[c.aff,TEAL],[c.neg,RED],[c.per,BURNT],[c.perneg,ROSE]].forEach(([t,markColor],li)=>{
-          drawMarkedLine(ctx, t, x2+8, y+rowPad+12+li*lineH, PAPER, markColor);
+          drawMarkedLine(ctx, t, x2+8, y+rowPad+12+li*lineH, PAPER, markColor, ADJ_PNG);
         });
         x2 += colW[i]+colGap;
       });
@@ -3057,7 +3382,7 @@ function newChallenge(){
     const isQ = formato==='pergunta' || formato==='pergunta_negativa';
     let raw = g.text;
     if(col) raw += ' ' + R(col.en);
-    if(signal) raw += ' ' + C(signal);
+    if(signal) raw += ' ' + C(signal, modalSignalFam(signal));
     raw += isQ ? M('?') : '.';
     const per = ptPerson(pronome), pron = PT_PRONOUN[pronome], vpt = PT_VERBS[verb.id] || PT_VERBS.work;
     const neg = formato==='negativa' || formato==='pergunta_negativa';
@@ -3462,6 +3787,220 @@ if(dbSearchEl) dbSearchEl.addEventListener('input', e=>{
 
 
 buildMatrixSource();
+
+/* ---- Anatomia da frase: guia dos encaixes ----
+   Tudo é gerado pelo motor a partir de combinações declaradas aqui, e não escrito à mão:
+   se um sinal mudar de encaixe ou de tradução, este guia acompanha sozinho. */
+const ANAT_EXEMPLOS = [
+  { titulo:"O par mais útil: modo + tempo",
+    t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","yesterday"],
+    why:"Diz COMO e QUANDO — cobre a maioria das situações do dia a dia com só duas peças." },
+  { titulo:"Frequência + tempo",
+    t:"past", a:"simples", f:"afirmativa", v:"go", ends:["twice","last week"],
+    why:"Quantas vezes e quando. Ambos violeta, encaixes diferentes: por isso somam." },
+  { titulo:"Modo + lugar",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", ends:["alone","at home"],
+    why:"Como e onde — a dupla natural para descrever uma rotina de trabalho." },
+  { titulo:"Grau + modo",
+    t:"present", a:"simples", f:"afirmativa", v:"speak", ends:["a bit","slowly"],
+    why:"Dois laranjas convivendo: o grau modula o modo. Ordem fixa — o grau vem antes." },
+  { titulo:"Lugar + duração",
+    t:"past", a:"continuo", f:"afirmativa", v:"work", ends:["at home","all day long"],
+    why:"Onde e por quanto tempo. Muito comum em relatos do passado contínuo." },
+  { titulo:"Modo + lugar + tempo — o trio clássico",
+    t:"future", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","tomorrow"],
+    why:"A regra que os manuais chamam de MPT (manner, place, time). Se lembrar de uma coisa, lembre desta." },
+  { titulo:"Certeza no meio + tempo no fim",
+    t:"future", a:"simples", f:"afirmativa", v:"go", mid:"probably", ends:["next week"],
+    why:"O advérbio de certeza não disputa encaixe de fim: ele mora no meio, junto ao auxiliar." },
+  { titulo:"Perfect: frequência + marco temporal",
+    t:"present", a:"perfeito", f:"afirmativa", v:"visit", ends:["twice","so far"],
+    why:"Combinação típica do present perfect: contagem + o recorte \"até agora\"." },
+];
+
+function anatFrase(cfg){
+  const verb = verbById(cfg.v);
+  const key = `${cfg.t}_${cfg.a}`;
+  const mid = cfg.mid ? (SIGNAL_WORDS[key]||[]).find(s=>s.w===cfg.mid) : null;
+  const ends = (cfg.ends||[]).map(x=>(SIGNAL_WORDS[key]||[]).find(s=>s.w===x)).filter(Boolean);
+  const g = generate('fact', cfg.t, cfg.a, cfg.f, 'I', verb);
+  const raw = applySignal(g.text, mid, ends, null, null, cfg.f) + (g.isQuestion ? M('?') : '.');
+  const pt = translate('fact', cfg.t, cfg.a, cfg.f, 'I', mid, ends, cfg.v, null, null);
+  const slots = sortEnds(ends).map(s=>{
+    const k = adjKind(s.cls, s.w);
+    return `<b style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[endRank(s)] || k}</b>`;
+  });
+  if(mid) slots.unshift(`<b style="color:${ADJ_COLOR[adjKind(mid.cls, mid.w)]}">meio</b>`);
+  return { en: markedToHTML(raw, markColorVar(cfg.f)), pt, slots: slots.join(' → '), texto: stripMarks(raw) };
+}
+
+/* ---- Montador: a tabela de tetos vira algo que se desmonta ----
+   Cada encaixe é um soquete clicável. Encaixar e desencaixar mostra na prática o que a
+   tabela afirma: 3 laranjas, 1 verde e 6 violetas cabem juntos, sem um tomar o lugar do
+   outro. As peças saem do banco real, então o exemplo é sempre uma frase válida. */
+const MONT_COMBO = { t:'past', a:'simples', v:'work' };
+let montOn = new Set([2, 4, 8]);   /* começa no trio clássico: modo + lugar + tempo */
+
+function montPecas(){
+  const key = `${MONT_COMBO.t}_${MONT_COMBO.a}`;
+  const escolhidos = {};
+  (SIGNAL_WORDS[key] || []).forEach(s=>{
+    const r = endRank(s);
+    if(!escolhidos[r]) escolhidos[r] = s;   /* um representante por encaixe */
+  });
+  return escolhidos;
+}
+function buildMontador(){
+  const box = document.getElementById('montadorWrap');
+  if(!box) return;
+  const pecas = montPecas();
+  const usados = [...montOn].filter(r=>pecas[r]).sort((a,b)=>a-b);
+  /* polaridade só existe em frase negada: encaixá-la troca o formato — e isso é a lição */
+  const formato = usados.includes(10) ? 'negativa' : 'afirmativa';
+  const ends = usados.map(r=>pecas[r]).filter(s=>signalAllowed(s, formato));
+  const verb = verbById(MONT_COMBO.v);
+  const g = generate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', verb);
+  const raw = applySignal(g.text, null, ends, null, null, formato) + (g.isQuestion ? M('?') : '.');
+  const pt = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', null, ends, MONT_COMBO.v, null, null);
+
+  const porCor = {como:0, onde:0, quando:0};
+  ends.forEach(s=> porCor[adjKind(s.cls, s.w)]++);
+
+  let sockets = '';
+  Object.keys(END_SLOT_NOME).map(Number).sort((a,b)=>a-b).forEach(r=>{
+    const s = pecas[r]; if(!s) return;
+    const k = adjKind(s.cls, s.w);
+    sockets += `<button class="socket" data-slot="${r}" data-on="${montOn.has(r)}" style="--cat:${ADJ_COLOR[k]}">
+      <b>${r}. ${END_SLOT_NOME[r]}</b><span>${escapeHTML(s.w)}</span></button>`;
+  });
+
+  box.innerHTML = `<div class="montador">
+    <div class="mont-frase">${markedToHTML(raw, markColorVar(formato))}</div>
+    <div class="mont-pt">${escapeHTML(pt)}</div>
+    <div class="mont-slots">${sockets}</div>
+    <div class="mont-acoes">
+      <button class="mont-btn" data-act="todos">encaixar todos</button>
+      <button class="mont-btn" data-act="limpar">desmontar</button>
+      <button class="mont-btn" data-act="trio">só o trio clássico</button>
+      <span class="mont-conta">${ends.length} encaixe(s) ·
+        <span style="color:${ADJ_COLOR.como}">${porCor.como} como</span> ·
+        <span style="color:${ADJ_COLOR.onde}">${porCor.onde} onde</span> ·
+        <span style="color:${ADJ_COLOR.quando}">${porCor.quando} quando</span></span>
+    </div>
+  </div>`;
+
+  box.querySelectorAll('.socket').forEach(b=>{
+    b.onclick = ()=>{ const r = +b.dataset.slot; montOn.has(r) ? montOn.delete(r) : montOn.add(r); buildMontador(); };
+  });
+  box.querySelectorAll('.mont-btn').forEach(b=>{
+    b.onclick = ()=>{
+      const act = b.dataset.act;
+      if(act === 'todos') montOn = new Set(Object.keys(pecas).map(Number));
+      else if(act === 'limpar') montOn = new Set();
+      else montOn = new Set([2, 4, 8]);
+      buildMontador();
+    };
+  });
+}
+
+function buildAnatomia(){
+  const wrap = document.getElementById('anatomiaWrap');
+  if(!wrap) return;
+
+  /* 1. tabela dos encaixes, com um exemplo real tirado do banco */
+  const exemploDoSlot = (r)=>{
+    for(const k in SIGNAL_WORDS){ const s = SIGNAL_WORDS[k].find(x=>endRank(x)===r); if(s) return s; }
+    return null;
+  };
+  let linhas = '';
+  Object.keys(END_SLOT_NOME).map(Number).sort((a,b)=>a-b).forEach(r=>{
+    const s = exemploDoSlot(r); if(!s) return;
+    const k = adjKind(s.cls, s.w);
+    const perg = { 1:'quanto?', 2:'como?', 3:'comparado a quê?', 4:'onde?', 5:'com que frequência?',
+                   6:'por quanto tempo?', 7:'aproximadamente quando?', 8:'quando?', 9:'em que ordem?', 10:'nega o quê?' }[r] || '';
+    linhas += `<tr>
+      <td class="slot-n">${r}</td>
+      <td class="slot-nome" style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[r]}</td>
+      <td class="slot-ex">${perg}</td>
+      <td class="slot-ex">${escapeHTML(s.w)}</td></tr>`;
+  });
+
+  /* 2. os exemplos que valem a pena */
+  let cards = '';
+  ANAT_EXEMPLOS.forEach(cfg=>{
+    const r = anatFrase(cfg);
+    cards += `<div class="anat-card">
+      <h4>${cfg.titulo}</h4>
+      <div class="anat-frase">${r.en}</div>
+      <div class="anat-pt">${escapeHTML(r.pt)}</div>
+      <div class="why">${r.slots}<br>${cfg.why}</div>
+    </div>`;
+  });
+
+  /* 3. o extremo, gerado de fato — serve de limite, não de modelo */
+  const maxCfg = { t:"past", a:"simples", f:"negativa", v:"work", mid:"probably",
+    ends:["a bit","quickly","better than before","at home","twice","all day long","about an hour ago","afterwards","at all"] };
+  const mx = anatFrase(maxCfg);
+
+  wrap.innerHTML = `
+    <div class="anat-atalho">
+      <b style="color:var(--brass)">O atalho mental:</b> depois do verbo (e do objeto), a frase inglesa
+      pergunta sempre na mesma ordem —
+      <b style="color:${ADJ_COLOR.como}">como</b> →
+      <b style="color:${ADJ_COLOR.onde}">onde</b> →
+      <b style="color:${ADJ_COLOR.quando}">quando</b>.
+      Se lembrar só disso, acerta a esmagadora maioria das frases.
+    </div>
+
+    <div class="ref-class-label">O teto por cor</div>
+    <div class="cor-resumo">
+      <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.como}"></div>
+        <div class="n" style="color:${ADJ_COLOR.como}">3</div><div class="rot">como</div>
+        <div class="quais">grau · modo · comparação</div></div>
+      <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.onde}"></div>
+        <div class="n" style="color:${ADJ_COLOR.onde}">1</div><div class="rot">onde</div>
+        <div class="quais">lugar</div></div>
+      <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.quando}"></div>
+        <div class="n" style="color:${ADJ_COLOR.quando}">6</div><div class="rot">quando</div>
+        <div class="quais">frequência · duração · aproximação · tempo · sequência · polaridade</div></div>
+    </div>
+    <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:4px;">
+      Toque nos encaixes para montar e desmontar a frase — a tabela acima deixa de ser
+      afirmação e vira algo que você confere.
+    </div>
+    <div id="montadorWrap"></div>
+
+    <div class="ref-class-label">Os 10 encaixes, na ordem em que entram</div>
+    <table class="slot-table">
+      <thead><tr><th>#</th><th>encaixe</th><th>responde</th><th>exemplo</th></tr></thead>
+      <tbody>${linhas}</tbody>
+    </table>
+    <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:6px;">
+      Cada encaixe aceita <b>um</b> ocupante. Dois do mesmo encaixe competem
+      ("everywhere <i>there</i>"); de encaixes diferentes, somam — mesmo sendo da mesma cor,
+      como <span style="color:${ADJ_COLOR.como}">grau</span> +
+      <span style="color:${ADJ_COLOR.como}">modo</span>.
+      Por isso cabem até <b>3</b> <span style="color:${ADJ_COLOR.como}">laranjas</span>,
+      <b>1</b> <span style="color:${ADJ_COLOR.onde}">verde</span> e
+      <b>6</b> <span style="color:${ADJ_COLOR.quando}">violetas</span> na mesma frase.
+    </div>
+
+    <div class="ref-class-label">Combinações que valem a pena</div>
+    ${cards}
+
+    <div class="ref-class-label">O limite — e por que não usá-lo</div>
+    <div class="anat-frase">${mx.en}</div>
+    <div class="anat-pt">${escapeHTML(mx.pt)}</div>
+    <div class="anat-aviso">
+      Esta frase é <b>gramaticalmente correta</b>: 9 encaixes ocupados, todos na ordem certa.
+      Mas ninguém fala assim — e ela ainda se contradiz ("duas vezes" × "o dia inteiro",
+      "de jeito nenhum" negando os outros oito). O motor garante a <b>estrutura</b>;
+      a <b>coerência</b> é sua. Na prática, o ponto ideal fica entre <b>2 e 4</b> encaixes.
+    </div>`;
+  buildMontador();
+}
+
+buildAnatomia();
 buildAdverbsList();
 buildErros();
 /* Restaura a sessão anterior antes do primeiro render. Cada bloco é validado: um estado
@@ -3482,6 +4021,8 @@ buildErros();
       if(!FORMATOS.includes(state.formato)) state.formato = 'afirmativa';
       const v = verbById(state.verbo);
       if(state.colocacao !== null && !(v.col || [])[state.colocacao]) state.colocacao = null;
+      /* estado salvo por versões que guardavam um único sinal de fim */
+      if(!Array.isArray(state.signalEnds)) state.signalEnds = s.signalEnd ? [s.signalEnd] : [];
     }
     const m = saved.modal;
     if(m && MODAL_ENGINE[m.funcao] && MODAL_ENGINE[m.funcao].tempos.some(t=>t.key===m.tempo) && FORMATOS.includes(m.formato)){
