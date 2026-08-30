@@ -63,6 +63,15 @@
 
   .topnav{position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:calc(10px + env(safe-area-inset-top, 0px)) 4px 10px; margin:0 -14px 18px; background:linear-gradient(180deg, color-mix(in srgb, var(--panel-deep) 97%, transparent), color-mix(in srgb, var(--panel-deep) 90%, transparent)); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-bottom:1px solid var(--line);}
   .nav-pills{display:flex; gap:8px; overflow-x:auto; padding:0 10px;}
+  /* Em telas estreitas as 5 seções precisam caber de uma vez: se "Expressões" e
+     "Referência" ficam fora da tela, o usuário não descobre que elas existem. */
+  /* Cinco seções não cabem em uma linha de 390px (precisariam de 557px). Em vez de
+     esconder duas atrás de rolagem — onde ninguém as encontra —, a barra quebra em duas
+     linhas e sua altura real é medida em --nav-h, de que dependem os painéis fixos. */
+  @media (max-width: 560px){
+    .nav-pills{flex-wrap:wrap; justify-content:center; gap:5px; padding:0 6px; overflow-x:visible;}
+    .nav-pill{padding:7px 9px; font-size:10.5px; letter-spacing:0;}
+  }
   .nav-pill{background:var(--panel-raised); border:1px solid var(--line); border-radius:20px; padding:7px 13px; font-size:11.5px; font-weight:600; color:var(--paper-dim); font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; cursor:pointer; transition:all .18s ease; flex-shrink:0; white-space:nowrap;}
   .nav-pill:active{color:var(--brass); border-color:var(--brass);}
   .theme-toggle{width:32px; height:32px; border-radius:50%; background:var(--panel-raised); border:1px solid var(--line); color:var(--paper); font-size:15px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .18s ease; margin-right:10px;}
@@ -116,6 +125,16 @@
 
   .signal-row{display:flex; flex-direction:column; gap:4px;}
   .signal-row-inner{display:flex; flex-wrap:nowrap; overflow-x:auto; gap:6px; padding-bottom:3px; scrollbar-width:thin;}
+  .signal-row-inner.wrap-row{flex-wrap:wrap; overflow-x:visible;}
+  /* Sombra nas bordas das faixas roláveis: sem esse aviso, o conteúdo à direita
+     simplesmente não é descoberto — foi o que aconteceu com o "by law". */
+  .scroll-shadow{position:relative;}
+  .scroll-shadow::before, .scroll-shadow::after{content:""; position:absolute; top:0; bottom:0; width:26px;
+    pointer-events:none; opacity:0; transition:opacity .18s ease; z-index:2;}
+  .scroll-shadow::before{left:0; background:linear-gradient(to right, var(--panel), transparent);}
+  .scroll-shadow::after{right:0; background:linear-gradient(to left, var(--panel), transparent);}
+  .scroll-shadow[data-more-left="true"]::before{opacity:1;}
+  .scroll-shadow[data-more-right="true"]::after{opacity:1;}
   .signal-row-inner::-webkit-scrollbar{height:4px;}
   .signal-row-inner::-webkit-scrollbar-thumb{background:var(--line); border-radius:2px;}
   .signal-chip{flex-shrink:0;}
@@ -140,7 +159,7 @@
   .wh-group-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin:8px 0 4px;}
   .wh-group-label:first-child{margin-top:0;}
 
-  .readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
+  .readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(var(--nav-h, 56px) + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none;}
   .readout-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
   .readout-btns{display:flex; gap:6px; position:relative; z-index:1;}
@@ -160,7 +179,7 @@
 
   .modal-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
   .modal-result{margin-top:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 14px 8px;}
-  .modal-readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
+  .modal-readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(var(--nav-h, 56px) + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .modal-readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none; border-radius:12px;}
   .modal-result-label{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase; margin-bottom:10px;}
   .modal-row{padding:9px 0; border-top:1px solid var(--line);}
@@ -271,7 +290,7 @@
     padding:10px; color:var(--paper); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; margin-top:12px;}
   .db-hit{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; color:var(--brass-dim); margin-bottom:2px;}
   .practice-card{background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px;
-    position:sticky; top:calc(56px + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
+    position:sticky; top:calc(var(--nav-h, 56px) + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .practice-prompt-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin-bottom:8px;}
   .practice-pt{font-size:17px; line-height:1.45; color:var(--paper); font-weight:500;}
   .practice-specs{display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;}
@@ -548,15 +567,15 @@
       <div class="dial-group-title">Ⓓ Qual formato?</div>
       <div class="formato-row" id="modalFormatoRow"></div>
     </div>
-    <div class="dial-group" id="modalWhGroup">
-      <div class="dial-group-title">Ⓔ Palavra interrogativa (só em perguntas)</div>
-      <div class="pronome-row" id="modalWhRow"></div>
-    </div>
-
     <div class="dial-group" style="margin-bottom:0;">
-      <div class="dial-group-title">Ⓕ Palavras-sinal da função (fim da frase, opcional)</div>
+      <div class="dial-group-title">Ⓔ Palavras-sinal da função (fim da frase, opcional)</div>
       <div class="signal-row" id="modalSignalRow"></div>
       <div class="signal-hint">O verbo principal e a regência/collocation são os mesmos escolhidos no console de tempos (dials ③ e ④).</div>
+    </div>
+
+    <div class="dial-group" id="modalWhGroup" style="margin-bottom:0;">
+      <div class="dial-group-title">Ⓕ Palavra interrogativa (só em perguntas)</div>
+      <div class="pronome-row" id="modalWhRow"></div>
     </div>
     <div id="modalAlerta"></div>
   </div>
@@ -836,6 +855,35 @@ function clearState(){
    Em vez de reescrever todos os construtores, esta passagem única marca cada um como
    botão focável depois de cada render. Enter e Espaço disparam o mesmo clique, que é
    o que um <button> faria nativamente. */
+/* Marca as faixas roláveis com sombra nas bordas quando há conteúdo fora da vista.
+   Roda após cada render e a cada rolagem da própria faixa; usa só leitura de scrollLeft,
+   sem observar o documento inteiro. */
+/* A barra pode ter uma ou duas linhas conforme a largura; os elementos fixos (readouts,
+   card de prática) precisam do valor real para não ficarem por baixo dela. */
+function updateNavHeight(){
+  const nav = document.querySelector('.topnav');
+  if(!nav) return;
+  document.documentElement.style.setProperty('--nav-h', Math.round(nav.getBoundingClientRect().height) + 'px');
+}
+window.addEventListener('resize', ()=>{ updateNavHeight(); updateScrollShadows(); }, {passive:true});
+function updateScrollShadows(){
+  document.querySelectorAll('.fam-row, .letter-row, .nav-pills, #dbGroupRow, #dbFamilyRow, .signal-row-inner:not(.wrap-row)')
+    .forEach(row=>{
+      if(row.offsetParent === null) return;
+      const rolavel = row.scrollWidth > row.clientWidth + 2;
+      row.classList.toggle('scroll-shadow', rolavel);
+      if(!rolavel){ row.removeAttribute('data-more-left'); row.removeAttribute('data-more-right'); return; }
+      const atualizar = ()=>{
+        row.setAttribute('data-more-left', String(row.scrollLeft > 4));
+        row.setAttribute('data-more-right', String(row.scrollLeft + row.clientWidth < row.scrollWidth - 4));
+      };
+      atualizar();
+      if(!row.dataset.shadowBound){
+        row.dataset.shadowBound = '1';
+        row.addEventListener('scroll', atualizar, {passive:true});
+      }
+    });
+}
 function applyA11y(){
   document.querySelectorAll('.pronome-pill, .signal-chip, .opt-btn, .formato-switch, .letter-pill')
     .forEach(el=>{
@@ -1535,6 +1583,71 @@ const SIGNAL_PT = {
   "all afternoon long":"a tarde inteira",
   "all evening long":"a noite inteira",
   "all winter long":"o inverno inteiro",
+  "under pressure":"sob pressão",
+  "under control":"sob controle",
+  "under the radar":"despercebido",
+  "under construction":"em construção",
+  "under the table":"por baixo dos panos",
+  "under those circumstances":"naquelas circunstâncias",
+  "under the weather":"indisposto(a)",
+  "under any circumstances":"em qualquer circunstância",
+  "across the board":"em todos os âmbitos",
+  "along the way":"pelo caminho",
+  "through thick and thin":"nos bons e maus momentos",
+  "all the way through":"do começo ao fim",
+  "through the night":"a noite toda",
+  "across the country":"pelo país todo",
+  "along the river":"ao longo do rio",
+  "through the whole night":"a noite inteira",
+  "through it all":"apesar de tudo",
+  "within reason":"dentro do razoável",
+  "within budget":"dentro do orçamento",
+  "within minutes":"em minutos",
+  "within a week":"em uma semana",
+  "within hours":"em poucas horas",
+  "within days":"em poucos dias",
+  "within a month":"em um mês",
+  "within the hour":"dentro de uma hora",
+  "within a year":"em um ano",
+  "against the clock":"contra o relógio",
+  "against my will":"contra a minha vontade",
+  "against all odds":"contra todas as probabilidades",
+  "against the odds":"contra as probabilidades",
+  "ahead of schedule":"adiantado",
+  "behind schedule":"atrasado",
+  "ahead of time":"com antecedência",
+  "behind the scenes":"nos bastidores",
+  "behind my back":"pelas minhas costas",
+  "ahead of the curve":"à frente do seu tempo",
+  "up front":"de antemão",
+  "up close":"de perto",
+  "down the line":"lá na frente",
+  "up and down":"de cima para baixo",
+  "upside down":"de cabeça para baixo",
+  "down the road":"no futuro",
+  "to some extent":"até certo ponto",
+  "to the fullest":"ao máximo",
+  "to the point":"direto ao ponto",
+  "to date":"até o momento",
+  "to no avail":"sem sucesso",
+  "to this point":"até este ponto",
+  "to death":"até a morte",
+  "to that point":"até aquele ponto",
+  "of course":"claro",
+  "of my own accord":"por vontade própria",
+  "of late":"recentemente",
+  "of all people":"logo eu",
+  "into detail":"em detalhes",
+  "into position":"em posição",
+  "into pieces":"em pedaços",
+  "into consideration":"em consideração",
+  "into account":"em conta",
+  "per day":"por dia",
+  "per week":"por semana",
+  "per hour":"por hora",
+  "per month":"por mês",
+  "straight away":"imediatamente",
+  "straight to the point":"direto ao ponto",
   "on purpose":"de propósito","on foot":"a pé","on my own":"por conta própria","on average":"em média","on the way":"a caminho","on several occasions":"em várias ocasiões","on and on":"sem parar","on the spot":"na hora","on schedule":"dentro do prazo",
   "out loud":"em voz alta","off and on":"de vez em quando","out of nowhere":"do nada","off the record":"em off","out of habit":"por hábito","at any time":"a qualquer hora"
 };
@@ -1708,6 +1821,14 @@ const CLASS_INFO = {
   aboutFam: {label:"Família do \"about\" — aproximação, fim da frase"},
   npiFam: {label:"Só em negativas e perguntas — at all, anymore, either…"},
   rightFam: {label:"Família do \"right\" — imediatez, fim da frase"},
+  underFam: {label:"Família do \"under\" — fim da frase"},
+  throughFam: {label:"Família do \"through/across/along\" — fim da frase"},
+  withinFam: {label:"Família do \"within\" — prazo, fim da frase"},
+  againstFam: {label:"Família do \"against\" — fim da frase"},
+  aheadFam: {label:"Família do \"ahead/behind\" — fim da frase"},
+  updownFam: {label:"Família do \"up/down\" — fim da frase"},
+  toFam: {label:"Família do \"to\" — fim da frase"},
+  ofFam: {label:"Família do \"of\" — fim da frase"},
   atFam: {label:"Família do \"at\" — fim da frase"},
   inFam: {label:"Família do \"in\" — fim da frase"},
   byFam: {label:"Família do \"by\" — fim da frase"},
@@ -1742,7 +1863,8 @@ const SIGNAL_WORDS = {
     {w:"over and over",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"all over the place",pl:"end",cls:"overFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"with care",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"around the clock",pl:"end",cls:"aroundFam"},{w:"around here",pl:"end",cls:"aroundFam"},{w:"once in a while",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},{w:"step by step",pl:"end",cls:"byFam"},{w:"day by day",pl:"end",cls:"byFam"},
     {w:"about twice a week",pl:"end",cls:"aboutFam"},{w:"about three times a month",pl:"end",cls:"aboutFam"},{w:"about every day",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in the least",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right now",pl:"end",cls:"rightFam"},{w:"right away",pl:"end",cls:"rightFam"},{w:"right here",pl:"end",cls:"rightFam"},{w:"normally",pl:"end",cls:"freqIndef"},{w:"typically",pl:"end",cls:"freqIndef"},{w:"regularly",pl:"end",cls:"freqIndef"},{w:"hardly",pl:"end",cls:"freqIndef"},{w:"daily",pl:"end",cls:"freqDef"},{w:"weekly",pl:"end",cls:"freqDef"},{w:"monthly",pl:"end",cls:"freqDef"},{w:"twice a month",pl:"end",cls:"freqDef"},{w:"every other week",pl:"end",cls:"freqDef"},{w:"once in a blue moon",pl:"end",cls:"freqDef"},{w:"these days",pl:"end",cls:"timePoint"},{w:"on a daily basis",pl:"end",cls:"timePoint"},
-    {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"}
+    {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the radar",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"against the clock",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"up close",pl:"end",cls:"updownFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"of my own accord",pl:"end",cls:"ofFam"},{w:"straight away",pl:"end",cls:"rightFam"}
   ],
   present_continuo: [
     {w:"right now",pl:"end",cls:"timePoint"},{w:"at the moment",pl:"end",cls:"timePoint"},{w:"at present",pl:"end",cls:"timePoint"},{w:"nowadays",pl:"end",cls:"timePoint"},{w:"today",pl:"end",cls:"timePoint"},{w:"this week",pl:"end",cls:"timePoint"},{w:"this month",pl:"end",cls:"timePoint"},{w:"this year",pl:"end",cls:"timePoint"},{w:"these days",pl:"end",cls:"timePoint"},{w:"at this moment",pl:"end",cls:"timePoint"},
@@ -1754,10 +1876,11 @@ const SIGNAL_WORDS = {
     {w:"over the phone",pl:"end",cls:"overFam"},{w:"over there",pl:"end",cls:"overFam"},{w:"with care",pl:"end",cls:"withFam"},{w:"without thinking",pl:"end",cls:"withFam"},{w:"around here",pl:"end",cls:"aroundFam"},
     {w:"about now",pl:"end",cls:"aboutFam"},{w:"about half the time",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right this minute",pl:"end",cls:"rightFam"},{w:"this very moment",pl:"end",cls:"timePoint"},{w:"as of now",pl:"end",cls:"timePoint"},{w:"for the time being",pl:"end",cls:"timePoint"},{w:"this semester",pl:"end",cls:"timePoint"},
-    {w:"all week long",pl:"end",cls:"allFam"},{w:"all afternoon long",pl:"end",cls:"allFam"}
+    {w:"all week long",pl:"end",cls:"allFam"},{w:"all afternoon long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"}
   ],
   present_perfeito: [
-    {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"yet",pl:"end",cls:"perfectAdv"},
+    {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"yet",pl:"end",cls:"perfectAdv", only:["negativa","pergunta","pergunta_negativa"]},
     {w:"ever",pl:"mid",cls:"freqIndef"},{w:"never",pl:"mid",cls:"freqIndef"},{w:"hardly ever",pl:"mid",cls:"freqIndef"},{w:"seldom",pl:"mid",cls:"freqIndef"},
     {w:"once",pl:"end",cls:"freqDef"},{w:"twice",pl:"end",cls:"freqDef"},{w:"three times",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"},{w:"many times",pl:"end",cls:"freqDef"},{w:"a few times",pl:"end",cls:"freqDef"},{w:"a lot",pl:"end",cls:"freqDef"},{w:"four times",pl:"end",cls:"freqDef"},{w:"five times",pl:"end",cls:"freqDef"},
     {w:"since 2020",pl:"end",cls:"timePoint"},{w:"since Monday",pl:"end",cls:"timePoint"},{w:"since last year",pl:"end",cls:"timePoint"},{w:"for three years",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},{w:"so far",pl:"end",cls:"timePoint"},{w:"up to now",pl:"end",cls:"timePoint"},{w:"since I was a child",pl:"end",cls:"timePoint"},{w:"since 2015",pl:"end",cls:"timePoint"},{w:"for a week",pl:"end",cls:"timePoint"},{w:"for months",pl:"end",cls:"timePoint"},{w:"for ages",pl:"end",cls:"timePoint"},{w:"over the years",pl:"end",cls:"timePoint"},{w:"in the last few days",pl:"end",cls:"timePoint"},
@@ -1768,7 +1891,8 @@ const SIGNAL_WORDS = {
     {w:"from the start",pl:"end",cls:"fromFam"},{w:"from day one",pl:"end",cls:"fromFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on several occasions",pl:"end",cls:"onFam"},
     {w:"over time",pl:"end",cls:"overFam"},{w:"over and over",pl:"end",cls:"overFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"once in a lifetime",pl:"end",cls:"onceFam"},{w:"more than once",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},{w:"one by one",pl:"end",cls:"byFam"},
     {w:"about ten times",pl:"end",cls:"aboutFam"},{w:"about twice",pl:"end",cls:"aboutFam"},{w:"about a hundred times",pl:"end",cls:"aboutFam"},
-    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in years",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in ages",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"finally",pl:"end",cls:"perfectAdv"},{w:"time and again",pl:"end",cls:"freqDef"},{w:"countless times",pl:"end",cls:"freqDef"},{w:"until now",pl:"end",cls:"timePoint"},{w:"up until now",pl:"end",cls:"timePoint"},{w:"to this day",pl:"end",cls:"timePoint"},{w:"ever since then",pl:"end",cls:"timePoint"},{w:"in recent years",pl:"end",cls:"timePoint"},{w:"this whole year",pl:"end",cls:"timePoint"}
+    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in years",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in ages",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"finally",pl:"mid",cls:"perfectAdv"},{w:"time and again",pl:"end",cls:"freqDef"},{w:"countless times",pl:"end",cls:"freqDef"},{w:"until now",pl:"end",cls:"timePoint"},{w:"up until now",pl:"end",cls:"timePoint"},{w:"to this day",pl:"end",cls:"timePoint"},{w:"ever since then",pl:"end",cls:"timePoint"},{w:"in recent years",pl:"end",cls:"timePoint"},{w:"this whole year",pl:"end",cls:"timePoint"},
+    {w:"through thick and thin",pl:"end",cls:"throughFam"},{w:"all the way through",pl:"end",cls:"throughFam"},{w:"within reason",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"against all odds",pl:"end",cls:"againstFam"},{w:"ahead of time",pl:"end",cls:"aheadFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"},{w:"to date",pl:"end",cls:"toFam"},{w:"to no avail",pl:"end",cls:"toFam"},{w:"to this point",pl:"end",cls:"toFam"},{w:"of late",pl:"end",cls:"ofFam"}
   ],
   present_perfeito_continuo: [
     {w:"since morning",pl:"end",cls:"timePoint"},{w:"since 9 a.m.",pl:"end",cls:"timePoint"},{w:"for two hours",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"lately",pl:"end",cls:"timePoint"},{w:"recently",pl:"end",cls:"timePoint"},{w:"all week",pl:"end",cls:"timePoint"},{w:"for hours",pl:"end",cls:"timePoint"},{w:"for days",pl:"end",cls:"timePoint"},{w:"since breakfast",pl:"end",cls:"timePoint"},{w:"since 8 a.m.",pl:"end",cls:"timePoint"},{w:"all day",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for months now",pl:"end",cls:"timePoint"},
@@ -1780,7 +1904,8 @@ const SIGNAL_WORDS = {
     {w:"over time",pl:"end",cls:"overFam"},{w:"around the clock",pl:"end",cls:"aroundFam"},{w:"step by step",pl:"end",cls:"byFam"},
     {w:"about an hour",pl:"end",cls:"aboutFam"},{w:"about two months",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"non-stop",pl:"end",cls:"timePoint"},{w:"since then",pl:"end",cls:"timePoint"},{w:"for quite a while",pl:"end",cls:"timePoint"},{w:"all this week",pl:"end",cls:"timePoint"},{w:"for the past few days",pl:"end",cls:"timePoint"},{w:"since last month",pl:"end",cls:"timePoint"},
-    {w:"all week long",pl:"end",cls:"allFam"},{w:"all month long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"}
+    {w:"all week long",pl:"end",cls:"allFam"},{w:"all month long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"}
   ],
   past_simples: [
     {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},{w:"the day before yesterday",pl:"end",cls:"timePoint"},{w:"three years ago",pl:"end",cls:"timePoint"},{w:"a long time ago",pl:"end",cls:"timePoint"},{w:"in 1990",pl:"end",cls:"timePoint"},{w:"when I was a child",pl:"end",cls:"timePoint"},{w:"last night",pl:"end",cls:"timePoint"},{w:"earlier today",pl:"end",cls:"timePoint"},
@@ -1793,7 +1918,8 @@ const SIGNAL_WORDS = {
     {w:"over the weekend",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"over there",pl:"end",cls:"overFam"},{w:"without warning",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"around noon",pl:"end",cls:"aroundFam"},{w:"around the corner",pl:"end",cls:"aroundFam"},{w:"back home",pl:"end",cls:"backFam"},{w:"back in the day",pl:"end",cls:"backFam"},{w:"way back",pl:"end",cls:"backFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"just once",pl:"end",cls:"onceFam"},{w:"one by one",pl:"end",cls:"byFam"},{w:"side by side",pl:"end",cls:"byFam"},
     {w:"about an hour ago",pl:"end",cls:"aboutFam"},{w:"about a month ago",pl:"end",cls:"aboutFam"},{w:"about a year ago",pl:"end",cls:"aboutFam"},{w:"about twice",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"one bit",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in the slightest",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right away",pl:"end",cls:"rightFam"},{w:"right then",pl:"end",cls:"rightFam"},{w:"right after that",pl:"end",cls:"rightFam"},{w:"that day",pl:"end",cls:"timePoint"},{w:"that night",pl:"end",cls:"timePoint"},{w:"the other day",pl:"end",cls:"timePoint"},{w:"years ago",pl:"end",cls:"timePoint"},{w:"months ago",pl:"end",cls:"timePoint"},{w:"ages ago",pl:"end",cls:"timePoint"},{w:"last summer",pl:"end",cls:"timePoint"},{w:"this morning",pl:"end",cls:"timePoint"},{w:"only once",pl:"end",cls:"freqDef"},{w:"a couple of times",pl:"end",cls:"freqDef"},{w:"over and over",pl:"end",cls:"freqDef"},
-    {w:"all week long",pl:"end",cls:"allFam"},{w:"all summer long",pl:"end",cls:"allFam"},{w:"all winter long",pl:"end",cls:"allFam"}
+    {w:"all week long",pl:"end",cls:"allFam"},{w:"all summer long",pl:"end",cls:"allFam"},{w:"all winter long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the table",pl:"end",cls:"underFam"},{w:"under those circumstances",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"across the country",pl:"end",cls:"throughFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"within minutes",pl:"end",cls:"withinFam"},{w:"within a week",pl:"end",cls:"withinFam"},{w:"within hours",pl:"end",cls:"withinFam"},{w:"against the odds",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"ahead of time",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},{w:"to no avail",pl:"end",cls:"toFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"straight away",pl:"end",cls:"rightFam"}
   ],
   past_continuo: [
     {w:"at that moment",pl:"end",cls:"timePoint"},{w:"at 5 p.m. yesterday",pl:"end",cls:"timePoint"},{w:"all day yesterday",pl:"end",cls:"timePoint"},{w:"at noon yesterday",pl:"end",cls:"timePoint"},{w:"while she was cooking",pl:"end",cls:"timePoint"},{w:"the whole afternoon",pl:"end",cls:"timePoint"},{w:"all night",pl:"end",cls:"timePoint"},
@@ -1805,7 +1931,8 @@ const SIGNAL_WORDS = {
     {w:"over the phone",pl:"end",cls:"overFam"},{w:"over there",pl:"end",cls:"overFam"},{w:"back and forth",pl:"end",cls:"backFam"},{w:"around the clock",pl:"end",cls:"aroundFam"},
     {w:"about an hour ago",pl:"end",cls:"aboutFam"},{w:"about that time",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"at that exact moment",pl:"end",cls:"timePoint"},{w:"the entire time",pl:"end",cls:"timePoint"},{w:"that afternoon",pl:"end",cls:"timePoint"},{w:"earlier that day",pl:"end",cls:"timePoint"},{w:"when it happened",pl:"end",cls:"timePoint"},
-    {w:"all afternoon long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},{w:"all evening long",pl:"end",cls:"allFam"}
+    {w:"all afternoon long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},{w:"all evening long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"along the river",pl:"end",cls:"throughFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"}
   ],
   past_perfeito: [
     {w:"already",pl:"mid",cls:"perfectAdv"},{w:"just",pl:"mid",cls:"perfectAdv"},{w:"recently",pl:"mid",cls:"perfectAdv"},{w:"never",pl:"mid",cls:"freqIndef"},
@@ -1816,7 +1943,8 @@ const SIGNAL_WORDS = {
     {w:"from the beginning",pl:"end",cls:"fromFam"},{w:"on my own",pl:"end",cls:"onFam"},
     {w:"over time",pl:"end",cls:"overFam"},{w:"without warning",pl:"end",cls:"withFam"},{w:"more than once",pl:"end",cls:"onceFam"},
     {w:"about a week before",pl:"end",cls:"aboutFam"},
-    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"finally",pl:"end",cls:"perfectAdv"},{w:"never before",pl:"end",cls:"perfectAdv"},{w:"by that point",pl:"end",cls:"perfectAdv"},{w:"until that day",pl:"end",cls:"timePoint"},{w:"up to that point",pl:"end",cls:"timePoint"},{w:"the night before",pl:"end",cls:"timePoint"},{w:"long before that",pl:"end",cls:"timePoint"}
+    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"finally",pl:"mid",cls:"perfectAdv"},{w:"never before",pl:"end",cls:"perfectAdv"},{w:"by that point",pl:"end",cls:"perfectAdv"},{w:"until that day",pl:"end",cls:"timePoint"},{w:"up to that point",pl:"end",cls:"timePoint"},{w:"the night before",pl:"end",cls:"timePoint"},{w:"long before that",pl:"end",cls:"timePoint"},
+    {w:"within days",pl:"end",cls:"withinFam"},{w:"within a month",pl:"end",cls:"withinFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"behind schedule",pl:"end",cls:"aheadFam"},{w:"to that point",pl:"end",cls:"toFam"},{w:"to no avail",pl:"end",cls:"toFam"}
   ],
   past_perfeito_continuo: [
     {w:"for two hours",pl:"end",cls:"timePoint"},{w:"since morning",pl:"end",cls:"timePoint"},{w:"all morning",pl:"end",cls:"timePoint"},{w:"for a while",pl:"end",cls:"timePoint"},{w:"for months",pl:"end",cls:"timePoint"},{w:"since the accident",pl:"end",cls:"timePoint"},{w:"all year",pl:"end",cls:"timePoint"},{w:"for a long time",pl:"end",cls:"timePoint"},
@@ -1827,14 +1955,16 @@ const SIGNAL_WORDS = {
     {w:"over the years",pl:"end",cls:"overFam"},{w:"back and forth",pl:"end",cls:"backFam"},{w:"day by day",pl:"end",cls:"byFam"},
     {w:"about three hours",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"for quite some time",pl:"end",cls:"timePoint"},{w:"up until then",pl:"end",cls:"timePoint"},{w:"that entire week",pl:"end",cls:"timePoint"},{w:"since early morning",pl:"end",cls:"timePoint"},{w:"non-stop",pl:"end",cls:"timePoint"},
-    {w:"all week long",pl:"end",cls:"allFam"},{w:"all day long",pl:"end",cls:"allFam"},{w:"all month long",pl:"end",cls:"allFam"}
+    {w:"all week long",pl:"end",cls:"allFam"},{w:"all day long",pl:"end",cls:"allFam"},{w:"all month long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the whole night",pl:"end",cls:"throughFam"},{w:"behind the scenes",pl:"end",cls:"aheadFam"}
   ],
   future_simples: [
     {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"},{w:"next weekend",pl:"end",cls:"timePoint"},{w:"in the future",pl:"end",cls:"timePoint"},{w:"eventually",pl:"end",cls:"timePoint"},{w:"someday",pl:"end",cls:"timePoint"},{w:"this evening",pl:"end",cls:"timePoint"},
     {w:"all of them",pl:"end",cls:"allFam"},{w:"all summer",pl:"end",cls:"allFam"},{w:"all weekend",pl:"end",cls:"allFam"},
     {w:"this time",pl:"end",cls:"timeFam"},{w:"next time",pl:"end",cls:"timeFam"},{w:"in time",pl:"end",cls:"timeFam"},{w:"forever",pl:"end",cls:"everFam"},{w:"for good",pl:"end",cls:"everFam"},{w:"again",pl:"end",cls:"againFam"},{w:"once again",pl:"end",cls:"againFam"},{w:"all over again",pl:"end",cls:"againFam"},
     {w:"as soon as possible",pl:"end",cls:"asFam"},{w:"as always",pl:"end",cls:"asFam"},{w:"as needed",pl:"end",cls:"asFam"},{w:"as usual",pl:"end",cls:"asFam"},{w:"at some point",pl:"end",cls:"atFam"},{w:"at least",pl:"end",cls:"atFam"},{w:"at once",pl:"end",cls:"atFam"},{w:"in advance",pl:"end",cls:"inFam"},{w:"in person",pl:"end",cls:"inFam"},{w:"in the end",pl:"end",cls:"inFam"},{w:"by then",pl:"end",cls:"byFam"},{w:"by all means",pl:"end",cls:"byFam"},{w:"for sure",pl:"end",cls:"forFam"},{w:"for now",pl:"end",cls:"forFam"},{w:"for a change",pl:"end",cls:"forFam"},{w:"out of habit",pl:"end",cls:"outFam"},{w:"from now on",pl:"end",cls:"fromFam"},{w:"from tomorrow",pl:"end",cls:"fromFam"},{w:"from scratch",pl:"end",cls:"fromFam"},{w:"on time",pl:"end",cls:"onFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on purpose",pl:"end",cls:"onFam"},{w:"over the weekend",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"around noon",pl:"end",cls:"aroundFam"},{w:"around the corner",pl:"end",cls:"aroundFam"},{w:"back home",pl:"end",cls:"backFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"once in a lifetime",pl:"end",cls:"onceFam"},{w:"step by step",pl:"end",cls:"byFam"},{w:"about noon",pl:"end",cls:"aboutFam"},{w:"about this time",pl:"end",cls:"aboutFam"},{w:"in about an hour",pl:"end",cls:"aboutFam"},{w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right away",pl:"end",cls:"rightFam"},{w:"right after work",pl:"end",cls:"rightFam"},{w:"right on time",pl:"end",cls:"rightFam"},{w:"first thing tomorrow",pl:"end",cls:"timePoint"},{w:"sooner or later",pl:"end",cls:"timePoint"},{w:"one of these days",pl:"end",cls:"timePoint"},{w:"before long",pl:"end",cls:"timePoint"},{w:"any minute now",pl:"end",cls:"timePoint"},{w:"the day after tomorrow",pl:"end",cls:"timePoint"},{w:"in a couple of days",pl:"end",cls:"timePoint"},
-    {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"}
+    {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},
+    {w:"along the way",pl:"end",cls:"throughFam"},{w:"within a week",pl:"end",cls:"withinFam"},{w:"within the hour",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"against all odds",pl:"end",cls:"againstFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"down the road",pl:"end",cls:"updownFam"},{w:"down the line",pl:"end",cls:"updownFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"to some extent",pl:"end",cls:"toFam"}
   ],
   future_continuo: [
     {w:"at this time tomorrow",pl:"end",cls:"timePoint"},{w:"this time next week",pl:"end",cls:"timePoint"},{w:"at 8 p.m. tomorrow",pl:"end",cls:"timePoint"},{w:"at midnight tonight",pl:"end",cls:"timePoint"},{w:"at this time next month",pl:"end",cls:"timePoint"},{w:"this time tomorrow",pl:"end",cls:"timePoint"},
@@ -1845,7 +1975,8 @@ const SIGNAL_WORDS = {
     {w:"over the weekend",pl:"end",cls:"overFam"},{w:"around here",pl:"end",cls:"aroundFam"},
     {w:"about this time tomorrow",pl:"end",cls:"aboutFam"},
     {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"all afternoon tomorrow",pl:"end",cls:"timePoint"},{w:"when you arrive",pl:"end",cls:"timePoint"},{w:"this time on Friday",pl:"end",cls:"timePoint"},{w:"during the meeting",pl:"end",cls:"timePoint"},
-    {w:"all morning long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all evening long",pl:"end",cls:"allFam"}
+    {w:"all morning long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all evening long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through the night",pl:"end",cls:"throughFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"}
   ],
   future_perfeito: [
     {w:"by then",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},{w:"by 2030",pl:"end",cls:"timePoint"},{w:"by tonight",pl:"end",cls:"timePoint"},{w:"by tomorrow",pl:"end",cls:"timePoint"},{w:"by the end of the year",pl:"end",cls:"timePoint"},{w:"by the time you arrive",pl:"end",cls:"timePoint"},
@@ -1855,7 +1986,8 @@ const SIGNAL_WORDS = {
     {w:"from now on",pl:"end",cls:"fromFam"},{w:"on schedule",pl:"end",cls:"onFam"},
     {w:"over time",pl:"end",cls:"overFam"},{w:"once and for all",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},
     {w:"about then",pl:"end",cls:"aboutFam"},
-    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"by the time we meet",pl:"end",cls:"timePoint"},{w:"by this time next year",pl:"end",cls:"timePoint"},{w:"before you know it",pl:"end",cls:"timePoint"},{w:"by the deadline",pl:"end",cls:"timePoint"}
+    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"by the time we meet",pl:"end",cls:"timePoint"},{w:"by this time next year",pl:"end",cls:"timePoint"},{w:"before you know it",pl:"end",cls:"timePoint"},{w:"by the deadline",pl:"end",cls:"timePoint"},
+    {w:"within a year",pl:"end",cls:"withinFam"},{w:"within budget",pl:"end",cls:"withinFam"},{w:"ahead of schedule",pl:"end",cls:"aheadFam"},{w:"to that point",pl:"end",cls:"toFam"}
   ],
   future_perfeito_continuo: [
     {w:"by then",pl:"end",cls:"timePoint"},{w:"for five years",pl:"end",cls:"timePoint"},{w:"by next year",pl:"end",cls:"timePoint"},{w:"for over a decade",pl:"end",cls:"timePoint"},{w:"by next summer",pl:"end",cls:"timePoint"},{w:"by the end of the month",pl:"end",cls:"timePoint"},
@@ -1863,7 +1995,8 @@ const SIGNAL_WORDS = {
     {w:"for good measure",pl:"end",cls:"forFam"},
     {w:"over the years",pl:"end",cls:"overFam"},{w:"day by day",pl:"end",cls:"byFam"},
     {w:"by this time next year",pl:"end",cls:"timePoint"},{w:"for quite some time",pl:"end",cls:"timePoint"},{w:"non-stop",pl:"end",cls:"timePoint"},
-    {w:"all month long",pl:"end",cls:"allFam"},{w:"all winter long",pl:"end",cls:"allFam"}
+    {w:"all month long",pl:"end",cls:"allFam"},{w:"all winter long",pl:"end",cls:"allFam"},
+    {w:"under pressure",pl:"end",cls:"underFam"},{w:"through it all",pl:"end",cls:"throughFam"}
   ]
 };
 
@@ -1964,7 +2097,7 @@ function buildVerbBank(){
     ()=>{ bankOpen = !bankOpen; buildVerbBank(); }, 'expressões de');
 }
 function buildColocacao(){
-  const el = document.getElementById('colRow'); el.innerHTML="";
+  const el = document.getElementById('colRow'); el.className='signal-row-inner wrap-row'; el.innerHTML="";
   const verb = verbById(state.verbo);
   const none = document.createElement('div'); none.className='signal-chip';
   none.dataset.active = (state.colocacao===null); none.textContent = "sem complemento";
@@ -2027,7 +2160,7 @@ function signalFamilyLabel(cls){
   /* rótulo curto para a fileira de famílias (o texto completo fica no cabeçalho do grupo) */
   const short = { freqIndef:"frequência", freqDef:"nº de vezes", perfectAdv:"perfect", timeMid:"tempo (meio)",
     timePoint:"tempo", allFam:"all", timeFam:"time", wholeFam:"whole", everFam:"ever", everyFam:"every",
-    againFam:"again", asFam:"as", atFam:"at", fromFam:"from", onFam:"on", overFam:"over", withFam:"with/without", aroundFam:"around", backFam:"back", onceFam:"once", aboutFam:"about", npiFam:"só em neg./perg.", rightFam:"right", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
+    againFam:"again", asFam:"as", atFam:"at", fromFam:"from", onFam:"on", overFam:"over", withFam:"with/without", aroundFam:"around", backFam:"back", onceFam:"once", aboutFam:"about", npiFam:"só em neg./perg.", rightFam:"right", underFam:"under", throughFam:"through", withinFam:"within", againstFam:"against", aheadFam:"ahead/behind", updownFam:"up/down", toFam:"to", ofFam:"of", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
     splitFam:"partidos", outrosFam:"diversos" };
   return short[cls] || cls;
 }
@@ -2087,7 +2220,7 @@ function buildSignal(){
   const cls = state.signalFam;
   const label = document.createElement('div'); label.className='signal-group-label'; label.textContent = CLASS_INFO[cls].label;
   el.appendChild(label);
-  const wrap = document.createElement('div'); wrap.className='signal-row-inner';
+  const wrap = document.createElement('div'); wrap.className='signal-row-inner wrap-row';
   groups[cls].forEach(sw=>{
     const chip = document.createElement('div'); chip.className='signal-chip';
     const slot = sw.pl==='split' ? 'signalSplit' : (sw.pl==='mid' ? 'signalMid' : 'signalEnd');
@@ -2222,7 +2355,7 @@ function render(){
   if(note){ noteBox.innerHTML = "💡 " + note; noteBox.classList.add('show'); } else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
   renderModal(); // mantém o motor de modais em sincronia com o verbo escolhido no dial ③
   if(matrixFollow){ buildMatrix(); buildMatrixSource(); }
-  applyA11y();
+  applyA11y(); updateScrollShadows();
   saveState();
 }
 
@@ -2251,7 +2384,9 @@ const CONJ_BY_TEMPO = {
 function buildAdverbsList(){
   const wrap = document.getElementById('adverbsListWrap');
   const aspectOrder = ["simples","continuo","perfeito","perfeito_continuo"];
-  const tenseOrder = ["present","past","future"];
+  /* Ordem cronológica em toda a referência: o eixo do app é passado → presente →
+     futuro, igual ao dial ⑤. Manter "presente" primeiro aqui contradizia a linha do tempo. */
+  const tenseOrder = ["past","present","future"];
   let html = "";
   tenseOrder.forEach(t=>{
     html += `<div class="ref-tense-block"><div class="ref-tense-title">${TENSE_ICON[t]} ${TENSE_LABEL[t]}</div>`;
@@ -2309,10 +2444,10 @@ function buildMatrix(){
   const wrap = document.getElementById('matrixWrap'); let html = "";
   Object.keys(CATEGORIES).forEach(catKey=>{
     const cat = CATEGORIES[catKey];
-    html += `<table class="matrix"><caption>${cat.icon} ${cat.label}</caption><thead><tr><th>Aspecto \\ Tempo</th><th>Presente</th><th>Passado</th><th>Futuro</th></tr></thead><tbody>`;
+    html += `<table class="matrix"><caption>${cat.icon} ${cat.label}</caption><thead><tr><th>Aspecto \\ Tempo</th><th>Passado</th><th>Presente</th><th>Futuro</th></tr></thead><tbody>`;
     cat.aspects.forEach(asp=>{
       html += `<tr><td class="cat">${ASPECT_LABEL[asp]}</td>`;
-      ["present","past","future"].forEach(t=>{
+      ["past","present","future"].forEach(t=>{
         const v = matrixVerb(), pr = matrixPronoun();
         const affHTML = markedToHTML(generate(catKey,t,asp,'afirmativa',pr,v).text + ".", markColorVar('afirmativa'));
         const negHTML = markedToHTML(generate(catKey,t,asp,'negativa',pr,v).text + ".", markColorVar('negativa'));
@@ -2513,7 +2648,7 @@ const MODAL_WH = WH_ADJUNCT.concat(WH_SUBJECT);
    classe dela; senão, é inferida pela palavra-âncora. O que não se encaixa cai em
    "diversos" — honesto, e evita forçar uma família que não descreve o item. */
 const MODAL_FAM_CACHE = {};
-const ANCORA_FAM = { about:'aboutFam', all:'allFam', at:'atFam', by:'byFam', for:'forFam', from:'fromFam', in:'inFam',
+const ANCORA_FAM = { under:'underFam', through:'throughFam', across:'throughFam', along:'throughFam', within:'withinFam', against:'againstFam', ahead:'aheadFam', behind:'aheadFam', up:'updownFam', down:'updownFam', to:'toFam', of:'ofFam', about:'aboutFam', all:'allFam', at:'atFam', by:'byFam', for:'forFam', from:'fromFam', in:'inFam',
   on:'onFam', over:'overFam', with:'withFam', without:'withFam', around:'aroundFam', back:'backFam',
   once:'onceFam', as:'asFam', every:'everyFam', time:'timeFam', out:'outFam', off:'outFam', whole:'wholeFam' };
 function modalSignalFam(w){
@@ -2629,7 +2764,10 @@ function buildModalDials(){
     sr.appendChild(lbl);
   }
 
-  const linha = document.createElement('div'); linha.className='signal-row-inner';
+  /* As palavras quebram em linhas em vez de rolar: numa lista de 13 itens, a faixa
+     horizontal escondia a maioria (o "by law" ficava fora da tela). A fileira de
+     FAMÍLIAS continua rolando, porque lá cada aba é um destino, não conteúdo. */
+  const linha = document.createElement('div'); linha.className='signal-row-inner wrap-row';
   (grupos[modalState.signalFam] || []).forEach(w=>{
     const chip = document.createElement('div'); chip.className='signal-chip';
     chip.dataset.active = (modalState.signal===w); chip.textContent = w;
@@ -2689,7 +2827,7 @@ function renderModal(){
   if(noteBits.length){ noteBox.innerHTML = "💡 " + noteBits.join('<br>💡 '); noteBox.classList.add('show'); }
   else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
 
-  applyA11y();
+  applyA11y(); updateScrollShadows();
   const d = MODAL_ENGINE[modalState.funcao];
   document.getElementById('modalAlerta').innerHTML = d.alerta ? `<div class="modal-alerta">⚠️ ${d.alerta}</div>` : "";
 }
@@ -2717,7 +2855,7 @@ function buildMatrixExportData(){
     const cat = CATEGORIES[catKey];
     const rows = cat.aspects.map(asp=>{
       const v = matrixVerb(), pr = matrixPronoun();
-      const cells = ["present","past","future"].map(t=>({
+      const cells = ["past","present","future"].map(t=>({
         aff: generate(catKey,t,asp,'afirmativa',pr,v).text + ".",
         neg: generate(catKey,t,asp,'negativa',pr,v).text + ".",
         per: generate(catKey,t,asp,'pergunta',pr,v).text + M("?"),
@@ -2763,7 +2901,7 @@ function downloadMatrixPNG(){
   const RED = cssVar('--red', isLight ? '#a83527' : '#c1483d');
   const BURNT = cssVar('--burnt-yellow', isLight ? '#96650f' : '#c9972c');
   const ROSE = cssVar('--rose', isLight ? '#a03a6e' : '#c76d9e');
-  const headers = ["Presente","Passado","Futuro"];
+  const headers = ["Passado","Presente","Futuro"];
   const pad=26, colGap=14, rowPad=10, lineH=17, headH=30, capH=30, tableGap=26, titleH=50, colLabelMin=110;
   const mono = size => `${size}px 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', monospace`;
   const head = size => `700 ${size}px 'Space Grotesk', 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif`;
@@ -3286,7 +3424,7 @@ function renderDb(){
   if(sec) sec.style.display = '';
   if(pill) pill.style.display = '';
   buildDbTypes(); buildDbFamilies(); buildDbHead(); buildDbGroups();
-  saveState(); applyA11y();
+  saveState(); applyA11y(); updateScrollShadows();
   const res = dbResults();
   const list = document.getElementById('dbList');
   const total = Object.values(EXPR_DB).reduce((a,v)=>a+v.items.length,0);
@@ -3368,6 +3506,8 @@ nextChallenge();
 renderDb();
 loadExprDb();
 setupNavSpy();
+updateNavHeight();
+updateScrollShadows();
 setTimeout(()=>{
   document.querySelectorAll('.block[data-open="true"] .block-body').forEach(b=>{ b.style.maxHeight='none'; });
 },50);
