@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Console de gramática inglesa: motor de tempos verbais, modais, 494 palavras-sinal em 41 famílias, banco de 1.668 expressões e modo prática — com tradução PT e áudio.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#10151c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -91,7 +92,6 @@
   .dial-group{margin-bottom:16px;}
   .dial-group-title{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:8px; font-weight:600;}
   .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
-  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
   .opt-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:12px; padding:10px 8px; color:var(--paper-dim); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size:12px; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; transition: all .18s ease; text-align:center;}
   .opt-btn .ic{font-size:18px; filter:grayscale(1); opacity:.6; transition:all .18s ease;}
   .opt-btn[data-active="true"]{color:var(--paper); border-color: var(--accent, var(--brass)); background: linear-gradient(180deg, color-mix(in srgb, var(--accent,var(--brass)) 16%, transparent), transparent); box-shadow: 0 0 0 1px var(--accent, var(--brass)) inset, 0 0 18px -4px var(--accent, var(--brass));}
@@ -166,7 +166,6 @@
   .signal-chip[data-rival="true"]{border-style:dashed; opacity:.75;}
   .signal-active .tagx[data-cat]{color:var(--cat); border-color:color-mix(in srgb, var(--cat) 45%, var(--line));}
   .signal-hint{font-size:11px; color:var(--paper-dim); margin-top:6px; line-height:1.4;}
-  .signal-rule{font-size:10.5px; color:var(--paper-dim); margin:2px 0 4px; line-height:1.4;}
 
   .wh-group-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin:8px 0 4px;}
   .wh-group-label:first-child{margin-top:0;}
@@ -190,18 +189,9 @@
   .note-box b{color:var(--violet);}
 
   .modal-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
-  .modal-result{margin-top:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 14px 8px;}
   .modal-readout{margin-bottom:16px; background:var(--panel-deep); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; position:sticky; top:calc(var(--nav-h, 56px) + env(safe-area-inset-top, 0px)); z-index:5; box-shadow:0 14px 30px -12px rgba(0,0,0,0.55);}
   .modal-readout::before{content:""; position:absolute; inset:0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px); pointer-events:none; border-radius:12px;}
-  .modal-result-label{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10px; letter-spacing:0.14em; color:var(--brass-dim); text-transform:uppercase; margin-bottom:10px;}
-  .modal-row{padding:9px 0; border-top:1px solid var(--line);}
   .modal-row:first-of-type{border-top:none;}
-  .modal-row .tempo-tag{font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--violet); font-weight:700; margin-bottom:3px;}
-  .modal-row .forma{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:14px; color:var(--paper); margin-bottom:3px;}
-  .modal-row .ex-row{display:flex; align-items:center; gap:8px; margin-bottom:3px;}
-  .modal-row .ex{font-size:12px; color:var(--teal);}
-  .modal-row .pt{font-size:11.5px; color:var(--paper-dim); font-style:italic; margin-bottom:3px;}
-  .modal-row .nuance{font-size:11.5px; color:var(--paper-dim); line-height:1.5;}
   .modal-alerta{margin-top:8px; padding:10px 12px; background:rgba(193,72,61,0.1); border:1px solid rgba(193,72,61,0.35); border-radius:10px; font-size:11.5px; color:var(--paper); line-height:1.5;}
   .modal-alerta b{color:var(--red);}
 
@@ -223,6 +213,10 @@
   table.matrix td{padding:7px 5px; border-bottom:1px solid var(--line); vertical-align:top; font-size:11.5px;}
   table.matrix td.cat{font-weight:600; color:var(--paper); white-space:nowrap;}
   table.matrix .cell-lines div{margin-bottom:3px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:10.8px; line-height:1.45; color:var(--paper);}
+  .cross-ref{font-size:11px; color:var(--paper-dim); line-height:1.5; margin:0 0 12px;
+    border-left:2px solid var(--line); padding-left:10px;}
+  .cross-link{background:none; border:0; color:var(--brass); font-size:11px; font-family:inherit;
+    cursor:pointer; padding:2px 0; text-decoration:underline; min-height:30px;}
   .matrix-note{font-size:11px; color:var(--paper-dim); display:block; margin:-4px 0 8px;}
   .matrix-source{margin-bottom:14px;}
   .color-legend{display:flex; flex-wrap:wrap; gap:6px 14px; margin:0 0 12px; font-size:10.5px; color:var(--paper-dim);}
@@ -242,6 +236,10 @@
   /* legenda no topo da referência, para a cor ser legível sem consultar a tabela */
   /* ---- Montador de encaixes: tabela viva ---- */
   .cor-resumo{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0;}
+  /* abaixo de 380px, três colunas deixam cada cartão com ~80px e a lista de encaixes
+     quebra letra a letra — vira coluna única */
+  @media (max-width: 379px){ .cor-resumo{grid-template-columns:1fr;} .cor-card{display:flex; align-items:center; gap:10px; text-align:left;}
+    .cor-card .bolha{margin:0;} .cor-card .n{font-size:18px;} .cor-card .quais{margin-top:0; flex:1;} }
   .cor-card{border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center; background:var(--panel-raised);}
   .cor-card .bolha{width:14px; height:14px; border-radius:50%; margin:0 auto 6px;}
   .cor-card .n{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:22px; font-weight:600; line-height:1;}
@@ -255,6 +253,30 @@
     color:var(--paper-dim); background:transparent; font-family:inherit; transition:all .16s ease; text-align:left; min-height:38px;}
   .socket b{display:block; font-size:9px; text-transform:uppercase; letter-spacing:0.05em; opacity:.75;}
   .socket span{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11px;}
+  .socket b{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  /* alvo de toque generoso sem engordar o visual: o ✕ é pequeno, a área clicável não */
+  .socket-x{background:none; border:0; color:inherit; font-size:12px; line-height:1;
+    cursor:pointer; opacity:.8; font-family:inherit; min-width:30px; min-height:30px;
+    margin:-8px -6px -8px 0; padding:0; display:inline-flex; align-items:center; justify-content:center;}
+  .socket-x:hover{opacity:1;}
+  .socket-peca{background:transparent; border:0; color:var(--cat); font-family:'JetBrains Mono', ui-monospace, monospace;
+    font-size:11px; padding:2px 0 0; cursor:pointer; display:flex; align-items:center; gap:5px; text-align:left;}
+  .socket-peca i{font-style:normal; font-size:9px; opacity:.8;}
+  .mont-picker{margin-top:10px; border:1px solid var(--cat); border-radius:12px; overflow:hidden;
+    background:var(--panel-deep);}
+  .mont-picker-head{background:color-mix(in srgb, var(--cat) 16%, transparent); color:var(--cat);
+    padding:8px 12px; font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em;
+    display:flex; justify-content:space-between; align-items:center;}
+  .mont-picker-head span{opacity:.75; text-transform:none; letter-spacing:0;}
+  .mont-picker-list{max-height:min(230px, 42vh); overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .mont-op{display:flex; justify-content:space-between; gap:12px; width:100%; text-align:left;
+    background:transparent; border:0; border-bottom:1px solid var(--line); padding:9px 12px;
+    cursor:pointer; font-family:inherit; min-height:38px; align-items:center;}
+  .mont-op:last-child{border-bottom:0;}
+  .mont-op .op-en{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11.5px; color:var(--cat);}
+  .mont-op .op-pt{font-size:10.5px; color:var(--paper-dim); text-align:right;}
+  .mont-op[data-sel="true"]{background:color-mix(in srgb, var(--cat) 14%, transparent);}
+  .mont-op[data-sel="true"] .op-en::after{content:" ✓"; opacity:.8;}
   .socket[data-on="true"]{border-style:solid; border-color:var(--cat); color:var(--cat); background:color-mix(in srgb, var(--cat) 12%, transparent);}
   .mont-acoes{display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap;}
   .mont-btn{background:var(--panel-raised); border:1px solid var(--line); border-radius:9px; padding:7px 11px;
@@ -283,6 +305,11 @@
   .anat-frase{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13.5px; line-height:1.55; margin:2px 0 3px;}
   .anat-pt{font-size:11.5px; color:var(--paper-dim); margin-bottom:12px; font-style:italic;}
   .anat-card{border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:10px 0; background:var(--panel-raised);}
+  .anat-card[data-ex]{cursor:pointer;}
+  .anat-card[data-ex]:active{transform:scale(.995);}
+  .anat-usar{float:right; font-size:10px; color:var(--paper-dim); font-weight:400; letter-spacing:0.03em;}
+  @keyframes flashReadout{0%{box-shadow:0 0 0 0 var(--brass);}100%{box-shadow:0 0 0 6px transparent;}}
+  .readout.flash, .montador.flash{animation:flashReadout .7s ease-out;}
   .anat-card h4{margin:0 0 4px; font-size:12px; color:var(--brass); letter-spacing:0.03em;}
   .anat-card .why{font-size:11px; color:var(--paper-dim); line-height:1.45;}
   .anat-atalho{border-left:3px solid var(--brass); padding:8px 0 8px 12px; margin:14px 0; font-size:12.5px; line-height:1.55;}
@@ -395,6 +422,11 @@
      compactas para caber muita opção na tela; aqui elas ganham altura mínima confortável
      sem mudar a tipografia, valendo só onde o ponteiro é impreciso. */
   @media (pointer: coarse){
+    /* o montador tem alvos próprios: a peça (que abre a lista), o ✕ e os botões de ação */
+    .socket-peca{min-height:34px; padding:7px 0 5px;}
+    .socket-x{min-width:34px; min-height:34px;}
+    .mont-btn{min-height:38px;}
+    .mont-op{min-height:44px;}
     .pronome-pill, .letter-pill{min-height:38px; display:inline-flex; align-items:center; justify-content:center;}
     .signal-chip{min-height:36px; display:inline-flex; align-items:center;}
     .nav-pill{min-height:38px;}
@@ -757,6 +789,9 @@
       <span class="chev">▾</span>
     </div>
     <div class="block-body"><div class="block-body-inner">
+      <div class="cross-ref">Este guia trata da <b>posição no meio</b> da frase e das interrogativas.
+        Para o que vem <b>depois do verbo</b> — a ordem dos adjuntos de fim — veja
+        <button class="cross-link" data-goto="block-anatomia">🧩 Anatomia da frase</button>.</div>
       <div class="conj-card">
         <h3>Frequência indefinida — sempre no meio</h3>
         <p><b style="color:var(--paper)">always, usually, often, sometimes, rarely, never, ever</b> entram entre o sujeito/auxiliar e o verbo principal — nunca no fim da frase.</p>
@@ -795,6 +830,9 @@
     </div>
     <div class="block-body"><div class="block-body-inner">
       <div class="matrix-note">Quantas peças cabem numa frase, em que ordem elas entram e quais combinações valem a pena. Todos os exemplos são gerados pelo motor — nada aqui é texto fixo.</div>
+      <div class="cross-ref">Aqui o foco é o <b>fim da frase</b>. As regras de posição no meio (frequência,
+        already/yet/still) e as interrogativas estão em
+        <button class="cross-link" data-goto="block-posicao">🎯 Guia de posição</button>.</div>
       <div id="anatomiaWrap"></div>
     </div></div>
   </section>
@@ -806,6 +844,9 @@
     </div>
     <div class="block-body"><div class="block-body-inner">
       <div class="matrix-note">Lista completa, organizada por tempo → aspecto → classe. Gerada a partir do mesmo banco usado no console interativo.</div>
+      <div class="cross-ref">Precisa do caminho inverso — saber quais expressões preenchem um
+        <b>encaixe</b> específico? Use o glossário em
+        <button class="cross-link" data-goto="block-anatomia">🧩 Anatomia da frase</button>.</div>
       <div id="adverbsListWrap"></div>
     </div></div>
   </section>
@@ -873,7 +914,7 @@
   <footer>
     <div class="tagline">Não decore frases. Entenda o sistema.</div>
     <div class="formula">SUJEITO × CATEGORIA × VERBO × TEMPO × ASPECTO × SINAL × FORMATO × WH = FRASE</div>
-    <div class="version">Painel Mestre do Inglês · v1.0</div>
+    <div class="version" id="appVersion">Painel Mestre do Inglês</div>
   </footer>
 
 </div>
@@ -898,6 +939,7 @@ document.addEventListener('click', function(e){
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
+const APP_VERSION = '2.0';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -922,10 +964,6 @@ function saveState(){
 function loadState(){
   if(!CAN_STORE) return null;
   try{ return JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); }catch(e){ return null; }
-}
-function clearState(){
-  if(!CAN_STORE) return;
-  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
 }
 /* ---- Acessibilidade por teclado ----
    As pastilhas e chips são <div> com clique (escolha de estilo, feita lá no início).
@@ -969,6 +1007,15 @@ function applyA11y(){
       el.setAttribute('tabindex','0');
     });
 }
+/* atalhos entre blocos que se complementam: abre o destino e leva até ele */
+document.addEventListener('click', e=>{
+  const b = e.target.closest('.cross-link');
+  if(!b) return;
+  const alvo = document.getElementById(b.dataset.goto);
+  if(!alvo) return;
+  if(alvo.dataset.open !== 'true') toggleBlock(b.dataset.goto);
+  if(alvo.scrollIntoView) alvo.scrollIntoView({behavior:'smooth', block:'start'});
+});
 document.addEventListener('keydown', e=>{
   const el = e.target;
   if(!el || !el.getAttribute || el.getAttribute('role') !== 'button') return;
@@ -1111,7 +1158,6 @@ function escapeHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
    nas etiquetas de ativos e no canvas do PNG. Mudar aqui muda tudo.
    O verde saiu: era próximo demais do teal das terminações verbais (-ed, -ing). */
 const ADJ_COLOR = { quando:'var(--violet)', como:'var(--orange)', onde:'var(--lime)', regencia:'var(--blue)' };
-const ADJ_NOME  = { quando:'quando', como:'como / quanto', onde:'onde', regencia:'regência' };
 function markedToHTML(s, formatoColorVar){
   return markedToSegments(s).map(seg => {
     if(seg.kind==='neutral') return escapeHTML(seg.t);
@@ -1137,7 +1183,12 @@ function markColorVar(formato){
    o primeiro caractere alfabético de verdade. */
 function lowerFirstMarked(s){
   const i = s.search(/[A-Za-z]/);
-  return i < 0 ? s : s.slice(0,i) + s[i].toLowerCase() + s.slice(i+1);
+  if(i < 0) return s;
+  /* "I" é sempre maiúsculo em inglês, mesmo no meio da frase — rebaixá-lo depois de um
+     marcador de sequência ("First, I worked") produziria erro clássico de iniciante. */
+  const resto = s.slice(i);
+  if(/^I\b/.test(resto) || /^I['’]/.test(resto)) return s;
+  return s.slice(0,i) + s[i].toLowerCase() + s.slice(i+1);
 }
 function markedForm(base, inflected){
   let i=0;
@@ -1888,11 +1939,16 @@ function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit)
     else { body = `${midPT} ${body}`; pre = neg ? ' não' : ''; }
   } else { pre = neg ? ' não' : ''; }
   if(col) body = `${body} ${col.pt}`;
+  let cabeca = '';
   if(!signalSplit){
     const ends = Array.isArray(signalEnd) ? signalEnd : (signalEnd ? [signalEnd] : []);
-    sortEnds(ends).forEach(s=>{ body = `${body} ${SIGNAL_PT[s.w] || s.w}`; });
+    /* o português também abre a frase com o marcador de sequência: "Primeiro, eu..." */
+    const seq = sortEnds(ends).filter(s=>s.cls === 'seqFam');
+    sortEnds(ends).filter(s=>s.cls !== 'seqFam').forEach(s=>{ body = `${body} ${SIGNAL_PT[s.w] || s.w}`; });
+    if(seq.length) cabeca = seq.map(s=>cap(SIGNAL_PT[s.w] || s.w)).join(', ') + ', ';
   }
-  const frase = `${cap(parts.pron)}${pre} ${body}` + (isQ ? "?" : ".");
+  let frase = `${cap(parts.pron)}${pre} ${body}` + (isQ ? "?" : ".");
+  if(cabeca) frase = cabeca + lowerFirst(frase);
   return prefixo ? prefixo + lowerFirst(frase) : frase;
 }
 /* "Just" com aspecto perfeito é idiomático em português: vira "acabar de + infinitivo"
@@ -2556,7 +2612,7 @@ function buildWh(){
    competem ("everywhere there" — dois lugares); de encaixes diferentes, somam
    ("a bit quickly", "twice yesterday"), ainda que sejam da mesma cor. Por isso o limite
    é por encaixe, e não um teto global: 9 encaixes = até 9 adjuntos que se complementam. */
-const END_SLOT_NOME = { 1:'grau', 2:'modo', 3:'comparação', 4:'lugar', 5:'frequência',
+const END_SLOT_NOME = { 0:'meio', 1:'grau', 2:'modo', 3:'comparação', 4:'lugar', 5:'frequência',
                         6:'duração', 7:'aproximação', 8:'tempo', 9:'sequência', 10:'polaridade' };
 const END_RANK = {
   bitFam:1, mannerFam:2, compareFam:3, placeFam:4,
@@ -2606,7 +2662,14 @@ function applySignal(text, signalMid, signalEnd, col, signalSplit, formato){
   if(signalSplit) t += ' ' + C(signalSplit.end, signalSplit.cls);
   else {
     const ends = Array.isArray(signalEnd) ? signalEnd : (signalEnd ? [signalEnd] : []);
-    sortEnds(ends).forEach(s=>{ t += ' ' + C(s.w, s.cls); });
+    /* Sequência é o único adjunto que o inglês prefere no INÍCIO: "First, I worked...".
+       No fim ele soa deslocado, então sai da fila dos encaixes finais e vira prefixo. */
+    const seq = sortEnds(ends).filter(s=>s.cls === 'seqFam');
+    sortEnds(ends).filter(s=>s.cls !== 'seqFam').forEach(s=>{ t += ' ' + C(s.w, s.cls); });
+    if(seq.length){
+      const cab = seq.map(s=>C(cap(s.w), s.cls)).join(', ');
+      t = cab + ', ' + lowerFirstMarked(t);
+    }
   }
   return t;
 }
@@ -2654,10 +2717,6 @@ function render(){
   saveState();
 }
 
-const END_RANK_NOME = { bitFam:'grau', mannerFam:'modo', compareFam:'comparação', placeFam:'lugar',
-  freqDef:'frequência', everyFam:'frequência', freqIndef:'frequência', allFam:'duração', wholeFam:'duração',
-  aboutFam:'aproximação', timePoint:'tempo', timeFam:'tempo', withinFam:'prazo', onceFam:'tempo',
-  againFam:'repetição', everFam:'tempo', seqFam:'sequência', npiFam:'polaridade' };
 function getNote(s){
   const ends = Array.isArray(s.signalEnds) ? s.signalEnds : [];
   if(ends.length > 1){
@@ -3805,6 +3864,9 @@ if(dbSearchEl) dbSearchEl.addEventListener('input', e=>{
 });
 
 
+/* selo do rodapé a partir da constante única, para não haver versão escrita à mão */
+(function selo(){ const el = document.getElementById('appVersion');
+  if(el) el.textContent = 'Painel Mestre do Inglês · v' + APP_VERSION; })();
 buildMatrixSource();
 
 /* ---- Anatomia da frase: guia dos encaixes ----
@@ -3866,6 +3928,34 @@ const ANAT_EXEMPLOS = [
   { titulo:"Modo + duração no perfect contínuo",
     t:"present", a:"perfeito_continuo", f:"afirmativa", v:"work", ends:["hard","for two hours"],
     why:"O aspecto perfeito contínuo já carrega duração; o adjunto a torna exata." },
+
+  { titulo:"Sequência abre a frase",
+    t:"past", a:"simples", f:"afirmativa", v:"eat", ends:["first","at home"],
+    why:"Sequência é o único adjunto que o inglês prefere no INÍCIO, com vírgula. Os outros continuam no fim." },
+  { titulo:"Sequência + modo + tempo — narrando",
+    t:"past", a:"simples", f:"afirmativa", v:"leave", ends:["afterwards","quickly","last night"],
+    why:"A estrutura de quem conta uma história: marca a ordem, descreve como, situa no tempo." },
+  { titulo:"Grau + modo + lugar",
+    t:"present", a:"continuo", f:"afirmativa", v:"speak", ends:["a bit","in silence","at home"],
+    why:"Dois laranjas seguidos do verde: a frase diz quanto, como e onde sem soar carregada." },
+  { titulo:"Frequência + duração",
+    t:"present", a:"simples", f:"afirmativa", v:"run", ends:["every day","all morning long"],
+    why:"Quantas vezes e por quanto tempo — dupla essencial para descrever treinos e rotinas." },
+  { titulo:"Lugar + tempo (sem modo)",
+    t:"future", a:"simples", f:"afirmativa", v:"meet", ends:["here","tomorrow"],
+    why:"Combinar onde e quando basta para marcar um compromisso. É a frase mais prática do idioma." },
+  { titulo:"Modo + comparação",
+    t:"present", a:"simples", f:"afirmativa", v:"drive", ends:["carefully","more than usual"],
+    why:"Como e em que medida, comparado ao habitual. Dois encaixes laranja distintos." },
+  { titulo:"Duração + polaridade (negativa)",
+    t:"present", a:"perfeito", f:"negativa", v:"sleep", ends:["well","in ages"],
+    why:"\"In ages\" só existe em negativa e ancora há quanto tempo algo não acontece." },
+  { titulo:"Aproximação + frequência",
+    t:"present", a:"simples", f:"afirmativa", v:"call", ends:["about twice a week"],
+    why:"Uma peça só, mas que resolve duas perguntas: com que frequência, aproximadamente." },
+  { titulo:"Modo + lugar + frequência + tempo",
+    t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","twice","last month"],
+    why:"Quatro encaixes ainda soam naturais. Daqui para cima, a frase começa a pesar." },
 ];
 
 function anatFrase(cfg){
@@ -3894,15 +3984,31 @@ function anatFrase(cfg){
    Cada encaixe é um soquete clicável. Encaixar e desencaixar mostra na prática o que a
    tabela afirma: 3 laranjas, 1 verde e 6 violetas cabem juntos, sem um tomar o lugar do
    outro. As peças saem do banco real, então o exemplo é sempre uma frase válida. */
-const MONT_COMBO = { t:'past', a:'simples', v:'work' };
+const MONT_COMBO = { t:'past', a:'simples', v:'work', f:'afirmativa' };
 let montOn = new Set([2, 4, 8]);   /* começa no trio clássico: modo + lugar + tempo */
+let montEscolha = {};              /* encaixe → expressão escolhida pelo usuário */
+let montAberto = null;             /* encaixe com o seletor aberto */
 
-function montPecas(){
+/* Opções por encaixe. O encaixe 0 é o do MEIO da frase (frequência, certeza, perfect),
+   que não disputa lugar com os de fim — por isso tem soquete próprio. */
+function montOpcoes(){
   const key = `${MONT_COMBO.t}_${MONT_COMBO.a}`;
-  const escolhidos = {};
+  const por = {};
   (SIGNAL_WORDS[key] || []).forEach(s=>{
-    const r = endRank(s);
-    if(!escolhidos[r]) escolhidos[r] = s;   /* um representante por encaixe */
+    const r = s.pl === 'mid' ? 0 : (s.pl === 'end' ? endRank(s) : null);
+    if(r === null) return;                         /* partidos ficam fora do montador */
+    (por[r] = por[r] || []).push(s);
+  });
+  Object.keys(por).forEach(r=> por[r].sort((a,b)=>a.w.localeCompare(b.w)));
+  return por;
+}
+function montPecas(){
+  const opts = montOpcoes();
+  const escolhidos = {};
+  Object.keys(opts).forEach(r=>{
+    const lista = opts[r];
+    const escolhida = montEscolha[r] && lista.find(s=>s.w === montEscolha[r]);
+    escolhidos[r] = escolhida || lista[0];
   });
   return escolhidos;
 }
@@ -3912,22 +4018,39 @@ function buildMontador(){
   const pecas = montPecas();
   const usados = [...montOn].filter(r=>pecas[r]).sort((a,b)=>a-b);
   /* polaridade só existe em frase negada: encaixá-la troca o formato — e isso é a lição */
-  const formato = usados.includes(10) ? 'negativa' : 'afirmativa';
-  const ends = usados.map(r=>pecas[r]).filter(s=>signalAllowed(s, formato));
+  const formato = usados.includes(10) ? 'negativa' : (MONT_COMBO.f || 'afirmativa');
+  const mid = usados.includes(0) ? pecas[0] : null;
+  const ends = usados.filter(r=>r !== 0).map(r=>pecas[r]).filter(s=>signalAllowed(s, formato));
   const verb = verbById(MONT_COMBO.v);
   const g = generate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', verb);
-  const raw = applySignal(g.text, null, ends, null, null, formato) + (g.isQuestion ? M('?') : '.');
-  const pt = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', null, ends, MONT_COMBO.v, null, null);
+  const raw = applySignal(g.text, mid, ends, null, null, formato) + (g.isQuestion ? M('?') : '.');
+  const pt = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', mid, ends, MONT_COMBO.v, null, null);
 
   const porCor = {como:0, onde:0, quando:0};
-  ends.forEach(s=> porCor[adjKind(s.cls, s.w)]++);
+  ends.concat(mid ? [mid] : []).forEach(s=> porCor[adjKind(s.cls, s.w)]++);
 
+  const opts = montOpcoes();
   let sockets = '';
   Object.keys(END_SLOT_NOME).map(Number).sort((a,b)=>a-b).forEach(r=>{
     const s = pecas[r]; if(!s) return;
     const k = adjKind(s.cls, s.w);
-    sockets += `<button class="socket" data-slot="${r}" data-on="${montOn.has(r)}" style="--cat:${ADJ_COLOR[k]}">
-      <b>${r}. ${END_SLOT_NOME[r]}</b><span>${escapeHTML(s.w)}</span></button>`;
+    const on = montOn.has(r);
+    /* ligado, o soquete vira um seletor: dá para trocar a peça daquele encaixe e ver o
+       efeito na frase, que é onde a brincadeira de combinar fica interessante */
+    /* Seletor próprio em vez de <select>: o menu nativo é desenhado pelo sistema e
+       ignora o tema do app (fundo branco, texto preto no Android). Aqui a lista herda
+       a cor do encaixe e respeita claro/escuro. */
+    const escolha = on
+      ? `<button class="socket-peca" data-pick="${r}" aria-expanded="${montAberto===r}">
+           ${escapeHTML(s.w)}<i>${montAberto===r ? '▴' : '▾'}</i></button>`
+      : `<span>${escapeHTML(s.w)}</span>`;
+    /* Com o seletor ocupando o corpo do soquete, desencaixar precisa de alvo próprio:
+       o ✕ remove num toque, e o rótulo continua servindo para ligar/desligar. */
+    const cabecalho = on
+      ? `<b data-toggle="${r}">${r}. ${END_SLOT_NOME[r]}<button class="socket-x" data-off="${r}" title="Desencaixar">✕</button></b>`
+      : `<b data-toggle="${r}">${r}. ${END_SLOT_NOME[r]}${opts[r].length > 1 ? ` · ${opts[r].length}` : ''}</b>`;
+    sockets += `<div class="socket" data-slot="${r}" data-on="${on}" style="--cat:${ADJ_COLOR[k]}">
+      ${cabecalho}${escolha}</div>`;
   });
 
   box.innerHTML = `<div class="montador">
@@ -3937,19 +4060,50 @@ function buildMontador(){
     </div>
     <div class="mont-pt">${escapeHTML(pt)}</div>
     <div class="mont-slots">${sockets}</div>
+    ${montAberto !== null && pecas[montAberto] ? (()=>{
+      const s0 = pecas[montAberto], kk = adjKind(s0.cls, s0.w);
+      return `<div class="mont-picker" style="--cat:${ADJ_COLOR[kk]}">
+        <div class="mont-picker-head">${montAberto}. ${END_SLOT_NOME[montAberto]}
+          <span>${opts[montAberto].length} opções</span></div>
+        <div class="mont-picker-list">
+          ${opts[montAberto].map(o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sel="${o.w===s0.w}">
+            <span class="op-en">${escapeHTML(o.w)}</span>
+            <span class="op-pt">${escapeHTML(SIGNAL_PT[o.w] || '—')}</span></button>`).join('')}
+        </div></div>`;
+    })() : ''}
     <div class="mont-acoes">
       <button class="mont-btn" data-act="todos">encaixar todos</button>
       <button class="mont-btn" data-act="limpar">desmontar</button>
       <button class="mont-btn" data-act="trio">só o trio clássico</button>
-      <span class="mont-conta">${ends.length} encaixe(s) ·
+      <span class="mont-conta">${TENSE_LABEL[MONT_COMBO.t]} · ${ASPECT_LABEL[MONT_COMBO.a]} · ${verb.base} ·
+        ${ends.length + (mid?1:0)} encaixe(s) ·
         <span style="color:${ADJ_COLOR.como}">${porCor.como} como</span> ·
         <span style="color:${ADJ_COLOR.onde}">${porCor.onde} onde</span> ·
         <span style="color:${ADJ_COLOR.quando}">${porCor.quando} quando</span></span>
     </div>
   </div>`;
 
-  box.querySelectorAll('.socket').forEach(b=>{
-    b.onclick = ()=>{ const r = +b.dataset.slot; montOn.has(r) ? montOn.delete(r) : montOn.add(r); buildMontador(); };
+  box.querySelectorAll('.socket').forEach(el=>{
+    el.onclick = (e)=>{
+      if(e.target.tagName === 'SELECT') return;      /* trocar a peça não desencaixa */
+      const r = +el.dataset.slot;
+      montOn.has(r) ? montOn.delete(r) : montOn.add(r);
+      buildMontador();
+    };
+  });
+  box.querySelectorAll('.socket-x').forEach(b=>{
+    b.onclick = (e)=>{ e.stopPropagation(); const r=+b.dataset.off; montOn.delete(r); if(montAberto===r) montAberto=null; buildMontador(); };
+  });
+  box.querySelectorAll('.socket-peca').forEach(b=>{
+    b.onclick = (e)=>{
+      e.stopPropagation();                      /* abrir a lista não desencaixa */
+      const r = +b.dataset.pick;
+      montAberto = (montAberto === r) ? null : r;
+      buildMontador();
+    };
+  });
+  box.querySelectorAll('.mont-op').forEach(b=>{
+    b.onclick = ()=>{ montEscolha[montAberto] = b.dataset.op; montAberto = null; buildMontador(); };
   });
   box.querySelectorAll('.mont-btn').forEach(b=>{
     b.onclick = ()=>{
@@ -4033,6 +4187,33 @@ function buildGlossario(){
   });
 }
 
+/* Carrega uma combinação do guia NO MONTADOR da própria anatomia — o console de tempos
+   fica intocado. Assim o exemplo vira ponto de partida para desmontar e recombinar ali
+   mesmo, sem perder o que estiver montado no motor principal. */
+function aplicarNoMontador(cfg){
+  if(!cfg) return;
+  const pool = SIGNAL_WORDS[`${cfg.t}_${cfg.a}`] || [];
+  MONT_COMBO.t = cfg.t; MONT_COMBO.a = cfg.a; MONT_COMBO.v = verbById(cfg.v).id; MONT_COMBO.f = cfg.f;
+  montOn = new Set(); montEscolha = {}; montAberto = null;
+
+  if(cfg.mid){
+    const s = pool.find(x=>x.w === cfg.mid);
+    if(s){ montOn.add(0); montEscolha[0] = s.w; }
+  }
+  (cfg.ends || []).forEach(x=>{
+    const s = pool.find(y=>y.w === x);
+    if(!s) return;
+    const r = endRank(s);
+    montOn.add(r); montEscolha[r] = s.w;
+  });
+
+  buildMontador();
+  const alvo = document.getElementById('montadorWrap');
+  if(alvo && alvo.scrollIntoView) alvo.scrollIntoView({behavior:'smooth', block:'center'});
+  const cx = document.querySelector('.montador');
+  if(cx){ cx.classList.remove('flash'); void cx.offsetWidth; cx.classList.add('flash'); }
+}
+
 function buildAnatomia(){
   const wrap = document.getElementById('anatomiaWrap');
   if(!wrap) return;
@@ -4057,10 +4238,10 @@ function buildAnatomia(){
 
   /* 2. os exemplos que valem a pena */
   let cards = '';
-  ANAT_EXEMPLOS.forEach(cfg=>{
+  ANAT_EXEMPLOS.forEach((cfg, i)=>{
     const r = anatFrase(cfg);
-    cards += `<div class="anat-card">
-      <h4>${cfg.titulo}</h4>
+    cards += `<div class="anat-card" data-ex="${i}" role="button" tabindex="0" title="Tocar para carregar esta combinação no montador">
+      <h4>${cfg.titulo}<span class="anat-usar">montar ↑</span></h4>
       <div class="anat-frase-row">
         <div class="anat-frase">${r.en}</div>
         <button class="audio-btn sm" data-text="${escapeHTML(r.texto)}" title="Ouvir">🔊</button>
@@ -4131,6 +4312,7 @@ function buildAnatomia(){
     <div class="ref-class-label">O limite — e por que não usá-lo</div>
     <div class="anat-frase-row">
       <div class="anat-frase">${mx.en}</div>
+      <button class="mont-btn" data-usar-max="1">montar ↑</button>
       <button class="audio-btn sm" data-text="${escapeHTML(mx.texto)}" title="Ouvir">🔊</button>
     </div>
     <div class="anat-pt">${escapeHTML(mx.pt)}</div>
@@ -4140,6 +4322,17 @@ function buildAnatomia(){
       "de jeito nenhum" negando os outros oito). O motor garante a <b>estrutura</b>;
       a <b>coerência</b> é sua. Na prática, o ponto ideal fica entre <b>2 e 4</b> encaixes.
     </div>`;
+  wrap.querySelectorAll('.anat-card[data-ex]').forEach(card=>{
+    const usar = (e)=>{
+      if(e.target.closest('.audio-btn')) return;   /* ouvir não aplica */
+      aplicarNoMontador(ANAT_EXEMPLOS[+card.dataset.ex]);
+    };
+    card.onclick = usar;
+    card.onkeydown = (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); usar(e); } };
+  });
+  const btnMax = wrap.querySelector('[data-usar-max]');
+  if(btnMax) btnMax.onclick = ()=> aplicarNoMontador(maxCfg);
+
   buildMontador();
   buildGlossario();
 }
