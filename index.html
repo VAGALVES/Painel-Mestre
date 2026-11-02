@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Console de gramática inglesa: motor de tempos verbais, modais, 494 palavras-sinal em 41 famílias, banco de 1.668 expressões e modo prática — com tradução PT e áudio.">
+<meta name="description" content="Console de gramática inglesa: motor de tempos verbais, modais, 973 palavras-sinal em 46 famílias, banco de 1.668 expressões e modo prática — com tradução PT e áudio.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#10151c">
 <meta name="mobile-web-app-capable" content="yes">
@@ -143,6 +143,20 @@
   .signal-row-inner::-webkit-scrollbar{height:4px;}
   .signal-row-inner::-webkit-scrollbar-thumb{background:var(--line); border-radius:2px;}
   .signal-chip{flex-shrink:0;}
+  .etapa{font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--paper-dim); margin:22px 0 10px; padding-top:12px; border-top:1px solid var(--line);}
+  .etapa:first-of-type{margin-top:6px; border-top:0; padding-top:0;}
+  .etapa span{color:var(--brass); font-weight:700; margin-right:6px;}
+  .slot-chip[data-vazio="true"]{border-style:dashed;opacity:.8}
+    .vazio-q{margin-left:4px;font-size:.85em}
+    .vazio-nota{line-height:1.5}
+    .pick-zona{font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--brass-dim); margin:9px 0 3px;}
+  .pick-zona b{font-weight:500; letter-spacing:.02em; text-transform:none; font-size:10.5px; color:var(--paper-dim); margin-left:4px;}
+  .slot-chip{display:inline-flex; align-items:center; gap:6px;}
+  .slot-n{font-size:9.5px; opacity:.65; font-variant-numeric:tabular-nums;}
+  .slot-chip[data-active="true"] .slot-n{opacity:1; font-weight:700;}
+  .slot-chip .fam-dot{background:currentColor;}
+  .pick-busca{width:100%; box-sizing:border-box; margin:6px 0 2px; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px; padding:8px 11px; color:var(--paper); font-size:12px; font-family:inherit;}
+  .pick-mais{border-style:dashed;}
   .signal-group-label{font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-dim); margin:5px 0 1px;}
   .fam-row{padding-bottom:8px; border-bottom:1px dashed var(--line); margin-bottom:2px;
     flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
@@ -312,6 +326,7 @@
   .readout.flash, .montador.flash{animation:flashReadout .7s ease-out;}
   .anat-card h4{margin:0 0 4px; font-size:12px; color:var(--brass); letter-spacing:0.03em;}
   .anat-card .why{font-size:11px; color:var(--paper-dim); line-height:1.45;}
+  .atalho-mn{font-size:14px; font-weight:600; color:var(--paper); letter-spacing:.01em; margin:1px 0 6px;}
   .anat-atalho{border-left:3px solid var(--brass); padding:8px 0 8px 12px; margin:14px 0; font-size:12.5px; line-height:1.55;}
   .anat-aviso{border:1px solid var(--red); border-radius:10px; padding:10px 12px; margin:12px 0; font-size:11.5px; color:var(--paper-dim); line-height:1.5;}
   .ref-legend{display:flex; flex-wrap:wrap; gap:6px 16px; margin:6px 0 14px; font-size:10.5px; color:var(--paper-dim);}
@@ -579,6 +594,7 @@
       <div class="note-box" id="noteBox"></div>
     </div>
 
+    <div class="etapa"><span>Etapa 1</span> O núcleo — quem faz o quê</div>
     <div class="dial-group">
       <div class="dial-group-title">① Pronome / sujeito</div>
       <div class="pronome-row" id="pronomeRow"></div>
@@ -603,6 +619,7 @@
       <div id="verbBankPanel"></div>
     </div>
 
+    <div class="etapa"><span>Etapa 2</span> O tempo gramatical — quando, como se vê e em que forma</div>
     <div class="dial-group">
       <div class="dial-group-title">⑤ Em que tempo?</div>
       <div class="tempo-track">
@@ -616,24 +633,26 @@
       <div class="grid2" id="aspectoGrid"></div>
     </div>
 
-    <div class="dial-group" id="signalDialGroup">
-      <div class="dial-group-title">⑦ Palavras-sinal (meio + fim, opcional)</div>
+    <div class="dial-group">
+      <div class="dial-group-title">⑦ Qual formato?</div>
+      <div class="formato-row" id="formatoRow"></div>
+    </div>
+
+    <div class="dial-group" id="whDialGroup">
+      <div class="dial-group-title">⑧ Palavra interrogativa (só em perguntas)</div>
+      <div id="whGrid"></div>
+      <div class="signal-hint" id="whHint"></div>
+      <div id="whBankPanel"></div>
+    </div>
+
+    <div class="etapa"><span>Etapa 3</span> As peças — o que se encaixa na frase</div>
+    <div class="dial-group" id="signalDialGroup" style="margin-bottom:0;">
+      <div class="dial-group-title">⑨ Palavras-sinal por encaixe (opcional)</div>
       <div class="signal-row" id="signalRow"></div>
       <div class="signal-hint" id="signalHint"></div>
       <div id="signalBankPanel"></div>
     </div>
 
-    <div class="dial-group">
-      <div class="dial-group-title">⑧ Qual formato?</div>
-      <div class="formato-row" id="formatoRow"></div>
-    </div>
-
-    <div class="dial-group" id="whDialGroup" style="margin-bottom:0;">
-      <div class="dial-group-title">⑨ Palavra interrogativa (só em perguntas)</div>
-      <div id="whGrid"></div>
-      <div class="signal-hint" id="whHint"></div>
-      <div id="whBankPanel"></div>
-    </div>
   </div>
 
   <div class="console" id="console-modais" style="scroll-margin-top:64px;">
@@ -647,10 +666,12 @@
       <div class="note-box" id="modalNote"></div>
     </div>
 
+    <div class="etapa"><span>Etapa 1</span> A função — o que você quer expressar</div>
     <div class="dial-group">
       <div class="dial-group-title">Ⓐ Qual função você quer expressar?</div>
       <div class="modal-grid" id="modalGrid"></div>
     </div>
+    <div class="etapa"><span>Etapa 2</span> A frase — sujeito, tempo e forma</div>
     <div class="dial-group">
       <div class="dial-group-title">Ⓑ Pronome / sujeito</div>
       <div class="pronome-row" id="modalPronomeRow"></div>
@@ -663,16 +684,18 @@
       <div class="dial-group-title">Ⓓ Qual formato?</div>
       <div class="formato-row" id="modalFormatoRow"></div>
     </div>
+    <div class="dial-group" id="modalWhGroup">
+      <div class="dial-group-title">Ⓔ Palavra interrogativa (só em perguntas)</div>
+      <div class="pronome-row" id="modalWhRow"></div>
+    </div>
+
+    <div class="etapa"><span>Etapa 3</span> As peças — o que se encaixa na frase</div>
     <div class="dial-group" style="margin-bottom:0;">
-      <div class="dial-group-title">Ⓔ Palavras-sinal da função (fim da frase, opcional)</div>
+      <div class="dial-group-title">Ⓕ Palavras-sinal da função, por encaixe (opcional)</div>
       <div class="signal-row" id="modalSignalRow"></div>
       <div class="signal-hint">O verbo principal e a regência/collocation são os mesmos escolhidos no console de tempos (dials ③ e ④).</div>
     </div>
 
-    <div class="dial-group" id="modalWhGroup" style="margin-bottom:0;">
-      <div class="dial-group-title">Ⓕ Palavra interrogativa (só em perguntas)</div>
-      <div class="pronome-row" id="modalWhRow"></div>
-    </div>
     <div id="modalAlerta"></div>
   </div>
 
@@ -939,7 +962,7 @@ document.addEventListener('click', function(e){
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '2.0';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '2.1';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -1114,7 +1137,7 @@ const MARK_OPEN = '\u0001', MARK_CLOSE = '\u0002', COMP_OPEN = '\u0003', COMP_CL
 const COMO_OPEN = '\u0007', COMO_CLOSE = '\u0008', ONDE_OPEN = '\u000B', ONDE_CLOSE = '\u000C';
 function M(s){ return MARK_OPEN + s + MARK_CLOSE; }
 /* categoria visual do adjunto — segue os mesmos grupos que definem a ordem na frase */
-const ADJ_COMO_FAM = new Set(['bitFam','mannerFam','compareFam','certaintyFam']);
+const ADJ_COMO_FAM = new Set(['bitFam','mannerFam','compareFam','certaintyFam','focusMid','degreeMid']);
 const ADJ_ONDE_FAM = new Set(['placeFam']);
 /* As famílias preposicionais são heterogêneas: "by heart" é modo e "by then" é tempo,
    mesma família. Por isso a categoria é propriedade da EXPRESSÃO, não da família —
@@ -1882,7 +1905,8 @@ function ptFactParts(tempo,aspecto,pEN,verbId){
     else if(aspecto==='perfeito') core = `${PT_TER.imperf[person]} ${vpt.part}`;
     else core = `${PT_ESTAR.imperf[person]} ${vpt.ger}`;
   } else {
-    if(aspecto==='simples') core = `${PT_ESTAR.ir[person]} ${vpt.inf}`;
+    /* "vou ir" é pleonasmo: com o verbo ir, o futuro perifrástico se reduz ao próprio "vou" */
+    if(aspecto==='simples') core = vpt.inf === 'ir' ? PT_ESTAR.ir[person] : `${PT_ESTAR.ir[person]} ${vpt.inf}`;
     else if(aspecto==='continuo') core = `${PT_ESTAR.ir[person]} estar ${vpt.ger}`;
     else if(aspecto==='perfeito') core = `${PT_ESTAR.ir[person]} ter ${vpt.part}`;
     else core = `${PT_ESTAR.ir[person]} ter estado ${vpt.ger}`;
@@ -1911,7 +1935,7 @@ const PT_ADV_INICIO = new Set(["atualmente","recentemente","ultimamente","hoje e
 function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit){
   const isQ = formato==='pergunta' || formato==='pergunta_negativa';
   const neg = (formato==='negativa' || formato==='pergunta_negativa');
-  const midPT = signalMid ? (SIGNAL_PT[signalMid.w] || signalMid.w) : null;
+  const mids = sortSlots(Array.isArray(signalMid) ? signalMid : (signalMid ? [signalMid] : []));
   let body = parts.core, pre = '', prefixo = '';
   if(signalSplit){
     /* "Nunca mais" é uma peça única em português. Na afirmativa vem antes do verbo
@@ -1920,23 +1944,27 @@ function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit)
     if(signalSplit.ptEnd){ body = `${signalSplit.pt} ${body} ${signalSplit.ptEnd}`; pre = neg ? ' não' : ''; }
     else if(neg){ pre = ' não'; body = `${body} ${signalSplit.pt}`; }
     else { body = `${signalSplit.pt} ${body}`; }
-  } else if(midPT){
-    /* "já não" / "ainda não" / "nem sempre" são as ordens naturais do português. */
-    if(neg && (midPT==='já' || midPT==='ainda')){ pre = ` ${midPT} não`; }
-    else if(neg && midPT==='sempre'){ pre = ' nem sempre'; }
-    else if(signalMid.cls === 'certaintyFam'){
-      /* o português espelha o inglês aqui: o advérbio vem antes da negação */
-      pre = ` ${midPT}` + (neg ? ' não' : '');
-    }
-    else if(signalMid.cls==='timeMid' || PT_ADV_INICIO.has(midPT)){
-      /* Advérbios de TEMPO em posição média no inglês (currently) não aceitam essa posição
-         em português: "Eu atualmente estou trabalhando" soa errado. Eles vão para o início
-         da frase, que é onde o português os coloca naturalmente. Isso difere dos advérbios
-         de FREQUÊNCIA (sempre, nunca), que funcionam bem antes do verbo. */
-      prefixo = cap(midPT) + ', ';
-      pre = neg ? ' não' : '';
-    }
-    else { body = `${midPT} ${body}`; pre = neg ? ' não' : ''; }
+  } else if(mids.length){
+    /* Cada advérbio de meio tem o seu lugar em português: certeza antes da negação, "já/ainda/
+       sempre/até" fundem-se a ela ("já não", "nem sempre", "nem"), advérbios de tempo abrem a
+       frase, e os de modo e intensidade em -mente ("completamente") vão depois do verbo. */
+    let certPre = '', negPre = neg ? ' não' : '';
+    const antes = [], depois = [];
+    mids.forEach(m=>{
+      const mp = SIGNAL_PT[m.w] || m.w;
+      if(neg && (mp==='já' || mp==='ainda')) negPre = ` ${mp} não`;
+      else if(neg && mp==='sempre') negPre = ' nem sempre';
+      else if(neg && mp==='até') negPre = ' nem';
+      else if(m.cls === 'certaintyFam') certPre += ` ${mp}`;
+      /* "normalmente/geralmente… não" é a ordem natural do português: "Eu normalmente não trabalho" */
+      else if(neg && PT_HABITUAL.has(mp)) certPre += ` ${mp}`;
+      else if(m.cls==='timeMid' || PT_ADV_INICIO.has(mp)) prefixo = cap(mp) + ', ';
+      else if(m.ptPos === 'depois') depois.push(mp);
+      else antes.push(mp);
+    });
+    pre = certPre + negPre;
+    if(antes.length) body = `${antes.join(' ')} ${body}`;
+    if(depois.length) body = `${body} ${depois.join(' ')}`;
   } else { pre = neg ? ' não' : ''; }
   if(col) body = `${body} ${col.pt}`;
   let cabeca = '';
@@ -1957,15 +1985,27 @@ function buildPTSentence(parts, formato, signalMid, signalEnd, col, signalSplit)
    então não é reinserido como palavra avulsa. "Just" só existe nas listas de
    present_perfeito e past_perfeito, então esses dois ramos cobrem todas as ocorrências. */
 const PT_ACABAR_PPERF = {"1s":"acabei","3s":"acabou","1p":"acabamos","3p":"acabaram"};
+const PT_HABITUAL = new Set(['normalmente','geralmente','tipicamente','habitualmente','usualmente','costumeiramente']);
 function translate(categoria,tempo,aspecto,formato,pronoun,signalMid,signalEnd,verbId,col,signalSplit){
-  const justIdiom = signalMid && signalMid.w==='just' && aspecto==='perfeito' && (tempo==='present' || tempo==='past');
+  const midLista = Array.isArray(signalMid) ? signalMid : (signalMid ? [signalMid] : []);
+  const justSw = midLista.find(m => m.w === 'just');
+  const justIdiom = justSw && aspecto==='perfeito' && (tempo==='present' || tempo==='past');
   if(justIdiom){
     const person = ptPerson(pronoun), pron = PT_PRONOUN[pronoun];
     const alvo = categoria==='fact' ? (PT_VERBS[verbId] || PT_VERBS.work).inf : `estar ${ptStateAdj(pronoun)}`;
     const core = tempo==='present' ? `${PT_ACABAR_PPERF[person]} de ${alvo}` : `${PT_TER.imperf[person]} acabado de ${alvo}`;
-    return buildPTSentence({pron, core}, formato, null, signalEnd || null, col || null, null);
+    const resto = midLista.filter(m => m !== justSw);
+    return buildPTSentence({pron, core}, formato, resto.length ? resto : null, signalEnd || null, col || null, null);
   }
   const parts = categoria==='fact' ? ptFactParts(tempo,aspecto,pronoun,verbId) : ptStateParts(tempo,aspecto,pronoun);
+  /* Contagem fecha o fato: "I have visited twice" → "Visitei duas vezes". O "tenho visitado" do
+     português é iterativo (algo que vem se repetindo), e não combina com um número exato. */
+  if(categoria==='fact' && tempo==='present' && aspecto==='perfeito'){
+    const fins = [].concat(signalEnd || []);
+    if(fins.some(s => s && /\b(once|twice|times)\b/.test(s.w) && !/\b(a|per|every|each)\s+(day|week|month|year)\b/.test(s.w))){
+      parts.core = (PT_VERBS[verbId] || PT_VERBS.work).pperf[ptPerson(pronoun)];
+    }
+  }
   return buildPTSentence(parts, formato, signalMid || null, signalEnd || null, col || null, signalSplit || null);
 }
 
@@ -1998,22 +2038,44 @@ const WH_STATIC = {
   "How much": {en:"How much water do you need?", pt:"De quanta água você precisa?", structure:"How much + substantivo incontável (singular) — pergunta por quantidade não contável"},
   "How many": {en:"How many books did you read?", pt:"Quantos livros você leu?", structure:"How many + substantivo contável (plural) — pergunta por quantidade contável"}
 };
-function whGenerate(cat,tempo,aspecto,pronoun,whWord,verb){
+/* Cada palavra interrogativa PERGUNTA por um encaixe: o encaixe fica vazio (a resposta é que o
+   preenche), e os outros continuam livres. "Where" esvazia o lugar, "When" o tempo, "How" o modo,
+   "How long" a duração, "How often" a periodicidade e a frequência. Why/Who/What não esvaziam
+   nenhum encaixe de advérbio: Why pergunta pela causa; Who/What ocupam o lugar do sujeito. */
+const WH_VAZIO = { Where:[4], When:[8], How:[2], "How long":[6], "How often":[5,13] };
+function whVazios(w){ return new Set(WH_VAZIO[w] || []); }
+/* "Primeiro, hoje, ele trabalha." → abre com os prefixos e devolve o resto sem pontuação final */
+function ptSepararPrefixos(frase){
+  const pre = []; let resto = frase.replace(/\.$/,'');
+  let m; while((m = resto.match(/^([^,]+), (.*)$/))){ pre.push(m[1]); resto = m[2]; }
+  return {pre, resto};
+}
+function ptComWh(afirm, whPt, subj){
+  const {pre, resto} = ptSepararPrefixos(afirm);
+  const corpo = subj ? resto.replace(/^[Ee]le\s+/,'') : lowerFirst(resto);
+  const cab = pre.map((x,i)=> i ? lowerFirst(x) : x).join(', ');
+  return (cab ? cab + ', ' + lowerFirst(whPt) : whPt) + ' ' + corpo + '?';
+}
+function whGenerate(cat,tempo,aspecto,pronoun,whWord,verb,opts){
   if(WH_STATIC[whWord]) return Object.assign({isStatic:true}, WH_STATIC[whWord]);
-  if(WH_SUBJECT.includes(whWord)){
-    const g = generate(cat,tempo,aspecto,'afirmativa', whWord, verb);
-    const en = stripMarks(g.text) + "?";
-    const affPT = translate(cat,tempo,aspecto,'afirmativa','He', null, null, verb && verb.id);
-    const core = affPT.replace(/^Ele\s+/,'').replace(/\.$/,'');
-    const pt = `${WH_PT_SUBJECT[whWord]} ${core}?`;
-    return {en, pt, structure:`${whWord} (sujeito) + verbo — sem auxiliar, sem inversão`, isStatic:false};
-  } else {
-    const g = generate(cat,tempo,aspecto,'pergunta', pronoun, verb);
-    const en = `${whWord} ${lowerFirst(stripMarks(g.text))}?`;
-    const affPT = translate(cat,tempo,aspecto,'afirmativa',pronoun, null, null, verb && verb.id).replace(/\.$/,'');
-    const pt = `${WH_PT_ADJUNCT[whWord]} ${lowerFirst(affPT)}?`;
-    return {en, pt, structure:`${whWord} + estrutura de pergunta sim/não (auxiliar antes do sujeito)`, isStatic:false};
-  }
+  opts = opts || {};
+  const vz = whVazios(whWord);
+  const manter = l => (Array.isArray(l) ? l : []).filter(x => !vz.has(slotOf(x)));
+  const mids = manter(opts.mids), ends = manter(opts.ends);
+  const subj = WH_SUBJECT.includes(whWord);
+  const resto = ends.filter(x => x.cls !== 'seqFam'), seq = ends.filter(x => x.cls === 'seqFam');
+  const g = subj ? generate(cat,tempo,aspecto,'afirmativa', whWord, verb)
+                 : generate(cat,tempo,aspecto,'pergunta', pronoun, verb);
+  let raw = applySignal(g.text, mids.length ? mids : null, resto, null, null, subj ? 'afirmativa' : 'pergunta');
+  if(!subj) raw = M(whWord) + ' ' + lowerFirstMarked(raw);
+  if(seq.length) raw = seq.map(x=>C(cap(x.w), x.cls)).join(', ') + ', ' + lowerFirstMarked(raw);
+  raw += M('?');
+  const affPT = translate(cat,tempo,aspecto,'afirmativa', subj ? 'He' : pronoun, mids.length ? mids : null, ends, verb && verb.id);
+  const pt = ptComWh(affPT, subj ? WH_PT_SUBJECT[whWord] : WH_PT_ADJUNCT[whWord], subj);
+  const extra = (mids.length || ends.length) ? ' + palavras-sinal nos outros encaixes' : '';
+  const structure = subj ? `${whWord} (sujeito) + verbo — sem auxiliar, sem inversão${extra}`
+                         : `${whWord} + estrutura de pergunta sim/não (auxiliar antes do sujeito)${extra}`;
+  return {en: stripMarks(raw), enMarked: raw, pt, structure, isStatic:false};
 }
 
 const CATEGORIES = {
@@ -2052,6 +2114,9 @@ const CLASS_INFO = {
   mannerFam: {label:"Modo — como se faz, fim da frase"},
   placeFam: {label:"Lugar — onde, fim da frase"},
   certaintyFam: {label:"Certeza — meio da frase (antes do \"not\" na negativa)"},
+  focusMid: {label:"Foco — só, também, até: meio da frase"},
+  degreeMid: {label:"Intensidade — realmente, completamente, quase: meio da frase"},
+  durFam: {label:"Duração — por quanto tempo, fim da frase"},
   compareFam: {label:"Comparação — fim da frase"},
   seqFam: {label:"Sequência — ordem dos acontecimentos, fim da frase"},
   npiFam: {label:"Só em negativas e perguntas — at all, anymore, either…"},
@@ -2097,7 +2162,7 @@ const SIGNAL_WORDS = {
     {w:"from home",pl:"end",cls:"fromFam"},{w:"from experience",pl:"end",cls:"fromFam"},{w:"from scratch",pl:"end",cls:"fromFam"},{w:"on purpose",pl:"end",cls:"onFam"},{w:"on foot",pl:"end",cls:"onFam"},{w:"on my own",pl:"end",cls:"onFam"},{w:"on average",pl:"end",cls:"onFam"},
     {w:"over and over",pl:"end",cls:"overFam"},{w:"over the phone",pl:"end",cls:"overFam"},{w:"all over the place",pl:"end",cls:"overFam"},{w:"with pleasure",pl:"end",cls:"withFam"},{w:"with care",pl:"end",cls:"withFam"},{w:"without a doubt",pl:"end",cls:"withFam"},{w:"without fail",pl:"end",cls:"withFam"},{w:"around the clock",pl:"end",cls:"aroundFam"},{w:"around here",pl:"end",cls:"aroundFam"},{w:"once in a while",pl:"end",cls:"onceFam"},{w:"little by little",pl:"end",cls:"byFam"},{w:"step by step",pl:"end",cls:"byFam"},{w:"day by day",pl:"end",cls:"byFam"},
     {w:"about twice a week",pl:"end",cls:"aboutFam"},{w:"about three times a month",pl:"end",cls:"aboutFam"},{w:"about every day",pl:"end",cls:"aboutFam"},
-    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in the least",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right now",pl:"end",cls:"rightFam"},{w:"right away",pl:"end",cls:"rightFam"},{w:"right here",pl:"end",cls:"rightFam"},{w:"normally",pl:"end",cls:"freqIndef"},{w:"typically",pl:"end",cls:"freqIndef"},{w:"regularly",pl:"end",cls:"freqIndef"},{w:"hardly",pl:"end",cls:"freqIndef"},{w:"daily",pl:"end",cls:"freqDef"},{w:"weekly",pl:"end",cls:"freqDef"},{w:"monthly",pl:"end",cls:"freqDef"},{w:"twice a month",pl:"end",cls:"freqDef"},{w:"every other week",pl:"end",cls:"freqDef"},{w:"once in a blue moon",pl:"end",cls:"freqDef"},{w:"these days",pl:"end",cls:"timePoint"},{w:"on a daily basis",pl:"end",cls:"timePoint"},
+    {w:"at all",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"anymore",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"any longer",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"either",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"in the least",pl:"end",cls:"npiFam", only:["negativa","pergunta","pergunta_negativa"]},{w:"right now",pl:"end",cls:"rightFam"},{w:"right away",pl:"end",cls:"rightFam"},{w:"right here",pl:"end",cls:"rightFam"},{w:"normally",pl:"mid",cls:"freqIndef"},{w:"typically",pl:"mid",cls:"freqIndef"},{w:"regularly",pl:"end",cls:"freqIndef"},{w:"hardly",pl:"mid",cls:"freqIndef", only:["afirmativa","pergunta"]},{w:"daily",pl:"end",cls:"freqDef"},{w:"weekly",pl:"end",cls:"freqDef"},{w:"monthly",pl:"end",cls:"freqDef"},{w:"twice a month",pl:"end",cls:"freqDef"},{w:"every other week",pl:"end",cls:"freqDef"},{w:"once in a blue moon",pl:"end",cls:"freqDef"},{w:"these days",pl:"end",cls:"timePoint"},{w:"on a daily basis",pl:"end",cls:"timePoint"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all week long",pl:"end",cls:"allFam"},{w:"all morning long",pl:"end",cls:"allFam"},
     {w:"under pressure",pl:"end",cls:"underFam"},{w:"under the radar",pl:"end",cls:"underFam"},{w:"along the way",pl:"end",cls:"throughFam"},{w:"against the clock",pl:"end",cls:"againstFam"},{w:"against my will",pl:"end",cls:"againstFam"},{w:"up close",pl:"end",cls:"updownFam"},{w:"to some extent",pl:"end",cls:"toFam"},{w:"to the fullest",pl:"end",cls:"toFam"},{w:"of my own accord",pl:"end",cls:"ofFam"},{w:"straight away",pl:"end",cls:"rightFam"},
     {w:"a bit",pl:"end",cls:"bitFam"},{w:"a little",pl:"end",cls:"bitFam"},{w:"a little bit",pl:"end",cls:"bitFam"},{w:"quite a bit",pl:"end",cls:"bitFam"},{w:"very little",pl:"end",cls:"bitFam"},
@@ -2155,6 +2220,7 @@ const SIGNAL_WORDS = {
     {w:"more than ever",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"from then on",pl:"end",cls:"seqFam"}
   ],
   past_simples: [
+    {w:"always",pl:"mid",cls:"freqIndef"},{w:"usually",pl:"mid",cls:"freqIndef"},{w:"often",pl:"mid",cls:"freqIndef"},{w:"frequently",pl:"mid",cls:"freqIndef"},{w:"sometimes",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},{w:"rarely",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},{w:"seldom",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},{w:"never",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},
     {w:"yesterday",pl:"end",cls:"timePoint"},{w:"last week",pl:"end",cls:"timePoint"},{w:"last month",pl:"end",cls:"timePoint"},{w:"last year",pl:"end",cls:"timePoint"},{w:"two days ago",pl:"end",cls:"timePoint"},{w:"a week ago",pl:"end",cls:"timePoint"},{w:"in 2020",pl:"end",cls:"timePoint"},{w:"when I was young",pl:"end",cls:"timePoint"},{w:"back then",pl:"end",cls:"timePoint"},{w:"the day before yesterday",pl:"end",cls:"timePoint"},{w:"three years ago",pl:"end",cls:"timePoint"},{w:"a long time ago",pl:"end",cls:"timePoint"},{w:"in 1990",pl:"end",cls:"timePoint"},{w:"when I was a child",pl:"end",cls:"timePoint"},{w:"last night",pl:"end",cls:"timePoint"},{w:"earlier today",pl:"end",cls:"timePoint"},
     {w:"once",pl:"end",cls:"freqDef"},{w:"several times",pl:"end",cls:"freqDef"},{w:"twice",pl:"end",cls:"freqDef"},{w:"three times",pl:"end",cls:"freqDef"},{w:"many times",pl:"end",cls:"freqDef"},
     {w:"all day long",pl:"end",cls:"allFam"},{w:"all night long",pl:"end",cls:"allFam"},{w:"all of them",pl:"end",cls:"allFam"},{w:"all summer",pl:"end",cls:"allFam"},
@@ -2218,6 +2284,7 @@ const SIGNAL_WORDS = {
     {w:"more than ever",pl:"end",cls:"compareFam"},{w:"harder than ever",pl:"end",cls:"compareFam"},{w:"up to then",pl:"end",cls:"seqFam"},{w:"before that",pl:"end",cls:"seqFam"}
   ],
   future_simples: [
+    {w:"always",pl:"mid",cls:"freqIndef"},{w:"usually",pl:"mid",cls:"freqIndef"},{w:"often",pl:"mid",cls:"freqIndef"},{w:"frequently",pl:"mid",cls:"freqIndef"},{w:"sometimes",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},{w:"rarely",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},{w:"seldom",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},{w:"never",pl:"mid",cls:"freqIndef",only:["afirmativa","pergunta"]},
     {w:"tomorrow",pl:"end",cls:"timePoint"},{w:"next week",pl:"end",cls:"timePoint"},{w:"next month",pl:"end",cls:"timePoint"},{w:"next year",pl:"end",cls:"timePoint"},{w:"soon",pl:"end",cls:"timePoint"},{w:"in a few days",pl:"end",cls:"timePoint"},{w:"later",pl:"end",cls:"timePoint"},{w:"next weekend",pl:"end",cls:"timePoint"},{w:"in the future",pl:"end",cls:"timePoint"},{w:"eventually",pl:"end",cls:"timePoint"},{w:"someday",pl:"end",cls:"timePoint"},{w:"this evening",pl:"end",cls:"timePoint"},
     {w:"all of them",pl:"end",cls:"allFam"},{w:"all summer",pl:"end",cls:"allFam"},{w:"all weekend",pl:"end",cls:"allFam"},
     {w:"this time",pl:"end",cls:"timeFam"},{w:"next time",pl:"end",cls:"timeFam"},{w:"in time",pl:"end",cls:"timeFam"},{w:"forever",pl:"end",cls:"everFam"},{w:"for good",pl:"end",cls:"everFam"},{w:"again",pl:"end",cls:"againFam"},{w:"once again",pl:"end",cls:"againFam"},{w:"all over again",pl:"end",cls:"againFam"},
@@ -2271,7 +2338,7 @@ const SIGNAL_WORDS = {
   ]
 };
 
-let state = { pronome:"I", categoria:"fact", verbo:"work", verboLetter:"W", colocacao:null, tempo:"present", aspecto:"simples", formato:"afirmativa", signalMid:null, signalEnds:[], signalSplit:null, signalFam:null, whWord:null };
+let state = { pronome:"I", categoria:"fact", verbo:"work", verboLetter:"W", colocacao:null, tempo:"present", aspecto:"simples", formato:"afirmativa", signalMids:[], signalEnds:[], signalSplit:null, signalSlot:null, signalFam:null, signalBusca:'', signalMais:false, whWord:null };
 
 function buildPronome(){
   const el = document.getElementById('pronomeRow'); el.innerHTML="";
@@ -2318,13 +2385,13 @@ function buildVerbo(){
 let bankOpen = false, bankOpenSignal = false, bankOpenWh = false;
 
 /* As famílias de palavras-sinal que construí têm correspondentes diretos no banco:
-   a família do "all" do dial ⑦ e a família ALL do banco descrevem o mesmo recorte.
+   a família do "all" do dial ⑨ e a família ALL do banco descrevem o mesmo recorte.
    O mesmo vale para o dial de interrogativas, que corresponde à família HOW/WHAT/WHERE/WHY.
    Em vez de duplicar conteúdo, cada dial ganha acesso à sua família no banco. */
 const SIGNAL_BANK_MAP = { allFam:'ALL', atFam:'AT', byFam:'BY', forFam:'FOR', inFam:'IN', timeFam:'TIME', fromFam:'FROM', onFam:'ON' };
 const WH_BANK_FAMILY = 'HOW / WHAT / WHERE / WHY';
 
-/* Painel de consulta reutilizável: mesma aparência nos dials ④, ⑦ e ⑨. */
+/* Painel de consulta reutilizável: mesma aparência nos dials ④, ⑧ e ⑨. */
 function renderBankPanel(boxId, fam, isOpen, onToggle, rotulo){
   const box = document.getElementById(boxId);
   if(!box) return;
@@ -2390,7 +2457,7 @@ function buildCategoria(){
     btn.style.setProperty('--accent', d.accent);
     btn.dataset.active = (state.categoria===key);
     btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
-    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMid=null; state.signalEnds=[]; state.signalSplit=null; bankOpen=false; render(); };
+    btn.onclick = ()=>{ state.categoria=key; if(!CATEGORIES[key].aspects.includes(state.aspecto)) state.aspecto = CATEGORIES[key].aspects[0]; state.signalMids=[]; state.signalEnds=[]; state.signalSplit=null; bankOpen=false; render(); };
     el.appendChild(btn);
   });
 }
@@ -2399,7 +2466,7 @@ function buildTempo(){
   TENSES.forEach(t=>{
     const s = document.createElement('div'); s.className='tempo-label';
     s.dataset.active = (state.tempo===t); s.textContent = TENSE_LABEL[t];
-    s.onclick = ()=>{ state.tempo=t; state.signalMid=null; state.signalEnds=[]; render(); };
+    s.onclick = ()=>{ state.tempo=t; state.signalMids=[]; state.signalEnds=[]; render(); };
     labelsEl.appendChild(s);
   });
 }
@@ -2415,7 +2482,7 @@ function buildAspecto(){
     btn.style.setProperty('--accent', 'var(--violet)');
     btn.dataset.active = (state.aspecto===a);
     btn.innerHTML = `<span class="ic">${ASPECT_ICON[a]}</span><span>${ASPECT_LABEL[a]}</span>`;
-    btn.onclick = ()=>{ state.aspecto=a; state.signalMid=null; state.signalEnds=[]; render(); };
+    btn.onclick = ()=>{ state.aspecto=a; state.signalMids=[]; state.signalEnds=[]; render(); };
     el.appendChild(btn);
   });
 }
@@ -2430,129 +2497,219 @@ function scrollChipIntoRow(row, chip){
 }
 function signalFamilyLabel(cls){
   /* rótulo curto para a fileira de famílias (o texto completo fica no cabeçalho do grupo) */
-  const short = { freqIndef:"frequência", freqDef:"nº de vezes", perfectAdv:"perfect", timeMid:"tempo (meio)",
+  const short = { focusMid:"foco", degreeMid:"intensidade", durFam:"duração", freqIndef:"frequência", freqDef:"nº de vezes", perfectAdv:"perfect", timeMid:"tempo (meio)",
     timePoint:"tempo", allFam:"all", timeFam:"time", wholeFam:"whole", everFam:"ever", everyFam:"every",
     againFam:"again", asFam:"as", atFam:"at", fromFam:"from", onFam:"on", overFam:"over", withFam:"with/without", aroundFam:"around", backFam:"back", onceFam:"once", aboutFam:"about", bitFam:"bit/little", mannerFam:"modo", placeFam:"lugar", certaintyFam:"certeza", compareFam:"comparação", seqFam:"sequência", npiFam:"só em neg./perg.", rightFam:"right", underFam:"under", throughFam:"through", withinFam:"within", againstFam:"against", aheadFam:"ahead/behind", updownFam:"up/down", toFam:"to", ofFam:"of", inFam:"in", byFam:"by", forFam:"for", outFam:"out/off",
     splitFam:"partidos", outrosFam:"diversos" };
   return short[cls] || cls;
 }
+/* ================================================================================
+   SELETOR DE PEÇAS POR ENCAIXE — compartilhado pelos motores de tempos e de modais
+   Antes, o primeiro nível do filtro era a "família" lexical (at, in, on, by, from…): 37 a 44
+   abas por combinação, e 19 delas misturavam funções (o chip "in" juntava "in a hurry",
+   "in the garden" e "in 2020"). Agora o primeiro nível é o ENCAIXE — a mesma anatomia da
+   referência, nas mesmas cores e na ordem da frase. A forma lexical continua existindo, mas
+   como filtro secundário, e só onde a lista é grande.
+   ================================================================================ */
+const PICK_MAX = 48;          /* peças visíveis antes do "mostrar mais" */
+const PICK_FORMA_FORTE = 4;   /* forma com menos peças que isto vai para "outras" */
+const PICK_FORMA_MIN = 24;    /* só mostra o filtro por forma em encaixes com pelo menos isto */
+const PICK_BUSCA_MIN = 60;    /* só mostra a busca em encaixes realmente grandes */
+const PICK_ZONAS = [
+  { z:'início', t:'Abre a frase',     d:'seguido de vírgula' },
+  { z:'meio',   t:'Antes do verbo',   d:'Será · Só · Sempre · Já · Muito' },
+  { z:'fim',    t:'Depois do verbo',  d:'ação → palco → relógio' }
+];
+function pickChave(sw){ return sw.pl === 'split' ? 'split' : slotOf(sw); }
+function pickNome(k){ return k === 'split' ? 'partidos' : END_SLOT_NOME[k]; }
+
+/* o = { st, itens, ativos, desativado, ativo(sw), rival(sw), pick(sw, isActive), limpar(),
+         limparAtivo, refresh(), aoMudar() }
+   st guarda só a navegação: signalSlot, signalFam (forma), signalBusca, signalMais. */
+function renderSlotPicker(el, o){
+  const st = o.st;
+  const grupos = new Map();
+  o.itens.forEach(sw=>{ const k = pickChave(sw); if(!grupos.has(k)) grupos.set(k, []); grupos.get(k).push(sw); });
+  const chaves = SLOT_ORDEM.filter(r=>grupos.has(r)).concat(grupos.has('split') ? ['split'] : []);
+  if(!chaves.length) return false;
+
+  const ocupados = new Set(o.ativos.map(pickChave));
+  if(!grupos.has(st.signalSlot)){
+    const a = o.ativos[0];
+    st.signalSlot = a ? pickChave(a) : (grupos.has(8) ? 8 : chaves[0]);
+    st.signalFam = null; st.signalBusca = ''; st.signalMais = false;
+  }
+  const dis = o.desativado ? .4 : 1;
+  const mudou = ()=>{ if(o.aoMudar) o.aoMudar(); o.refresh(); };
+
+  /* limpar tudo */
+  const noneWrap = document.createElement('div'); noneWrap.className = 'signal-row-inner';
+  const none = document.createElement('div'); none.className = 'signal-chip';
+  none.dataset.active = String(!!o.limparAtivo); none.textContent = o.rotuloLimpar || 'limpar tudo'; none.style.opacity = dis;
+  none.onclick = ()=>{ if(!o.desativado) o.limpar(); };
+  noneWrap.appendChild(none); el.appendChild(noneWrap);
+
+  /* nível 1: os encaixes, em três zonas */
+  const zonas = PICK_ZONAS.concat(grupos.has('split') ? [{ z:'split', t:'Partidos', d:'ocupam meio e fim' }] : []);
+  zonas.forEach(Z=>{
+    const rs = chaves.filter(k => Z.z === 'split' ? k === 'split' : (k !== 'split' && SLOT_ZONA(k) === Z.z));
+    if(!rs.length) return;
+    const lab = document.createElement('div'); lab.className = 'pick-zona';
+    lab.innerHTML = `${Z.t} <b>${Z.d}</b>`; el.appendChild(lab);
+    const row = document.createElement('div'); row.className = 'signal-row-inner wrap-row';
+    rs.forEach(k=>{
+      const chip = document.createElement('div'); chip.className = 'signal-chip slot-chip';
+      chip.dataset.active = String(st.signalSlot === k);
+      if(k !== 'split') paintCat(chip, grupos.get(k)[0]);
+      const vazio = !!(o.vazios && o.vazios.has(k));
+      if(vazio) chip.dataset.vazio = 'true';
+      const num = k === 'split' ? '' : `<span class="slot-n">${slotNum(k)}</span>`;
+      chip.innerHTML = `${num}${pickNome(k)}${vazio ? '<span class="vazio-q">❓</span>' : `<span class="fam-count">${grupos.get(k).length}</span>`}${ocupados.has(k) ? '<span class="fam-dot"></span>' : ''}`;
+      chip.style.opacity = dis;
+      chip.onclick = ()=>{ if(o.desativado) return; st.signalSlot = k; st.signalFam = null; st.signalBusca = ''; st.signalMais = false; mudou(); };
+      row.appendChild(chip);
+    });
+    el.appendChild(row);
+  });
+
+  /* nível 2: as peças do encaixe aberto */
+  const k = st.signalSlot, todos = grupos.get(k);
+  const pergunta = (k !== 'split' && typeof SLOT_PERGUNTA !== 'undefined') ? SLOT_PERGUNTA[k] : 'um advérbio que se parte: meio + fim';
+  const cab = document.createElement('div'); cab.className = 'signal-group-label';
+  cab.textContent = `${pickNome(k)} — ${pergunta}`; el.appendChild(cab);
+  if(o.vazios && o.vazios.has(k)){
+    /* o encaixe que a palavra interrogativa pergunta fica vazio: é a resposta que vai ocupá-lo */
+    const v = document.createElement('div'); v.className = 'signal-hint vazio-nota';
+    v.innerHTML = `❓ <b>${o.vazioPor || 'A pergunta'}</b> pergunta justamente por este encaixe — ele fica vazio na frase, porque é a resposta que vai preenchê-lo. Os outros encaixes continuam livres.`;
+    el.appendChild(v);
+    return true;
+  }
+
+  /* formas com poucas peças viram um balde só ("outras"): uma aba com 1 ou 2 itens dá mais
+     navegação do que a lista que ela deveria encurtar */
+  const contaForma = {}; todos.forEach(s=>{ contaForma[s.cls] = (contaForma[s.cls] || 0) + 1; });
+  const fortes = Object.keys(contaForma).filter(c => contaForma[c] >= PICK_FORMA_FORTE);
+  const temOutras = Object.keys(contaForma).some(c => contaForma[c] < PICK_FORMA_FORTE);
+  const formas = fortes.concat(temOutras && fortes.length ? ['__outras'] : []);
+  if(!formas.includes(st.signalFam)) st.signalFam = null;
+  const daForma = s => !st.signalFam || (st.signalFam === '__outras' ? contaForma[s.cls] < PICK_FORMA_FORTE : s.cls === st.signalFam);
+  if(formas.length > 1 && todos.length >= PICK_FORMA_MIN){
+    const fr = document.createElement('div'); fr.className = 'signal-row-inner fam-row';
+    const mk = (cls, rotulo, n)=>{
+      const b = document.createElement('div'); b.className = 'signal-chip fam-chip';
+      b.dataset.active = String(st.signalFam === cls);
+      b.innerHTML = `${rotulo}<span class="fam-count">${n}</span>`; b.style.opacity = dis;
+      b.onclick = ()=>{ if(o.desativado) return; st.signalFam = cls; st.signalMais = false; mudou(); };
+      fr.appendChild(b);
+    };
+    mk(null, 'todas', todos.length);
+    formas.forEach(c => mk(c, c === '__outras' ? 'outras' : signalFamilyLabel(c), todos.filter(s=>c === '__outras' ? contaForma[s.cls] < PICK_FORMA_FORTE : s.cls === c).length));
+    el.appendChild(fr);
+    scrollChipIntoRow(fr, fr.querySelector('[data-active="true"]'));
+  }
+
+  let busca = null;
+  if(todos.length >= PICK_BUSCA_MIN){
+    busca = document.createElement('input'); busca.type = 'text'; busca.className = 'pick-busca';
+    busca.placeholder = `buscar em ${pickNome(k)} (${todos.length})…`; busca.value = st.signalBusca || '';
+    busca.setAttribute('autocomplete','off'); busca.setAttribute('autocapitalize','none'); busca.spellcheck = false;
+    el.appendChild(busca);
+  }
+
+  const lista = document.createElement('div'); lista.className = 'signal-row-inner wrap-row'; el.appendChild(lista);
+  const pinta = ()=>{
+    lista.innerHTML = '';
+    const q = (st.signalBusca || '').trim().toLowerCase();
+    const vis = todos.filter(s => daForma(s) && (!q || s.w.toLowerCase().includes(q)));
+    const corte = st.signalMais || q ? vis : vis.slice(0, PICK_MAX);
+    corte.forEach(sw=>{
+      const chip = document.createElement('div'); chip.className = 'signal-chip';
+      const isActive = o.ativo(sw);
+      chip.dataset.active = String(isActive); chip.textContent = sw.w; paintCat(chip, sw);
+      if(!isActive){
+        const oc = o.rival(sw);
+        if(oc){ chip.dataset.rival = 'true'; chip.title = `Ocupa o mesmo encaixe (${pickNome(k)}) de "${oc.w}" — substitui`; }
+      }
+      chip.style.opacity = dis;
+      chip.onclick = ()=>{ if(!o.desativado) o.pick(sw, isActive); };
+      lista.appendChild(chip);
+    });
+    if(!vis.length){ const v = document.createElement('div'); v.className = 'signal-hint'; v.textContent = 'Nada com esse trecho neste encaixe.'; lista.appendChild(v); }
+    if(corte.length < vis.length){
+      const m = document.createElement('div'); m.className = 'signal-chip pick-mais';
+      m.textContent = `+ ${vis.length - corte.length} peças`;
+      m.onclick = ()=>{ st.signalMais = true; pinta(); };
+      lista.appendChild(m);
+    }
+    if(typeof applyA11y === 'function') applyA11y();
+  };
+  if(busca) busca.addEventListener('input', ()=>{ st.signalBusca = busca.value; pinta(); });
+  pinta();
+  return true;
+}
+
 function buildSignal(){
   const el = document.getElementById('signalRow'); const hint = document.getElementById('signalHint');
   const key = `${state.tempo}_${state.aspecto}`;
-  const words = (SIGNAL_WORDS[key] || []).concat(SPLIT_SIGNALS[key] || [])
+  const comWh = state.formato==='pergunta' && state.whWord && !WH_STATIC[state.whWord];
+  /* o sinal partido ocupa meio E fim; com uma interrogativa de adjunto ele atravessaria o encaixe vazio */
+  const words = (SIGNAL_WORDS[key] || []).concat(comWh ? [] : (SPLIT_SIGNALS[key] || []))
                   .filter(sw => signalAllowed(sw, state.formato));
+  const vazios = comWh ? whVazios(state.whWord) : new Set();
   /* se o formato mudou e o sinal escolhido não vale mais aqui, ele sai de cena */
-  ['signalMid','signalSplit'].forEach(slot=>{
-    if(state[slot] && !signalAllowed(state[slot], state.formato)) state[slot] = null;
-  });
+  if(state.signalSplit && !signalAllowed(state.signalSplit, state.formato)) state.signalSplit = null;
   /* vale também para estados restaurados: um ocupante por encaixe, o resto sai */
-  const vistosSlot = new Set();
-  state.signalEnds = endList().filter(s=>{
+  const um = (lista)=>{ const vistos = new Set(); return lista.filter(s=>{
     if(!signalAllowed(s, state.formato)) return false;
-    const r = endRank(s);
-    if(vistosSlot.has(r)) return false;
-    vistosSlot.add(r); return true;
-  });
-  el.innerHTML="";
-  const disabled = !!state.whWord;
+    const r = slotOf(s); if(vistos.has(r)) return false; vistos.add(r); return true; }); };
+  state.signalEnds = um(endList()).filter(x => !vazios.has(slotOf(x)));
+  state.signalMids = um(midList()).filter(x => !vazios.has(slotOf(x)));
+  if(comWh) state.signalSplit = null;
+  el.innerHTML = "";
+  const disabled = !!(state.formato==='pergunta' && state.whWord && WH_STATIC[state.whWord]);
 
-  const groups = {};
-  words.forEach(sw=>{ (groups[sw.cls] = groups[sw.cls]||[]).push(sw); });
-  const famKeys = Object.keys(CLASS_INFO).filter(k=>groups[k]);
-
-  /* A família ativa é escolha do usuário e não pode ser forçada a cada render: senão,
-     com um sinal de meio já selecionado, a fileira voltaria sempre para a família dele e
-     seria impossível navegar até a família do sinal de fim para combinar os dois.
-     O salto automático só acontece quando não há família válida escolhida (ex.: ao trocar
-     de tempo, quando a família anterior deixa de existir). */
-  const selected = state.signalSplit || state.signalMid || endList()[0];
-  if(!famKeys.includes(state.signalFam)){
-    state.signalFam = (selected && famKeys.includes(selected.cls)) ? selected.cls : famKeys[0];
-  }
-
-  const noneWrap = document.createElement('div'); noneWrap.className='signal-row-inner';
-  const none = document.createElement('div'); none.className='signal-chip';
-  none.dataset.active = (state.signalMid===null && !endList().length && state.signalSplit===null); none.textContent = "limpar tudo";
-  none.style.opacity = disabled ? .4 : 1;
-  none.onclick = ()=>{ if(disabled) return; state.signalMid=null; state.signalEnds=[]; state.signalSplit=null; render(); };
-  noneWrap.appendChild(none); el.appendChild(noneWrap);
-
-  if(!famKeys.length){ hint.textContent = "Nenhuma palavra-sinal cadastrada para esta combinação ainda."; return; }
-
-  /* fileira 1: famílias (mesma navegação em dois níveis do seletor de verbos) */
-  const famRow = document.createElement('div'); famRow.className='signal-row-inner fam-row';
-  famKeys.forEach(cls=>{
-    const btn = document.createElement('div'); btn.className='signal-chip fam-chip';
-    /* qualquer sinal ativo (meio, fim ou partido) acende o ponto na sua família —
-       com dois selecionados, as duas famílias ficam marcadas ao mesmo tempo */
-    const hasActive = [state.signalSplit, state.signalMid].concat(endList()).some(s=>s && s.cls===cls);
-    btn.dataset.active = (state.signalFam===cls);
-    btn.innerHTML = `${signalFamilyLabel(cls)}<span class="fam-count">${groups[cls].length}</span>${hasActive?'<span class="fam-dot"></span>':''}`;
-    btn.style.opacity = disabled ? .4 : 1;
-    btn.onclick = ()=>{ if(disabled) return; state.signalFam = cls; bankOpenSignal = false; render(); };
-    famRow.appendChild(btn);
-  });
-  el.appendChild(famRow);
-  /* mantém a família ativa visível na fileira rolável (importante com 20 famílias no celular) */
-  scrollChipIntoRow(famRow, famRow.querySelector('[data-active="true"]'));
-
-  /* fileira 2: palavras da família ativa */
-  const cls = state.signalFam;
-  const label = document.createElement('div'); label.className='signal-group-label'; label.textContent = CLASS_INFO[cls].label;
-  el.appendChild(label);
-  const wrap = document.createElement('div'); wrap.className='signal-row-inner wrap-row';
-  groups[cls].forEach(sw=>{
-    const chip = document.createElement('div'); chip.className='signal-chip';
-    const isEnd = sw.pl === 'end';
-    const isActive = sw.pl==='split' ? (state.signalSplit && state.signalSplit.w===sw.w)
-                   : (isEnd ? endList().some(s=>s.w===sw.w)
-                            : (state.signalMid && state.signalMid.w===sw.w));
-    chip.dataset.active = isActive; chip.textContent = sw.w;
-    paintCat(chip, sw);
-    /* marca visualmente quem disputa o mesmo encaixe de um adjunto já escolhido:
-       clicar aqui substitui, e o usuário vê isso antes de clicar */
-    if(isEnd && !isActive){
-      const ocupante = endList().find(s=>endRank(s)===endRank(sw));
-      if(ocupante){
-        chip.dataset.rival = 'true';
-        chip.title = `Ocupa o mesmo encaixe (${END_SLOT_NOME[endRank(sw)] || 'adjunto'}) de "${ocupante.w}" — substitui`;
-      }
-    }
-    chip.style.opacity = disabled ? .4 : 1;
-    chip.onclick = ()=>{
-      if(disabled) return;
-      if(sw.pl==='split'){
+  const ativos = (state.signalSplit ? [state.signalSplit] : []).concat(sortSlots(midList().concat(endList())));
+  const ocupante = (sw)=> (sw.pl === 'split') ? null
+      : (sw.pl === 'end' ? endList() : midList()).find(s => slotOf(s) === slotOf(sw) && s.w !== sw.w) || null;
+  const ok = renderSlotPicker(el, {
+    st: state, itens: words, ativos, desativado: disabled,
+    vazios, vazioPor: state.whWord,
+    limparAtivo: !ativos.length,
+    ativo: sw => sw.pl === 'split' ? !!(state.signalSplit && state.signalSplit.w === sw.w)
+                : (sw.pl === 'end' ? endList() : midList()).some(s => s.w === sw.w),
+    rival: ocupante,
+    limpar: ()=>{ state.signalMids = []; state.signalEnds = []; state.signalSplit = null; render(); },
+    pick: (sw, isActive)=>{
+      if(sw.pl === 'split'){
         /* o partido ocupa meio E fim, então limpa os dois slots simples */
-        state.signalSplit = isActive ? null : sw; state.signalMid=null; state.signalEnds=[];
-      } else if(isEnd){
-        /* Um ocupante por encaixe: escolher outro adjunto do MESMO encaixe substitui o
-           anterior (dois lugares não se somam); encaixes diferentes convivem. */
-        const atual = endList();
-        const slot = endRank(sw);
-        state.signalEnds = isActive ? atual.filter(s=>s.w!==sw.w)
-                                    : atual.filter(s=>endRank(s)!==slot).concat([sw]);
-        state.signalSplit=null;
+        state.signalSplit = isActive ? null : sw; state.signalMids = []; state.signalEnds = [];
       } else {
-        state.signalMid = isActive ? null : sw; state.signalSplit=null;
+        /* Um ocupante por encaixe: outra peça do MESMO encaixe substitui a anterior (dois
+           lugares não se somam); encaixes diferentes convivem — inclusive vários do meio. */
+        const campo = sw.pl === 'end' ? 'signalEnds' : 'signalMids';
+        const atual = campo === 'signalEnds' ? endList() : midList();
+        state[campo] = isActive ? atual.filter(s => s.w !== sw.w)
+                                : atual.filter(s => slotOf(s) !== slotOf(sw)).concat([sw]);
+        state.signalSplit = null;
       }
       render();
-    };
-    wrap.appendChild(chip);
+    },
+    refresh: ()=> render(),
+    aoMudar: ()=>{ bankOpenSignal = false; }
   });
-  el.appendChild(wrap);
+  if(!ok){ hint.textContent = "Nenhuma palavra-sinal cadastrada para esta combinação ainda."; return; }
 
   /* resumo do que está ativo — some quando nada está selecionado, e cada etiqueta remove só o seu */
-  const actives = [];
-  if(state.signalSplit) actives.push({label:state.signalSplit.w, pos:"meio + fim", sw:state.signalSplit, clear:()=>{ state.signalSplit=null; }});
-  if(state.signalMid) actives.push({label:state.signalMid.w, pos:adjKind(state.signalMid.cls, state.signalMid.w)+" · meio", sw:state.signalMid, clear:()=>{ state.signalMid=null; }});
-  sortEnds(endList()).forEach((s,i)=> actives.push({
-    label: s.w, pos: END_SLOT_NOME[endRank(s)] || adjKind(s.cls, s.w), sw: s,
-    clear: ()=>{ state.signalEnds = endList().filter(x=>x.w!==s.w); }
+  const etiquetas = [];
+  if(state.signalSplit) etiquetas.push({label:state.signalSplit.w, pos:"meio + fim", sw:state.signalSplit, clear:()=>{ state.signalSplit=null; }});
+  sortSlots(midList().concat(endList())).forEach(s=> etiquetas.push({
+    label: s.w, pos: `${slotNum(slotOf(s))}. ${END_SLOT_NOME[slotOf(s)] || adjKind(s.cls, s.w)}`, sw: s,
+    clear: ()=>{ state.signalMids = midList().filter(x=>x.w!==s.w); state.signalEnds = endList().filter(x=>x.w!==s.w); }
   }));
-  if(actives.length && !disabled){
+  if(etiquetas.length && !disabled){
     const box = document.createElement('div'); box.className='signal-active';
     const cap = document.createElement('span'); cap.textContent = "ativos:"; box.appendChild(cap);
-    actives.forEach(a=>{
+    etiquetas.forEach(a=>{
       const tag = document.createElement('span'); tag.className='tagx';
       tag.innerHTML = `<b>${a.label}</b><span>${a.pos}</span>✕`;
       paintCat(tag, a.sw);
@@ -2563,8 +2720,10 @@ function buildSignal(){
   }
 
   buildSignalBank();
-  hint.textContent = disabled ? "Desativado com interrogativa ativa — remova a palavra interrogativa para usar sinais."
-    : "Escolha a família e depois a palavra. Meio e fim são complementares — dá pra combinar uma de cada posição (ex.: already + twice).";
+  hint.textContent = disabled ? "How much / How many são exemplos fixos — remova a palavra interrogativa para usar sinais."
+    : comWh ? (vazios.size ? `Com "${state.whWord}" o encaixe marcado com ❓ fica vazio (é a resposta); os demais aceitam peças normalmente. Ao escolher a interrogativa, as peças desse encaixe saem.`
+                           : `"${state.whWord}" não esvazia nenhum encaixe de advérbio — todos continuam livres.`)
+    : "Escolha o encaixe e depois a peça. Cada encaixe aceita uma peça; encaixes diferentes se somam — dá para montar a frase inteira.";
 }
 function buildFormato(){
   const el = document.getElementById('formatoRow'); el.innerHTML="";
@@ -2597,11 +2756,11 @@ function buildWh(){
     });
     el.appendChild(wrap);
   });
-  hint.textContent = "Combinações servem para entender a estrutura — nem toda frase resultante é 100% natural semanticamente.";
+  hint.textContent = "A interrogativa esvazia o encaixe que ela pergunta (Where→lugar, When→tempo, How→modo, How long→duração, How often→periodicidade e frequência); os outros encaixes seguem livres no dial ⑨. Combinações servem para entender a estrutura — nem toda frase é 100% natural.";
 }
 /* Alguns advérbios do inglês são de POLARIDADE NEGATIVA: só existem em frases negativas
    ou interrogativas. "I don't work at all" e "Do you work at all?" são naturais;
-   "I work at all" não existe. O campo `only` marca esses sinais, e o dial ⑦ só os oferece
+   "I work at all" não existe. O campo `only` marca esses sinais, e o dial ⑨ só os oferece
    nos formatos onde são gramaticais — em vez de deixar o motor produzir inglês inválido. */
 /* ---- Ordem dos adjuntos no fim da frase ----
    Quando vários coexistem, o inglês segue uma ordem canônica — grau → modo → lugar →
@@ -2611,13 +2770,14 @@ function buildWh(){
 /* Cada POSIÇÃO da ordem canônica aceita um ocupante. Duas expressões do mesmo encaixe
    competem ("everywhere there" — dois lugares); de encaixes diferentes, somam
    ("a bit quickly", "twice yesterday"), ainda que sejam da mesma cor. Por isso o limite
-   é por encaixe, e não um teto global: 9 encaixes = até 9 adjuntos que se complementam. */
-const END_SLOT_NOME = { 0:'meio', 1:'grau', 2:'modo', 3:'comparação', 4:'lugar', 5:'frequência',
-                        6:'duração', 7:'aproximação', 8:'tempo', 9:'sequência', 10:'polaridade' };
+   é por encaixe, e não um teto global: são 15 posições que se complementam. */
+const END_SLOT_NOME = { 1:'grau', 2:'modo', 3:'comparação', 4:'lugar', 5:'periodicidade',
+                        6:'duração', 7:'aproximação', 8:'tempo', 9:'sequência', 10:'polaridade',
+                        11:'certeza', 12:'foco', 13:'frequência', 14:'fase', 15:'intensidade' };
 const END_RANK = {
   bitFam:1, mannerFam:2, compareFam:3, placeFam:4,
   freqDef:5, everyFam:5, freqIndef:5,
-  allFam:6, wholeFam:6, aboutFam:7,
+  allFam:6, wholeFam:6, durFam:6, aboutFam:7,
   timePoint:8, timeFam:8, withinFam:8, onceFam:8, againFam:8, everFam:8,
   seqFam:9, npiFam:10
 };
@@ -2630,7 +2790,353 @@ function endRank(sw){
   return END_RANK[sw.cls] || 8;
 }
 function sortEnds(list){ return list.slice().sort((a,b)=> endRank(a)-endRank(b)); }
+/* ---- Geografia da frase ----
+   Um encaixe = uma função = uma cor. O MEIO deixou de ser "um encaixe" (misturava certeza,
+   frequência, fase...) e virou uma ZONA com cinco encaixes próprios, na ordem em que o inglês
+   os empilha antes do verbo: certeza → foco → frequência → fase → intensidade
+   ("I probably also often already really like it"). A numeração segue a frase, da esquerda
+   para a direita: sequência abre (com vírgula), o meio vem antes do verbo, o fim depois. */
+const MID_SLOT = { certaintyFam:11, focusMid:12, freqIndef:13, perfectAdv:14, timeMid:14, degreeMid:15 };
+const SLOT_ORDEM = [9, 11, 12, 13, 14, 15, 1, 2, 3, 4, 5, 6, 7, 8, 10];
+const SLOT_N = SLOT_ORDEM.length;
+if(Object.keys(END_SLOT_NOME).length !== SLOT_N) console.warn('[anatomia] nomes e ordem dos encaixes divergem');
+function slotOf(sw){ return sw.pl === 'mid' ? (MID_SLOT[sw.cls] || 13) : endRank(sw); }
+function slotNum(r){ return SLOT_ORDEM.indexOf(r) + 1; }
+function SLOT_ZONA(r){ return r === 9 ? 'início' : (r >= 11 ? 'meio' : 'fim'); }
+function sortSlots(list){ return list.slice().sort((x,y)=> SLOT_ORDEM.indexOf(slotOf(x)) - SLOT_ORDEM.indexOf(slotOf(y))); }
+
+/* ================================================================================
+   EXPANSÃO DOS ENCAIXES
+   O banco original nasceu por combinação de tempo e ficou irregular: o grau tinha 1 peça
+   em alguns tempos, a periodicidade zero em outros. Aqui cada encaixe é povoado por UMA
+   lista-mestra e distribuído às combinações onde faz sentido. Regras:
+   • encaixe atemporal (grau, modo, comparação, lugar, periodicidade, duração): todas as 12
+     combinações recebem a união de tudo o que já existia + as peças novas;
+   • encaixe preso ao tempo (aproximação, polaridade, fase): só entra onde a gramática aceita;
+   • cada linha é "palavra|tradução|marcas" — A = só afirmativa/pergunta, N = só negativa e
+     pergunta, C = afirmativa/negativa, d = em português vai DEPOIS do verbo ("esqueci
+     completamente"), não antes. O motor de tradução lê a marca, e nada é escrito à mão
+     por combinação.
+   ================================================================================ */
+(function expandirEncaixes(){
+  const AFF = ['afirmativa','pergunta'], NEGQ = ['negativa','pergunta','pergunta_negativa'], AN = ['afirmativa','negativa'];
+  const COMBOS = Object.keys(SIGNAL_WORDS);
+  const sel = re => COMBOS.filter(k => re.test(k));
+  const ALL = COMBOS, PERF = sel(/perfeito/), SC = sel(/_(simples|continuo)$/);
+
+  function add(cls, pl, rows, combos){
+    rows.forEach(linha=>{
+      const [w, pt, f = ''] = linha.split('|');
+      if(!SIGNAL_PT[w]) SIGNAL_PT[w] = pt;
+      combos.forEach(k=>{
+        const lista = SIGNAL_WORDS[k];
+        if(lista.some(s => s.w === w)) return;          /* já existe aqui: não duplica */
+        const o = { w, pl, cls };
+        if(f.includes('A')) o.only = AFF.slice();
+        else if(f.includes('N')) o.only = NEGQ.slice();
+        else if(f.includes('C')) o.only = AN.slice();
+        if(f.includes('d')) o.ptPos = 'depois';
+        lista.push(o);
+      });
+    });
+  }
+  /* União de um encaixe atemporal: tudo o que existe em alguma combinação passa a existir em todas */
+  function unificar(slot, excluirCls = []){
+    const uniao = new Map();
+    COMBOS.forEach(k => SIGNAL_WORDS[k].forEach(s=>{
+      if(slotOf(s) === slot && !excluirCls.includes(s.cls) && !uniao.has(s.w)) uniao.set(s.w, s);
+    }));
+    COMBOS.forEach(k=>{
+      const tem = new Set(SIGNAL_WORDS[k].map(s => s.w));
+      uniao.forEach((s, w)=>{ if(!tem.has(w)) SIGNAL_WORDS[k].push(Object.assign({}, s)); });
+    });
+  }
+
+  /* ---------- 1 · grau: quanto ---------- */
+  add('bitFam','end',[
+    'a lot|muito','a great deal|bastante','a good deal|bastante','a whole lot|muitíssimo','very much|muito',
+    'so much|tanto','too much|demais','too little|pouco demais','so little|tão pouco','enough|o suficiente',
+    'more|mais','less|menos','a bit more|um pouco mais','a little more|um pouco mais','a lot more|muito mais',
+    'a lot less|muito menos','much more|bem mais','much less|bem menos','even more|ainda mais','even less|ainda menos',
+    'considerably|consideravelmente','significantly|significativamente','greatly|enormemente','enormously|imensamente',
+    'substantially|substancialmente','marginally|marginalmente','dramatically|drasticamente',
+    'to a large extent|em grande parte','to a great extent|em grande medida','much|muito|N','that much|tanto assim|N'
+  ], ALL);
+
+  /* ---------- 2 · modo: como (advérbios em -ly; as locuções já existiam) ---------- */
+  add('mannerFam','end',[
+    'efficiently|com eficiência','effectively|com eficácia','easily|facilmente','smoothly|sem problemas',
+    'gladly|de bom grado','happily|com alegria','calmly|com calma','patiently|com paciência','loudly|em voz alta',
+    'gently|com delicadeza','politely|educadamente','seriously|a sério','honestly|honestamente',
+    'properly|adequadamente','correctly|corretamente','perfectly|perfeitamente','beautifully|lindamente',
+    'professionally|profissionalmente','independently|de forma independente','voluntarily|voluntariamente',
+    'secretly|em segredo','openly|abertamente','publicly|publicamente','privately|em particular',
+    'reluctantly|a contragosto','eagerly|com entusiasmo','nervously|nervosamente','confidently|com confiança',
+    'creatively|de forma criativa','intensely|intensamente','steadily|de forma constante','gradually|gradualmente',
+    'suddenly|de repente','fluently|fluentemente','accurately|com precisão','precisely|com exatidão',
+    'freely|livremente','deliberately|deliberadamente','intentionally|intencionalmente','automatically|automaticamente',
+    'manually|manualmente','thoroughly|a fundo'
+  ], ALL);
+
+  /* ---------- 3 · comparação: comparado a quê ---------- */
+  add('compareFam','end',[
+    'better than usual|melhor que o normal','worse than usual|pior que o normal','worse than before|pior do que antes',
+    'worse than ever|pior do que nunca','faster than usual|mais rápido que o normal','slower than usual|mais devagar que o normal',
+    'harder than usual|mais duro que o normal','longer than usual|por mais tempo que o normal',
+    'earlier than usual|mais cedo que o normal','later than usual|mais tarde que o normal','less than before|menos do que antes',
+    'more than expected|mais do que o esperado','less than expected|menos do que o esperado',
+    'better than expected|melhor do que o esperado','worse than expected|pior do que o esperado',
+    'as well as ever|tão bem quanto sempre','as hard as ever|tão duro quanto sempre','as well as before|tão bem quanto antes',
+    'as much as before|tanto quanto antes','more than I thought|mais do que eu pensava',
+    'more than I used to|mais do que eu costumava','less than I used to|menos do que eu costumava',
+    'more than anyone else|mais do que qualquer outra pessoa','better than anyone|melhor do que qualquer um',
+    'better than anyone else|melhor do que qualquer outra pessoa','the most|mais do que todos','the least|menos do que todos'
+  ], ALL);
+
+  /* ---------- 4 · lugar: onde ---------- */
+  add('placeFam','end',[
+    'at the office|no escritório','at school|na escola','at the gym|na academia','at the airport|no aeroporto',
+    'at the station|na estação','at the table|à mesa','at a café|em um café','at a restaurant|em um restaurante',
+    'at the library|na biblioteca','at the hospital|no hospital','at the store|na loja','at the market|no mercado',
+    'at the university|na universidade','at the beach|na praia','at the party|na festa','in the city|na cidade',
+    'in the countryside|no interior','in the garden|no jardim','in the kitchen|na cozinha','in the living room|na sala',
+    'in the car|no carro','in the park|no parque','on the street|na rua','on the train|no trem','on the bus|no ônibus',
+    'on the plane|no avião','on campus|no campus','on site|no local','in public|em público','in private|em particular',
+    'indoors|em ambientes fechados','outdoors|ao ar livre','inside|lá dentro','downstairs|lá embaixo','overseas|no estrangeiro',
+    'locally|localmente','elsewhere|em outro lugar','somewhere|em algum lugar|A','anywhere|em lugar algum|N',
+    'far away|longe','up there|lá em cima','down there|lá embaixo','back there|lá atrás',
+    'in the middle of nowhere|no meio do nada','by the sea|à beira-mar','by the river|à beira do rio',
+    'in the mountains|nas montanhas','on the road|na estrada','on the way home|a caminho de casa',
+    'at the front|na frente','at the back|nos fundos'
+  ], ALL);
+
+  /* ---------- 5 · periodicidade: a cada quando / quantas vezes ---------- */
+  add('freqDef','end',[
+    'daily|diariamente','weekly|semanalmente','monthly|mensalmente','yearly|anualmente','annually|anualmente',
+    'hourly|a cada hora','nightly|toda noite','every week|toda semana','every month|todo mês','every year|todo ano',
+    'every morning|toda manhã','every afternoon|toda tarde','every evening|toda noite','every night|toda noite',
+    'every weekend|todo fim de semana','every Monday|toda segunda-feira','every few days|a cada poucos dias',
+    'every couple of days|a cada dois ou três dias','every now and then|de vez em quando','every so often|de vez em quando',
+    'now and then|de vez em quando','now and again|de vez em quando','once a day|uma vez por dia',
+    'twice a day|duas vezes por dia','three times a day|três vezes por dia','once a week|uma vez por semana',
+    'twice a week|duas vezes por semana','three times a week|três vezes por semana','once a month|uma vez por mês',
+    'twice a month|duas vezes por mês','once a year|uma vez por ano','twice a year|duas vezes por ano',
+    'four times a year|quatro vezes por ano','on weekdays|nos dias úteis','on weekends|nos fins de semana',
+    'at weekends|aos fins de semana','on Mondays|às segundas-feiras','on Sundays|aos domingos',
+    'in the mornings|de manhã','in the evenings|à noite','on a regular basis|regularmente','on a weekly basis|semanalmente',
+    'on a monthly basis|mensalmente','time and again|vez após vez','over and over|repetidamente',
+    'as often as possible|com a maior frequência possível','as often as I can|sempre que posso','once|uma vez',
+    'three times|três vezes','several times|várias vezes','many times|muitas vezes','a few times|algumas vezes',
+    'a couple of times|duas ou três vezes','countless times|inúmeras vezes','ten times|dez vezes'
+  ], ALL);
+
+  /* ---------- 6 · duração: por quanto tempo ---------- */
+  add('durFam','end',[
+    'throughout the day|ao longo do dia','throughout the week|ao longo da semana','throughout the month|ao longo do mês',
+    'throughout the year|ao longo do ano','throughout the night|durante a noite toda','throughout the summer|ao longo do verão',
+    'throughout the winter|ao longo do inverno','throughout the morning|durante toda a manhã','the entire time|o tempo todo',
+    'day and night|dia e noite','round the clock|24 horas por dia','nonstop|sem parar','without a break|sem pausa',
+    'from morning till night|de manhã até a noite','from dawn till dusk|do amanhecer ao anoitecer',
+    'from start to finish|do início ao fim','day after day|dia após dia','week after week|semana após semana',
+    'month after month|mês após mês','year after year|ano após ano','hour after hour|hora após hora',
+    'for hours|por horas','for days|por dias','for weeks|por semanas','for months|por meses','for years|por anos',
+    'for hours on end|por horas a fio','for days on end|por dias a fio','for weeks on end|por semanas a fio',
+    'for months on end|por meses a fio','for years on end|por anos a fio','for a while|por um tempo',
+    'for a short time|por pouco tempo','for a long while|por bastante tempo','for a few minutes|por alguns minutos',
+    'for a few hours|por algumas horas','for a few days|por alguns dias','for a few weeks|por algumas semanas',
+    'for a few months|por alguns meses','for a few years|por alguns anos','for a couple of hours|por umas duas horas',
+    'for a couple of days|por uns dois dias','for half an hour|por meia hora','for an hour|por uma hora',
+    'for a minute|por um minuto','during the day|durante o dia','during the night|durante a noite',
+    'overnight|durante a noite','all the way|o caminho todo','all the while|o tempo todo'
+  ], ALL);
+
+  /* ---------- 7 · aproximação: mais ou menos quando / quanto ---------- */
+  add('aboutFam','end',[                                   /* ritmo e duração: valem em qualquer tempo */
+    'about once a day|cerca de uma vez por dia','about once a week|cerca de uma vez por semana',
+    'about once a month|cerca de uma vez por mês','about once a year|cerca de uma vez por ano',
+    'about three times a week|umas três vezes por semana','about four times a day|umas quatro vezes por dia',
+    'roughly twice a month|aproximadamente duas vezes por mês','around five times a week|umas cinco vezes por semana',
+    'approximately every week|aproximadamente toda semana','more or less every day|mais ou menos todo dia',
+    'about three times|umas três vezes','about a dozen times|umas doze vezes','roughly ten times|aproximadamente dez vezes',
+    'around twenty times|umas vinte vezes','for about an hour|por cerca de uma hora','for about two hours|por cerca de duas horas',
+    'for about ten minutes|por cerca de dez minutos','for about half an hour|por cerca de meia hora',
+    'for about a week|por cerca de uma semana','for about a month|por cerca de um mês',
+    'for roughly three days|por aproximadamente três dias','for approximately a year|por aproximadamente um ano',
+    'for around two weeks|por umas duas semanas','at some point|em algum momento'
+  ], ALL);
+  add('aboutFam','end',[                                   /* hora do dia: simples e contínuo */
+    'around noon|por volta do meio-dia','around midnight|por volta da meia-noite','around three|por volta das três',
+    'around ten|por volta das dez','at about nine|por volta das nove','at around five|por volta das cinco',
+    'at roughly eight|por volta das oito','around that time|por volta dessa hora','around sunset|por volta do pôr do sol',
+    'around dawn|por volta do amanhecer','roughly then|mais ou menos nessa hora'
+  ], SC);
+  add('aboutFam','end',[                                   /* "há cerca de…": só o passado */
+    'about ten minutes ago|há cerca de dez minutos','about two hours ago|há cerca de duas horas',
+    'about three days ago|há cerca de três dias','about two weeks ago|há cerca de duas semanas',
+    'about six months ago|há cerca de seis meses','about ten years ago|há cerca de dez anos',
+    'around a week ago|há cerca de uma semana','roughly a decade ago|há cerca de uma década',
+    'approximately two years ago|há aproximadamente dois anos'
+  ], ['past_simples','past_continuo']);
+  add('aboutFam','end',[                                   /* "daqui a cerca de…": o futuro */
+    'in about ten minutes|daqui a uns dez minutos','in about two hours|daqui a umas duas horas',
+    'in about a week|daqui a mais ou menos uma semana','in about two weeks|daqui a umas duas semanas',
+    'in roughly a month|daqui a aproximadamente um mês','in around a year|daqui a cerca de um ano',
+    'sometime next week|em algum momento da semana que vem','sometime tomorrow|em algum momento amanhã',
+    'sometime soon|em breve','any time now|a qualquer momento','about this time next week|por volta desta hora na semana que vem',
+    'around this time next year|por volta desta época no ano que vem','roughly next month|mais ou menos no mês que vem'
+  ], ['future_simples','future_continuo','present_continuo']);
+
+  /* ---------- 9 · sequência: em que ordem ---------- */
+  add('seqFam','end',[
+    'firstly|primeiramente','first of all|antes de tudo','to begin with|para começar','at first|a princípio',
+    'in the first place|em primeiro lugar','secondly|em segundo lugar','thirdly|em terceiro lugar',
+    'after a while|depois de um tempo','shortly after|logo depois','soon after|pouco depois','right after|logo em seguida',
+    'immediately afterwards|imediatamente depois','subsequently|posteriormente','previously|anteriormente',
+    'beforehand|antes','in the end|no fim','lastly|por último','at last|finalmente','eventually|por fim',
+    'after all|afinal','once that was done|feito isso','in turn|por sua vez','simultaneously|simultaneamente',
+    'from that moment on|a partir daquele momento','after this|depois disto','following that|em seguida a isso',
+    'prior to that|antes disso'
+  ], ALL);
+  add('seqFam','end',['from now on|a partir de agora'], ['present_simples','present_continuo','future_simples','future_continuo']);
+
+  /* ---------- 10 · polaridade: só em negativas e perguntas ---------- */
+  add('npiFam','end',[
+    'whatsoever|de forma alguma|N','in any way|de forma alguma|N','by any means|de modo algum|N',
+    'under any circumstances|em nenhuma circunstância|N','at any point|em momento algum|N','at any time|em nenhum momento|N',
+    'for a moment|nem por um momento|N','for a second|nem por um segundo|N','any further|mais longe|N',
+    'any better|nem um pouco melhor|N','any more|mais|N'
+  ], ALL);
+  add('npiFam','end',[                                      /* "há anos": só o perfect */
+    'in years|há anos|N','in ages|há séculos|N','in a long time|há muito tempo|N','in months|há meses|N',
+    'in weeks|há semanas|N','in decades|há décadas|N','in a while|há algum tempo|N'
+  ], PERF);
+  add('npiFam','end',['any time soon|tão cedo|N'], ['future_simples','future_continuo','present_continuo']);
+
+  /* ---------- 11 · certeza: com que segurança (meio, antes do auxiliar negado) ---------- */
+  add('certaintyFam','mid',[
+    'probably|provavelmente|C','possibly|possivelmente|C','definitely|com certeza|C','certainly|certamente|C',
+    'surely|seguramente|C','clearly|claramente|C','obviously|obviamente|C','evidently|evidentemente|C',
+    'apparently|aparentemente|C','seemingly|aparentemente|C','presumably|presumivelmente|C','supposedly|supostamente|C',
+    'allegedly|supostamente|C','undoubtedly|sem dúvida|C','unquestionably|inquestionavelmente|C',
+    'most likely|muito provavelmente|C','inevitably|inevitavelmente|C','actually|na verdade|C'
+  ], ALL);
+
+  /* ---------- 12 · foco: só / também / até ---------- */
+  add('focusMid','mid',[
+    'also|também|A','even|até','only|só|A','merely|meramente|A','mainly|principalmente|Ad','mostly|sobretudo|Ad',
+    'primarily|primordialmente|Ad','especially|especialmente|d','particularly|particularmente|d',
+    'specifically|especificamente|d','exclusively|exclusivamente|Ad','solely|unicamente|Ad'
+  ], ALL);
+
+  /* ---------- 13 · frequência: com que frequência (vaga) ---------- */
+  add('freqIndef','mid',[
+    'always|sempre','usually|normalmente','often|frequentemente','frequently|frequentemente','generally|geralmente',
+    'constantly|constantemente','continually|continuamente','invariably|invariavelmente','habitually|habitualmente',
+    'repeatedly|repetidamente','periodically|periodicamente','intermittently|intermitentemente',
+    'almost always|quase sempre','nearly always|quase sempre','sometimes|às vezes|A','occasionally|ocasionalmente|A',
+    'rarely|raramente|A','seldom|raramente|A','never|nunca|A','hardly ever|quase nunca|A','scarcely ever|quase nunca|A',
+    'rarely ever|raramente|A','almost never|quase nunca|A'
+  ], ALL);
+
+  /* ---------- 14 · fase: em que ponto da ação ---------- */
+  add('perfectAdv','mid',['already|já|A','finally|finalmente|A'], ALL);
+  add('perfectAdv','mid',['still|ainda|A'], SC);
+  add('perfectAdv','mid',['initially|inicialmente|A','originally|originalmente|A','ultimately|por fim|A'], ALL);
+  add('perfectAdv','mid',['recently|recentemente|A'], PERF.filter(k=>/^(present|past)/.test(k)).concat(['past_simples']));
+  add('timeMid','mid',['currently|atualmente'], ['present_simples','present_continuo']);
+  add('timeMid','mid',['now|agora|A'], ['present_simples','present_continuo','present_perfeito','future_simples','future_continuo']);
+
+  /* ---------- 15 · intensidade: em que medida (meio, antes do verbo) ---------- */
+  add('degreeMid','mid',[
+    'really|realmente','truly|verdadeiramente|A','completely|completamente|d','totally|totalmente|d',
+    'entirely|inteiramente|d','fully|plenamente|d','absolutely|absolutamente|Ad','utterly|totalmente|Ad','almost|quase|A',
+    'nearly|quase|A','barely|mal|A','scarcely|mal|A','simply|simplesmente','literally|literalmente|A',
+    'partly|em parte|d','partially|parcialmente|d','slightly|levemente|Ad','deeply|profundamente|d','strongly|fortemente|d',
+    'quite|bastante|Ad','rather|bastante|Ad','somewhat|um tanto|Ad','genuinely|genuinamente'
+  ], ALL);
+
+  /* ---------- 8 · tempo: quando — as lacunas que o fio condutor deixou ----------
+     O tempo é o encaixe mais pedido e o mais irregular: o passado simples tinha 55 peças, o
+     perfect contínuo 28 e o passado contínuo 19. Cada tempo verbal aceita uma família própria
+     de marcadores, e é essa família que é completada aqui:
+       passado → período JÁ ENCERRADO (yesterday, last week, two days ago)
+       perfect → período AINDA ABERTO (today, this week, lately, in the past year)
+       presente → o recorte em que vale (today, at the moment, nowadays)
+       futuro → à frente (tonight, in a week, by Friday)  */
+  const P_FIM = ['past_simples','past_continuo'];
+  add('timePoint','end',[
+    'yesterday morning|ontem de manhã','yesterday afternoon|ontem à tarde','yesterday evening|ontem à noite',
+    'last weekend|no fim de semana passado','last Monday|segunda-feira passada','last Friday|sexta-feira passada',
+    'last spring|na primavera passada','last winter|no inverno passado','last Christmas|no Natal passado',
+    'a month ago|há um mês','a year ago|há um ano','a few days ago|há alguns dias','a few weeks ago|há algumas semanas',
+    'a couple of weeks ago|há umas duas semanas','on Monday|na segunda-feira','on Friday night|na sexta à noite',
+    'in the nineties|nos anos noventa','at the weekend|no fim de semana','this time last week|a esta hora semana passada',
+    'this time yesterday|a esta hora ontem','this time last year|nesta época do ano passado'
+  ], P_FIM);
+  add('timePoint','end',[
+    'yesterday|ontem','last night|ontem à noite','last week|semana passada','last month|mês passado','last year|ano passado',
+    'two days ago|há dois dias','a week ago|há uma semana','earlier today|mais cedo hoje','this morning|hoje de manhã',
+    'at midnight|à meia-noite','at noon|ao meio-dia','at lunchtime|na hora do almoço','at that time|naquela hora',
+    'when you called|quando você ligou','when you arrived|quando você chegou','a moment ago|há um instante'
+  ], ['past_continuo']);
+  add('timePoint','end',[
+    'the day before|no dia anterior','the night before|na noite anterior','the week before|na semana anterior',
+    'the month before|no mês anterior','the year before|no ano anterior','the previous day|no dia anterior',
+    'the previous week|na semana anterior','the previous year|no ano anterior','two days earlier|dois dias antes',
+    'a week earlier|uma semana antes','a year earlier|um ano antes','years earlier|anos antes','earlier that day|mais cedo naquele dia',
+    'until then|até então','by that time|até aquela hora','by noon|até o meio-dia','by the end of the day|até o fim do dia',
+    'by Monday|até segunda','before breakfast|antes do café da manhã','by 5 p.m.|até as 17h'
+  ], ['past_perfeito','past_perfeito_continuo']);
+  add('timePoint','end',[
+    'today|hoje','tonight|hoje à noite','this morning|hoje de manhã','this afternoon|hoje à tarde','this evening|hoje à noite',
+    'this week|esta semana','this month|este mês','this year|este ano','this weekend|neste fim de semana',
+    'this semester|neste semestre','nowadays|hoje em dia','at the moment|no momento','for the time being|por enquanto',
+    'at present|atualmente','tomorrow|amanhã','next week|semana que vem','next month|mês que vem',
+    'on Monday|na segunda-feira','on Friday|na sexta-feira'
+  ], ['present_simples','present_continuo']);
+  add('timePoint','end',[
+    'today|hoje','this morning|esta manhã','this afternoon|esta tarde','this week|esta semana','this month|este mês',
+    'this year|este ano','this weekend|neste fim de semana','this summer|neste verão','this semester|neste semestre',
+    'lately|ultimamente','so far today|até agora hoje','so far this week|até agora esta semana',
+    'so far this month|até agora este mês','so far this year|até agora este ano','in the past week|na última semana',
+    'in the past month|no último mês','in the past year|no último ano','in the past few weeks|nas últimas semanas',
+    'in the past few months|nos últimos meses','over the past week|ao longo da última semana',
+    'over the past year|ao longo do último ano','over the past decade|ao longo da última década',
+    'over the last few years|ao longo dos últimos anos','in recent weeks|nas últimas semanas',
+    'in recent months|nos últimos meses','in recent days|nos últimos dias','since this morning|desde esta manhã',
+    'since yesterday|desde ontem','since last week|desde a semana passada','since last month|desde o mês passado',
+    'since January|desde janeiro','since then|desde então','for the past week|durante a última semana',
+    'for the past few days|durante os últimos dias','for the last two weeks|durante as últimas duas semanas'
+  ], ['present_perfeito','present_perfeito_continuo']);
+  add('timePoint','end',[
+    'today|hoje','tonight|hoje à noite','this morning|hoje de manhã','this afternoon|hoje à tarde','this week|esta semana',
+    'this month|este mês','this year|este ano','this weekend|neste fim de semana','tomorrow morning|amanhã de manhã',
+    'tomorrow afternoon|amanhã à tarde','tomorrow night|amanhã à noite','next Monday|segunda-feira que vem',
+    'next summer|no verão que vem','on Monday|na segunda-feira','on Friday|na sexta-feira','in a week|daqui a uma semana',
+    'in a month|daqui a um mês','in a year|daqui a um ano','in ten minutes|daqui a dez minutos','in an hour|daqui a uma hora',
+    'in two days|daqui a dois dias','in two weeks|daqui a duas semanas','later today|mais tarde hoje',
+    'this time tomorrow|a esta hora amanhã','this time next week|a esta hora na semana que vem'
+  ], ['future_simples','future_continuo']);
+  add('timePoint','end',[
+    'tomorrow|amanhã','tonight|hoje à noite','next week|na semana que vem','next month|no mês que vem','next year|no ano que vem',
+    'this weekend|neste fim de semana','this evening|esta noite','tomorrow morning|amanhã de manhã','tomorrow night|amanhã à noite',
+    'next Monday|segunda-feira que vem','at noon tomorrow|amanhã ao meio-dia','at this time tomorrow|a esta hora amanhã'
+  ], ['future_continuo']);
+  add('timePoint','end',[
+    'by Friday|até sexta','by Monday|até segunda','by next week|até a semana que vem','by next month|até o mês que vem',
+    'by the end of the week|até o fim da semana','by noon|até o meio-dia','by tomorrow morning|até amanhã de manhã',
+    'by this time tomorrow|até esta hora amanhã','by this time next week|até esta hora na semana que vem',
+    'by the end of the day|até o fim do dia','by the end of the decade|até o fim da década','by next summer|até o verão que vem',
+    'by the weekend|até o fim de semana','by January|até janeiro','by 5 p.m.|até as 17h','by midnight|até a meia-noite'
+  ], ['future_perfeito','future_perfeito_continuo']);
+
+  /* ---------- atemporais: tudo o que existe em alguma combinação passa a existir em todas ---------- */
+  [1, 2, 3, 4, 6].forEach(r => unificar(r));
+  unificar(5, ['freqIndef']);          /* "normally/typically" ficam onde estavam: aceitam mal a negação */
+})();
+
 function endList(){ return Array.isArray(state.signalEnds) ? state.signalEnds : []; }
+function midList(){ return Array.isArray(state.signalMids) ? state.signalMids : []; }
 
 /* Pinta um elemento (chip, etiqueta) com a cor do encaixe do sinal. As famílias
    continuam neutras: elas são navegação, não conteúdo. */
@@ -2654,8 +3160,20 @@ function applySignal(text, signalMid, signalEnd, col, signalSplit, formato){
        depois do auxiliar ("I will probably work"), mas na negativa vêm ANTES dele
        ("I probably won't work" — nunca "I won't probably work"). Os de frequência não
        fazem isso ("I don't always work" é natural), por isso a regra é só desta família. */
-    if(signalMid.cls === 'certaintyFam' && neg) words.splice(1, 0, C(signalMid.w, signalMid.cls));
-    else words.splice(words.length-1, 0, C(signalMid.w, signalMid.cls));
+    /* Vários advérbios de meio empilham na ordem dos encaixes (certeza → foco → frequência →
+       fase → intensidade). O ponto de inserção é logo depois do 1º auxiliar ("I have probably
+       been working", e não "I have been probably working"); sem auxiliar, antes do verbo. */
+    const listaMid = sortSlots(Array.isArray(signalMid) ? signalMid : [signalMid]);
+    /* certeza em frase negada vem ANTES do auxiliar ("I probably won't work") */
+    const base = Math.min(words.length-1, 2);          /* logo após o 1º auxiliar, medido antes de inserir */
+    /* Na negativa, duas peças passam à frente do auxiliar: a certeza ("I probably don't") e o
+       "still" ("I still don't know" — nunca "I don't still know"). Entram na ordem dos encaixes. */
+    const furaFila = m => neg && (m.cls === 'certaintyFam' || m.w === 'still');
+    const certNeg = listaMid.filter(furaFila);
+    certNeg.forEach((m, i) => words.splice(1 + i, 0, C(m.w, m.cls)));
+    /* os demais empilham um depois do outro a partir desse ponto */
+    let ponto = base + certNeg.length;
+    listaMid.filter(m => !furaFila(m)).forEach(m => { words.splice(ponto, 0, C(m.w, m.cls)); ponto++; });
   }
   let t = words.join(" ");
   if(col) t += ' ' + R(col.en);           /* regência/collocation cola no verbo, antes dos sinais de fim */
@@ -2678,7 +3196,7 @@ function render(){
   buildPronome(); buildVerbo(); buildColocacao(); buildVerbBank(); buildWhBank(); buildCategoria(); buildTempo(); buildAspecto(); buildSignal(); buildFormato(); buildWh(); updateTempoTrack();
 
   document.getElementById('whDialGroup').style.display = state.formato==='pergunta' ? '' : 'none';
-  document.getElementById('signalDialGroup').style.display = (state.formato==='pergunta' && state.whWord) ? 'none' : '';
+  document.getElementById('signalDialGroup').style.display = (state.formato==='pergunta' && state.whWord && WH_STATIC[state.whWord]) ? 'none' : '';
   document.getElementById('verboDialGroup').style.display = state.categoria==='fact' ? '' : 'none';
   document.getElementById('colDialGroup').style.display = (state.categoria==='fact' && !(state.formato==='pergunta' && state.whWord)) ? '' : 'none';
 
@@ -2686,17 +3204,17 @@ function render(){
   const col = (verb && state.colocacao!==null) ? (verb.col || [])[state.colocacao] : null;
   let sentenceHTML, audioText, ptText, structureText, formulaExtra="";
   if(state.formato==='pergunta' && state.whWord){
-    const w = whGenerate(state.categoria, state.tempo, state.aspecto, state.pronome, state.whWord, verb);
-    sentenceHTML = escapeHTML(w.en); audioText = w.en; ptText = w.pt; structureText = w.structure;
+    const w = whGenerate(state.categoria, state.tempo, state.aspecto, state.pronome, state.whWord, verb, {mids: midList(), ends: endList()});
+    sentenceHTML = w.enMarked ? markedToHTML(w.enMarked, markColorVar('pergunta')) : escapeHTML(w.en); audioText = w.en; ptText = w.pt; structureText = w.structure;
     formulaExtra = ` × <span>❓ ${state.whWord}</span>`;
   } else {
     const g = generate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, verb);
-    const withSignal = applySignal(g.text, state.signalMid, endList(), col, state.signalSplit, state.formato);
+    const withSignal = applySignal(g.text, midList().length ? midList() : null, endList(), col, state.signalSplit, state.formato);
     const finalRaw = withSignal + (g.isQuestion ? M("?") : ".");
     sentenceHTML = markedToHTML(finalRaw, markColorVar(state.formato));
     audioText = stripMarks(finalRaw);
-    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, state.signalMid, endList(), state.verbo, col, state.signalSplit);
-    const signalNote = state.signalSplit ? state.signalSplit.w : [state.signalMid].concat(sortEnds(endList())).filter(Boolean).map(s=>s.w).join(" + ");
+    ptText = translate(state.categoria, state.tempo, state.aspecto, state.formato, state.pronome, midList().length ? midList() : null, endList(), state.verbo, col, state.signalSplit);
+    const signalNote = state.signalSplit ? state.signalSplit.w : sortSlots(midList().concat(endList())).map(s=>s.w).join(" + ");
     structureText = g.structure + (signalNote ? ` + palavra-sinal (${signalNote})` : "") + (col ? ` + regência/collocation` : "");
   }
   document.getElementById('sentence').innerHTML = sentenceHTML;
@@ -2718,6 +3236,9 @@ function render(){
 }
 
 function getNote(s){
+  /* o console aceita um advérbio por encaixe do meio; as notas abaixo tratam o primeiro deles */
+  const mList = sortSlots(Array.isArray(s.signalMids) ? s.signalMids : []);
+  s = Object.assign({}, s, { signalMid: mList[0] || null });
   const ends = Array.isArray(s.signalEnds) ? s.signalEnds : [];
   if(ends.length > 1){
     const ordenados = sortEnds(ends);
@@ -2727,9 +3248,9 @@ function getNote(s){
     const pinta = (txt, kind)=> `<b style="color:${ADJ_COLOR[kind]}">${txt}</b>`;
     const KIND_DE_NOME = { grau:'como', modo:'como', comparação:'como', como:'como',
       lugar:'onde', onde:'onde',
-      frequência:'quando', duração:'quando', tempo:'quando', quando:'quando',
+      frequência:'quando', periodicidade:'quando', duração:'quando', tempo:'quando', quando:'quando',
       prazo:'quando', repetição:'quando', aproximação:'quando', sequência:'quando', polaridade:'quando' };
-    const regra = ['grau','modo','lugar','frequência','duração','tempo']
+    const regra = ['grau','modo','lugar','periodicidade','duração','tempo']
       .map(n=> pinta(n, KIND_DE_NOME[n])).join(' → ');
     /* o rótulo é o ENCAIXE (grau, modo, lugar, frequência...), que é a unidade da regra —
        dizer "como → como" para grau + modo esconderia justamente por que eles se somam */
@@ -2741,6 +3262,11 @@ function getNote(s){
     return `Vários adjuntos convivem no fim da frase, mas em <b>ordem fixa</b>: ${regra}. Aqui a ordem é ${cats.join(' → ')}, então sai "${ordenados.map(x=>x.w).join(' ')}"` +
            (iguais ? '.' : ' — o motor reordenou o que você escolheu.') +
            ' Cada encaixe aceita um ocupante: escolher outro do mesmo encaixe substitui, mas encaixes diferentes se somam.';
+  }
+  if(mList.length > 1){
+    const neg = s.formato==='negativa' || s.formato==='pergunta_negativa';
+    return `Os advérbios do meio empilham na ordem do corredor — <b>Será · Só · Sempre · Já · Muito</b> (certeza → foco → frequência → fase → intensidade) — logo depois do primeiro auxiliar: "${mList.map(m=>m.w).join(' ')}". Aqui sai nessa ordem mesmo que você tenha escolhido em outra.` +
+      (neg ? ' Na negativa, só a certeza e o "still" ficam antes do auxiliar.' : '');
   }
   if(s.signalMid && s.signalMid.cls === 'certaintyFam'){
     const neg = s.formato==='negativa' || s.formato==='pergunta_negativa';
@@ -2901,6 +3427,78 @@ const MODAL_SIGNALS = {
   habito: ["when I was young","every summer","all summer long","back then","as a child","in those days","all the time","every single day","for fun","out of habit","off and on","on my own","back in the day","once in a while"]
 };
 
+/* Função de cada sinal modal — o encaixe a que ele pertence na anatomia. A classe lexical
+   ("with", "by", "in"…) não diz a função: "without help" é modo, "by law" é modo, "in advance"
+   é tempo. O número é o do encaixe interno (1 grau · 2 modo · 4 lugar · 5 periodicidade ·
+   6 duração · 7 aproximação · 8 tempo). Nada é inferido: o que não estiver aqui avisa no console. */
+const MODAL_SLOT_MAP = {
+  "easily":2,"without help":2,"by myself":2,"all by myself":2,"with practice":2,"if necessary":2,"all the time":6,"as always":2,"by heart":2,"out loud":2,"from memory":2,"on my own":2,"without a doubt":2,"little by little":2,"about half the time":5,"a bit":1,"quite a bit":1,
+  "tomorrow":8,"tonight":8,"at any moment":8,"all of a sudden":2,"in theory":2,"this weekend":8,"once again":8,"by chance":2,"out of nowhere":2,"at some point":7,"without warning":2,"over the phone":2,"about now":7,"about twice":7,
+  "by law":2,"before Friday":8,"no matter what":2,"right away":8,"every day":5,"all week long":6,"on time":8,"every single day":5,"as agreed":2,"in advance":8,"at once":2,"from now on":8,"on schedule":8,
+  "here":4,"after class":8,"on weekends":5,"all weekend":6,"in this building":4,"during the break":8,"this time":8,"as needed":2,"in person":2,"at any time":8,"over the weekend":8,"around here":4,
+  "more often":5,"as soon as possible":8,"before it gets worse":8,"at least once":5,"all year round":6,"from time to time":5,"as usual":2,"for sure":2,"at least":1,"step by step":2,"once and for all":2,"a little":1,"a bit longer":1,
+  "when I was young":8,"every summer":5,"all summer long":6,"back then":8,"as a child":8,"in those days":8,"for fun":2,"out of habit":2,"off and on":5,"back in the day":8,"once in a while":5
+};
+const MODAL_SLOT_CLS = { 1:'bitFam', 2:'mannerFam', 3:'compareFam', 4:'placeFam', 5:'freqDef', 6:'durFam', 7:'aboutFam', 8:'timePoint', 9:'seqFam' };
+Object.values(MODAL_SIGNALS).forEach(l => l.forEach(w => { if(!MODAL_SLOT_MAP[w]) console.warn('[modais] sinal sem encaixe definido:', w); }));
+
+/* Corredor do meio nos modais: os advérbios que cabem antes do verbo, por função. A lista é
+   curada — "I might probably" ou "I can just have to" não se dizem —, e cada peça vem do
+   mesmo banco do console (classe, encaixe e restrição de polaridade já definidos lá). */
+const MODAL_MID = {
+  capacidade:  ["probably","definitely","certainly","only","also","even","always","usually","often","sometimes","never","still","already","really","completely","barely","hardly","simply"],
+  possibilidade:["actually","also","even","only","still","already","sometimes","often","never","really","simply"],
+  obrigacao:   ["probably","definitely","certainly","actually","always","usually","often","sometimes","never","still","already","only","also","even","really","simply"],
+  permissao:   ["probably","definitely","certainly","always","usually","often","sometimes","never","still","already","only","also","even","really","simply"],
+  conselho:    ["probably","definitely","certainly","really","always","usually","never","only","also","even","still","already","simply","completely"],
+  habito:      ["probably","definitely","certainly","actually","always","usually","often","sometimes","never","only","also","even","really","simply"]
+};
+let _midBank = null;
+function midBank(){
+  if(_midBank) return _midBank;
+  _midBank = new Map();
+  Object.values(SIGNAL_WORDS).flat().filter(x => x.pl === 'mid').forEach(x=>{
+    const a = _midBank.get(x.w) || [];
+    if(!a.some(y => y.cls === x.cls && y.only === x.only)) a.push(x);
+    _midBank.set(x.w, a);
+  });
+  return _midBank;
+}
+/* todas as peças oferecidas na função atual: meio (curado) + fim (MODAL_SIGNALS) */
+function modalItens(){
+  const f = modalState.funcao, fmt = modalState.formato;
+  const fim = MODAL_SIGNALS[f].map(w => ({ w, cls: modalSignalFam(w), pl:'end' }));
+  const meio = (MODAL_MID[f] || []).map(w => (midBank().get(w) || []).find(e => signalAllowed(e, fmt))).filter(Boolean);
+  return meio.concat(fim);
+}
+function modalSigs(){ return Array.isArray(modalState.signals) ? modalState.signals : []; }
+function modalVazios(){
+  return (modalState.formato === 'pergunta' && modalState.whWord) ? whVazios(modalState.whWord) : new Set();
+}
+/* Onde o advérbio de meio entra no modal:
+   · afirmativa/negativa: logo depois do 1º auxiliar ("I can always work", "I will often have to work");
+   · diante de have to / has to / had to / used to, que se comportam como verbo pleno, ele vem antes
+     ("I often have to work", "I never used to work");
+   · "might not": depois do not ("I might not always have worked");
+   · pergunta: depois do sujeito ("Can you always work?");
+   · negativa: certeza e "still" passam à frente do auxiliar ("I probably can't work"). */
+const MODAL_CABECA = new Set(['have','has','had','used']);
+function modalInserirMeio(text, mids, formato){
+  if(!mids.length) return text;
+  const isQ = formato === 'pergunta' || formato === 'pergunta_negativa';
+  const neg = formato === 'negativa' || formato === 'pergunta_negativa';
+  const w = text.split(' ');
+  const lista = sortSlots(mids);
+  const frente = (neg && !isQ) ? lista.filter(m => m.cls === 'certaintyFam' || m.w === 'still') : [];
+  const resto = lista.filter(m => !frente.includes(m));
+  frente.forEach((m,i)=> w.splice(1 + i, 0, C(m.w, m.cls)));
+  let ponto = isQ ? 2 : (MODAL_CABECA.has(stripMarks(w[1 + frente.length] || '')) ? 1 : 2);
+  ponto += frente.length;
+  if(neg && !isQ && stripMarks(w[ponto] || '') === 'not') ponto++;
+  resto.forEach(m=>{ w.splice(ponto, 0, C(m.w, m.cls)); ponto++; });
+  return w.join(' ');
+}
+
 function bePastNeg(p){ return (IS_3SG(p)||p==='I') ? "wasn't" : "weren't"; }
 function haveToPres(p){ return IS_3SG(p) ? "has to" : "have to"; }
 
@@ -3031,7 +3629,7 @@ const MODAL_ENGINE = {
   ]}
 };
 
-let modalState = { funcao:"capacidade", tempo:"present", formato:"afirmativa", pronome:"I", signal:null, signalFam:null, whWord:null };
+let modalState = { funcao:"capacidade", tempo:"present", formato:"afirmativa", pronome:"I", signals:[], signalSlot:null, signalFam:null, signalBusca:'', signalMais:false, whWord:null };
 /* WH nos modais: as de adjunto (Where/When/Why/How...) usam a pergunta pronta e só
    ganham a palavra na frente — "Should I go?" → "Where should I go?". As de sujeito
    (Who/What) NÃO invertem: o WH ocupa o lugar do sujeito, com o verbo na 3ª pessoa
@@ -3049,6 +3647,7 @@ const ANCORA_FAM = { bit:'bitFam', little:'bitFam', under:'underFam', through:'t
   on:'onFam', over:'overFam', with:'withFam', without:'withFam', around:'aroundFam', back:'backFam',
   once:'onceFam', as:'asFam', every:'everyFam', time:'timeFam', out:'outFam', off:'outFam', whole:'wholeFam' };
 function modalSignalFam(w){
+  if(MODAL_SLOT_MAP[w]) return MODAL_SLOT_CLS[MODAL_SLOT_MAP[w]];
   if(MODAL_FAM_CACHE[w]) return MODAL_FAM_CACHE[w];
   let cls = null;
   for(const k in SIGNAL_WORDS){
@@ -3074,7 +3673,7 @@ function buildModalGrid(){
     btn.style.setProperty('--accent', 'var(--amber)');
     btn.dataset.active = (modalState.funcao===key);
     btn.innerHTML = `<span class="ic">${d.icon}</span><span>${d.label}</span>`;
-    btn.onclick = ()=>{ modalState.funcao=key; if(!MODAL_ENGINE[key].tempos.some(t=>t.key===modalState.tempo)) modalState.tempo = MODAL_ENGINE[key].tempos[0].key; modalState.signal=null; modalState.signalFam=null; renderModal(); };
+    btn.onclick = ()=>{ modalState.funcao=key; if(!MODAL_ENGINE[key].tempos.some(t=>t.key===modalState.tempo)) modalState.tempo = MODAL_ENGINE[key].tempos[0].key; modalState.signals=[]; modalState.signalSlot=null; modalState.signalFam=null; renderModal(); };
     el.appendChild(btn);
   });
 }
@@ -3113,66 +3712,28 @@ function buildModalDials(){
     wr.appendChild(b);
   });
 
-  /* mesma navegação em dois níveis do dial ⑦: família primeiro, palavra depois */
+  /* o mesmo seletor por encaixe do motor de tempos; meio e fim somam, um ocupante por encaixe */
   const sr = document.getElementById('modalSignalRow'); sr.innerHTML="";
-  const palavras = MODAL_SIGNALS[modalState.funcao];
-  const brutos = {};
-  palavras.forEach(w=>{ const c = modalSignalFam(w); (brutos[c] = brutos[c]||[]).push(w); });
-  /* Família com um único item vira aba de um clique só — mais navegação que a lista
-     corrida que ela deveria substituir. Aqui elas se juntam em "diversos": a paginação
-     só compensa onde há de fato um grupo. */
-  const grupos = {};
-  Object.keys(brutos).forEach(c=>{
-    /* "diversos" ACUMULA: ele recebe tanto os itens que já nasceram sem família quanto os
-       solitários realocados. Atribuir direto aqui sobrescrevia o que já tinha sido movido
-       para cá antes — foi assim que um sinal sumia da tela sem sumir do banco. */
-    const destino = (brutos[c].length >= 2 && c !== 'outrosFam') ? c : 'outrosFam';
-    (grupos[destino] = grupos[destino] || []).push(...brutos[c]);
+  const itens = modalItens(), vz = modalVazios();
+  const ids = new Set(itens.map(x => x.pl + '|' + x.w)), vistos = new Set();
+  modalState.signals = modalSigs().filter(x => ids.has(x.pl + '|' + x.w) && !vz.has(slotOf(x))
+                                               && !vistos.has(slotOf(x)) && (vistos.add(slotOf(x)), true));
+  const mesma = (a, b) => a.pl === b.pl && a.w === b.w;
+  renderSlotPicker(sr, {
+    st: modalState, itens, ativos: sortSlots(modalSigs()), desativado: false,
+    vazios: vz, vazioPor: modalState.whWord,
+    limparAtivo: !modalSigs().length, rotuloLimpar: 'sem sinal',
+    ativo: sw => modalSigs().some(x => mesma(x, sw)),
+    rival: sw => modalSigs().find(x => slotOf(x) === slotOf(sw) && !mesma(x, sw)) || null,
+    limpar: ()=>{ modalState.signals = []; renderModal(); },
+    pick: (sw, isActive)=>{
+      const atual = modalSigs();
+      modalState.signals = isActive ? atual.filter(x => !mesma(x, sw))
+                                    : atual.filter(x => slotOf(x) !== slotOf(sw)).concat([sw]);
+      renderModal();
+    },
+    refresh: ()=> renderModal()
   });
-  if(grupos.outrosFam) grupos.outrosFam.sort();
-  const famKeys = Object.keys(CLASS_INFO).filter(k=>grupos[k]);
-
-  const selFamBruto = modalState.signal ? modalSignalFam(modalState.signal) : null;
-  const selFam = (selFamBruto && grupos[selFamBruto]) ? selFamBruto : (modalState.signal ? 'outrosFam' : null);
-  if(!famKeys.includes(modalState.signalFam)){
-    modalState.signalFam = (selFam && famKeys.includes(selFam)) ? selFam : famKeys[0];
-  }
-
-  const linhaNone = document.createElement('div'); linhaNone.className='signal-row-inner';
-  const none = document.createElement('div'); none.className='signal-chip';
-  none.dataset.active = (modalState.signal===null); none.textContent = "sem sinal";
-  none.onclick = ()=>{ modalState.signal=null; renderModal(); };
-  linhaNone.appendChild(none); sr.appendChild(linhaNone);
-
-  if(famKeys.length > 1){
-    const famRow = document.createElement('div'); famRow.className='signal-row-inner fam-row';
-    famKeys.forEach(cls=>{
-      const b = document.createElement('div'); b.className='signal-chip fam-chip';
-      b.dataset.active = (modalState.signalFam === cls);
-      b.innerHTML = `${signalFamilyLabel(cls)}<span class="fam-count">${grupos[cls].length}</span>${selFam===cls?'<span class="fam-dot"></span>':''}`;
-      b.onclick = ()=>{ modalState.signalFam = cls; renderModal(); };
-      famRow.appendChild(b);
-    });
-    sr.appendChild(famRow);
-    scrollChipIntoRow(famRow, famRow.querySelector('[data-active="true"]'));
-
-    const lbl = document.createElement('div'); lbl.className='signal-group-label';
-    lbl.textContent = CLASS_INFO[modalState.signalFam].label;
-    sr.appendChild(lbl);
-  }
-
-  /* As palavras quebram em linhas em vez de rolar: numa lista de 13 itens, a faixa
-     horizontal escondia a maioria (o "by law" ficava fora da tela). A fileira de
-     FAMÍLIAS continua rolando, porque lá cada aba é um destino, não conteúdo. */
-  const linha = document.createElement('div'); linha.className='signal-row-inner wrap-row';
-  (grupos[modalState.signalFam] || []).forEach(w=>{
-    const chip = document.createElement('div'); chip.className='signal-chip';
-    chip.dataset.active = (modalState.signal===w); chip.textContent = w;
-    paintCat(chip, {cls: modalSignalFam(w), w});
-    chip.onclick = ()=>{ modalState.signal = (modalState.signal===w) ? null : w; renderModal(); };
-    linha.appendChild(chip);
-  });
-  sr.appendChild(linha);
 }
 function renderModal(){
   buildModalGrid(); buildModalDials();
@@ -3186,41 +3747,37 @@ function renderModal(){
   const isSubjWh = wh && WH_SUBJECT.includes(wh);
   /* WH de sujeito não inverte: gera a afirmativa com o WH no lugar do sujeito. */
   const g = isSubjWh ? tempoDef.gen(wh, verb, 'afirmativa') : tempoDef.gen(modalState.pronome, verb, modalState.formato);
-  let raw = g.text;
+  const vzM = modalVazios();
+  const sigs = modalSigs().filter(x => !vzM.has(slotOf(x)));
+  const mids = sigs.filter(x => x.pl === 'mid'), ends = sigs.filter(x => x.pl === 'end');
+  let raw = modalInserirMeio(g.text, mids, isSubjWh ? 'afirmativa' : modalState.formato);
   if(col) raw += ' ' + R(col.en);                 /* regência colada ao verbo, antes do sinal */
-  if(modalState.signal) raw += ' ' + C(modalState.signal, modalSignalFam(modalState.signal));
+  sortEnds(ends).forEach(x => { raw += ' ' + C(x.w, x.cls); });
   if(wh && !isSubjWh) raw = M(wh) + ' ' + lowerFirstMarked(raw);
   raw += (isQ || wh) ? M('?') : '.';
   document.getElementById('modalSentence').innerHTML = markedToHTML(raw, markColorVar(modalState.formato));
   document.getElementById('modalAudio').dataset.text = stripMarks(raw);
-  const per = ptPerson(modalState.pronome), pron = PT_PRONOUN[modalState.pronome];
+  const per = ptPerson(modalState.pronome);
   const vpt = PT_VERBS[state.verbo] || PT_VERBS.work;
-  const neg = modalState.formato==='negativa' || modalState.formato==='pergunta_negativa';
-  let ptBody = tempoDef.pt(per, vpt);
-  if(col) ptBody += ' ' + col.pt;
-  if(modalState.signal) ptBody += ' ' + (SIGNAL_PT[modalState.signal] || modalState.signal);
+  const pt = (pronKey, pessoa, fmt)=> buildPTSentence({ pron: PT_PRONOUN[pronKey], core: tempoDef.pt(pessoa, vpt) },
+                                                       fmt, mids.length ? mids : null, ends, col || null, null);
   let ptFrase;
-  if(isSubjWh){
-    /* "Quem deveria ir?" — o WH é o sujeito, então a conjugação vai na 3ª pessoa */
-    const pt3 = tempoDef.pt('3s', vpt);
-    let corpo = pt3;
-    if(col) corpo += ' ' + col.pt;
-    if(modalState.signal) corpo += ' ' + (SIGNAL_PT[modalState.signal] || modalState.signal);
-    ptFrase = `${WH_PT_SUBJECT[wh]} ${corpo}?`;
-  } else if(wh){
-    ptFrase = `${WH_PT_ADJUNCT[wh]} ${lowerFirst(cap(pron))}${neg?' não':''} ${ptBody}?`;
-  } else {
-    ptFrase = `${cap(pron)}${neg?' não':''} ${ptBody}` + (isQ ? '?' : '.');
-  }
+  if(isSubjWh)  ptFrase = ptComWh(pt('He', '3s', 'afirmativa'), WH_PT_SUBJECT[wh], true);
+  else if(wh)   ptFrase = ptComWh(pt(modalState.pronome, per, 'afirmativa'), WH_PT_ADJUNCT[wh], false);
+  else          ptFrase = pt(modalState.pronome, per, modalState.formato);
   document.getElementById('modalTranslation').textContent = ' ' + ptFrase;
   document.getElementById('modalStructure').textContent = tempoDef.structure
-    + (wh ? (isSubjWh ? ` + ${wh} como sujeito (sem inversão)` : ` + ${wh} antes do modal`) : '');
+    + (wh ? (isSubjWh ? ` + ${wh} como sujeito (sem inversão)` : ` + ${wh} antes do modal`) : '')
+    + (sigs.length ? ' + palavras-sinal' : '');
   document.getElementById('copyModal').dataset.text = stripMarks(raw) + "\n" + ptFrase;
 
   const whNote = isSubjWh
     ? `Com <b>${wh}</b> como sujeito não há inversão: o modal fica logo depois do WH, igual a uma afirmativa — "${stripMarks(raw).replace(/\?$/,'')}?"`
     : (wh ? `A palavra interrogativa entra <b>antes do modal</b>; o resto da pergunta continua igual.` : null);
-  const noteBits = [tempoDef.note, g.extraNote, whNote].filter(Boolean);
+  const meioNote = mids.length
+    ? `O advérbio do meio entra <b>depois do primeiro auxiliar</b> ("can <i>always</i> work"); diante de <b>have to / used to</b> ele vem antes ("<i>always</i> have to work"). Na negativa, certeza e "still" passam à frente do auxiliar ("<i>probably</i> can't work").`
+    : null;
+  const noteBits = [tempoDef.note, g.extraNote, whNote, meioNote].filter(Boolean);
   const noteBox = document.getElementById('modalNote');
   if(noteBits.length){ noteBox.innerHTML = "💡 " + noteBits.join('<br>💡 '); noteBox.classList.add('show'); }
   else { noteBox.classList.remove('show'); noteBox.innerHTML=""; }
@@ -3873,130 +4430,246 @@ buildMatrixSource();
    Tudo é gerado pelo motor a partir de combinações declaradas aqui, e não escrito à mão:
    se um sinal mudar de encaixe ou de tradução, este guia acompanha sozinho. */
 const ANAT_EXEMPLOS = [
-  { titulo:"O par mais útil: modo + tempo",
+  /* ================= Duplas: duas perguntas bastam ================= */
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Como + quando",
     t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","yesterday"],
-    why:"Diz COMO e QUANDO — cobre a maioria das situações do dia a dia com só duas peças." },
-  { titulo:"Frequência + tempo",
+    why:"A dupla que sustenta a maioria dos relatos: como foi feito e quando. Duas peças já fecham uma frase completa e natural." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Quantas vezes + quando",
     t:"past", a:"simples", f:"afirmativa", v:"go", ends:["twice","last week"],
-    why:"Quantas vezes e quando. Ambos violeta, encaixes diferentes: por isso somam." },
-  { titulo:"Modo + lugar",
+    why:"Contagem e momento. Ambos violeta, mas de encaixes diferentes — por isso somam em vez de competir." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Como + onde",
     t:"present", a:"continuo", f:"afirmativa", v:"work", ends:["alone","at home"],
-    why:"Como e onde — a dupla natural para descrever uma rotina de trabalho." },
-  { titulo:"Grau + modo",
+    why:"Descreve uma cena em curso: de que jeito e em que lugar." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Quanto + como",
     t:"present", a:"simples", f:"afirmativa", v:"speak", ends:["a bit","slowly"],
-    why:"Dois laranjas convivendo: o grau modula o modo. Ordem fixa — o grau vem antes." },
-  { titulo:"Lugar + duração",
+    why:"O grau modula o modo (“um pouco devagar”). Ordem fixa: quem mede vem antes de quem descreve." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Onde + por quanto tempo",
     t:"past", a:"continuo", f:"afirmativa", v:"work", ends:["at home","all day long"],
-    why:"Onde e por quanto tempo. Muito comum em relatos do passado contínuo." },
-  { titulo:"Modo + lugar + tempo — o trio clássico",
-    t:"future", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","tomorrow"],
-    why:"A regra que os manuais chamam de MPT (manner, place, time). Se lembrar de uma coisa, lembre desta." },
-  { titulo:"Certeza no meio + tempo no fim",
-    t:"future", a:"simples", f:"afirmativa", v:"go", mid:"probably", ends:["next week"],
-    why:"O advérbio de certeza não disputa encaixe de fim: ele mora no meio, junto ao auxiliar." },
-  { titulo:"Perfect: frequência + marco temporal",
-    t:"present", a:"perfeito", f:"afirmativa", v:"visit", ends:["twice","so far"],
-    why:"Combinação típica do present perfect: contagem + o recorte \"até agora\"." },
-
-  { titulo:"Frequência + lugar — a rotina",
-    t:"present", a:"simples", f:"afirmativa", v:"work", ends:["every day","at home"],
-    why:"Descreve hábito com precisão: com que frequência e onde. Note a ordem — lugar antes de frequência." },
-  { titulo:"Duração + tempo",
-    t:"past", a:"continuo", f:"afirmativa", v:"read", ends:["all night long","at that moment"],
-    why:"Por quanto tempo e quando: dois violetas de encaixes vizinhos, muito usados juntos em relatos." },
-  { titulo:"Comparação + tempo",
-    t:"present", a:"perfeito", f:"afirmativa", v:"sleep", ends:["better than ever","so far"],
-    why:"O encaixe de comparação é subaproveitado e muda o tom da frase: introduz progresso." },
-  { titulo:"Modo + frequência + tempo",
-    t:"past", a:"simples", f:"afirmativa", v:"call", ends:["quickly","twice","last week"],
-    why:"Trio sem lugar: quando o onde é óbvio pelo contexto, a frase ganha precisão sem ficar longa." },
-  { titulo:"Grau + comparação",
+    why:"Lugar e duração: o par típico do passado contínuo, que pinta um período inteiro em andamento." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Quanto + em relação a quê",
     t:"present", a:"simples", f:"afirmativa", v:"work", ends:["a bit","more than usual"],
-    why:"Dois laranjas de encaixes distintos. \"Um pouco mais que o normal\" — nuance difícil sem essa dupla." },
-  { titulo:"Sequência + lugar",
-    t:"past", a:"simples", f:"afirmativa", v:"eat", ends:["first","at home"],
-    why:"Sequência é o último encaixe, mas na fala costuma abrir a frase. Aqui fica no fim, que é o padrão do motor." },
-  { titulo:"Negativa: polaridade fecha a frase",
-    t:"past", a:"simples", f:"negativa", v:"sleep", ends:["well","at all"],
-    why:"\"At all\" só existe em negativa e sempre vai por último, reforçando a negação de tudo que veio antes." },
-  { titulo:"Aproximação + lugar",
-    t:"past", a:"simples", f:"afirmativa", v:"go", ends:["about an hour ago","downtown"],
-    why:"Quando não se sabe a hora exata. \"About\" ocupa encaixe próprio, distinto do tempo definido." },
-  { titulo:"O trio MPT no presente contínuo",
-    t:"present", a:"continuo", f:"afirmativa", v:"work", ends:["quickly","at home","right now"],
-    why:"A mesma fórmula MPT funciona em qualquer tempo — aqui com o agora explícito." },
-  { titulo:"Modo + duração no perfect contínuo",
-    t:"present", a:"perfeito_continuo", f:"afirmativa", v:"work", ends:["hard","for two hours"],
-    why:"O aspecto perfeito contínuo já carrega duração; o adjunto a torna exata." },
-
-  { titulo:"Sequência abre a frase",
-    t:"past", a:"simples", f:"afirmativa", v:"eat", ends:["first","at home"],
-    why:"Sequência é o único adjunto que o inglês prefere no INÍCIO, com vírgula. Os outros continuam no fim." },
-  { titulo:"Sequência + modo + tempo — narrando",
-    t:"past", a:"simples", f:"afirmativa", v:"leave", ends:["afterwards","quickly","last night"],
-    why:"A estrutura de quem conta uma história: marca a ordem, descreve como, situa no tempo." },
-  { titulo:"Grau + modo + lugar",
-    t:"present", a:"continuo", f:"afirmativa", v:"speak", ends:["a bit","in silence","at home"],
-    why:"Dois laranjas seguidos do verde: a frase diz quanto, como e onde sem soar carregada." },
-  { titulo:"Frequência + duração",
-    t:"present", a:"simples", f:"afirmativa", v:"run", ends:["every day","all morning long"],
-    why:"Quantas vezes e por quanto tempo — dupla essencial para descrever treinos e rotinas." },
-  { titulo:"Lugar + tempo (sem modo)",
-    t:"future", a:"simples", f:"afirmativa", v:"meet", ends:["here","tomorrow"],
-    why:"Combinar onde e quando basta para marcar um compromisso. É a frase mais prática do idioma." },
-  { titulo:"Modo + comparação",
-    t:"present", a:"simples", f:"afirmativa", v:"drive", ends:["carefully","more than usual"],
-    why:"Como e em que medida, comparado ao habitual. Dois encaixes laranja distintos." },
-  { titulo:"Duração + polaridade (negativa)",
-    t:"present", a:"perfeito", f:"negativa", v:"sleep", ends:["well","in ages"],
-    why:"\"In ages\" só existe em negativa e ancora há quanto tempo algo não acontece." },
-  { titulo:"Aproximação + frequência",
+    why:"“Um pouco mais do que o normal”: o grau mede, a comparação dá a régua. Nuance que sem as duas peças exigiria uma oração inteira." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Onde + quando — marcar um compromisso",
+    t:"future", a:"simples", f:"afirmativa", v:"wait", ends:["here","tomorrow"],
+    why:"Combinar um encontro é dizer onde e quando; o resto o interlocutor já sabe. A frase mais prática do idioma." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Onde + quantas vezes — a rotina",
+    t:"present", a:"simples", f:"afirmativa", v:"work", ends:["at home","every day"],
+    why:"Rotina em duas peças. Repare na ordem: o palco (lugar) vem antes do relógio (periodicidade)." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Quantas vezes + por quanto tempo",
+    t:"present", a:"simples", f:"afirmativa", v:"run", ends:["every day","for an hour"],
+    why:"Treino em uma linha: com que frequência e por quanto tempo. A periodicidade antecede a duração." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Por quanto tempo + quando",
+    t:"past", a:"continuo", f:"afirmativa", v:"work", ends:["all day long","yesterday"],
+    why:"A duração vem primeiro, o dia depois: “o dia inteiro, ontem”. Dois violetas de encaixes vizinhos." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Comparação + marco temporal",
+    t:"present", a:"perfeito", f:"afirmativa", v:"sleep", ends:["better than ever","this week"],
+    why:"A comparação introduz progresso, e o marco (“esta semana”) delimita a janela em que ele vale." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Contagem + recorte “até agora”",
+    t:"present", a:"perfeito", f:"afirmativa", v:"visit", ends:["twice","so far"],
+    why:"Combinação típica do present perfect. Em português a contagem pede o pretérito simples (“visitei duas vezes”); o “tenho visitado” soaria como hábito." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Onde + aproximação de tempo",
+    t:"past", a:"simples", f:"afirmativa", v:"come", ends:["here","about an hour ago"],
+    why:"Quando a hora exata não importa, “about” aproxima. A aproximação é encaixe próprio, distinto do tempo definido." },
+  { g:"Duplas — duas perguntas bastam",
+    titulo:"Aproximação + frequência numa peça só",
     t:"present", a:"simples", f:"afirmativa", v:"call", ends:["about twice a week"],
-    why:"Uma peça só, mas que resolve duas perguntas: com que frequência, aproximadamente." },
-  { titulo:"Modo + lugar + frequência + tempo",
+    why:"Uma única peça que responde “quantas vezes?” já com a margem de aproximação embutida." },
+
+  /* ================= Trios e quartetos ================= */
+  { g:"Trios e quartetos",
+    titulo:"Como + onde + quando — o trio clássico",
+    t:"future", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","tomorrow"],
+    why:"É o que os manuais chamam de MPT (manner, place, time). Se lembrar de uma regra só, que seja esta." },
+  { g:"Trios e quartetos",
+    titulo:"O trio no presente contínuo",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", ends:["hard","at home","right now"],
+    why:"A mesma fórmula vale em qualquer tempo — aqui com o “agora” explícito fechando a frase." },
+  { g:"Trios e quartetos",
+    titulo:"Como + quantas vezes + quando",
+    t:"past", a:"simples", f:"afirmativa", v:"run", ends:["fast","twice","last week"],
+    why:"Trio sem lugar: quando o cenário é óbvio, a frase ganha precisão sem ganhar peso." },
+  { g:"Trios e quartetos",
+    titulo:"Quanto + como + onde",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", ends:["a bit","slowly","at home"],
+    why:"Dois laranjas de encaixes distintos seguidos do verde: mede, descreve, situa." },
+  { g:"Trios e quartetos",
+    titulo:"Como + duração no perfect contínuo",
+    t:"present", a:"perfeito_continuo", f:"afirmativa", v:"work", ends:["hard","for two hours"],
+    why:"O perfect contínuo já carrega a ideia de duração; o adjunto a torna exata." },
+  { g:"Trios e quartetos",
+    titulo:"Como + onde + quantas vezes + quando",
     t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","twice","last month"],
-    why:"Quatro encaixes ainda soam naturais. Daqui para cima, a frase começa a pesar." },
+    why:"Quatro peças ainda soam naturais porque seguem a ordem das cores. Daqui para cima, a frase começa a pesar." },
+  { g:"Trios e quartetos",
+    titulo:"Sequência abre a frase",
+    t:"past", a:"simples", f:"afirmativa", v:"eat", ends:["first","at home"],
+    why:"Sequência é o único adjunto que o inglês prefere no INÍCIO, seguido de vírgula. Os demais continuam no fim." },
+  { g:"Trios e quartetos",
+    titulo:"Narrar: sequência + modo + tempo",
+    t:"past", a:"simples", f:"afirmativa", v:"leave", ends:["afterwards","quietly","last night"],
+    why:"A estrutura de quem conta uma história: marca a ordem, descreve como e situa no tempo." },
+
+  /* ================= O corredor do meio ================= */
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Frequência: “Sempre?”",
+    t:"present", a:"simples", f:"afirmativa", v:"work", mid:"usually", ends:["at home"],
+    why:"Frequência indefinida mora no MEIO (“I usually work”). O lugar segue no fim: posições diferentes, nada disputa." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Meio + como + onde",
+    t:"present", a:"simples", f:"afirmativa", v:"eat", mid:"always", ends:["slowly","at home"],
+    why:"O advérbio do meio responde “com que frequência”; os dois de fim descrevem o jeito e o lugar." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"O mesmo meio no passado",
+    t:"past", a:"simples", f:"afirmativa", v:"work", mid:"often", ends:["hard","last year"],
+    why:"“I often worked hard last year”: a posição não muda com o tempo verbal. Frequência no meio, tempo no fim." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Foco: “Só?”",
+    t:"present", a:"simples", f:"afirmativa", v:"work", mid:"only", ends:["at home"],
+    why:"O foco (only, also, even) delimita o que a frase afirma: trabalho em casa e em nenhum outro lugar." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Foco + frequência",
+    t:"present", a:"simples", f:"afirmativa", v:"work", mid:["also","usually"], ends:["at home"],
+    why:"Dois encaixes do meio empilhados, sempre nesta ordem: foco antes de frequência." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Fase: “Já?” e “ainda?”",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", mid:"still", ends:["at home"],
+    why:"A fase diz em que ponto a ação está: “already” (já feita), “still” (em curso), “finally” (enfim feita)." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Fase no perfect: o recorte do “já”",
+    t:"present", a:"perfeito", f:"afirmativa", v:"call", mid:"already", ends:["twice","today"],
+    why:"“Already” é o advérbio de meio por excelência do perfect: a ação aconteceu antes do esperado. Entra depois de “have”." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Certeza + fase",
+    t:"present", a:"perfeito", f:"afirmativa", v:"call", mid:["probably","already"], ends:["twice"],
+    why:"“Probably already”: a certeza vem antes da fase. A ordem inversa soa estranha em inglês." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Intensidade: o “mal” e o “quase”",
+    t:"past", a:"simples", f:"afirmativa", v:"sleep", mid:"barely", ends:["last night"],
+    why:"Intensidade é o último encaixe antes do verbo: “barely slept” (mal dormi). Aqui o português também põe antes." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Intensidade que troca de lado em português",
+    t:"past", a:"simples", f:"afirmativa", v:"forget", mid:"completely",
+    why:"No inglês “completely” fica antes do verbo; em português costuma ir depois: “esqueci completamente”. O motor faz a troca." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"“Currently” abre a frase em português",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", mid:"currently", ends:["at home"],
+    why:"No inglês mora no meio (“I am currently working”); em português soa melhor no início: “Atualmente, estou trabalhando”." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Meio + o trio clássico",
+    t:"future", a:"simples", f:"afirmativa", v:"work", mid:"definitely", ends:["hard","at home","tomorrow"],
+    why:"Quatro encaixes: o meio se soma ao trio sem tirar o lugar de ninguém." },
+  { g:"O corredor do meio — antes do verbo",
+    titulo:"Três do corredor: certeza + foco + fase",
+    t:"present", a:"continuo", f:"afirmativa", v:"work", mid:["probably","also","still"], ends:["at home"],
+    why:"Três encaixes do meio na ordem do corredor: “será, só, já”. Dá para dizer, mas pesa — o normal é usar um ou dois." },
+
+  /* ================= Negar ================= */
+  { g:"Negar — o que muda de lugar",
+    titulo:"Polaridade fecha a negativa",
+    t:"past", a:"simples", f:"negativa", v:"sleep", ends:["well","at all"],
+    why:"“At all” só existe em frase negada (ou pergunta) e vai por último, reforçando a negação de tudo que veio antes." },
+  { g:"Negar — o que muda de lugar",
+    titulo:"Há quanto tempo não…",
+    t:"present", a:"perfeito", f:"negativa", v:"sleep", ends:["well","in ages"],
+    why:"“In ages” só existe em negativa e mede há quanto tempo algo não acontece. Em português: “faz séculos que não durmo bem”." },
+  { g:"Negar — o que muda de lugar",
+    titulo:"A certeza fura a fila",
+    t:"future", a:"simples", f:"negativa", v:"go", mid:"probably", ends:["there","tomorrow"],
+    why:"Certeza vai ANTES do auxiliar negado (“I probably won't go”); a frequência, ao contrário, fica depois (“I don't often go”)." },
+  { g:"Negar — o que muda de lugar",
+    titulo:"Certeza + frequência na negativa",
+    t:"present", a:"simples", f:"negativa", v:"work", mid:["probably","always"], ends:["at home"],
+    why:"A certeza passa à frente do “don't”; a frequência entra depois dele: “I probably don't always work at home”. Em português, “nem sempre”." },
+  { g:"Negar — o que muda de lugar",
+    titulo:"“Still” também fura a fila",
+    t:"present", a:"continuo", f:"negativa", v:"work", mid:"still", ends:["at home"],
+    why:"“I'm still not working”, nunca “I'm not still working”. Em português o par é o mesmo: “ainda não”." },
+];
+
+/* ---- Atalhos mentais: formas de decorar a anatomia sem decorar a tabela ----
+   Cada atalho tem uma frase viva gerada pelo motor (nunca escrita à mão), então o que o card
+   mostra é, por construção, o que o motor produz. */
+const ATALHOS = [
+  { nome:"Como → Onde → Quando", mn:"o trio clássico",
+    regra:"Depois do verbo, a frase inglesa responde sempre nesta ordem: como se faz, onde, quando. Só isso já acerta a esmagadora maioria das frases do dia a dia.",
+    cfg:{ t:"future", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","tomorrow"] } },
+  { nome:"Ação → Palco → Relógio", mn:"laranja · verde · violeta",
+    regra:"O trio generalizado para as 9 peças de fim. Primeiro o que descreve a ação (grau, modo, comparação — laranja); depois o palco (lugar — verde); por fim o relógio (periodicidade, duração, aproximação, tempo — violeta), e a polaridade, quando existe, fecha tudo. Não precisa decorar encaixe por encaixe: olhe as cores. Se estiverem na ordem laranja → verde → violeta, a frase está em ordem.",
+    cfg:{ t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","at home","twice","last month"] } },
+  { nome:"O corredor do verbo", mn:"Será · Só · Sempre · Já · Muito",
+    regra:"Antes do verbo há uma fila de cinco encaixes, e a ordem é a de cinco perguntas curtas: Será? (certeza: probably) · Só? (foco: only, also) · Sempre? (frequência: always) · Já? (fase: already, still) · Muito? (intensidade: really). Cada palavra do mnemônico é o protótipo do seu encaixe. A fila começa logo depois do primeiro auxiliar: “I have probably already called”.",
+    cfg:{ t:"present", a:"continuo", f:"afirmativa", v:"work", mid:["probably","also","still"], ends:["at home"] } },
+  { nome:"O que passa na frente do “not”", mn:"certeza e still · na frente",
+    regra:"Na negativa, duas peças do corredor furam a fila e ficam antes do auxiliar: a certeza (“I probably don't”) e o still (“I still don't”). As demais entram depois do “not”: “I don't usually”, “I don't really”. Um cuidado: “I really don't” e “I don't really” têm sentidos diferentes (ênfase × atenuação).",
+    cfg:{ t:"present", a:"simples", f:"negativa", v:"work", mid:["probably","always"], ends:["at home"] } },
+  { nome:"Espelho português ↔ inglês", mn:"traduza o encaixe, não a posição",
+    regra:"O português manda para depois do verbo muito do que o inglês põe antes (“completamente”, “totalmente”) e leva para o início o que o inglês põe no meio (“atualmente”, “inicialmente”). Quem traduz a posição fala inglês com sotaque de português; quem traduz o encaixe acerta o lugar sozinho.",
+    cfg:{ t:"past", a:"simples", f:"afirmativa", v:"forget", mid:"completely" } },
+  { nome:"A régua do 2-3-4", mn:"fala 2 · relato 3 · limite 4",
+    regra:"Heurística de uso, não regra gramatical. Antes de falar, imagine as perguntas que o ouvinte faria e preencha só essas. Duas peças de fim sustentam uma conversa; três, um relato; quatro, uma narrativa cuidadosa. Passou disso, é exercício de montagem, não fala.",
+    cfg:{ t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","yesterday"] } },
 ];
 
 function anatFrase(cfg){
-  /* Guarda de integridade: se um verbo ou sinal do exemplo não existir no banco, o motor
-     cairia no padrão silenciosamente e o card mostraria outra frase. Melhor gritar. */
+  /* Guarda de integridade: se um verbo ou sinal do exemplo não existir no banco (ou não valer
+     naquele formato), o motor cairia no padrão em silêncio e o card mostraria outra frase.
+     Melhor gritar. */
   if(verbById(cfg.v).id !== cfg.v) console.warn('[anatomia] verbo inexistente:', cfg.v, '→', cfg.titulo);
-  const faltando = (cfg.ends || []).concat(cfg.mid ? [cfg.mid] : [])
-    .filter(x => !(SIGNAL_WORDS[`${cfg.t}_${cfg.a}`] || []).some(s => s.w === x));
-  if(faltando.length) console.warn('[anatomia] sinais ausentes em', `${cfg.t}_${cfg.a}`, ':', faltando, '→', cfg.titulo);
-  const verb = verbById(cfg.v);
   const key = `${cfg.t}_${cfg.a}`;
-  const mid = cfg.mid ? (SIGNAL_WORDS[key]||[]).find(s=>s.w===cfg.mid) : null;
-  const ends = (cfg.ends||[]).map(x=>(SIGNAL_WORDS[key]||[]).find(s=>s.w===x)).filter(Boolean);
-  const g = generate('fact', cfg.t, cfg.a, cfg.f, 'I', verb);
-  const raw = applySignal(g.text, mid, ends, null, null, cfg.f) + (g.isQuestion ? M('?') : '.');
-  const pt = translate('fact', cfg.t, cfg.a, cfg.f, 'I', mid, ends, cfg.v, null, null);
-  const slots = sortEnds(ends).map(s=>{
-    const k = adjKind(s.cls, s.w);
-    return `<b style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[endRank(s)] || k}</b>`;
+  const pool = SIGNAL_WORDS[key] || [];
+  const achar = x => pool.find(s => s.w === x);
+  const nomesMeio = [].concat(cfg.mid || []);
+  [].concat(nomesMeio, cfg.ends || []).forEach(x=>{
+    const s = achar(x);
+    if(!s) console.warn('[anatomia] sinal ausente em', key, ':', x, '→', cfg.titulo);
+    else if(!signalAllowed(s, cfg.f)) console.warn('[anatomia] sinal não vale em', cfg.f, ':', x, '→', cfg.titulo);
   });
-  if(mid) slots.unshift(`<b style="color:${ADJ_COLOR[adjKind(mid.cls, mid.w)]}">meio</b>`);
+  const verb = verbById(cfg.v);
+  const mids = nomesMeio.map(achar).filter(Boolean);
+  const ends = (cfg.ends || []).map(achar).filter(Boolean);
+  const g = generate('fact', cfg.t, cfg.a, cfg.f, 'I', verb);
+  const raw = applySignal(g.text, mids.length ? mids : null, ends, null, null, cfg.f) + (g.isQuestion ? M('?') : '.');
+  const pt = translate('fact', cfg.t, cfg.a, cfg.f, 'I', mids.length ? mids : null, ends, cfg.v, null, null);
+  /* a legenda segue a ordem real da frase: início → meio → fim */
+  const slots = sortSlots(mids.concat(ends)).map(s=>{
+    const k = adjKind(s.cls, s.w);
+    return `<b style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[slotOf(s)]}</b>`;
+  });
   return { en: markedToHTML(raw, markColorVar(cfg.f)), pt, slots: slots.join(' → '), texto: stripMarks(raw) };
 }
 
-/* ---- Montador: a tabela de tetos vira algo que se desmonta ----
+/* ---- Montador: a tabela vira algo que se desmonta ----
    Cada encaixe é um soquete clicável. Encaixar e desencaixar mostra na prática o que a
-   tabela afirma: 3 laranjas, 1 verde e 6 violetas cabem juntos, sem um tomar o lugar do
-   outro. As peças saem do banco real, então o exemplo é sempre uma frase válida. */
+   tabela afirma: peças de cores iguais convivem desde que ocupem encaixes diferentes. As
+   peças saem do banco real, então o exemplo é sempre uma frase válida. */
 const MONT_COMBO = { t:'past', a:'simples', v:'work', f:'afirmativa' };
 let montOn = new Set([2, 4, 8]);   /* começa no trio clássico: modo + lugar + tempo */
 let montEscolha = {};              /* encaixe → expressão escolhida pelo usuário */
 let montAberto = null;             /* encaixe com o seletor aberto */
+/* peça inicial de cada encaixe: a mais ensinável, e não a primeira em ordem alfabética */
+const MONT_PREF = { 1:'a bit', 2:'quickly', 3:'more than usual', 4:'at home', 5:'twice', 6:'all day long',
+  7:'about an hour ago', 8:'yesterday', 9:'first', 10:'at all', 11:'probably', 12:'also', 13:'often',
+  14:'already', 15:'really' };
 
-/* Opções por encaixe. O encaixe 0 é o do MEIO da frase (frequência, certeza, perfect),
-   que não disputa lugar com os de fim — por isso tem soquete próprio. */
 function montOpcoes(){
   const key = `${MONT_COMBO.t}_${MONT_COMBO.a}`;
   const por = {};
   (SIGNAL_WORDS[key] || []).forEach(s=>{
-    const r = s.pl === 'mid' ? 0 : (s.pl === 'end' ? endRank(s) : null);
-    if(r === null) return;                         /* partidos ficam fora do montador */
+    if(s.pl === 'split') return;                    /* partidos ficam fora do montador */
+    const r = slotOf(s);
     (por[r] = por[r] || []).push(s);
   });
   Object.keys(por).forEach(r=> por[r].sort((a,b)=>a.w.localeCompare(b.w)));
@@ -4007,8 +4680,12 @@ function montPecas(){
   const escolhidos = {};
   Object.keys(opts).forEach(r=>{
     const lista = opts[r];
-    const escolhida = montEscolha[r] && lista.find(s=>s.w === montEscolha[r]);
-    escolhidos[r] = escolhida || lista[0];
+    const fmt = MONT_COMBO.f || 'afirmativa';
+    escolhidos[r] = (montEscolha[r] && lista.find(s=>s.w === montEscolha[r]))
+      || lista.find(s=>s.w === MONT_PREF[r] && signalAllowed(s, fmt))
+      || lista.find(s=>signalAllowed(s, fmt))
+      || lista.find(s=>s.w === MONT_PREF[r])
+      || lista[0];
   });
   return escolhidos;
 }
@@ -4016,41 +4693,47 @@ function buildMontador(){
   const box = document.getElementById('montadorWrap');
   if(!box) return;
   const pecas = montPecas();
-  const usados = [...montOn].filter(r=>pecas[r]).sort((a,b)=>a-b);
+  const ordem = SLOT_ORDEM.filter(r=>pecas[r]);
+  const usados = ordem.filter(r=>montOn.has(r));
   /* polaridade só existe em frase negada: encaixá-la troca o formato — e isso é a lição */
   const formato = usados.includes(10) ? 'negativa' : (MONT_COMBO.f || 'afirmativa');
-  const mid = usados.includes(0) ? pecas[0] : null;
-  const ends = usados.filter(r=>r !== 0).map(r=>pecas[r]).filter(s=>signalAllowed(s, formato));
+  const vale = s => signalAllowed(s, formato);
+  const mids = usados.filter(r=>SLOT_ZONA(r) === 'meio').map(r=>pecas[r]).filter(vale);
+  const ends = usados.filter(r=>SLOT_ZONA(r) !== 'meio').map(r=>pecas[r]).filter(vale);
   const verb = verbById(MONT_COMBO.v);
   const g = generate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', verb);
-  const raw = applySignal(g.text, mid, ends, null, null, formato) + (g.isQuestion ? M('?') : '.');
-  const pt = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', mid, ends, MONT_COMBO.v, null, null);
+  const raw = applySignal(g.text, mids.length ? mids : null, ends, null, null, formato) + (g.isQuestion ? M('?') : '.');
+  const pt = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', mids.length ? mids : null, ends, MONT_COMBO.v, null, null);
 
   const porCor = {como:0, onde:0, quando:0};
-  ends.concat(mid ? [mid] : []).forEach(s=> porCor[adjKind(s.cls, s.w)]++);
+  ends.concat(mids).forEach(s=> porCor[adjKind(s.cls, s.w)]++);
 
   const opts = montOpcoes();
-  let sockets = '';
-  Object.keys(END_SLOT_NOME).map(Number).sort((a,b)=>a-b).forEach(r=>{
-    const s = pecas[r]; if(!s) return;
+  let sockets = '', zonaAtual = '';
+  const ROTULO_ZONA = { 'início':'abre a frase', 'meio':'entre o auxiliar e o verbo', 'fim':'depois do verbo' };
+  ordem.forEach(r=>{
+    const s = pecas[r];
+    const z = SLOT_ZONA(r);
+    if(z !== zonaAtual){
+      zonaAtual = z;
+      sockets += `<div class="mont-zona" style="flex-basis:100%; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--brass-dim); margin-top:4px;">${z} · ${ROTULO_ZONA[z]}</div>`;
+    }
     const k = adjKind(s.cls, s.w);
     const on = montOn.has(r);
+    const bloq = on && !vale(s);
     /* ligado, o soquete vira um seletor: dá para trocar a peça daquele encaixe e ver o
-       efeito na frase, que é onde a brincadeira de combinar fica interessante */
-    /* Seletor próprio em vez de <select>: o menu nativo é desenhado pelo sistema e
-       ignora o tema do app (fundo branco, texto preto no Android). Aqui a lista herda
-       a cor do encaixe e respeita claro/escuro. */
+       efeito na frase. Seletor próprio em vez de <select>: o menu nativo é desenhado pelo
+       sistema e ignora o tema do app; aqui a lista herda a cor do encaixe. */
     const escolha = on
       ? `<button class="socket-peca" data-pick="${r}" aria-expanded="${montAberto===r}">
            ${escapeHTML(s.w)}<i>${montAberto===r ? '▴' : '▾'}</i></button>`
       : `<span>${escapeHTML(s.w)}</span>`;
-    /* Com o seletor ocupando o corpo do soquete, desencaixar precisa de alvo próprio:
-       o ✕ remove num toque, e o rótulo continua servindo para ligar/desligar. */
+    const n = slotNum(r);
     const cabecalho = on
-      ? `<b data-toggle="${r}">${r}. ${END_SLOT_NOME[r]}<button class="socket-x" data-off="${r}" title="Desencaixar">✕</button></b>`
-      : `<b data-toggle="${r}">${r}. ${END_SLOT_NOME[r]}${opts[r].length > 1 ? ` · ${opts[r].length}` : ''}</b>`;
-    sockets += `<div class="socket" data-slot="${r}" data-on="${on}" style="--cat:${ADJ_COLOR[k]}">
-      ${cabecalho}${escolha}</div>`;
+      ? `<b data-toggle="${r}">${n}. ${END_SLOT_NOME[r]}<button class="socket-x" data-off="${r}" title="Desencaixar">✕</button></b>`
+      : `<b data-toggle="${r}">${n}. ${END_SLOT_NOME[r]}${opts[r].length > 1 ? ` · ${opts[r].length}` : ''}</b>`;
+    sockets += `<div class="socket" data-slot="${r}" data-on="${on}" style="--cat:${ADJ_COLOR[k]};${bloq ? 'opacity:.45;' : ''}"
+      ${bloq ? 'title="Esta peça não vale em frase negada"' : ''}>${cabecalho}${escolha}</div>`;
   });
 
   box.innerHTML = `<div class="montador">
@@ -4062,11 +4745,12 @@ function buildMontador(){
     <div class="mont-slots">${sockets}</div>
     ${montAberto !== null && pecas[montAberto] ? (()=>{
       const s0 = pecas[montAberto], kk = adjKind(s0.cls, s0.w);
+      const lista = opts[montAberto].filter(vale);
       return `<div class="mont-picker" style="--cat:${ADJ_COLOR[kk]}">
-        <div class="mont-picker-head">${montAberto}. ${END_SLOT_NOME[montAberto]}
-          <span>${opts[montAberto].length} opções</span></div>
+        <div class="mont-picker-head">${slotNum(montAberto)}. ${END_SLOT_NOME[montAberto]}
+          <span>${lista.length} opções</span></div>
         <div class="mont-picker-list">
-          ${opts[montAberto].map(o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sel="${o.w===s0.w}">
+          ${lista.map(o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sel="${o.w===s0.w}">
             <span class="op-en">${escapeHTML(o.w)}</span>
             <span class="op-pt">${escapeHTML(SIGNAL_PT[o.w] || '—')}</span></button>`).join('')}
         </div></div>`;
@@ -4076,7 +4760,7 @@ function buildMontador(){
       <button class="mont-btn" data-act="limpar">desmontar</button>
       <button class="mont-btn" data-act="trio">só o trio clássico</button>
       <span class="mont-conta">${TENSE_LABEL[MONT_COMBO.t]} · ${ASPECT_LABEL[MONT_COMBO.a]} · ${verb.base} ·
-        ${ends.length + (mid?1:0)} encaixe(s) ·
+        ${ends.length + mids.length} encaixe(s) ·
         <span style="color:${ADJ_COLOR.como}">${porCor.como} como</span> ·
         <span style="color:${ADJ_COLOR.onde}">${porCor.onde} onde</span> ·
         <span style="color:${ADJ_COLOR.quando}">${porCor.quando} quando</span></span>
@@ -4120,7 +4804,7 @@ function buildMontador(){
    O banco inteiro reorganizado pela pergunta que cada expressão responde, e não pelo
    tempo verbal em que aparece. É a visão que faltava: quero preencher o encaixe "modo",
    quais peças tenho? Junta todas as combinações, sem repetir. */
-/* Nenhum encaixe aberto de início: com 251 expressões só em "tempo", abrir algo por
+/* Nenhum encaixe aberto de início: com centenas de expressões só em "tempo", abrir algo por
    padrão empurraria o resto do guia para fora da tela. O glossário começa recolhido e
    expande sob demanda. */
 let glossSlot = null;
@@ -4128,22 +4812,25 @@ function glossPorEncaixe(){
   const mapa = {};
   Object.keys(SIGNAL_WORDS).forEach(k=>{
     SIGNAL_WORDS[k].forEach(s=>{
-      const r = endRank(s);
+      const r = slotOf(s);
       (mapa[r] = mapa[r] || new Map()).set(s.w, s);
     });
   });
   return mapa;
 }
+const SLOT_PERGUNTA = {
+  1:'quanto?', 2:'como?', 3:'comparado a quê?', 4:'onde?', 5:'a cada quando? quantas vezes?',
+  6:'por quanto tempo?', 7:'aproximadamente quando?', 8:'quando?', 9:'em que ordem?',
+  10:'nega o quê? (só em negativas e perguntas)',
+  11:'com que certeza?', 12:'só? também? até? (foco)', 13:'com que frequência? (vaga)',
+  14:'em que fase da ação? (já, ainda)', 15:'em que medida? (realmente, quase)'
+};
 function buildGlossario(){
   const box = document.getElementById('glossarioWrap');
   if(!box) return;
   const mapa = glossPorEncaixe();
-  const slots = Object.keys(mapa).map(Number).sort((a,b)=>a-b);
+  const slots = SLOT_ORDEM.filter(r=>mapa[r]);
   if(glossSlot !== null && !slots.includes(glossSlot)) glossSlot = null;
-
-  const PERGUNTA = { 1:'quanto?', 2:'como?', 3:'comparado a quê?', 4:'onde?', 5:'com que frequência?',
-                     6:'por quanto tempo?', 7:'aproximadamente quando?', 8:'quando?', 9:'em que ordem?',
-                     10:'nega o quê? (só em negativas e perguntas)' };
 
   const abas = slots.map(r=>{
     const s0 = mapa[r].values().next().value;
@@ -4158,7 +4845,7 @@ function buildGlossario(){
       .sort((a,b)=> a.w.localeCompare(b.w))
       .map(s=>{
         const k = adjKind(s.cls, s.w);
-        const pos = s.pl === 'mid' ? ' · meio' : (s.pl === 'split' ? ' · partido' : '');
+        const pos = s.pl === 'split' ? ' · partido' : '';
         /* o partido guarda as duas metades; fala a forma unida, que é como se ouve */
         const falar = s.pl === 'split' ? `${s.mid} ${s.end}` : s.w;
         return `<div class="gloss-item" style="--cat:${ADJ_COLOR[k]}">
@@ -4171,8 +4858,8 @@ function buildGlossario(){
     const s0 = mapa[glossSlot].values().next().value;
     const k0 = adjKind(s0.cls, s0.w);
     corpo = `<div class="gloss-head">
-        <b style="color:${ADJ_COLOR[k0]}">${glossSlot}. ${END_SLOT_NOME[glossSlot]}</b>
-        — responde <i>${PERGUNTA[glossSlot] || ''}</i> · ${mapa[glossSlot].size} expressões
+        <b style="color:${ADJ_COLOR[k0]}">${slotNum(glossSlot)}. ${END_SLOT_NOME[glossSlot]}</b>
+        — responde <i>${SLOT_PERGUNTA[glossSlot] || ''}</i> · ${mapa[glossSlot].size} expressões
         <button class="gloss-fechar" data-gloss-close="1">recolher ✕</button>
       </div>
       <div class="gloss-grid">${itens}</div>`;
@@ -4196,14 +4883,10 @@ function aplicarNoMontador(cfg){
   MONT_COMBO.t = cfg.t; MONT_COMBO.a = cfg.a; MONT_COMBO.v = verbById(cfg.v).id; MONT_COMBO.f = cfg.f;
   montOn = new Set(); montEscolha = {}; montAberto = null;
 
-  if(cfg.mid){
-    const s = pool.find(x=>x.w === cfg.mid);
-    if(s){ montOn.add(0); montEscolha[0] = s.w; }
-  }
-  (cfg.ends || []).forEach(x=>{
+  [].concat(cfg.mid || [], cfg.ends || []).forEach(x=>{
     const s = pool.find(y=>y.w === x);
     if(!s) return;
-    const r = endRank(s);
+    const r = slotOf(s);
     montOn.add(r); montEscolha[r] = s.w;
   });
 
@@ -4220,26 +4903,43 @@ function buildAnatomia(){
 
   /* 1. tabela dos encaixes, com um exemplo real tirado do banco */
   const exemploDoSlot = (r)=>{
-    for(const k in SIGNAL_WORDS){ const s = SIGNAL_WORDS[k].find(x=>endRank(x)===r); if(s) return s; }
+    for(const k in SIGNAL_WORDS){ const s = SIGNAL_WORDS[k].find(x=>slotOf(x)===r); if(s) return s; }
     return null;
   };
-  let linhas = '';
-  Object.keys(END_SLOT_NOME).map(Number).sort((a,b)=>a-b).forEach(r=>{
+  /* Tetos por cor calculados do próprio banco: nada de número escrito à mão. */
+  const teto = {como:[], onde:[], quando:[]};
+  SLOT_ORDEM.forEach(r=>{
+    const s = exemploDoSlot(r); if(s) teto[adjKind(s.cls, s.w)].push(END_SLOT_NOME[r]);
+  });
+  const nMeio = SLOT_ORDEM.filter(r=>SLOT_ZONA(r) === 'meio').length;
+  const ZONA_TXT = {
+    'início':'abre a frase, seguido de vírgula',
+    'meio':'entre o auxiliar e o verbo principal — nesta ordem, e cada um com uma única função',
+    'fim':'depois do verbo e do objeto'
+  };
+  let linhas = '', zonaAtual = '';
+  SLOT_ORDEM.forEach(r=>{
     const s = exemploDoSlot(r); if(!s) return;
+    const z = SLOT_ZONA(r);
+    if(z !== zonaAtual){
+      zonaAtual = z;
+      linhas += `<tr><td colspan="4" style="border-top:1px solid var(--line); padding-top:9px; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--brass-dim);">
+        ${z} <span style="text-transform:none; letter-spacing:0; opacity:.85;">— ${ZONA_TXT[z]}</span></td></tr>`;
+    }
     const k = adjKind(s.cls, s.w);
-    const perg = { 1:'quanto?', 2:'como?', 3:'comparado a quê?', 4:'onde?', 5:'com que frequência?',
-                   6:'por quanto tempo?', 7:'aproximadamente quando?', 8:'quando?', 9:'em que ordem?', 10:'nega o quê?' }[r] || '';
     linhas += `<tr>
-      <td class="slot-n">${r}</td>
+      <td class="slot-n">${slotNum(r)}</td>
       <td class="slot-nome" style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[r]}</td>
-      <td class="slot-ex">${perg}</td>
+      <td class="slot-ex">${SLOT_PERGUNTA[r] || ''}</td>
       <td class="slot-ex">${escapeHTML(s.w)}</td></tr>`;
   });
+  const nomesMeio = SLOT_ORDEM.filter(r=>SLOT_ZONA(r) === 'meio').map(r=>END_SLOT_NOME[r]).join(' → ');
 
   /* 2. os exemplos que valem a pena */
-  let cards = '';
+  let cards = '', grupoAtual = '';
   ANAT_EXEMPLOS.forEach((cfg, i)=>{
     const r = anatFrase(cfg);
+    if(cfg.g && cfg.g !== grupoAtual){ grupoAtual = cfg.g; cards += `<div class="ref-class-label" style="margin-top:14px;">${cfg.g}</div>`; }
     cards += `<div class="anat-card" data-ex="${i}" role="button" tabindex="0" title="Tocar para carregar esta combinação no montador">
       <h4>${cfg.titulo}<span class="anat-usar">montar ↑</span></h4>
       <div class="anat-frase-row">
@@ -4251,10 +4951,31 @@ function buildAnatomia(){
     </div>`;
   });
 
-  /* 3. o extremo, gerado de fato — serve de limite, não de modelo */
-  const maxCfg = { t:"past", a:"simples", f:"negativa", v:"work", mid:"probably",
-    ends:["a bit","quickly","better than before","at home","twice","all day long","about an hour ago","afterwards","at all"] };
+  /* 2b. os atalhos mentais, cada um com a sua frase viva */
+  let atalhosHTML = '';
+  ATALHOS.forEach((at, i)=>{
+    const r = anatFrase(at.cfg);
+    atalhosHTML += `<div class="anat-card" data-at="${i}" role="button" tabindex="0" title="Tocar para carregar esta combinação no montador">
+      <h4>${i + 1}. ${at.nome}<span class="anat-usar">montar ↑</span></h4>
+      <div class="atalho-mn">${at.mn}</div>
+      <div class="why">${at.regra}</div>
+      <div class="anat-frase-row" style="margin-top:8px;">
+        <div class="anat-frase">${r.en}</div>
+        <button class="audio-btn sm" data-text="${escapeHTML(r.texto)}" title="Ouvir">🔊</button>
+      </div>
+      <div class="anat-pt">${escapeHTML(r.pt)}</div>
+    </div>`;
+  });
+
+  /* 3. o extremo, gerado de fato — serve de limite, não de modelo. Fica em afirmativa:
+     a polaridade ("at all") só existe em frase negada e não convive com "already" ou "never",
+     então o 15º encaixe nunca cabe junto dos outros 14. */
+  const maxCfg = { t:"past", a:"simples", f:"afirmativa", v:"work",
+    mid:["probably","also","always","already","really"],
+    ends:["a bit","quickly","better than before","at home","twice","all day long","about an hour ago","yesterday","afterwards"] };
   const mx = anatFrase(maxCfg);
+  const mxN = maxCfg.mid.length + maxCfg.ends.length;
+  if(mxN !== SLOT_N - 1) console.warn('[anatomia] a frase-limite ocupa', mxN, 'de', SLOT_N - 1, 'encaixes possíveis');
 
   wrap.innerHTML = `
     <div class="anat-atalho">
@@ -4263,40 +4984,45 @@ function buildAnatomia(){
       <b style="color:${ADJ_COLOR.como}">como</b> →
       <b style="color:${ADJ_COLOR.onde}">onde</b> →
       <b style="color:${ADJ_COLOR.quando}">quando</b>.
-      Se lembrar só disso, acerta a esmagadora maioria das frases.
+      Se lembrar só disso, acerta a esmagadora maioria das frases. Antes do verbo vale outra
+      ordem, a do meio: ${nomesMeio}.
     </div>
+
+    <div class="ref-class-label">Seis atalhos mentais</div>
+    ${atalhosHTML}
 
     <div class="ref-class-label">O teto por cor</div>
     <div class="cor-resumo">
       <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.como}"></div>
-        <div class="n" style="color:${ADJ_COLOR.como}">3</div><div class="rot">como</div>
-        <div class="quais">grau · modo · comparação</div></div>
+        <div class="n" style="color:${ADJ_COLOR.como}">${teto.como.length}</div><div class="rot">como</div>
+        <div class="quais">${teto.como.join(' · ')}</div></div>
       <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.onde}"></div>
-        <div class="n" style="color:${ADJ_COLOR.onde}">1</div><div class="rot">onde</div>
-        <div class="quais">lugar</div></div>
+        <div class="n" style="color:${ADJ_COLOR.onde}">${teto.onde.length}</div><div class="rot">onde</div>
+        <div class="quais">${teto.onde.join(' · ')}</div></div>
       <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.quando}"></div>
-        <div class="n" style="color:${ADJ_COLOR.quando}">6</div><div class="rot">quando</div>
-        <div class="quais">frequência · duração · aproximação · tempo · sequência · polaridade</div></div>
+        <div class="n" style="color:${ADJ_COLOR.quando}">${teto.quando.length}</div><div class="rot">quando</div>
+        <div class="quais">${teto.quando.join(' · ')}</div></div>
     </div>
     <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:4px;">
-      Toque nos encaixes para montar e desmontar a frase — a tabela acima deixa de ser
+      Toque nos encaixes para montar e desmontar a frase — a tabela abaixo deixa de ser
       afirmação e vira algo que você confere.
     </div>
     <div id="montadorWrap"></div>
 
-    <div class="ref-class-label">Os 10 encaixes, na ordem em que entram</div>
+    <div class="ref-class-label">Os ${SLOT_N} encaixes, na ordem em que aparecem na frase</div>
     <table class="slot-table">
       <thead><tr><th>#</th><th>encaixe</th><th>responde</th><th>exemplo</th></tr></thead>
       <tbody>${linhas}</tbody>
     </table>
     <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:6px;">
-      Cada encaixe aceita <b>um</b> ocupante. Dois do mesmo encaixe competem
-      ("everywhere <i>there</i>"); de encaixes diferentes, somam — mesmo sendo da mesma cor,
-      como <span style="color:${ADJ_COLOR.como}">grau</span> +
-      <span style="color:${ADJ_COLOR.como}">modo</span>.
-      Por isso cabem até <b>3</b> <span style="color:${ADJ_COLOR.como}">laranjas</span>,
-      <b>1</b> <span style="color:${ADJ_COLOR.onde}">verde</span> e
-      <b>6</b> <span style="color:${ADJ_COLOR.quando}">violetas</span> na mesma frase.
+      Cada encaixe tem <b>uma</b> função e <b>uma</b> cor, e aceita <b>um</b> ocupante. Dois do
+      mesmo encaixe competem ("everywhere <i>there</i>"); de encaixes diferentes, somam — mesmo
+      sendo da mesma cor, como <span style="color:${ADJ_COLOR.como}">grau</span> +
+      <span style="color:${ADJ_COLOR.como}">modo</span>. Por isso cabem até
+      <b>${teto.como.length}</b> <span style="color:${ADJ_COLOR.como}">laranjas</span>,
+      <b>${teto.onde.length}</b> <span style="color:${ADJ_COLOR.onde}">verde</span> e
+      <b>${teto.quando.length}</b> <span style="color:${ADJ_COLOR.quando}">violetas</span>
+      na mesma frase, sendo ${nMeio} delas antes do verbo.
     </div>
 
     <div class="ref-class-label">Glossário por encaixe</div>
@@ -4306,7 +5032,7 @@ function buildAnatomia(){
     </div>
     <div id="glossarioWrap"></div>
 
-    <div class="ref-class-label">Combinações que valem a pena</div>
+    <div class="ref-class-label">Combinações que valem a pena — por situação</div>
     ${cards}
 
     <div class="ref-class-label">O limite — e por que não usá-lo</div>
@@ -4317,15 +5043,24 @@ function buildAnatomia(){
     </div>
     <div class="anat-pt">${escapeHTML(mx.pt)}</div>
     <div class="anat-aviso">
-      Esta frase é <b>gramaticalmente correta</b>: 9 encaixes ocupados, todos na ordem certa.
-      Mas ninguém fala assim — e ela ainda se contradiz ("duas vezes" × "o dia inteiro",
-      "de jeito nenhum" negando os outros oito). O motor garante a <b>estrutura</b>;
-      a <b>coerência</b> é sua. Na prática, o ponto ideal fica entre <b>2 e 4</b> encaixes.
+      Esta frase é <b>gramaticalmente correta</b>: ${mxN} de ${SLOT_N} encaixes ocupados, todos na ordem certa.
+      O que falta é a <b>polaridade</b> ("at all"): ela só existe em frase negada, e a negação
+      não aceita peças como "already" e "also". Mas ninguém fala assim — e ela ainda se contradiz
+      ("há cerca de uma hora" × "ontem", "duas vezes" × "o dia inteiro"). O motor garante a
+      <b>estrutura</b>; a <b>coerência</b> é sua. Na prática, o ponto ideal fica entre <b>2 e 4</b> encaixes.
     </div>`;
   wrap.querySelectorAll('.anat-card[data-ex]').forEach(card=>{
     const usar = (e)=>{
       if(e.target.closest('.audio-btn')) return;   /* ouvir não aplica */
       aplicarNoMontador(ANAT_EXEMPLOS[+card.dataset.ex]);
+    };
+    card.onclick = usar;
+    card.onkeydown = (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); usar(e); } };
+  });
+  wrap.querySelectorAll('.anat-card[data-at]').forEach(card=>{
+    const usar = (e)=>{
+      if(e.target.closest('.audio-btn')) return;
+      aplicarNoMontador(ATALHOS[+card.dataset.at].cfg);
     };
     card.onclick = usar;
     card.onkeydown = (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); usar(e); } };
@@ -4360,10 +5095,18 @@ buildErros();
       if(state.colocacao !== null && !(v.col || [])[state.colocacao]) state.colocacao = null;
       /* estado salvo por versões que guardavam um único sinal de fim */
       if(!Array.isArray(state.signalEnds)) state.signalEnds = s.signalEnd ? [s.signalEnd] : [];
+      /* versões anteriores guardavam um único advérbio de meio */
+      if(!Array.isArray(s.signalMids)) state.signalMids = s.signalMid ? [s.signalMid] : [];
+      delete state.signalMid;
+      state.signalSlot = null; state.signalFam = null; state.signalBusca = ''; state.signalMais = false;
     }
     const m = saved.modal;
     if(m && MODAL_ENGINE[m.funcao] && MODAL_ENGINE[m.funcao].tempos.some(t=>t.key===m.tempo) && FORMATOS.includes(m.formato)){
       Object.assign(modalState, m);
+      /* versões anteriores guardavam um único sinal (texto), sempre de fim de frase */
+      if(!Array.isArray(m.signals)) modalState.signals = (typeof m.signal === 'string' && m.signal) ? [{ w:m.signal, cls:modalSignalFam(m.signal), pl:'end' }] : [];
+      delete modalState.signal;
+      modalState.signalSlot = null; modalState.signalFam = null; modalState.signalBusca = ''; modalState.signalMais = false;
     }
     const p = saved.practice;
     if(p && PRACTICE_LEVELS.some(l=>l.key===p.level)){
