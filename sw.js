@@ -1,4 +1,4 @@
-const CACHE_NAME = "painel-mestre-ingles-v84";
+const CACHE_NAME = "painel-mestre-ingles-v86";
 const ASSETS = [
   "./index.html",
   "./expressoes.js",

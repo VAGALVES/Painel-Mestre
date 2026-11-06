@@ -115,6 +115,15 @@
   .verbo-ficha{margin-top:10px; font-size:12px; color:var(--paper-dim); line-height:1.6;}
   .verbo-ficha b{color:var(--brass); font-family:'JetBrains Mono', ui-monospace, monospace;}
   .verbo-ficha span{display:inline-block; margin-left:4px; padding:1px 8px; border:1px solid var(--line); border-radius:10px; font-size:11px;}
+  /* léxico: outros sentidos e família de palavras (v85) */
+  .verbo-lex .lex-sentido{margin-top:5px; font-size:12px; line-height:1.5; color:var(--paper);}
+  .verbo-lex .lex-sentido em{color:var(--paper-dim); font-size:11.5px;}
+  .verbo-lex .lex-familia{margin-top:7px; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 6px;}
+  .verbo-lex .lex-familia small{flex:0 0 78px; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--paper-dim);}
+  .verbo-lex .lex-item{margin-left:0; padding:2px 8px; font-size:11.5px; color:var(--paper-dim);}
+  .verbo-lex .lex-item b{font-size:12px;}
+  .verbo-lex .lex-item.aprox{border-style:dashed; opacity:.85;}
+  .verbo-lex .lex-nota{margin-top:6px; font-size:10.5px; line-height:1.4; color:var(--paper-dim); font-style:italic;}
   /* registro cotidiano × formal (v84) */
   .verbo-reg .reg-linha{margin-top:6px; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 6px;}
   .verbo-reg .reg-par{margin-left:0; padding:3px 10px; border-color:var(--brass-dim); color:var(--brass); cursor:pointer; font-size:12px; font-family:'JetBrains Mono', ui-monospace, monospace;}
@@ -1015,7 +1024,7 @@ document.addEventListener('click', function(e){
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '2.5';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '2.7';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -3704,6 +3713,961 @@ function linhaOrigens(el, atual, lista, aoEscolher){
   });
   el.appendChild(cab);
 }
+/* ---- Léxico dos verbos (v85): outros sentidos + família de palavras ----
+   Camada de consulta, escrita à mão e SEM ligação com o motor: não altera nenhuma frase gerada.
+   Linha: id | outros sentidos (PT, com exemplo EN entre parênteses; só onde o verbo é polissêmico) |
+   substantivos equivalentes (en=pt) | adjetivos equivalentes (en=pt). Campo vazio = não se aplica.
+   O sentido principal é o que já aparece como tradução do verbo; aqui ficam os demais. */
+const VERB_LEX_TXT = `work|funcionar (the plan works); dar certo (it worked!); operar (the machine works by steam)|work=trabalho/obra; worker=trabalhador; workplace=local de trabalho|working=que trabalha/de trabalho; workable=viável
+go|funcionar/andar (the clock doesn't go); ficar/tornar-se (go mad); combinar (red goes with blue); acabar em (go bankrupt)|going=ida; goer=frequentador|gone=ido/ausente; going=em andamento
+eat|corroer/consumir (acid eats metal); preocupar (what's eating you?)|eating=ato de comer; eater=comedor; eatery=lanchonete|edible=comestível; eatable=comível
+write|compor (write a song); redigir/escrever (write code)|writer=escritor; writing=escrita; write-up=relato|written=escrito; writable=gravável
+see|entender (I see); acompanhar (see her home); consultar (see a doctor); garantir (see that it's done)|sight=visão; seer=vidente; seeing=ato de ver|visible=visível; seeing=que enxerga; seen=visto
+take|levar (take her home); durar (it takes an hour); aceitar (take advice); tomar (take a pill)|take=tomada/ponto de vista; taker=quem aceita; taking=captura|taking=cativante; takeable=aceitável
+come|chegar (come home); vir a ser (come true); custar/ser vendido (it comes in red)|coming=chegada; newcomer=recém-chegado|coming=próximo; incoming=que chega
+run|dirigir/gerir (run a company); funcionar (the engine runs); escorrer (the tap runs); candidatar-se (run for office); executar (run a program)|run=corrida; runner=corredor; running=ato de correr|running=em funcionamento/corrente; runny=aguado
+buy|acreditar em (I don't buy it)|buy=compra; buyer=comprador; buying=ato de comprar|buyable=comprável
+think|achar/opinar (I think so); lembrar-se (I can't think of it); considerar (think twice)|thought=pensamento; thinker=pensador; thinking=raciocínio|thoughtful=atencioso/pensativo; thinking=pensante; thoughtless=irrefletido
+put|expressar (put it simply); estimar (I'd put it at 50)|≈placement=colocação; ≈position=posição|≈placed=colocado; ≈positioned=posicionado
+speak|discursar (speak at a conference); dizer (speak the truth)|speaker=orador/falante; speech=discurso; speaking=fala|spoken=falado; speakable=pronunciável
+say|dizer-se/indicar (the sign says...); supor (say we meet at 5)|say=voz/opinião; saying=ditado/provérbio|said=dito/mencionado
+get|tornar-se (get tired); receber (get a letter); entender (I get it); buscar (get a doctor); chegar (get home)|getter=quem consegue; get-together=encontro|gettable=obtível
+make|obrigar (make him go); ganhar (make money); somar (two and two make four); chegar a (make it)|make=marca/fabricação; maker=fabricante; making=criação|made=feito/fabricado; makeshift=improvisado
+know|conhecer (know her); reconhecer (know the signs); distinguir (know right from wrong)|knowledge=conhecimento; know-how=experiência; knower=conhecedor|knowing=conhecedor/cúmplice; knowledgeable=bem-informado; known=conhecido
+give|ceder (the floor gave); realizar (give a talk); causar (give pain); dar de si (the rope gave)|gift=presente; giver=quem dá; giving=ato de dar|given=dado/determinado; giving=generoso/que dá
+find|julgar/considerar (I find it hard); descobrir (find out); declarar (find guilty)|find=descoberta/achado; finding=descoberta/conclusão; finder=descobridor|found=encontrado; findable=localizável
+tell|distinguir (tell them apart); mandar (tell him to go); revelar (tell a secret)|teller=narrador/caixa; telling=relato|telling=revelador; tell-tale=denunciador
+become|combinar/cair bem (that dress becomes you)|becoming=transformação|becoming=adequado/elegante
+leave|deixar (leave a note); partir (leave town); largar (leave a job); sobrar (nothing left)|leave=licença/permissão; leaver=quem sai; leavings=sobras|left=deixado/restante; leftover=que sobrou
+feel|apalpar (feel the cloth); parecer ao toque (it feels soft); achar (I feel that...)|feeling=sentimento; feel=tato/sensação; feeler=antena|feeling=sensível/emotivo; felt=sentido
+bring|causar (bring tears); render/gerar (bring profit); levar a (bring to justice)|bringer=quem traz|brought=trazido
+begin|nascer/surgir (the river begins here); ter início (the era begins)|beginning=começo; beginner=iniciante|beginning=inicial; begun=começado
+keep|guardar (keep a secret); cumprir (keep a promise); sustentar (keep a family); continuar (keep going)|keep=sustento/torre; keeper=guardião; keeping=custódia|kept=mantido; keepable=guardável
+hold|conter (the hall holds 500); realizar (hold a meeting); aguentar (the rope holds); valer (the offer holds)|hold=controle/porão; holder=detentor; holding=posse/participação|held=segurado; holdable=segurável
+meet|atender/satisfazer (meet needs); cumprir (meet a deadline); conhecer (nice to meet you); reunir-se (the team meets)|meeting=reunião; meet=encontro esportivo|meeting=de encontro; meet=apropriado (arcaico)
+win|conquistar (win support); vencer (win a race); ganhar (win a prize)|win=vitória; winner=vencedor; winning=ganho|winning=vencedor/cativante; winnable=ganhável
+teach|dar aulas (she teaches at a school); ensinar uma lição (that taught me)|teacher=professor; teaching=ensino; teachings=ensinamentos|teachable=ensinável; teaching=de ensino
+sell|convencer (sell the idea); ser vendido (it sells well); trair (sell out)|sale=venda; seller=vendedor; selling=venda|salable=vendável; sold=vendido
+send|enviar/transmitir (send a signal); mandar (send for help); levar (send into a rage)|sender=remetente; sending=envio; send-off=despedida|sendable=enviável; sent=enviado
+break|romper (break a record); infringir (break the law); interromper (break the silence); amanhecer (day breaks); arrebentar/quebrar-se (the wave breaks)|break=pausa/quebra; breakage=quebra; breaker=quebrador|broken=quebrado; breakable=quebrável; breaking=que irrompe
+drive|impelir/motivar (drive growth); forçar (drive mad); conduzir (drive a car)|drive=viagem/impulso/garra; driver=motorista; driveway=entrada de garagem|driving=motriz/forte; driven=motivado
+choose|preferir/decidir (choose to stay); optar (choose between)|choice=escolha; chooser=quem escolhe|choosy=exigente; chosen=escolhido; choice=seleto
+wear|desgastar (wear thin); durar/resistir (it wears well); trazer (wear a smile)|wear=roupa/desgaste; wearer=quem usa; wearing=ato de usar|worn=gasto/usado; wearable=vestível; wearing=cansativo
+fall|diminuir (prices fall); ser tomado (the city fell); acontecer (Christmas falls on Friday); ficar (fall asleep)|fall=queda/outono (EUA); downfall=ruína|fallen=caído; falling=em queda
+forget|deixar de (don't forget to call); esquecer-se de (forget it!)|forgetfulness=esquecimento|forgetful=esquecido; forgotten=esquecido; forgettable=esquecível
+grow|cultivar (grow tomatoes); deixar crescer (grow a beard); tornar-se (grow old)|growth=crescimento; grower=cultivador; grown-up=adulto|grown=crescido/adulto; growing=crescente
+catch|pegar (catch a cold); entender (I didn't catch that); prender-se (catch on a nail); surpreender (catch him lying)|catch=pega/armadilha/pegadinha; catcher=apanhador; catching=pegar|catching=contagioso; catchy=cativante
+sleep|dormir (sleep on it = pensar com calma); ter capacidade para (the room sleeps six)|sleep=sono; sleeper=dorminhoco; sleepiness=sonolência|sleepy=sonolento; sleeping=adormecido; asleep=dormindo
+arise|decorrer (problems arise); aparecer (a chance arises)|arising=surgimento|≈arising=emergente; ≈emergent=emergente
+imagine|supor (I imagine so); fazer ideia (just imagine!)|imagination=imaginação; image=imagem|imaginary=imaginário; imaginative=criativo; imaginable=imaginável
+join|unir (join two pieces); participar (join in); associar-se (join a club)|join=junção; joiner=marceneiro; joint=junta/articulação|joint=conjunto/em comum
+need|exigir (it needs care); dever (you need not go)|need=necessidade; needs=necessidades|needy=necessitado; needless=desnecessário
+overcome|dominar/vencer (overcome by emotion)|≈overcoming=superação; ≈victory=vitória|overcome=dominado/vencido
+quit|parar (quit smoking); sair (quit the program); pedir demissão|quitter=desistente|quit=livre de/quite
+understand|saber/ouvir dizer (I understand he's ill); subentender|understanding=compreensão/acordo|understandable=compreensível; understanding=compreensivo; understood=compreendido
+visit|visitar o site (visit a website); ir ao médico (visit a doctor); castigar (visit punishment)|visit=visita; visitor=visitante; visitation=visitação|visiting=visitante; visitable=visitável
+x-ray||x-ray=radiografia|≈radiographic=radiográfico
+yell||yell=grito|yelling=aos gritos
+zoom|ampliar (zoom in); passar zunindo (cars zoom past)|zoom=zum/ampliação; zoom lens=lente zoom|≈zoomed=ampliado; ≈zooming=em ampliação
+give-up|desistir (give up smoking); entregar-se (the thief gave up); abrir mão (give up a seat)|giving up=desistência; quitter=desistente|≈resigned=resignado; ≈defeatist=derrotista
+find-out||≈discovery=descoberta; ≈finding=constatação|≈discovered=descoberto
+look-after|cuidar de (look after a child)|≈care=cuidado; ≈caretaker=cuidador|≈caring=cuidadoso; ≈cared-for=bem cuidado
+look-for||≈search=busca; ≈seeker=quem procura|≈searching=que procura; ≈sought-after=procurado
+put-off|adiar (put off a meeting); desanimar (the smell put me off)|≈postponement=adiamento; ≈delay=atraso|put-off=desanimado
+get-up|levantar da cama (get up at 7); levantar-se (get up from the chair)|get-up=traje/figurino|≈up=de pé/acordado; ≈risen=levantado
+come-back||comeback=retorno triunfal|≈returning=que volta; ≈returned=retornado
+turn-on|ligar (turn on the light); excitar/empolgar (it turns me on)|turn-on=algo excitante|≈switched-on=ligado; ≈on=ligado
+run-out|acabar (we ran out of time); expirar (the contract runs out)|≈depletion=esgotamento; ≈expiry=vencimento|≈exhausted=esgotado; ≈expired=vencido
+take-off|decolar (the plane took off); tirar a roupa (take off your coat); fazer sucesso (sales took off)|takeoff=decolagem|≈airborne=no ar; ≈off=fora
+carry-on||carry-on=bagagem de mão|carry-on=de mão
+work-out|malhar (work out at the gym); dar certo (it worked out); resolver (work out a problem)|workout=treino/exercício|≈workable=viável; ≈solved=resolvido
+agree|combinar-se (the figures agree); concordar com a dieta (the food doesn't agree with me)|agreement=acordo; agreeableness=amabilidade|agreeable=agradável/disposto
+call|visitar (call on a friend); nomear (call a meeting); exigir (call for); considerar (call it a day)|call=chamada/chamado; caller=quem liga; calling=vocação|calling=chamativo
+carry|sustentar (carry the team); ser aprovado (the motion carried); publicar (the paper carried the story); alcançar (the sound carries)|carrier=transportadora/portador; carriage=carruagem/transporte; carry=transporte|carriable=transportável
+check|conter/segurar (check your anger); marcar (check the box); conferir bagagem (check a bag); coincidir (the figures check out)|check=cheque/conta (EUA)/verificação; checker=verificador; checkup=exame|checked=xadrez/verificado
+clean||cleaning=limpeza; cleaner=faxineiro/produto; cleanliness=limpeza|clean=limpo; cleanly=asseado; cleansing=de limpeza
+close|encerrar (close a deal); terminar (the show closes); fechar-se (close ranks)|close=fim; closure=fechamento/encerramento; closeness=proximidade|close=próximo/íntimo; closing=final
+count|importar (every vote counts); incluir (count me in); confiar (count on)|count=contagem/conde; counter=balcão/contador; counting=contagem|countable=contável; countless=incontável
+cross|cruzar-se (our paths crossed); contrariar (cross someone); riscar (cross out)|cross=cruz; crossing=travessia; crossroads=encruzilhada|cross=zangado/cruzado
+cut|reduzir (cut costs); editar (cut a film); ferir (cut a finger); faltar (cut class)|cut=corte/fatia; cutter=cortador; cutting=recorte|cut=cortado; cutting=cortante/mordaz; cutthroat=impiedoso
+deal|distribuir (deal cards); negociar (deal in antiques); tratar de (deal with)|deal=acordo/negócio/quantidade; dealer=negociante/crupiê; dealing=trato|dealt=distribuído
+decide|resolver (the case was decided in court); determinar|decision=decisão; decider=jogo/fator decisivo|decisive=decisivo; decidable=decidível
+do|bastar (that will do); servir (it does the job); sair-se (do well); cursar (do a degree)|doer=quem faz; doing=ato; deed=feito; to-do=lista de tarefas|done=feito/pronto; doable=exequível
+draw|empatar (draw a match); atrair (draw a crowd); sacar (draw a gun/draw money); extrair (draw a conclusion)|draw=empate/sorteio; drawer=gaveta; drawing=desenho|drawn=desenhado/abatido
+dream|desejar muito (dream of success); imaginar (I wouldn't dream of it)|dream=sonho; dreamer=sonhador|dreamy=sonhador/delicioso; dreamlike=onírico
+drink|brindar (drink to us); beber álcool (he drinks)|drink=bebida; drinker=bebedor; drinking=ato de beber|drinkable=potável; drunk=bêbado/bebido
+drop|largar (drop a subject); cair (prices dropped); deixar (drop me at home); omitir|drop=gota/queda; dropout=evadido; droplet=gotícula|dropped=derrubado
+face|encarar (face facts); dar para (the house faces south)|face=rosto/face; facing=revestimento|facial=facial
+fight|brigar (fight with); combater (fight fires/crime); disputar (fight an election)|fight=luta/briga; fighter=lutador; fighting=combate|fighting=combativo
+figure|supor (I figure so); aparecer (figure in a story); calcular (figure out)|figure=número/figura; figurine=estatueta|figurative=figurado
+fill|ocupar (fill a post); satisfazer (fill a need); obturar (fill a tooth)|fill=porção; filling=recheio/obturação; filler=enchimento|full=cheio; filling=que sacia
+follow|compreender (I don't follow); decorrer (it follows that); acompanhar (follow a blog)|follower=seguidor; following=seguidores/lista|following=seguinte; follow-up=de acompanhamento
+have|comer/tomar (have lunch); ter um bebê (have a baby); tolerar (I won't have it); mandar fazer (have it fixed)|≈possession=posse; ≈ownership=propriedade|≈possessive=possessivo; ≈possessed=possuído
+lay|botar ovos (lay eggs); preparar (lay a trap); pôr a mesa (lay the table)|layer=camada/galinha poedeira; layout=disposição|lay=leigo; laid-back=descontraído
+let|alugar (house to let - UK); permitir (let me go); sugerir (let's go)|let=aluguel/obstáculo (tênis)|≈permissive=permissivo; ≈allowed=permitido
+like||like=semelhante/gosto; liking=gosto/afeição; likeness=semelhança|likeable=simpático; likely=provável; alike=parecido
+live|morar (live in); sobreviver (live through); viver (live a life)|life=vida; living=sustento; liver=fígado|live=ao vivo/vivo; alive=vivo; lively=animado; living=vivo
+look|parecer (look happy); procurar (look for); cuidar (look after)|look=olhar/aparência; looker=pessoa atraente; lookout=vigia|looking=de aparência
+lose|atrasar (the clock loses); gastar à toa (lose time); despistar (lose a tail)|loss=perda; loser=perdedor; losing=perda|lost=perdido; losing=perdedor
+pass|aprovar (pass a law); ser aprovado (pass a test); entregar (pass the salt); acontecer (what passed); acabar (the pain passed)|pass=passe/passagem/aprovação; passage=passagem; passer-by=transeunte|passing=passageiro; passable=razoável; past=passado
+pay|compensar (it pays to listen); render (pay dividends); prestar (pay attention); visitar (pay a visit)|pay=salário; payment=pagamento; payer=pagador|paid=pago; payable=a pagar; pay=pago
+pick|colher (pick fruit); arrombar (pick a lock); escolher (pick a team); implicar (pick a fight)|pick=escolha/picareta; picker=colhedor; pickings=restos|picky=exigente
+play|tocar (play the guitar); interpretar (play Hamlet); fazer (play a joke); funcionar (the video plays)|play=peça/jogo/jogada; player=jogador; playing=jogo|playful=brincalhão; playable=jogável
+pull|conseguir (pull a crowd); distender (pull a muscle); sacar (pull a gun)|pull=puxão/atração; puller=puxador; pull-out=retirada|pulling=de tração
+push|insistir (push for); pressionar (push someone to do); vender drogas|push=empurrão/esforço; pusher=traficante; pushing=insistência|pushy=insistente/agressivo
+raise|criar (raise a family); levantar dinheiro (raise funds); suscitar (raise a question); aumentar (raise prices)|raise=aumento (EUA); raiser=criador; raising=ato de elevar|raised=elevado/criado
+read|dizer/marcar (the meter reads 90); interpretar (read the signs); estudar (read law)|reading=leitura; reader=leitor; readership=público leitor|readable=legível; readily=prontamente; read=lido
+return|devolver (return a book); render (return profit); eleger (return a candidate); retribuir (return a favour)|return=retorno/devolução/rendimento; returnee=quem retorna|returnable=retornável; returning=que volta
+ride|dirigir (ride a bike); flutuar (the ship rides the waves); continuar (let it ride)|ride=passeio/carona; rider=cavaleiro/ciclista; riding=equitação|ridable=montável
+save|poupar (save money); guardar (save a file); salvar (save a life); evitar (save time)|saving=economia; saver=poupador; savings=poupança|savable=salvável; saving=que economiza
+set|fixar (set a date); pôr-se (the sun sets); endurecer (the jelly sets); pôr a mesa (set the table)|set=conjunto/cenário/set; setting=ambiente/configuração; setback=revés|set=pronto/fixo; settled=estabelecido
+show|aparecer (the mistake shows); projetar (show a film); provar (show it works); exibir (show a work)|show=espetáculo/programa; showing=exibição; showcase=vitrine|showy=vistoso; shown=mostrado
+stand|aguentar (can't stand him); candidatar-se (stand for office); estar (stand idle); ficar de pé|stand=banca/postura/posição; standing=posição/prestígio; standpoint=ponto de vista|standing=permanente/em pé; standard=padrão; outstanding=notável
+stay|permanecer (stay calm); hospedar-se (stay at a hotel); morar provisoriamente (stay with friends)|stay=estadia/estada; stayer=resistente|staying=permanente
+step|dar um passo (step forward); passar por cima (step on); afastar-se (step down)|step=passo/etapa; stepping stone=trampolim|stepped=em degraus
+stop|interromper (stop a call); impedir (stop him); parar de (stop smoking); hospedar-se brevemente (stop by)|stop=parada/ponto; stopper=rolha; stoppage=paralisação|stopped=parado
+talk|discursar (talk to a group); revelar (talk under pressure); fofocar (people talk)|talk=conversa/palestra; talker=falante; talks=negociações|talkative=tagarela
+throw|dar uma festa (throw a party); desconcertar (throw off); ter um ataque (throw a tantrum); perder de propósito (throw a match)|throw=lance/arremesso; thrower=lançador; throwaway=descartável|thrown=lançado; throwaway=descartável
+turn|virar-se (turn around); ficar (turn red); mudar (the weather turned); tornear (turn wood)|turn=vez/curva/giro; turner=torneiro; turning=curva|turning=giratório
+wait|servir mesas (wait tables); adiar (it can wait)|wait=espera; waiter=garçom; waiting=espera|waiting=em espera
+walk|acompanhar (walk her home); passear com o cachorro (walk the dog); sair impune (walk free)|walk=caminhada/passeio; walker=caminhante/andador; walkway=passarela|walking=ambulante/a pé; walkable=transitável a pé
+wash|lavar-se (wash up); ser levado pela água (washed away); resistir (it won't wash)|wash=lavagem/ondulação; washer=máquina de lavar; washing=roupa lavada|washable=lavável
+learn|saber/ficar sabendo (learn of a death); memorizar (learn a poem)|learning=aprendizado; learner=aprendiz; learnings=aprendizados|learnable=aprendível
+remember|dar lembranças (remember me to her); comemorar (remember the dead)|remembrance=lembrança/memória; memory=memória|memorable=memorável
+believe|crer em (believe in God); achar (I believe so)|belief=crença; believer=crente|believable=crível; unbelievable=inacreditável
+realize|concretizar (realize a dream); render (realize a profit); entender (I didn't realize)|realization=percepção/concretização; reality=realidade|real=real; realistic=realista
+notice||notice=aviso/notificação/percepção; noticeboard=mural|noticeable=perceptível
+guess|supor (I guess so); adivinhar corretamente (guess right)|guess=palpite; guesswork=adivinhação|guessable=adivinhável
+presume|ousar (presume to speak); abusar (presume on a friendship)|presumption=suposição/arrogância|presumptuous=presunçoso; presumable=presumível
+doubt|desconfiar (doubt a claim)|doubt=dúvida; doubter=cético|doubtful=duvidoso; doubtless=sem dúvida
+recognize|reconhecer oficialmente (recognize a state); admitir (recognize defeat)|recognition=reconhecimento|recognizable=reconhecível
+consider|julgar (consider guilty); levar em conta (consider the cost)|consideration=consideração; considerations=fatores|considerate=atencioso; considerable=considerável
+focus|ajustar o foco (focus the lens); centrar|focus=foco; focal point=ponto central|focal=focal
+memorize||memory=memória; memorization=memorização|memorable=memorável
+analyze||analysis=análise; analyst=analista; analytics=análise de dados|analytical=analítico
+solve||solution=solução; solver=resolvedor|soluble=solúvel; solvable=resolvível
+mean|pretender (I meant to call); implicar (it means more work); ter importância (it means a lot)|meaning=significado; means=meios|meaningful=significativo; meaningless=sem sentido; mean=mesquinho/médio
+expect|supor (I expect so); estar grávida (she's expecting); exigir (expect results)|expectation=expectativa; expectancy=expectativa|expectant=expectante; unexpected=inesperado
+predict||prediction=previsão; predictor=indicador|predictable=previsível; predictive=preditivo
+compare||comparison=comparação; comparative=comparativo|comparable=comparável; comparative=comparativo
+judge|achar (I judge him honest); julgar um concurso|judge=juiz; judgment=julgamento; judgement=julgamento (UK)|judgmental=crítico/moralista; judicial=judicial; judicious=judicioso
+blame||blame=culpa; blamer=quem culpa|blameless=inocente; blameworthy=culpável
+praise|louvar (praise the Lord)|praise=elogio; praiser=elogiador|praiseworthy=louvável
+criticize||criticism=crítica; critic=crítico; critique=análise crítica|critical=crítico; criticizable=criticável
+approve||approval=aprovação; approver=aprovador|approving=de aprovação; approvable=aprovável
+reject||rejection=rejeição; reject=item rejeitado; rejecter=quem rejeita|rejectable=rejeitável
+accuse||accusation=acusação; accuser=acusador; the accused=o acusado|accusing=acusador; accusatory=acusatório
+admire||admiration=admiração; admirer=admirador|admirable=admirável; admiring=admirado
+respect||respect=respeito; respects=cumprimentos; respecter=quem respeita|respectful=respeitoso; respectable=respeitável; respective=respectivo
+deserve||(just) deserts=o que se merece|deserving=merecedor
+evaluate||evaluation=avaliação; evaluator=avaliador|evaluative=avaliativo
+recommend||recommendation=recomendação; recommender=quem recomenda|recommendable=recomendável
+support|sustentar (support a roof); suportar (support a team); manter (support a family)|support=apoio/suporte; supporter=apoiador/torcedor; supporting=apoio|supportive=que apoia; supporting=de apoio; supportable=sustentável
+defend||defense=defesa; defence=defesa (UK); defender=defensor; defendant=réu|defensive=defensivo; defenseless=indefeso; defensible=defensável
+trust||trust=confiança/fundo fiduciário; trustee=curador; trusting=confiante|trustworthy=confiável; trusting=confiante
+forgive||forgiveness=perdão; forgiver=quem perdoa|forgiving=indulgente; forgivable=perdoável; forgiven=perdoado
+suspect|desconfiar (suspect a plot); imaginar|suspect=suspeito; suspicion=suspeita|suspect=suspeito; suspicious=desconfiado
+prefer||preference=preferência; preferment=promoção|preferable=preferível; preferential=preferencial
+disagree|fazer mal (the food disagrees with me)|disagreement=discordância|disagreeable=desagradável
+ask|convidar (ask her out); pedir (ask a favour); cobrar (ask a price)|ask=pedido; asker=quem pergunta; asking price=preço pedido|asking=de pedido
+answer|atender (answer the phone); corresponder (answer the description); retrucar|answer=resposta; answerer=respondente; answering machine=secretária eletrônica|answerable=responsável/respondível
+explain|justificar-se (explain yourself); esclarecer|explanation=explicação; explainer=explicador|explanatory=explicativo; explicable=explicável
+discuss||discussion=discussão; discussant=debatedor|discussable=discutível
+mention||mention=menção; mentioner=quem menciona|mentionable=digno de menção
+announce||announcement=anúncio; announcer=locutor|announced=anunciado
+argue|sustentar (argue that); convencer (argue him out of it)|argument=argumento/discussão; arguer=debatedor|arguable=discutível; argumentative=argumentador
+suggest|indicar (the data suggest); sugerir ideia (suggest a name)|suggestion=sugestão; suggester=quem sugere|suggestive=sugestivo; suggestible=sugestionável
+report|apresentar-se (report for duty); denunciar (report a crime); informar-se|report=relatório/reportagem; reporter=repórter; reporting=cobertura|reportable=notificável; reportedly=segundo consta
+whisper||whisper=sussurro; whisperer=sussurrador|whispery=sussurrante
+shout||shout=grito; shouting=gritaria|shouty=gritão
+promise|prometer (promise to be good); dar sinais (promise rain)|promise=promessa; promiser=quem promete|promising=promissor; promissory=promissório
+warn|advertir (warn against); alertar (warn of danger)|warning=aviso; warner=quem avisa|warning=de advertência
+complain|queixar-se de dor (complain of pain)|complaint=reclamação/queixa; complainer=reclamão; complainant=queixoso|complaining=reclamão
+describe|traçar (describe a circle)|description=descrição; describer=descritor|descriptive=descritivo; describable=descritível
+express|exprimir (express a view); expressar-se; espremer (express juice)|expression=expressão; expressway=via expressa|expressive=expressivo; express=expresso
+greet||greeting=saudação/cumprimento; greeter=recepcionista|greeting=de saudação
+thank||thanks=obrigado/agradecimentos; thankfulness=gratidão; thanksgiving=ação de graças|thankful=grato; thankless=ingrato
+interrupt||interruption=interrupção; interrupter=interruptor/quem interrompe|interruptive=interruptivo
+interview||interview=entrevista; interviewer=entrevistador; interviewee=entrevistado|interviewed=entrevistado
+communicate||communication=comunicação; communicator=comunicador; communiqué=comunicado|communicative=comunicativo; communicable=transmissível; communal=comunitário
+share|dividir (share a room); compartilhar|share=parte/ação (bolsa); shareholder=acionista; sharing=compartilhamento|shareable=compartilhável
+love||love=amor; lover=amante; lovingness=carinho|loving=carinhoso; lovely=adorável; lovable=amável; beloved=amado
+hate||hate=ódio; hatred=ódio; hater=quem odeia|hateful=odioso; hating=de ódio
+enjoy||enjoyment=prazer/diversão; enjoyer=apreciador|enjoyable=agradável
+want|faltar (it wants only a coat of paint); querer bem/procurar (wanted by police)|want=desejo/falta; wanting=ausência|wanting=em falta; wanton=gratuito
+fear||fear=medo; fearfulness=temor|fearful=medroso/temeroso; fearless=destemido; fearsome=assustador
+miss|errar (miss the target); sentir falta (miss you); perder (miss the bus); sentir falta|miss=erro/senhorita; missing=ausência|missing=faltando/desaparecido
+care|importar-se (I don't care); gostar (would you care for a tea?)|care=cuidado/atenção; carer=cuidador; caretaker=zelador|careful=cuidadoso; careless=descuidado; caring=atencioso; carefree=despreocupado
+hug||hug=abraço; hugger=quem abraça|huggable=fofinho
+kiss||kiss=beijo; kisser=quem beija|kissable=beijável
+marry||marriage=casamento|marriageable=casadouro; matrimonial=matrimonial
+comfort||comfort=conforto/consolo; comforter=edredom/consolador; discomfort=desconforto|comfortable=confortável; comforting=reconfortante; comfortless=desconfortável
+laugh||laugh=riso/risada; laughter=gargalhada; laughingstock=motivo de riso|laughable=risível; laughing=risonho
+cry|gritar (cry for help); pedir (cry out for)|cry=choro/grito; crier=pregoeiro; crying=choro|crying=chorando/gritante; teary=lacrimoso
+smile||smile=sorriso; smiler=quem sorri|smiling=sorridente; smiley=sorridente
+hope||hope=esperança; hopefulness=otimismo|hopeful=esperançoso; hopeless=desesperançado
+welcome||welcome=boas-vindas; welcomer=recepcionista|welcome=bem-vindo; welcoming=acolhedor; unwelcome=indesejado
+inspire|inalar (inspire air)|inspiration=inspiração; inspirer=inspirador|inspiring=inspirador; inspirational=inspirador
+surprise||surprise=surpresa|surprising=surpreendente; unsurprising=previsível
+arrive||arrival=chegada; arriver=quem chega|arrived=chegado
+travel||travel=viagem; traveler=viajante; traveller=viajante (UK)|traveling=viajante
+enter|ingressar (enter a contest); registrar (enter data); inscrever (enter a race)|entry=entrada; entrance=entrada; entrant=participante|entering=de entrada
+climb|subir (prices climb); escalar|climb=subida/escalada; climber=alpinista; climbing=escalada|climbing=ascendente; climbable=escalável
+jump|aumentar de repente (prices jumped); saltar sobre (jump the queue)|jump=salto; jumper=saltador/suéter (UK); jumpsuit=macacão|jumpy=nervoso; jumping=saltitante
+fly|passar rápido (time flies); hastear (fly a flag); pilotar (fly a plane)|fly=mosca; flight=voo; flier=aviador|flying=voador; flighty=volúvel
+swim|rodar (my head swims); inundar|swimming=natação; swimmer=nadador; swim=nado|swimming=natatório; swimmable=navegável a nado
+move|comover (be moved); propor (move a motion); mudar-se (move house)|move=movimento/jogada; movement=movimento; mover=motor|moving=comovente/móvel; movable=móvel
+depart|desviar-se (depart from the plan); partir (the train departs)|departure=partida; department=departamento; departed=falecido|departing=de partida
+escape|fugir (escape prison); escapar (it escaped me); vazar (gas escapes)|escape=fuga; escapee=fugitivo; escapism=escapismo|escapable=evitável; inescapable=inevitável
+park||park=parque; parking=estacionamento|parking=de estacionamento
+board||board=quadro/diretoria/tábua; boarder=pensionista; boarding=embarque|boarding=de embarque; on board=a bordo
+land|aterrissar (land a plane); conseguir (land a job); pegar (land a fish)|land=terra/país; landing=aterrissagem; landlord=senhorio|landless=sem terras
+reach|chegar a (reach an agreement); contatar (reach by phone); passar a mão (reach for)|reach=alcance|reachable=alcançável
+chase||chase=perseguição; chaser=perseguidor; chasing=caçada|chased=perseguido
+explore||exploration=exploração; explorer=explorador|exploratory=exploratório; explorable=explorável
+guide||guide=guia; guidance=orientação; guideline=diretriz|guiding=orientador
+kick|largar (kick a habit); reclamar (kick off); dar o pontapé inicial|kick=chute/pontapé; kicker=chutador; kickoff=pontapé inicial|kicking=vigoroso; kickable=chutável
+score|marcar gol; conseguir (score a deal); arranhar|score=placar/pontuação; scorer=artilheiro; scoreboard=placar|scoreless=sem gols
+train||train=trem; trainer=treinador; training=treinamento; trainee=estagiário|trainable=treinável; training=de treinamento
+compete||competition=competição; competitor=concorrente; competence=competência|competitive=competitivo; competing=concorrente; competent=competente
+lift||lift=elevador/carona/levantamento; lifter=levantador; lifting=levantamento|liftable=levantável
+stretch||stretch=trecho/esticada; stretcher=maca|stretchy=elástico
+shoot||shot=tiro/arremesso; shooter=atirador; shooting=tiroteio|shot=atirado; shooting=de tiro
+hit||hit=sucesso/golpe; hitter=rebatedor; hitman=assassino de aluguel|hit=atingido
+dribble||dribble=drible; dribbler=driblador; dribbling=drible|≈dribbling=de drible
+beat|bater (beat eggs); superar (beat the traffic); ritmar (the heart beats)|beat=batida/ritmo; beater=batedor; beating=surra|beaten=batido/derrotado; beatable=superável
+cheer|animar (cheer up); torcer; aplaudir|cheer=alegria/vivas; cheerleader=líder de torcida; cheers=saúde!|cheerful=alegre; cheery=animado; cheering=de aplauso
+surf|navegar (surf the net)|surf=surfe/ondas; surfer=surfista; surfing=surfe|surfable=surfável
+dive|mergulhar de cabeça (dive into work); cair (prices dive)|dive=mergulho/espelunca; diver=mergulhador; diving=mergulho|diving=de mergulho
+referee||referee=árbitro; refereeing=arbitragem|refereed=arbitrado
+add|acrescentar (add that); somar|addition=adição/acréscimo; adder=somador|additional=adicional; additive=aditivo
+subtract||subtraction=subtração; subtrahend=subtraendo|subtractive=subtrativo
+multiply|reproduzir-se (rabbits multiply); aumentar|multiplication=multiplicação; multiplier=multiplicador; multiple=múltiplo|multiple=múltiplo; multiplicative=multiplicativo
+divide|separar (divide opinion); repartir|division=divisão; divider=divisor; dividend=dividendo|divisible=divisível; divisive=divisivo
+calculate||calculation=cálculo; calculator=calculadora|calculating=calculista; calculable=calculável
+measure||measure=medida; measurement=medição; measurer=medidor|measurable=mensurável; measureless=imensurável
+estimate||estimate=estimativa/orçamento; estimation=estimativa; estimator=estimador|estimable=estimável
+round||round=rodada; roundness=arredondamento|round=redondo
+weigh|ponderar (weigh the options); pesar (weigh anchor = levantar âncora)|weight=peso; weigher=pesador; weighing=pesagem|weighty=importante/pesado; weighted=ponderado; weightless=sem peso
+total||total=total; totality=totalidade|total=total; totalling=total
+demonstrate|manifestar-se (protesters demonstrate)|demonstration=demonstração/manifestação; demonstrator=manifestante|demonstrable=demonstrável; demonstrative=demonstrativo
+plot|conspirar (plot a coup); marcar (plot a course)|plot=enredo/terreno/conspiração; plotter=conspirador/traçador|plotted=traçado
+rank||rank=posição/patente; ranking=classificação|ranking=de alto escalão; rank=rançoso/total
+convert||conversion=conversão; convert=convertido; converter=conversor|convertible=conversível
+spend|passar (spend time); esgotar (spent)|spending=gastos; spender=gastador; spendthrift=esbanjador|spent=gasto/esgotado; spendable=gastável
+cost||cost=custo; costing=cálculo de custos|costly=caro/custoso; cost-effective=econômico
+order|ordenar (order him to leave); organizar|order=pedido/ordem; orderliness=ordem; ordering=ordenação|orderly=ordenado
+charge|carregar (charge a battery); acusar (charge with); atacar (charge the enemy)|charge=taxa/acusação/carga; charger=carregador; charging=cobrança|chargeable=tributável
+owe||debt=dívida; debtor=devedor; owing=dívida|owing=devido; indebted=endividado
+lend|conferir (lend credibility); emprestar-se (lend itself to)|loan=empréstimo; lender=credor; lending=empréstimo|lent=emprestado
+earn|conquistar (earn respect); render (earn interest)|earnings=ganhos; earner=quem ganha; earning=remuneração|earnest=sério/sincero
+invest|investir tempo (invest time); conferir poder|investment=investimento; investor=investidor; investiture=investidura|investable=investível
+bargain|barganhar (bargain for)|bargain=pechincha/barganha; bargainer=negociador|bargain=barato
+refund||refund=reembolso|refundable=reembolsável
+deliver|cumprir (deliver on a promise); fazer um parto; proferir (deliver a speech)|delivery=entrega/parto; deliverer=entregador; deliverance=libertação|deliverable=entregável
+rent||rent=aluguel; renter=inquilino; rental=aluguel|rentable=alugável
+donate||donation=doação; donor=doador|donatable=doável
+withdraw|retirar-se (withdraw from); recuar|withdrawal=saque/retirada|withdrawn=retraído; withdrawable=sacável
+deposit||deposit=depósito/jazida; depositor=depositante; deposition=depoimento|deposited=depositado
+waste||waste=desperdício/lixo; wastage=desperdício; waster=esbanjador|wasteful=desperdiçador; waste=baldio
+manage|conseguir (manage to); administrar; arranjar-se (manage with)|management=administração; manager=gerente; manageress=gerente (fem.)|manageable=gerenciável; managerial=gerencial
+hire||hire=contratação/aluguel; hirer=contratante; hiring=contratação|hireable=contratável
+fire|disparar (fire a gun); incendiar; entusiasmar|fire=fogo/incêndio; firing=demissão/disparo; fireman=bombeiro|fiery=ardente
+lead|conduzir (the road leads to); encabeçar (lead the league); viver (lead a life)|lead=liderança/pista; leader=líder; leadership=liderança|leading=principal; led=liderado
+negotiate|contornar (negotiate a bend)|negotiation=negociação; negotiator=negociador|negotiable=negociável
+schedule||schedule=cronograma/horário; scheduler=agendador|schedulable=agendável
+plan||plan=plano; planner=planejador; planning=planejamento|planless=sem plano
+organize||organization=organização; organizer=organizador; organism=organismo|organizational=organizacional; organic=orgânico
+apply|aplicar-se (apply oneself); valer (the rule applies); candidatar-se (apply for a job)|application=aplicação/candidatura; applicant=candidato; applicator=aplicador|applicable=aplicável
+resign|conformar-se (resign oneself to)|resignation=demissão/resignação|resigning=que se demite
+promote||promotion=promoção; promoter=promotor|promotional=promocional
+attend|cuidar (attend to); atender (attend a patient)|attendance=presença; attendant=atendente; attention=atenção|attentive=atento
+present||present=presente; presentation=apresentação; presenter=apresentador|present=presente/atual; presentable=apresentável
+produce||produce=produtos agrícolas; product=produto; production=produção; producer=produtor|productive=produtivo; producible=produzível
+delegate||delegate=delegado; delegation=delegação|delegated=delegado
+launch||launch=lançamento; launcher=lançador|launched=lançado
+supervise||supervision=supervisão; supervisor=supervisor|supervisory=de supervisão
+collaborate||collaboration=colaboração; collaborator=colaborador|collaborative=colaborativo
+complete||completion=conclusão; completeness=completude|complete=completo; completable=concluível
+finish||finish=acabamento/final; finisher=finalizador; finale=final|final=final; finishing=final
+start||start=início/largada; starter=entrada/iniciante; startup=empresa iniciante|starting=inicial
+improve||improvement=melhoria; improver=aprimorador|improvable=melhorável; improving=em melhora
+develop|revelar (develop a photo); contrair (develop a cold); desenvolver-se|development=desenvolvimento; developer=desenvolvedor|developing=em desenvolvimento; developmental=do desenvolvimento
+achieve||achievement=conquista/realização; achiever=realizador|achievable=alcançável
+operate|funcionar (the machine operates); operar (operate on a patient)|operation=operação; operator=operador; operative=operário|operational=operacional; operative=operante; operable=operável
+cancel|anular (cancel out); compensar|cancellation=cancelamento|canceled=cancelado; cancelled=cancelado (UK)
+submit|ceder (submit to); apresentar (submit a report); alegar|submission=submissão/entrega; submitter=remetente|submissive=submisso
+review||review=revisão/resenha; reviewer=revisor/crítico|reviewed=revisado
+prepare||preparation=preparação; preparedness=preparo|preparatory=preparatório
+recruit||recruit=recruta; recruitment=recrutamento; recruiter=recrutador|recruited=recrutado
+click|combinar (we clicked at once); cair a ficha (it finally clicked)|click=clique/estalo; clickbait=isca de cliques|clickable=clicável
+type||type=tipo; typing=digitação; typist=digitador; typeface=fonte|typical=típico
+download||download=baixada/arquivo baixado; downloader=baixador|downloadable=baixável
+upload||upload=envio de arquivo; uploader=quem envia|uploaded=enviado
+install|empossar (install a president); instalar-se (install oneself)|installation=instalação; installer=instalador; instalment=parcela|installed=instalado
+delete||deletion=exclusão|deletable=apagável
+search|revistar (search a suspect); vasculhar|search=busca/pesquisa; searcher=pesquisador; searchlight=holofote|searching=penetrante/investigativo; searchable=pesquisável
+print|publicar (print a story); escrever em letra de forma|print=impressão/estampa; printer=impressora; printing=impressão|printable=imprimível
+scan|examinar rapidamente (scan the headlines); escandir versos|scan=varredura/exame; scanner=scanner; scanning=varredura|scant=escasso
+code||code=código; coder=programador; coding=programação|codable=codificável
+test||test=teste/prova; tester=testador; testing=teste|testable=testável
+update||update=atualização; updater=atualizador|updated=atualizado
+connect||connection=conexão; connector=conector; connectivity=conectividade|connective=conectivo
+browse|pastar (cattle browse); folhear (browse a book)|browser=navegador; browsing=navegação|browsable=navegável
+record||record=registro/recorde/disco; recorder=gravador; recording=gravação|record-breaking=recorde
+copy|imitar (copy a style); copiar-se|copy=cópia/exemplar; copier=copiadora; copyist=copista|copyable=copiável
+paste||paste=pasta/massa; pasting=colagem|pasty=pastoso
+stream||stream=riacho/fluxo; streamer=serpentina; streaming=transmissão|streamed=transmitido
+encrypt||encryption=criptografia|encrypted=criptografado
+filter||filter=filtro; filtration=filtragem|filtered=filtrado
+sort||sort=tipo/espécie; sorter=classificador; sorting=classificação|sorted=resolvido/classificado
+debug||bug=falha/inseto; debugger=depurador; debugging=depuração|debugged=depurado
+automate||automation=automação; automaton=autômato|automatic=automático
+process||process=processo; processor=processador; processing=processamento|processed=processado
+open|abrir-se (the door opens); estrear (the play opens); começar (open a meeting)|opening=abertura/vaga; opener=abridor|open=aberto; opening=de abertura; open-minded=aberto a ideias
+post||post=cargo/poste/correio; poster=cartaz; posting=postagem|posted=postado
+monitor||monitor=monitor/tela; monitoring=monitoramento|monitored=monitorado
+press|pressionar (press for change); passar a ferro (press clothes)|press=imprensa/prensa; pressure=pressão; pressing=pressão|pressing=urgente
+cook|forjar (cook the books); preparar (cook a meal)|cook=cozinheiro; cooking=culinária; cookery=culinária|cookable=cozinhável
+bake||baker=padeiro; bakery=padaria; baking=assadura/assar|baked=assado
+boil|ferver (boil with rage); cozer em água|boil=fervura/furúnculo; boiler=caldeira|boiling=fervente
+fry||fry=fritura/cardume; fryer=fritadeira; frying pan=frigideira|fried=frito
+chop|cortar (chop wood); mudar (chop and change)|chop=costeleta/golpe; chopper=machado/helicóptero|choppy=agitado
+slice||slice=fatia; slicer=fatiador|sliced=fatiado
+peel|descascar (skin peels); sair em lascas|peel=casca; peeler=descascador; peeling=descamação|peeled=descascado
+pour|chover forte (it's pouring); servir (pour a drink)|pour=despejo|pouring=torrencial
+mix|conviver (mix with people); misturar-se|mix=mistura; mixer=batedeira/misturador; mixture=mistura|mixable=misturável
+stir|mover-se (not a soul stirred); provocar (stir trouble)|stir=agitação/mexida|stirring=emocionante
+taste||taste=gosto/sabor; tasting=degustação; taster=degustador|tasty=saboroso; tasteful=de bom gosto; tasteless=insosso
+serve|atender (serve a customer); cumprir pena (serve time); sacar (serve in tennis)|service=serviço; server=servidor/garçom; servant=empregado|serviceable=útil
+grill|interrogar (grill a suspect)|grill=grelha/churrasqueira; grilling=interrogatório|grilled=grelhado
+season||season=estação/temporada; seasoning=tempero; seasonality=sazonalidade|seasonal=sazonal
+feed||feed=ração/fluxo de dados; feeder=alimentador; feedback=retorno|fed=alimentado; feeding=de alimentação
+chew|ruminar (chew over)|chew=mastigada; chewer=mastigador; chewing gum=chiclete|chewy=mastigável
+swallow|aceitar (swallow an excuse); engolir (swallow pride)|swallow=gole/andorinha|swallowed=engolido
+bite||bite=mordida/lanche; biter=mordedor|biting=cortante/mordaz; bitten=mordido
+melt|comover (melt her heart); desaparecer|melt=derretimento; melting=derretimento; meltdown=colapso|molten=derretido; melting=derretendo
+squeeze||squeeze=aperto/espremida; squeezer=espremedor|squeezable=espremível
+spread||spread=propagação/pasta; spreader=espalhador; spreadsheet=planilha|widespread=disseminado; spread=espalhado
+wake||wake=velório/esteira; waking=vigília|awake=acordado; waking=desperto; wakeful=desperto
+dress|curar (dress a wound); temperar (dress a salad); enfeitar|dress=vestido/traje; dresser=cômoda; dressing=molho/curativo|dressy=elegante
+brush|roçar (brush against); escovar|brush=escova/pincel; brushing=escovação; brush-up=revisão|brushed=escovado
+bathe||bath=banho; bather=banhista; bathing=banho|bathed=banhado
+fix|prender (fix to the wall); arrumar (fix a meal); fraudar (fix a match)|fix=conserto/aperto; fixer=quem resolve; fixture=instalação fixa|fixable=consertável
+repair||repair=reparo/conserto; repairer=reparador; repairman=técnico|repairable=reparável
+lock||lock=fechadura/eclusa; locker=armário; locksmith=chaveiro|lockable=trancável
+sweep||sweep=varrida/varredura; sweeper=varredor; sweeping=varrição|sweeping=abrangente; swept=varrido
+tidy||tidiness=organização; tidy=arrumação|tidy=arrumado; untidy=desarrumado
+rest|apoiar-se (rest on); depender (rest on)|rest=descanso/resto; restfulness=repouso|restful=tranquilo; restless=inquieto
+fold|falir (the business folded); dobrar-se|fold=dobra; folder=pasta; folding=dobramento|foldable=dobrável
+hang|enforcar (hang a man); ficar pendurado; pairar (hang in the air)|hang=caimento/jeito; hanger=cabide; hanging=enforcamento|hanging=pendente; hung=pendurado
+decorate|condecorar (decorate a soldier)|decoration=decoração/condecoração; decorator=decorador; decor=decoração|decorative=decorativo
+water|lacrimejar (eyes water); regar|water=água; watering=rega; waterfall=cachoeira|watery=aguado
+light|iluminar (light a room); pousar (light on); acender|light=luz/lâmpada; lighter=isqueiro; lighting=iluminação|light=leve/claro; lit=aceso; lightweight=leve
+pack||pack=pacote/mochila/matilha; package=pacote; packing=embalagem|packed=lotado/embalado
+wipe||wipe=lenço umedecido/limpada; wiper=limpador|wiped=enxugado
+build|desenvolver (build a business); aumentar (tension builds)|build=constituição física; builder=construtor; building=prédio|built=construído; built-in=embutido
+create||creation=criação; creator=criador; creativity=criatividade|creative=criativo
+design|planejar (design a course); destinar (be designed for)|design=projeto/desenho; designer=designer; designation=designação|designer=de grife
+paint|descrever (paint a picture of)|paint=tinta; painter=pintor; painting=pintura|painted=pintado
+assemble|reunir-se (the crowd assembles)|assembly=montagem/assembleia; assembler=montador|assembled=montado
+sew||sewing=costura; sewer=costureiro|sewn=costurado
+shape||shape=forma; shaper=moldador; shaping=moldagem|shapely=bem torneado; shapeless=sem forma
+tie|empatar (tie the game); vincular (tied to)|tie=gravata/laço/empate; tying=amarração|tied=amarrado
+stick|enfiar (stick a pin); aguentar (stick it out); colocar (stick it there)|stick=graveto/vara/bastão; sticker=adesivo; stickiness=aderência|sticky=pegajoso; stuck=preso
+dig|gostar (I dig it); escavar|dig=escavação/alfinetada; digger=escavadeira; digging=escavação|dug=cavado
+tear|correr (tear down the road); lacrimejar|tear=rasgo/lágrima; tearing=rasgamento|torn=rasgado; tearful=chorosa
+bend||bend=curva; bending=curvatura|bent=curvado; bendy=flexível
+shake|apertar (shake hands); abalar (shaken); tremer|shake=sacudida/milk-shake; shaker=coqueteleira; shakedown=extorsão|shaky=trêmulo; shaken=abalado
+use||use=uso; usage=uso; user=usuário|useful=útil; usable=utilizável; useless=inútil
+try|julgar (try a case); testar (try the door)|try=tentativa; trial=julgamento/teste; trier=quem tenta|trying=difícil/cansativo
+help||help=ajuda; helper=ajudante; helpfulness=prestatividade|helpful=prestativo; helpless=indefeso; helping=porção
+study||study=estudo/escritório; student=estudante; studies=estudos|studious=estudioso
+practice|exercer (practice law); praticar (practice yoga)|practice=prática/consultório; practitioner=profissional; practicality=praticidade|practical=prático; practicable=viável
+translate||translation=tradução; translator=tradutor|translatable=traduzível
+pronounce|declarar (pronounce guilty)|pronunciation=pronúncia; pronouncement=declaração|pronounceable=pronunciável
+spell|significar (spell trouble); soletrar|spell=feitiço/período; speller=soletrador; spelling=ortografia|spelled=soletrado
+quote|orçar (quote a price); citar|quote=citação/orçamento; quotation=citação; quoter=quem cita|quotable=citável
+research||research=pesquisa; researcher=pesquisador|researched=pesquisado
+examine||examination=exame; exam=prova; examiner=examinador|examined=examinado
+summarize||summary=resumo; summarizer=resumidor|summary=sumário
+highlight||highlight=destaque; highlighter=marca-texto|highlighted=destacado
+edit||edit=edição; editor=editor; edition=edição; editorial=editorial|editable=editável; editorial=editorial
+draft||draft=rascunho/recrutamento; drafter=redator; draftsman=desenhista|drafted=recrutado
+correct||correction=correção; corrector=corretor|correct=correto; corrective=corretivo
+publish||publication=publicação; publisher=editora; publicity=publicidade|publishable=publicável
+breathe||breath=respiração/fôlego; breather=pausa; breathing=respiração|breathable=respirável; breathless=ofegante; breathy=ofegante
+cough||cough=tosse; coughing=tosse|coughed=tossido
+hurt||hurt=dor/mágoa; hurtfulness=mágoa|hurt=machucado/magoado; hurtful=magoante
+bleed|extorquir (bleed him dry); sangrar|bleeding=sangramento; bleeder=hemofílico|bleeding=sangrando
+heal||healing=cura; healer=curandeiro; health=saúde|healthy=saudável; healing=curativo
+sweat|trabalhar duro (sweat it out); preocupar-se|sweat=suor; sweater=suéter; sweatiness=suor|sweaty=suado
+sneeze||sneeze=espirro; sneezing=espirros|sneezy=espirrento
+touch|comover (touch the heart); aproximar-se|touch=toque/tato; touchscreen=tela sensível|touching=comovente; touchy=melindroso
+hear|julgar (hear a case); saber (hear of); ouvir falar (hear about)|hearing=audição/audiência; hearer=ouvinte; hearsay=boato|audible=audível
+listen||listener=ouvinte; listening=escuta|listenable=agradável de ouvir
+watch|vigiar (watch the kids); cuidar (watch your step)|watch=relógio/vigília; watcher=observador; watchman=vigia|watchful=vigilante
+treat||treat=agrado/mimo; treatment=tratamento; treatise=tratado|treatable=tratável
+recover||recovery=recuperação|recoverable=recuperável
+diagnose||diagnosis=diagnóstico; diagnostician=diagnosticador|diagnostic=diagnóstico
+die||death=morte; dying=agonia|dead=morto; dying=moribundo; deadly=mortal
+plant||plant=planta/fábrica; planter=jardineira/plantador; planting=plantio|planted=plantado
+harvest||harvest=colheita; harvester=colheitadeira|harvested=colhido
+protect||protection=proteção; protector=protetor|protective=protetor; protectable=protegível
+recycle||recycling=reciclagem; recycler=recicladora|recyclable=reciclável
+pollute||pollution=poluição; pollutant=poluente; polluter=poluidor|polluted=poluído
+burn|arder (burn with anger); gravar (burn a CD)|burn=queimadura; burner=queimador; burning=queima|burnt=queimado; burning=ardente; burnable=combustível
+freeze|travar (freeze in place); congelar preços|freeze=congelamento/geada; freezer=freezer; freezing=congelamento|frozen=congelado; freezing=gelado
+shine|polir (shine shoes); destacar-se (shine at maths)|shine=brilho; shiner=olho roxo; shininess=brilho|shiny=brilhante; shining=resplandecente
+fish||fish=peixe; fisher=pescador; fishing=pesca; fishery=pescaria|fishy=suspeito/com cheiro de peixe
+camp||camp=acampamento/campo; camper=campista; camping=camping|camping=de camping
+bloom||bloom=flor/florescimento; blossom=flor|blooming=florescente; blossoming=florescente
+survive||survival=sobrevivência; survivor=sobrevivente|surviving=sobrevivente; survivable=sobrevivível
+sink||sink=pia; sinker=chumbada; sinking=naufrágio|sunken=afundado; sinkable=afundável
+sing||song=canção; singer=cantor; singing=canto|sung=cantado; singable=cantável
+dance||dance=dança; dancer=dançarino; dancing=dança|danceable=dançante
+act|agir (act quickly); fingir (act the fool); funcionar (the drug acts fast)|act=ato/lei; action=ação; actor=ator; acting=atuação|active=ativo; acting=interino
+perform|funcionar (the car performs well); apresentar (perform a play)|performance=desempenho/apresentação; performer=artista|performing=de apresentação; performative=performativo
+film||film=filme; filmmaker=cineasta; filming=filmagem|filmic=cinematográfico
+photograph||photograph=fotografia; photographer=fotógrafo; photography=fotografia|photographic=fotográfico; photogenic=fotogênico
+entertain|acolher (entertain guests); cogitar (entertain an idea)|entertainment=entretenimento; entertainer=artista|entertaining=divertido
+celebrate||celebration=celebração; celebrity=celebridade|celebratory=comemorativo
+relax||relaxation=relaxamento; relaxer=relaxante|relaxing=relaxante
+invite||invitation=convite; invitee=convidado|inviting=convidativo
+collect||collection=coleção/cobrança; collector=colecionador/coletor|collective=coletivo; collectible=colecionável
+gather|inferir (I gather that); reunir-se|gathering=reunião; gatherer=coletor|gathered=reunido
+obey||obedience=obediência|obedient=obediente; disobedient=desobediente
+forbid||prohibition=proibição|forbidden=proibido; forbidding=intimidador
+allow|admitir (allow for); conceder (allow time)|allowance=mesada/ajuda de custo|allowable=admissível
+require||requirement=requisito/exigência; requisite=requisito|requisite=necessário
+sue||suit=processo; suitor=pretendente|suable=processável
+arrest|deter (arrest growth); chamar atenção|arrest=prisão|arresting=marcante
+vote||vote=voto; voter=eleitor; voting=votação|voting=de votação
+elect||election=eleição; elector=eleitor; electorate=eleitorado|elective=eletivo
+ban||ban=proibição; banning=proibição|banned=proibido
+sign||sign=sinal/placa; signature=assinatura; signal=sinal|significant=significativo
+govern||government=governo; governor=governador; governance=governança|governmental=governamental; governing=governante
+punish||punishment=punição; punisher=punidor|punishing=exaustivo; punishable=punível; punitive=punitivo
+testify||testimony=depoimento; testimonial=depoimento/recomendação; testifier=testemunha|testimonial=testemunhal
+declare||declaration=declaração; declarer=declarante|declarative=declarativo
+comply||compliance=conformidade/cumprimento|compliant=em conformidade
+change|trocar (change trains); mudar de roupa|change=mudança/troco; changer=trocador; changeover=mudança|changeable=mutável; changing=em mudança
+increase||increase=aumento; increment=incremento|increasing=crescente; incremental=incremental
+decrease||decrease=diminuição; decrement=decremento|decreasing=decrescente
+continue||continuation=continuação; continuity=continuidade|continuous=contínuo; continual=contínuo
+end||end=fim; ending=final; endurance=resistência|endless=sem fim; ending=final
+remain||remains=restos; remainder=resto; remnant=vestígio|remaining=restante
+happen||happening=acontecimento; happenstance=acaso|happening=badalado
+seem||seeming=aparência|seeming=aparente; seemly=decoroso; seemingly=aparentemente
+appear|comparecer (appear in court); surgir; parecer|appearance=aparência/comparecimento; apparition=aparição|apparent=aparente; appearing=que aparece
+disappear||disappearance=desaparecimento|disappearing=que desaparece
+exist||existence=existência|existing=existente; existent=existente
+reduce||reduction=redução; reducer=redutor|reducible=redutível
+replace||replacement=substituição/peça de reposição; replacer=substituidor|replaceable=substituível
+adapt||adaptation=adaptação; adapter=adaptador; adaptability=adaptabilidade|adaptable=adaptável; adaptive=adaptativo
+adjust||adjustment=ajuste; adjuster=ajustador|adjustable=ajustável
+expand||expansion=expansão; expanse=extensão|expansive=expansivo; expandable=expansível
+last||last=último/forma de sapato; lastingness=durabilidade|last=último; lasting=duradouro; latest=mais recente
+offer||offer=oferta; offering=oferenda|offered=oferecido
+accept||acceptance=aceitação; acceptability=aceitabilidade|acceptable=aceitável
+refuse||refusal=recusa; refuse=lixo|refused=recusado
+receive||receipt=recibo; reception=recepção; receiver=receptor/fone|receptive=receptivo
+own||owner=dono; ownership=propriedade|own=próprio
+gain||gain=ganho; gainer=beneficiário|gainful=lucrativo
+provide||provision=provisão; provider=provedor; provisions=suprimentos|provisional=provisório
+exchange||exchange=troca/câmbio; exchanger=trocador|exchangeable=trocável
+steal||theft=roubo; thief=ladrão; steal=pechincha|stolen=roubado; stealthy=furtivo
+hide||hide=esconderijo/couro; hider=escondedor; hiding=esconderijo|hidden=escondido; hiding=escondido
+seek||seeker=buscador; seeking=busca|sought-after=procurado
+assume|adotar (assume a name); simular (assume an air of calm); tomar (assume power)|assumption=suposição|assumable=assumível
+ignore||ignorance=ignorância; ignoring=ato de ignorar|ignorant=ignorante
+interpret||interpretation=interpretação; interpreter=intérprete|interpretive=interpretativo; interpretable=interpretável
+discover||discovery=descoberta; discoverer=descobridor|discoverable=descobrível
+reflect|refletir luz (the mirror reflects); pensar (reflect on); repercutir (reflect badly on)|reflection=reflexo/reflexão; reflector=refletor; reflex=reflexo|reflective=reflexivo/refletor
+wish|desejar (wish someone luck); querer (wish to speak)|wish=desejo; wisher=quem deseja; wishfulness=desejo|wishful=desejoso
+regret||regret=arrependimento/pesar; regrets=lamentos|regretful=arrependido; regrettable=lamentável
+reconsider||reconsideration=reconsideração|reconsidered=reconsiderado
+recall||recall=recolhimento/recordação; recollection=lembrança|recallable=lembrável
+conclude||conclusion=conclusão|conclusive=conclusivo; concluding=final
+infer||inference=inferência|inferential=inferencial; inferable=inferível
+hesitate||hesitation=hesitação; hesitancy=hesitação|hesitant=hesitante; hesitating=hesitante
+concentrate||concentration=concentração; concentrate=concentrado|concentrated=concentrado
+ponder||ponderer=quem pondera|ponderous=pesado/lento
+deduce||deduction=dedução|deducible=dedutível; deductive=dedutivo
+identify||identity=identidade; identification=identificação; identifier=identificador|identical=idêntico; identifiable=identificável
+distinguish||distinction=distinção|distinct=distinto; distinctive=distintivo; distinguishable=distinguível
+determine||determination=determinação; determinant=fator determinante|determinate=definido; determinable=determinável
+verify||verification=verificação; verifier=verificador|verifiable=verificável
+confirm||confirmation=confirmação|confirmable=confirmável; confirmatory=confirmatório
+deny||denial=negação/negativa|deniable=negável
+admit||admission=admissão/entrada; admittance=entrada|admissible=admissível
+define||definition=definição|definite=definido; definitive=definitivo
+prove|resultar (it proved useful); crescer (dough proves)|proof=prova; proving=comprovação; provenance=procedência|proven=comprovado; provable=comprovável
+intend||intention=intenção; intent=propósito|intentional=intencional; intent=concentrado
+aim||aim=objetivo/mira|aimless=sem rumo
+suppose||supposition=suposição|supposedly=supostamente; suppositional=hipotético
+pretend||pretense=fingimento; pretence=fingimento (UK); pretender=pretendente|pretend=fingido; pretentious=pretensioso
+depend||dependence=dependência; dependency=dependência; dependant=dependente|dependent=dependente; dependable=confiável
+condemn||condemnation=condenação|condemnatory=condenatório
+applaud||applause=aplausos|applauded=aplaudido
+appreciate|valorizar (appreciate the value); entender (appreciate the difficulty); subir de valor|appreciation=gratidão/valorização; appreciator=apreciador|appreciative=agradecido; appreciable=considerável
+underestimate||underestimate=subestimação; underestimation=subestimação|underestimated=subestimado
+overestimate||overestimate=superestimação|overestimated=superestimado
+rate|classificar-se (rate highly); merecer (it rates a mention)|rate=taxa/ritmo; rating=avaliação|rateable=tributável
+mock||mockery=zombaria; mocker=zombador|mock=falso/simulado; mocking=zombeteiro
+insult||insult=insulto; insulter=insultador|insulting=insultante
+offend|infringir (offend against the law); ofender-se|offense=ofensa; offence=ofensa (UK); offender=infrator|offensive=ofensivo
+endorse||endorsement=endosso/aval; endorser=endossante|endorsed=endossado
+reply||reply=resposta|replied=respondido
+respond||response=resposta; respondent=réu/respondente; responsibility=responsabilidade|responsive=receptivo; responsible=responsável
+insist||insistence=insistência|insistent=insistente; insisting=insistente
+claim||claim=reivindicação/alegação; claimant=requerente|claimed=reivindicado
+confess||confession=confissão; confessor=confessor|confessional=confessional
+advise||advice=conselho; adviser=conselheiro; advisor=consultor|advisable=aconselhável; advisory=consultivo
+convince||conviction=convicção/condenação|convincing=convincente
+persuade||persuasion=persuasão|persuasive=persuasivo
+encourage||encouragement=incentivo|encouraging=encorajador
+discourage||discouragement=desânimo|discouraging=desanimador
+apologize||apology=desculpa; apologist=apologista|apologetic=desculpando-se
+congratulate||congratulation=parabenização; congratulations=parabéns|congratulatory=de felicitação
+chat||chat=bate-papo; chatter=tagarelice|chatty=tagarela
+gossip||gossip=fofoca/fofoqueiro; gossiper=fofoqueiro|gossipy=fofoqueiro
+murmur||murmur=murmúrio; murmuring=murmúrio|murmuring=murmurante
+mumble||mumble=resmungo; mumbler=quem resmunga|mumbling=murmurante
+scream||scream=grito; screamer=gritador|screaming=gritante
+sigh||sigh=suspiro|sighing=suspirante
+tease||tease=provocação; teaser=teaser/provocador; teasing=provocação|teasing=provocador
+joke||joke=piada; joker=piadista/coringa|joking=brincalhão; jokey=brincalhão
+lie|deitar (lie down); ficar (lie ahead); estar localizado|lie=mentira (lie to deceive); liar=mentiroso; lying=mentira|lying=mentiroso; lying down=deitado
+swear|jurar (swear an oath); praguejar|swearing=palavrões; oath=juramento|sworn=jurado
+curse||curse=maldição/palavrão|accursed=maldito
+narrate||narration=narração; narrator=narrador; narrative=narrativa|narrative=narrativo
+inform||information=informação; informant=informante; informer=delator|informative=informativo; informal=informal
+notify||notification=notificação|notifiable=de notificação obrigatória
+remind||reminder=lembrete|reminiscent=que lembra
+request||request=pedido/solicitação; requester=solicitante|requested=solicitado
+demand||demand=demanda/exigência|demanding=exigente
+refer||reference=referência; referral=encaminhamento; referee=árbitro|referential=referencial
+address||address=endereço/discurso; addressee=destinatário|addressable=endereçável
+clarify||clarity=clareza; clarification=esclarecimento|clear=claro
+emphasize||emphasis=ênfase|emphatic=enfático
+stutter||stutter=gagueira; stutterer=gago|stuttering=gago
+adore||adoration=adoração; adorer=adorador|adorable=adorável; adoring=adorador
+cherish||≈devotion=devoção; ≈fondness=carinho|cherished=querido/estimado
+envy||envy=inveja|envious=invejoso; enviable=invejável
+embrace||embrace=abraço|embraced=abraçado
+flirt||flirt=paquera; flirtation=flerte|flirtatious=flertador; flirty=paquerador
+date||date=data/encontro; dating=namoro|datable=datável
+grieve||grief=luto/dor; griever=enlutado|grieving=enlutado; grievous=grave
+worry||worry=preocupação; worrier=preocupado|worrying=preocupante; worrisome=preocupante
+blush||blush=rubor|blushing=ruborizado
+shiver||shiver=tremor/calafrio|shivery=trêmulo
+annoy||annoyance=aborrecimento|annoying=irritante
+bore||boredom=tédio; bore=chato|boring=chato
+amuse||amusement=diversão|amusing=engraçado
+delight||delight=deleite|delightful=encantador
+impress||impression=impressão|impressive=impressionante; impressionable=impressionável
+disappoint||disappointment=decepção|disappointing=decepcionante
+frighten||fright=susto|frightening=assustador; frightful=terrível
+shock||shock=choque|shocking=chocante
+upset||upset=chateação/desarranjo|upsetting=perturbador; upset=chateado
+calm||calm=calma; calmness=serenidade|calm=calmo; calming=calmante
+please||pleasure=prazer; pleasantry=gentileza|pleasing=agradável; pleasant=agradável
+wander||wanderer=andarilho; wanderlust=vontade de viajar|wandering=errante
+march||march=marcha/passeata; marcher=manifestante|marching=em marcha
+crawl||crawl=rastejo/crawl (natação); crawler=rastreador|crawling=rastejante
+slide||slide=escorregador/slide; sliding=deslizamento|sliding=deslizante; slippery=escorregadio
+slip||slip=deslize/escorregão|slippery=escorregadio; slipshod=desleixado
+roll||roll=rolo/pão/lista; roller=rolo|rolling=ondulante
+rush||rush=pressa/correria|rushed=apressado
+hike||hike=caminhada; hiker=caminhante; hiking=trilha|≈hiking=de trilha; ≈walking=de caminhada
+stroll||stroll=passeio; stroller=carrinho de bebê/passeante|strolling=passeante
+approach||approach=abordagem/aproximação|approachable=acessível; approaching=que se aproxima
+avoid||avoidance=evitação|avoidable=evitável; unavoidable=inevitável
+jog|empurrar (jog the elbow)|jog=corrida leve; jogger=corredor leve; jogging=corrida leve|≈jogging=de corrida leve; ≈running=de corrida
+skate||skate=patim; skater=patinador; skating=patinação|≈skating=de patinação; ≈skated=patinado
+ski||ski=esqui; skier=esquiador; skiing=esqui|ski=de esqui
+sail||sail=vela; sailor=marinheiro; sailing=navegação à vela|≈sailing=de vela; ≈nautical=náutico
+row||row=fileira/remada/briga; rower=remador; rowing=remo|rowing=de remo
+steer||steer=novilho; steering=direção|steerable=dirigível
+stumble||stumble=tropeço|stumbling=tropeçante
+lean|apoiar-se (lean on); tender (lean toward)|lean=inclinação; leaning=inclinação|lean=magro/enxuto; leaning=inclinado
+kneel||kneeler=genuflexório|kneeling=ajoelhado
+crouch||crouch=agachamento|crouching=agachado
+sit|ficar sentado (sit still); posar (sit for a portrait); fazer prova (sit an exam); reunir-se|seat=assento; sitter=babá; sitting=sessão|seated=sentado; sedentary=sedentário
+rise|aumentar (prices rise); nascer (the sun rises); rebelar-se (rise up)|rise=subida/aumento; rising=levante|rising=crescente; risen=ressuscitado
+bounce|rejeitar (the cheque bounced); saltar|bounce=quique/vigor; bouncer=segurança de bar|bouncy=elástico; bouncing=saltitante
+swing|oscilar (swing between); balançar|swing=balanço/oscilação|swinging=oscilante
+spin|inventar versão (spin a story); girar (my head spins); fiar (spin wool)|spin=giro/versão tendenciosa; spinner=girador; spinning=giro|spinning=giratório; spun=girado
+migrate||migration=migração; migrant=migrante|migratory=migratório; migrant=migrante
+flee||flight=fuga|fleeing=fugitivo
+retreat||retreat=retirada/retiro|retreating=em retirada
+advance||advance=avanço/adiantamento; advancement=progresso|advance=antecipado
+cycle||cycle=ciclo/bicicleta; cyclist=ciclista; cycling=ciclismo|cyclical=cíclico; cyclic=cíclico
+box||box=caixa/boxe; boxer=boxeador; boxing=boxe|boxy=quadrado
+punch|furar (punch a ticket); socar|punch=soco/ponche; puncher=socador|punchy=incisivo
+coach||coach=treinador/ônibus; coaching=treinamento|coachable=treinável
+exercise|exercer (exercise a right); preocupar|exercise=exercício|exercised=exercitado
+skip|saltar (skip a page); matar aula (skip class); pular corda|skip=pulinho/caçamba; skipper=capitão; skipping=pular corda|skippable=dispensável
+bat||bat=morcego/taco; batter=rebatedor; batting=rebatida|batty=maluco
+compute||computation=computação; computer=computador; computing=computação|computational=computacional; computable=computável
+exceed||excess=excesso; exceedance=excedência|excessive=excessivo; exceeding=excedente; exceedingly=extremamente
+balance||balance=equilíbrio/saldo; balancing=equilibrismo|balanced=equilibrado
+integrate||integration=integração; integrity=integridade|integral=integral
+approximate||approximation=aproximação|approximate=aproximado
+tally||tally=contagem/placar|tallied=contado
+simplify||simplicity=simplicidade; simplification=simplificação|simple=simples; simplistic=simplista
+double||double=dobro/dublê; doubling=duplicação|double=duplo
+triple||triple=triplo|triple=triplo
+shop||shop=loja; shopper=comprador; shopping=compras|shopping=de compras; shoppable=comprável
+borrow||borrower=tomador; borrowing=empréstimo|borrowed=emprestado
+budget||budget=orçamento|budgetary=orçamentário; budget=econômico
+import|importar (import into); significar|import=importação/importância; importer=importador; importance=importância|important=importante
+export||export=exportação; exporter=exportador; exportation=exportação|exportable=exportável
+auction||auction=leilão; auctioneer=leiloeiro|auctioned=leiloado
+sponsor||sponsor=patrocinador; sponsorship=patrocínio|sponsored=patrocinado
+finance||finance=finanças; financier=financista; financing=financiamento|financial=financeiro
+profit|beneficiar-se (profit from)|profit=lucro; profiteer=aproveitador; profitability=rentabilidade|profitable=lucrativo; profiting=lucrativo
+price||price=preço; pricing=precificação|priceless=inestimável; pricey=caro
+discount|descontar (discount a rumor); ignorar|discount=desconto|discounted=com desconto
+tax||tax=imposto; taxation=tributação; taxpayer=contribuinte|taxable=tributável; taxing=cansativo
+insure||insurance=seguro; insurer=segurador|insurable=segurável
+cash||cash=dinheiro/espécie; cashier=caixa|cash-free=sem dinheiro vivo
+bill||bill=conta/projeto de lei/cédula; billing=faturamento|billable=faturável
+employ||employment=emprego; employee=funcionário; employer=empregador|employable=empregável
+coordinate||coordination=coordenação; coordinator=coordenador; coordinates=coordenadas|coordinated=coordenado
+consult||consultation=consulta; consultant=consultor|consultative=consultivo; consulting=de consultoria
+assign||assignment=tarefa/atribuição; assignee=cessionário|assigned=designado
+assist||assistance=assistência; assistant=assistente|assistive=de apoio
+represent||representation=representação; representative=representante|representative=representativo; representational=representacional
+merge||merger=fusão; merging=fusão|merged=fundido
+file||file=arquivo; filing=arquivamento|filed=arquivado
+appoint||appointment=nomeação/compromisso; appointee=nomeado|appointed=nomeado
+accomplish||accomplishment=realização; accomplice=cúmplice|accomplished=realizado/habilidoso
+audit||audit=auditoria; auditor=auditor|auditable=auditável
+reconcile||reconciliation=conciliação|reconcilable=conciliável
+depreciate||depreciation=depreciação|depreciated=depreciado
+amortize||amortization=amortização|amortized=amortizado
+accrue||accrual=provisão/acúmulo|accrued=acumulado
+forecast||forecast=previsão; forecaster=previsor|forecasted=previsto
+allocate||allocation=alocação|allocable=alocável
+capitalize|aproveitar (capitalize on); escrever em maiúscula|capital=capital; capitalization=capitalização; capitalism=capitalismo|capital=capital/maiúscula
+outsource||outsourcing=terceirização|outsourced=terceirizado
+diversify||diversity=diversidade; diversification=diversificação|diverse=diverso
+liquidate||liquidation=liquidação; liquidity=liquidez|liquid=líquido
+streamline||streamlining=racionalização|streamlined=aerodinâmico/enxuto
+leverage||leverage=alavancagem|leveraged=alavancado
+prioritize||priority=prioridade; prioritization=priorização|prior=anterior
+onboard||onboarding=integração de novatos|onboard=a bordo
+involve||involvement=envolvimento|involving=envolvente
+handle||handle=alça/maçaneta; handler=manipulador; handling=manuseio|handy=prático/útil
+succeed||success=sucesso; succession=sucessão; successor=sucessor|successful=bem-sucedido; successive=sucessivo
+set-up|montar (set up a company); armar para alguém (it was a set-up); configurar (set up an account)|setup=configuração/estrutura|set-up=armado
+break-down|pifar (the car broke down); desabar emocionalmente (she broke down); detalhar (break down the costs)|breakdown=pane/colapso/detalhamento|broken-down=quebrado
+show-up|aparecer/comparecer (he didn't show up); ofuscar (show up a rival)|≈appearance=aparecimento; ≈attendance=comparecimento|≈visible=visível; ≈present=presente
+pick-up|buscar (pick up a friend); aprender (pick up a language); melhorar (business is picking up); atender (pick up the phone)|pickup=picape/busca/coleta|≈picked-up=apanhado; ≈pickable=colhível
+give-back||giveback=devolução|≈returned=devolvido; ≈restored=restituído
+turn-off|desligar (turn off the TV); desinteressar (it turned me off); sair da estrada (turn off the road)|turn-off=algo broxante|turned-off=desinteressado
+go-on|continuar (go on talking); acontecer (what's going on?); prosseguir (go on, tell me)|≈continuation=continuação; ≈continuity=continuidade|ongoing=em andamento
+make-up|inventar (make up a story); fazer as pazes (make up after a fight); compor (women make up 50%); maquiar-se|makeup=maquiagem/composição|made-up=inventado
+look-up|pesquisar no dicionário (look up a word); melhorar (things are looking up); procurar alguém (look him up)|≈search=consulta; ≈lookup=consulta (tecnologia)|≈searched=pesquisado; ≈searchable=pesquisável
+sit-down||sit-down=reunião/greve|sit-down=sentado
+stand-up|levantar-se (stand up!); deixar alguém esperando (stand someone up)|stand-up=comédia stand-up|stand-up=de pé
+throw-away||throwaway=descartável|throwaway=descartável/de passagem
+call-off|cancelar (call off the strike); chamar de volta (call off the dogs)|≈cancellation=cancelamento|≈cancelled=cancelado; ≈called-off=suspenso
+figure-out||≈solution=solução; ≈deduction=dedução|≈solvable=solúvel; ≈figured=deduzido
+hand-in||≈submission=entrega; ≈delivery=entrega|≈submitted=entregue; ≈delivered=entregue
+hold-on|aguardar (hold on a second); segurar firme (hold on tight); resistir (hold on until help arrives)|≈grip=aperto; ≈hold=firmeza|≈steadfast=firme; ≈holding=segurando
+let-down|decepcionar (don't let me down); baixar/soltar (let down the blinds)|letdown=decepção|≈disappointed=decepcionado; ≈disappointing=decepcionante
+log-in||login=acesso/entrada|≈logged-in=conectado; ≈authenticated=autenticado
+pay-back|pagar de volta (pay back a loan); vingar-se (pay him back)|payback=retorno/vingança|≈repaid=reembolsado; ≈vengeful=vingativo
+point-out||≈indication=indicação; ≈remark=observação|≈pointed=direto/pontudo; ≈indicated=indicado
+set-off|partir (set off at dawn); disparar (set off an alarm); detonar (set off a bomb)|≈departure=partida; ≈trigger=gatilho|≈departing=de partida; ≈triggered=acionado
+take-over|assumir o controle (take over the company); assumir o lugar (take over from her)|takeover=aquisição/tomada de controle|≈dominant=dominante; ≈acquired=adquirido
+try-on||≈fitting=prova de roupa; ≈trial=experiência|≈tried=experimentado; ≈fitted=ajustado
+cut-down|reduzir (cut down on sugar); derrubar (cut down a tree)|≈reduction=redução; ≈cutback=corte|≈reduced=reduzido; ≈cut=cortado
+drop-off|deixar alguém (drop off a child); adormecer (drop off to sleep); diminuir (sales dropped off)|drop-off=queda/entrega|≈declining=em queda; ≈dropped=deixado
+get-over|superar (get over a breakup); recuperar-se (get over the flu)|≈recovery=recuperação; ≈overcoming=superação|≈recovered=recuperado; ≈surmountable=superável
+give-in|ceder (give in to pressure); entregar (give in an essay)|≈surrender=rendição; ≈concession=concessão|≈yielding=cedente; ≈submissive=submisso
+go-out|sair para se divertir (go out tonight); namorar (go out with someone); apagar (the light went out)|outing=saída/passeio|outgoing=extrovertido/de saída
+keep-up|acompanhar o ritmo (keep up with news); manter (keep up the good work)|upkeep=manutenção|≈maintained=mantido; ≈sustained=contínuo
+pass-away||passing=falecimento|≈deceased=falecido; ≈departed=falecido
+put-on|colocar (put on a coat); fingir (put on an accent); engordar (put on weight); encenar (put on a show)|put-on=fingimento|put-on=fingido
+run-into||≈encounter=encontro; ≈meeting=encontro casual|≈encountered=encontrado
+clean-up|limpar (clean up the mess); fazer faxina|cleanup=limpeza|≈cleaned=limpo; ≈tidy=arrumado
+cheer-up||≈encouragement=ânimo; ≈cheer=alegria|≈cheerful=animado; ≈cheered=animado
+mix-up||mix-up=confusão|mixed-up=confuso
+speed-up||speedup=aceleração|≈accelerated=acelerado; ≈faster=mais rápido
+slow-down||slowdown=desaceleração|≈slowed=desacelerado; ≈slower=mais lento
+shut-down||shutdown=desligamento/paralisação|≈closed=fechado; ≈shut=fechado
+warm-up||warm-up=aquecimento|warm=quente; warmed-up=aquecido
+cool-down||cooldown=desaquecimento|≈cooled=resfriado; ≈cool=fresco
+hang-up|desligar o telefone (hang up on me); pendurar (hang up a coat)|hang-up=complexo/trauma|hung-up=encanado
+call-back||callback=retorno de ligação|≈returned=retornado
+rely||reliance=confiança; reliability=confiabilidade|reliable=confiável; reliant=dependente
+end-up|acabar em (end up in jail); terminar como (end up a manager)|≈outcome=desfecho; ≈result=resultado|≈final=final; ≈eventual=eventual
+fall-apart||≈collapse=colapso; ≈breakdown=desmoronamento|≈collapsed=desmoronado; ≈shaky=instável
+carry-out|executar (carry out a plan); levar para viagem (carry out food)|carryout=comida para viagem (EUA)|≈executed=executado; ≈performed=realizado
+bring-up|criar filhos (bring up children); mencionar (bring up a topic); vomitar (bring up food)|upbringing=criação|≈raised=criado; ≈brought-up=educado
+come-across|encontrar por acaso (come across a letter); parecer (come across as shy)|≈encounter=encontro; ≈find=achado|≈apparent=aparente; ≈incidental=casual
+look-into||≈investigation=investigação; ≈inquiry=sondagem|≈investigative=investigativo; ≈probing=sondador
+tear-down||teardown=demolição|≈demolished=demolido; ≈torn-down=demolido
+hack||hack=gambiarra/ataque; hacker=hacker|hackable=hackeável
+compile||compilation=compilação; compiler=compilador|compiled=compilado
+deploy||deployment=implantação|deployable=implantável
+log||log=registro; logging=registro|logged=registrado
+scroll||scroll=rolagem/pergaminho; scrolling=rolagem|scrollable=rolável
+tap||tap=toque/torneira; tapping=toque|tapped=tocado
+text||text=texto/mensagem; texting=mensagens; texture=textura|textual=textual
+restore||restoration=restauração; restorer=restaurador|restorative=restaurador
+format||format=formato; formatting=formatação|formatted=formatado
+reboot||reboot=reinicialização|rebooted=reiniciado
+refresh||refresh=atualização; refreshment=refresco|refreshing=refrescante
+sync||sync=sincronização; synchronization=sincronização|synchronous=síncrono
+store||store=loja/armazém; storage=armazenamento; stock=estoque|stored=armazenado
+crash||crash=colisão/queda; crasher=penetra|crashed=travado/batido
+load||load=carga; loader=carregador; loading=carregamento|loadable=carregável
+render||rendition=interpretação; rendering=renderização|rendered=renderizado
+scrape||scrape=raspagem/arranhão; scraper=raspador|scraped=raspado
+forward||forward=atacante; forwarding=encaminhamento|forward=à frente
+subscribe||subscription=assinatura; subscriber=assinante|subscribed=assinado
+unsubscribe||≈cancellation=cancelamento; ≈opt-out=descadastramento|unsubscribed=desinscrito
+tag||tag=etiqueta/tag; tagging=marcação|tagged=etiquetado
+authenticate||authentication=autenticação; authenticity=autenticidade|authentic=autêntico
+configure||configuration=configuração|configurable=configurável
+optimize||optimization=otimização; optimum=ótimo|optimal=ideal; optimum=ótimo
+customize||customization=personalização; customer=cliente; custom=costume|custom=sob medida; customary=habitual
+visualize||visualization=visualização; visual=visual|visual=visual
+classify||classification=classificação; class=classe|classifiable=classificável
+enable||enablement=habilitação|enabling=capacitador
+remove||removal=remoção|removable=removível
+insert||insert=encarte/inserção; insertion=inserção|inserted=inserido
+attach||attachment=anexo/apego|attachable=anexável
+track||track=trilha/faixa; tracker=rastreador; tracking=rastreamento|trackable=rastreável
+detect||detection=detecção; detector=detector; detective=detetive|detectable=detectável; detective=de detetive
+roast|criticar duramente (roast a colleague)|roast=assado/humilhação humorística; roaster=assadeira|roasting=muito quente
+steam||steam=vapor; steamer=vaporeira|steamy=abafado/sensual
+simmer||simmer=fervura lenta|simmering=fervente
+whisk||whisk=batedor de claras|whisked=batido
+knead||kneading=sova; kneader=amassadeira|kneaded=sovado
+grate|irritar (grate on one's nerves); ranger|grater=ralador; grating=grade|grating=irritante/estridente
+marinate||marinade=marinada; marination=marinação|marinated=marinado
+dice||dice=dado/cubinhos; dicing=corte em cubos|diced=em cubinhos
+mash||mash=purê/mistura; masher=amassador|mashed=amassado
+toast|brindar (toast the bride); aquecer|toast=torrada/brinde; toaster=torradeira|toasty=quentinho
+sprinkle||sprinkle=pitada; sprinkler=irrigador|sprinkled=polvilhado
+stuff||stuff=coisas/matéria; stuffing=recheio|stuffy=abafado
+brew||brew=infusão/cerveja; brewer=cervejeiro; brewery=cervejaria|brewed=preparado
+sip||sip=gole pequeno|sippable=agradável de bebericar
+devour||devourer=devorador|devouring=devorador
+nibble||nibble=beliscada; nibbler=beliscador|nibbled=mordiscado
+snack||snack=lanche|≈snacky=de petisco; ≈snack-sized=em porção de lanche
+starve||starvation=inanição|starving=faminto
+dine||diner=comensal/lanchonete; dining=jantar; dinner=jantar|dining=de jantar
+lick|derrotar (lick the competition)|lick=lambida; licking=lambida|licked=lambido
+thaw||thaw=degelo|thawed=descongelado
+ferment||fermentation=fermentação; ferment=agitação|fermented=fermentado
+drain|esgotar (drain resources); secar|drain=ralo/dreno; drainage=drenagem|drained=exausto/escoado
+garnish||garnish=guarnição|garnished=guarnecido
+iron||iron=ferro/ferro de passar; ironing=passar roupa|iron=de ferro
+dust||dust=pó/poeira; duster=espanador|dusty=empoeirado
+vacuum||vacuum=vácuo/aspirador|vacuumed=aspirado
+mop||mop=esfregão|mopped=esfregado
+scrub||scrub=esfregão/matagal; scrubber=esfregador|scrubbed=esfregado
+rinse||rinse=enxágue|rinsed=enxaguado
+dry||dryness=secura; drier=secador; dryer=secadora|dry=seco; drying=de secagem
+empty||emptiness=vazio|empty=vazio
+switch||switch=interruptor/troca; switching=troca|switched=trocado
+cover||cover=capa/cobertura; coverage=cobertura; covering=cobertura|covert=secreto
+furnish||furniture=mobília; furnishing=mobiliário|furnished=mobiliado
+knock||knock=batida; knocker=aldrava|knocked=batido
+ring||ring=anel/toque/ringue; ringer=toque|ringing=tilintante
+unlock||unlocking=destravamento|unlocked=destrancado
+stack||stack=pilha; stacker=empilhador|stacked=empilhado
+leak||leak=vazamento; leakage=vazamento|leaky=com vazamento
+drip||drip=gotejamento/pingo; dripper=conta-gotas|dripping=pingando; drippy=gotejante
+invent||invention=invenção; inventor=inventor; inventory=inventário|inventive=inventivo
+craft||craft=ofício/artesanato; craftsman=artesão; craftsmanship=artesania|crafty=astuto
+carve||carving=escultura; carver=entalhador|carved=entalhado
+knit||knitting=tricô; knitter=tricoteiro; knitwear=malha|knitted=tricotado
+weave||weave=trama; weaver=tecelão; weaving=tecelagem|woven=tecido
+glue||glue=cola|gluey=pegajoso
+nail||nail=prego/unha; nailing=pregagem|nailed=pregado
+drill||drill=furadeira/treino; driller=perfurador|drilled=perfurado
+saw||saw=serra; sawing=serragem|sawn=serrado
+hammer||hammer=martelo|hammered=martelado
+screw||screw=parafuso|screwed=parafusado
+polish||polish=polimento/verniz|polished=polido/refinado
+manufacture||manufacture=fabricação; manufacturer=fabricante; manufacturing=manufatura|manufactured=fabricado
+forge|forjar (forge a signature); avançar (forge ahead)|forge=forja; forger=falsário; forgery=falsificação|forged=forjado
+mend||mend=remendo; mender=remendão|mended=remendado
+sharpen||sharpener=apontador/afiador|sharp=afiado
+grind||grind=labuta/moagem; grinder=moedor|ground=moído; grinding=moagem
+mold||mold=molde/mofo; molding=moldagem|moldy=mofado
+revise||revision=revisão|revised=revisado
+enroll||enrollment=matrícula|enrolled=matriculado
+lecture||lecture=palestra/sermão; lecturer=palestrante|lecturing=palestra
+cheat||cheat=trapaceiro; cheater=trapaceiro; cheating=trapaça|cheating=traiçoeiro
+underline||underline=sublinhado|underlined=sublinhado
+annotate||annotation=anotação|annotated=anotado
+cite||citation=citação|citable=citável
+paraphrase||paraphrase=paráfrase|paraphrased=parafraseado
+rehearse||rehearsal=ensaio|rehearsed=ensaiado
+conjugate||conjugation=conjugação|conjugated=conjugado
+fail||failure=fracasso/falha; fail=reprovação|failing=falho
+debate||debate=debate; debater=debatedor|debatable=discutível
+investigate||investigation=investigação; investigator=investigador|investigative=investigativo
+observe|cumprir (observe the law); comentar (observe that)|observation=observação; observer=observador; observatory=observatório|observant=observador; observable=observável
+experiment||experiment=experimento; experimentation=experimentação|experimental=experimental
+yawn||yawn=bocejo|yawning=bocejante
+blink||blink=piscada|blinking=piscante
+nod||nod=aceno de cabeça|nodding=que acena
+frown||frown=cenho franzido|frowning=carrancudo
+stare||stare=olhar fixo|staring=fixo
+glance||glance=olhadela|glancing=de relance
+gaze||gaze=olhar fixo|gazing=contemplativo
+peek||peek=espiadela|peeking=espiando
+smell||smell=cheiro/olfato|smelly=fedorento; smelling=cheiroso
+sniff||sniff=fungada|sniffy=desdenhoso
+faint||faint=desmaio|faint=fraco/tênue; fainting=desmaiante
+vomit||vomit=vômito|vomiting=vômito
+swell||swelling=inchaço|swollen=inchado; swell=ótimo (informal)
+scratch||scratch=arranhão|scratchy=áspero
+rub||rub=fricção|rubbed=esfregado
+pinch||pinch=beliscão/pitada|pinched=pálido/apertado
+limp||limp=mancar|limp=mole/frouxo; limping=manco
+hum||hum=zumbido/cantarolar; humming=zumbido|humming=zumbindo
+whistle||whistle=apito/assobio; whistler=assobiador|whistling=assobiando
+snore||snore=ronco; snorer=roncador|snoring=ronco
+nap||nap=cochilo|napping=cochilando
+suffer||suffering=sofrimento; sufferer=sofredor|suffering=sofredor; sufferable=suportável
+cure||cure=cura|curable=curável
+inject||injection=injeção|injectable=injetável
+vaccinate||vaccination=vacinação; vaccine=vacina|vaccinated=vacinado
+prescribe||prescription=receita|prescriptive=prescritivo
+blow|desperdiçar (blow a chance); estourar (blow a fuse); soprar|blow=golpe/sopro|blown=soprado
+flood||flood=inundação|flooded=inundado
+flow||flow=fluxo|flowing=fluente
+splash||splash=respingo|splashy=chamativo
+spray||spray=spray|sprayed=borrifado
+wither||withering=murchamento|withering=fulminante
+sprout||sprout=broto|sprouted=brotado
+hunt||hunt=caça; hunter=caçador; hunting=caça|hunted=caçado
+graze||graze=arranhão/pasto; grazing=pasto|grazed=ralado
+hatch||hatch=escotilha/ninhada; hatchery=incubadora|hatched=chocado
+float||float=boia/carro alegórico|floating=flutuante; floatable=flutuante
+erode||erosion=erosão|erosive=erosivo
+evaporate||evaporation=evaporação|evaporated=evaporado
+ripen||ripeness=maturidade|ripe=maduro
+sparkle||sparkle=brilho|sparkling=cintilante; sparkly=brilhante
+decay||decay=decomposição|decaying=em decomposição
+soar||soaring=ascensão|soaring=altíssimo
+sculpt||sculpture=escultura; sculptor=escultor|sculptural=escultural
+sketch||sketch=esboço|sketchy=superficial
+illustrate||illustration=ilustração; illustrator=ilustrador|illustrative=ilustrativo
+direct||direction=direção; director=diretor|direct=direto; directional=direcional
+strum||strum=dedilhado|strummed=dedilhado
+tune||tune=melodia/afinação; tuner=afinador|tuneful=melodioso
+conduct||conduct=conduta; conductor=maestro/condutor|conductive=condutor
+improvise||improvisation=improviso|improvised=improvisado
+frame||frame=moldura/estrutura; framework=estrutura|framed=emoldurado
+exhibit||exhibit=objeto exposto; exhibition=exposição; exhibitor=expositor|exhibitionist=exibicionista
+rhyme||rhyme=rima|rhymed=rimado
+recite||recital=recital; recitation=recitação|recited=recitado
+dub||dub=dublagem|dubbed=dublado
+animate||animation=animação; animator=animador|animate=animado/vivo
+sentence||sentence=frase/sentença|sentenced=sentenciado
+convict||conviction=condenação/convicção; convict=condenado|convicted=condenado
+acquit||acquittal=absolvição|acquitted=absolvido
+prosecute||prosecution=acusação/promotoria; prosecutor=promotor|prosecuted=processado
+enforce||enforcement=aplicação (da lei)|enforceable=exigível
+regulate||regulation=regulamentação; regulator=regulador|regulatory=regulatório
+legislate||legislation=legislação; legislator=legislador|legislative=legislativo
+authorize||authorization=autorização; authority=autoridade|authoritative=autoritativo
+license||license=licença; licensee=licenciado|licensed=licenciado
+prohibit||prohibition=proibição|prohibitive=proibitivo
+violate||violation=violação; violator=infrator|violated=violado
+oblige||obligation=obrigação|obliging=prestativo; obligatory=obrigatório
+appeal|atrair (appeal to); apelar|appeal=apelação/atrativo|appealing=atraente
+ratify||ratification=ratificação|ratified=ratificado
+repeal||repeal=revogação|repealed=revogado
+enact||enactment=promulgação|enacted=promulgado
+inherit||inheritance=herança; heir=herdeiro|inheritable=herdável
+release||release=lançamento/liberação|released=liberado
+confiscate||confiscation=confisco|confiscated=confiscado
+threaten||threat=ameaça|threatening=ameaçador
+attack||attack=ataque; attacker=atacante|attacking=de ataque
+destroy||destruction=destruição; destroyer=destruidor|destructive=destrutivo
+damage||damage=dano; damages=indenização|damaging=prejudicial
+kill||kill=abate; killer=assassino; killing=matança|killing=mortal/exaustivo
+rescue||rescue=resgate; rescuer=salvador|rescued=resgatado
+explode||explosion=explosão|explosive=explosivo
+worsen||worsening=piora|worse=pior; worsening=em piora
+evolve||evolution=evolução|evolutionary=evolutivo; evolving=em evolução
+transform||transformation=transformação; transformer=transformador|transformative=transformador
+vary||variation=variação; variety=variedade; variable=variável|various=vários; variable=variável
+fade||fade=esmaecimento|fading=esmaecendo
+vanish||vanishing=sumiço|vanishing=desaparecendo
+shift||shift=turno/mudança|shifty=suspeito
+shrink||shrinkage=encolhimento|shrunken=encolhido
+widen||width=largura|wide=largo; widening=alargamento
+strengthen||strength=força|strong=forte
+weaken||weakness=fraqueza|weak=fraco
+soften||softness=maciez|soft=macio
+boost||boost=impulso; booster=reforço|boosted=impulsionado
+accelerate||acceleration=aceleração; accelerator=acelerador|accelerated=acelerado
+stabilize||stability=estabilidade; stabilizer=estabilizador|stable=estável
+renew||renewal=renovação|renewable=renovável
+reform||reform=reforma; reformer=reformador|reformed=reformado
+mature||maturity=maturidade|mature=maduro
+affect||affect=afeto (psicologia); affection=afeição|affective=afetivo
+cause||cause=causa|causal=causal
+swap||swap=troca|swapped=trocado
+transfer||transfer=transferência|transferable=transferível
+hand||hand=mão/ponteiro; handful=punhado|handy=prático
+distribute||distribution=distribuição; distributor=distribuidor|distributed=distribuído
+substitute||substitute=substituto; substitution=substituição|substitutable=substituível
+mail||mail=correio|mailed=enviado
+ship||ship=navio; shipment=remessa; shipping=envio|shipped=enviado
+belong||belongings=pertences; belonging=pertencimento|belonging=pertencente
+inquire||inquiry=pergunta/investigação; enquiry=consulta (UK); inquirer=quem pergunta|inquiring=curioso; inquisitive=curioso
+conceal||concealment=ocultação; concealer=corretivo (maquiagem)|concealable=ocultável
+state||state=estado; statement=declaração|statutory=legal
+indicate||indication=indício; indicator=indicador|indicative=indicativo
+ask-for||≈request=pedido; ≈demand=solicitação|≈requested=pedido
+terminate||termination=rescisão/término; terminal=terminal; terminus=ponto final|terminal=terminal/final
+attempt||attempt=tentativa|attempted=tentado
+utilize||utility=utilidade; utilization=utilização|utilitarian=utilitário
+dispatch||dispatch=envio/despacho; dispatcher=despachante|dispatched=despachado
+postpone||postponement=adiamento|postponed=adiado
+establish||establishment=estabelecimento; the Establishment=elite dominante|established=estabelecido
+take-part||≈participation=participação; ≈participant=participante|≈participating=participante; ≈participatory=participativo
+obtain||obtainment=obtenção|obtainable=obtível
+retain||retention=retenção; retainer=adiantamento (honorário)|retentive=retentivo
+purchase||purchase=compra; purchaser=comprador|purchasable=comprável
+reimburse||reimbursement=reembolso|reimbursable=reembolsável
+select||selection=seleção; selector=seletor|selective=seletivo; select=seleto
+turn-down||turndown=recusa|≈rejected=recusado
+commence||commencement=início/formatura (EUA)|commenced=iniciado
+modify||modification=modificação; modifier=modificador|modifiable=modificável
+abandon||abandonment=abandono|abandoned=abandonado
+cease||cessation=cessação|ceaseless=incessante
+proceed||procedure=procedimento; proceeds=receita/rendimentos; process=processo|procedural=processual; proceeding=em andamento
+construct||construction=construção; constructor=construtor|constructive=construtivo
+instruct||instruction=instrução; instructor=instrutor|instructive=instrutivo
+encounter||encounter=encontro/confronto|encountered=encontrado
+look-at||≈look=olhar; ≈examination=exame|≈visual=visual; ≈viewed=observado`;
+const VERB_LEX = {};
+(function(){
+  const par = t => (t || '').split('; ').filter(Boolean).map(x => { const i = x.indexOf('='), ap = x[0] === '≈'; return { w: x.slice(ap ? 1 : 0, i), pt: x.slice(i + 1), ap }; });   /* ≈ = equivalente aproximado */
+  VERB_LEX_TXT.split('\n').forEach(l => {
+    const [id, sent, n, a] = l.split('|');
+    if(!id) return;
+    VERB_LEX[id] = { sent: (sent || '').split('; ').filter(Boolean), n: par(n), a: par(a) };
+  });
+})();
+function lexDe(v){ const x = VERB_LEX[v.id]; return x && (x.sent.length || x.n.length || x.a.length) ? x : null; }
+
 /* ---- Registro: cotidiano × formal ----
    O inglês tem dois andares de vocabulário para o mesmo sentido: o verbo curto, germânico, da
    conversa (ask, buy, start) e o par latino/francês, de e-mails, contratos e relatórios
@@ -3890,6 +4854,25 @@ function buildVerbo(){
       const ef = document.createElement('div'); ef.className = 'verbo-ficha verbo-etim';
       ef.innerHTML = `<b>${om.icon} ${om.curto}</b> ${escapeHTML(et.nota || '')} <span>${escapeHTML(om.nome)}</span>`;
       corpo.appendChild(ef);
+    }
+    /* léxico: outros sentidos do verbo e família de palavras (substantivo / adjetivo) */
+    const lx = lexDe(cur);
+    if(lx){
+      if(lx.sent.length){
+        const sf = document.createElement('div'); sf.className = 'verbo-ficha verbo-lex';
+        sf.innerHTML = '<b>📖 Outros sentidos</b>' + lx.sent.map(x => {
+          const m = x.match(/^(.*?)\s*\((.*)\)$/);
+          return `<div class="lex-sentido">${escapeHTML(m ? m[1] : x)}${m ? ` <em>${escapeHTML(m[2])}</em>` : ''}</div>`;
+        }).join('');
+        corpo.appendChild(sf);
+      }
+      if(lx.n.length || lx.a.length){
+        const ff = document.createElement('div'); ff.className = 'verbo-ficha verbo-lex';
+        const lista = (rot, arr) => arr.length ? `<div class="lex-familia"><small>${rot}</small>${arr.map(i => `<span class="lex-item${i.ap ? ' aprox' : ''}">${i.ap ? '≈ ' : ''}<b>${escapeHTML(i.w)}</b> ${escapeHTML(i.pt)}</span>`).join('')}</div>` : '';
+        ff.innerHTML = '<b>🧩 Família de palavras</b>' + lista('substantivo', lx.n) + lista('adjetivo', lx.a) +
+          ((lx.n.some(i => i.ap) || lx.a.some(i => i.ap)) ? '<div class="lex-nota">≈ equivalente aproximado — o verbo não tem um par direto; serve de ponto de partida para pensar no campo semântico.</div>' : '');
+        corpo.appendChild(ff);
+      }
     }
     /* registro: cotidiano × formal — mostra o par e a nuance; tocar no par abre aquele verbo */
     const rg = regDe(cur);
