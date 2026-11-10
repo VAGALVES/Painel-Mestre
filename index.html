@@ -349,7 +349,7 @@
   .modal-alerta{margin-top:8px; padding:10px 12px; background:rgba(193,72,61,0.1); border:1px solid rgba(193,72,61,0.35); border-radius:10px; font-size:11.5px; color:var(--paper); line-height:1.5;}
   .modal-alerta b{color:var(--red);}
 
-  section.block{background:var(--panel); border:1px solid var(--line); border-radius:16px; margin-bottom:16px; overflow:hidden;}
+  section.block{background:var(--panel); border:1px solid var(--line); border-radius:16px; margin-bottom:16px; overflow:hidden; scroll-margin-top:calc(var(--nav-h, 56px) + 8px);}
   .block-head{padding:14px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none;}
   .block-head-title{display:flex; align-items:center; gap:10px;}
   .block-num{font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; font-size:11px; color:var(--panel-deep); background:var(--brass); width:22px;height:22px;border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;}
@@ -467,10 +467,26 @@
   .anat-card h4{margin:0 0 4px; font-size:12px; color:var(--brass); letter-spacing:0.03em;}
   .anat-card .why{font-size:11px; color:var(--paper-dim); line-height:1.45;}
   .atalho-mn{font-size:14px; font-weight:600; color:var(--paper); letter-spacing:.01em; margin:1px 0 6px;}
+  .verbo-mais{display:block; width:100%; margin:8px 0 2px; padding:9px 12px; min-height:40px; background:var(--panel-deep); border:1px dashed var(--brass-dim); border-radius:10px; color:var(--brass); font-family:inherit; font-size:12px; font-weight:600; cursor:pointer;}
+  .verbo-mais[aria-expanded="true"]{border-style:solid;}
+  /* v125: menu da Referência */
+  #refMenu{position:fixed; z-index:60; left:8px; right:8px; max-width:520px; margin:0 auto; background:var(--panel-raised); border:1px solid var(--line); border-radius:14px; padding:8px; box-shadow:0 18px 40px -10px rgba(0,0,0,.6); display:grid; grid-template-columns:1fr 1fr; gap:6px;}
+  #refMenu[hidden]{display:none;}
+  #refMenu button{display:flex; align-items:center; gap:8px; text-align:left; background:var(--panel-deep); border:1px solid var(--line); border-radius:10px; padding:9px 10px; min-height:44px; color:var(--paper); font-family:inherit; font-size:12px; line-height:1.25; cursor:pointer;}
+  #refMenu button b{font-size:15px; font-weight:400;}
+  #refMenu button.dest{grid-column:1 / -1; border-color:var(--brass-dim); color:var(--brass); font-weight:600;}
+  @media (max-width:340px){ #refMenu{grid-template-columns:1fr;} }
   /* v123: parágrafos */
   .par-legenda{font-size:11px; color:var(--paper-dim); margin:0 0 8px;}
   .par-filtros{flex-wrap:wrap; gap:6px; margin-bottom:8px;}
   .par-filtros .pronome-pill{font-size:11.5px; padding:6px 11px; white-space:nowrap;}
+  .par-vals{padding-top:2px; border-top:1px dashed var(--line); margin-top:2px; padding-top:8px;}
+  .par-rac-d{font-size:11.5px; line-height:1.5; color:var(--paper); border-left:3px solid var(--conj); padding:2px 0 2px 10px; margin:0 0 10px;}
+  .par-grupo{margin:18px 0 8px; padding:8px 10px; border-left:3px solid var(--conj); background:color-mix(in srgb, var(--conj) 7%, transparent); border-radius:0 8px 8px 0;}
+  .par-grupo b{display:block; font-size:13px; color:var(--paper);}
+  .par-grupo span{font-size:11.5px; line-height:1.5; color:var(--paper-dim);}
+  .par-rac-tag{font-size:10.5px; color:var(--conj); margin:-4px 0 8px; overflow-wrap:anywhere;}
+  .par-rac-tag span{color:var(--paper-dim); font-family:'JetBrains Mono', ui-monospace, monospace;}
   .par-conta{font-size:11px; color:var(--brass-dim); margin:6px 0 2px;}
   .par-card{cursor:default;}
   .par-ideia{font-size:11.5px; color:var(--paper-dim); margin:0 0 8px;}
@@ -480,7 +496,32 @@
   .par-ver{background:var(--panel-deep); border:1px solid var(--brass-dim); color:var(--brass); border-radius:20px; padding:8px 14px; font-size:12px; font-weight:600; font-family:inherit; cursor:pointer; min-height:38px;}
   .par-ver[aria-expanded="true"]{background:var(--panel-raised); border-color:var(--brass);}
   .par-nota{margin-top:12px; border-top:1px dashed var(--line); padding-top:12px;}
-  .par-nota-geral{font-size:12px; line-height:1.55; color:var(--paper); border-left:3px solid var(--brass); padding:2px 0 2px 10px; margin-bottom:12px;}
+  .par-eixos{display:grid; gap:8px; margin-bottom:12px;}
+  .par-eixo{font-size:12px; line-height:1.55; color:var(--paper); border-left:3px solid var(--line); padding:2px 0 2px 10px;}
+  .par-eixo > b{display:block; font-size:11.5px; color:var(--brass); margin-bottom:2px;}
+  .par-eixo.dest{border-left-color:var(--conj); background:color-mix(in srgb, var(--conj) 7%, transparent); padding:8px 10px; border-radius:0 8px 8px 0;}
+  .par-assin{font-size:11px; line-height:1.6; margin:2px 0 6px; color:var(--paper-dim); overflow-wrap:anywhere;}
+  .par-assin i{font-style:normal; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:10.5px;}
+  /* v124: toque para ouvir — palavra a palavra nas frases dos motores e itens de vocabulário das listas */
+  #sentence, #modalSentence, .mont-frase, .par-en, .par-item .anat-frase, #practiceEN{cursor:pointer;}
+  .w-on{background:color-mix(in srgb, var(--teal) 30%, transparent); border-radius:3px; box-shadow:0 0 0 2px color-mix(in srgb, var(--teal) 30%, transparent);}
+  .ref-tag, .conj-card .ex:not(.no), .orac-conj-c, .ct-conj, table.matrix .cell-lines div{cursor:pointer;}
+  .conj-card .ex:not(.no)::after, .orac-conj-c::after, .ct-conj::after{content:' 🔊'; font-size:.78em; opacity:.6;}
+  .say-on{outline:2px solid var(--teal); outline-offset:1px; border-radius:4px;}
+  #segPop .audio-btn{float:none; display:inline-flex; vertical-align:middle; margin-left:6px;}
+  /* v124: introdução de cada seção */
+  .sec-intro{border:1px solid var(--line); border-left:3px solid var(--teal); border-radius:8px; background:var(--panel-deep); margin:0 0 12px; font-size:12px; line-height:1.55;}
+  .sec-intro > summary{cursor:pointer; padding:9px 12px; list-style:none; display:flex; justify-content:space-between; gap:10px; min-height:38px; align-items:flex-start;}
+  .sec-intro .si-o{font-size:12px; line-height:1.5; color:var(--paper); font-weight:400;}
+  .sec-intro .si-k{flex:0 0 auto; font-size:10.5px; font-weight:700; color:var(--teal); white-space:nowrap; padding-top:2px;}
+  .sec-intro > summary::-webkit-details-marker{display:none;}
+  .sec-intro .si-k::after{content:' ▾';}
+  .sec-intro[open] .si-k::after{content:' ▴';}
+  .sec-intro .si-c{padding:0 12px 10px; color:var(--paper);}
+  .sec-intro .si-c p{margin:0 0 6px;}
+  .sec-intro .si-c ul{margin:0; padding-left:18px; color:var(--paper-dim);}
+  .sec-intro .si-c li{margin:2px 0;}
+  .console > .sec-intro{margin:0 0 14px;}
   .par-item{display:flex; gap:10px; align-items:flex-start; margin:0 0 14px;}
   .par-item-n{flex:0 0 22px; height:22px; border-radius:50%; background:var(--brass); color:var(--panel-deep); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:2px;}
   .par-item-c{flex:1; min-width:0;}
@@ -732,7 +773,7 @@
       <button class="nav-pill" data-section="console-modais" onclick="document.getElementById('console-modais').scrollIntoView({behavior:'smooth'})">🗣️ Modais</button>
       <button class="nav-pill" data-section="console-pratica" onclick="document.getElementById('console-pratica').scrollIntoView({behavior:'smooth'})">🎯 Praticar</button>
       <button class="nav-pill" id="navExpressoes" data-section="console-expressoes" onclick="document.getElementById('console-expressoes').scrollIntoView({behavior:'smooth'})">🗃️ Expressões</button>
-      <button class="nav-pill" data-section="block-matrix" onclick="document.getElementById('block-matrix').scrollIntoView({behavior:'smooth'})">📚 Referência</button>
+      <button class="nav-pill" id="navRef" data-section="block-matrix" aria-haspopup="true" aria-expanded="false" onclick="refMenuToggle(event)">📚 Referência ▾</button>
     </div>
     <button class="theme-toggle eng-toggle" id="speedToggle" onclick="toggleSpeed()" title="Velocidade do áudio: 1×" aria-label="Velocidade do áudio">1×</button>
     <button class="theme-toggle eng-toggle" id="engToggle" onclick="toggleEng()" title="Variante do inglês: americano / britânico" aria-label="Variante do inglês">US</button>
@@ -1104,7 +1145,6 @@
       <span class="chev">▾</span>
     </div>
     <div class="block-body"><div class="block-body-inner">
-      <div class="matrix-note">Aqui as três frentes do app trabalham juntas: <b>tempo verbal</b>, <b>encaixes</b> e <b>orações ligadas por conjunção</b>. Cada parágrafo expressa uma ideia completa, e todas as frases são montadas pelo motor — nada aqui é texto fixo.</div>
       <div class="cross-ref">Toque em <b>Ver explicação</b> para entender por que cada peça e cada conjunção foi escolhida e como elas se combinam. As regras de base estão em
         <button class="cross-link" data-goto="block-anatomia">🧩 Anatomia da frase</button> e
         <button class="cross-link" data-goto="block-oracoes">🔗 Orações compostas</button>.</div>
@@ -1180,12 +1220,55 @@ document.addEventListener('click', function(e){
   const btn = e.target.closest('.audio-btn');
   if(btn && btn.dataset.text) speak(btn.dataset.text, btn.dataset.lang || ENG_LANG[ENG]);
 });
+/* ---- v124: TOQUE PARA OUVIR ----
+   (1) Nas frases dos motores, tocar numa palavra fala só aquela palavra. Não mexe no HTML da frase (as peças coloridas
+       continuam abrindo o significado): a palavra é achada pela posição do toque e destacada por um instante.
+   (2) Nas listas de vocabulário (expressões por tempo, nomes de conjunção, exemplos, linhas da tabela), tocar no item fala o item. */
+const FALA_FRASES = '#sentence, #modalSentence, .mont-frase, .par-en, .par-item .anat-frase, #practiceEN';
+const FALA_ITENS = '.ref-tag, .conj-card .ex:not(.no), .orac-conj-c, .ct-conj, table.matrix .cell-lines div';
+function palavraNoPonto(x, y){
+  let node = null, off = 0;
+  if(document.caretRangeFromPoint){ const r = document.caretRangeFromPoint(x, y); if(r){ node = r.startContainer; off = r.startOffset; } }
+  else if(document.caretPositionFromPoint){ const c = document.caretPositionFromPoint(x, y); if(c){ node = c.offsetNode; off = c.offset; } }
+  if(!node || node.nodeType !== 3) return null;
+  const t = node.nodeValue, eh = ch => /[A-Za-z'’-]/.test(ch || '');
+  let a = Math.min(off, t.length), b = a;
+  if(!eh(t[a]) && eh(t[a - 1])) a--;                       /* toque no fim da palavra */
+  if(!eh(t[a])) return null;
+  while(a > 0 && eh(t[a - 1])) a--;
+  b = a; while(b < t.length && eh(t[b])) b++;
+  const w = t.slice(a, b).replace(/^['’-]+|['’-]+$/g, '');
+  return w && /[A-Za-z]/.test(w) ? { node, a, b, w } : null;
+}
+function piscaPalavra(p){
+  try {
+    const r = document.createRange(); r.setStart(p.node, p.a); r.setEnd(p.node, p.b);
+    const sp = document.createElement('span'); sp.className = 'w-on'; r.surroundContents(sp);
+    setTimeout(() => { if(sp.parentNode){ const pai = sp.parentNode; sp.replaceWith(document.createTextNode(sp.textContent)); pai.normalize(); } }, 650);
+  } catch(err){ /* destaque é só cosmético: se o DOM mudou no meio, segue sem ele */ }
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest || e.target.closest('.audio-btn, button, input, a')) return;
+  const fr = e.target.closest(FALA_FRASES);
+  if(fr){
+    if(fr.closest('.anat-card[data-ex], .anat-card[data-at]')) return;          /* cards que carregam o montador: o toque é deles */
+    const p = palavraNoPonto(e.clientX, e.clientY);
+    if(p && fr.contains(p.node)){ speak(p.w); piscaPalavra(p); }
+    return;
+  }
+  const it = e.target.closest(FALA_ITENS);
+  if(it){
+    const c = it.cloneNode(true); c.querySelectorAll('i, small, button').forEach(x => x.remove());      /* tira a nota em português da etiqueta */
+    const txt = c.textContent.replace(/[✓✗]/g, '').replace(/\s*…\s*/g, ', ').replace(/\s*·\s*/g, '. ').replace(/^[\s:,.]+/, '').trim();
+    if(txt && /[A-Za-z]/.test(txt)){ speak(txt); it.classList.add('say-on'); setTimeout(() => it.classList.remove('say-on'), 600); }
+  }
+});
 /* ---- Persistência local ----
    Guarda no dispositivo o que o usuário construiu ao longo do estudo: tema, configuração
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.34';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.36';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -3848,6 +3931,9 @@ function verbGroupOf(v){ return v.phrasal ? '⚡' : v.base[0].toUpperCase(); }
    longe no alfabeto e perto no pensamento. O filtro por tema agrupa por campo semântico; a visão
    A–Z continua para quem já sabe a palavra, e a busca aceita inglês ou português. */
 let verboGradeAberta = false;
+/* v125: a lista de verbos nasce recolhida (12 + o verbo atual); antes eram até 133 pílulas entre o passo ③ e o ④ */
+let verboListaAberta = false;
+const VERBO_LISTA_MAX = 12;
 
 /* ---- Etimologia dos verbos ----
    Cada verbo carrega a família de línguas de onde veio. O inglês tem camadas: o núcleo do dia a dia
@@ -5952,7 +6038,7 @@ function buildVerbo(){
   const escolher = v => {
     /* v122: ao escolher um verbo transitivo, o passo ④ já vem com o objeto mais típico (a frase nasce completa);
        "sem complemento" continua a um clique */
-    state.verbo = v.id; state.verboLetter = verbGroupOf(v); state.colocacao = colAutoIdx(v); state.verboBusca = '';
+    state.verbo = v.id; state.verboLetter = verbGroupOf(v); state.colocacao = colAutoIdx(v); state.verboBusca = ''; verboListaAberta = false;
     if(state.verboModo === 'tema' && state.verboTema !== VERB_TEMA_FRASAIS && !verbCats(v).includes(state.verboTema)) state.verboTema = verbCats(v)[0];
     verboGradeAberta = false; render();
   };
@@ -5978,6 +6064,23 @@ function buildVerbo(){
   linhaOrigens(el, state.verboOrigem, VERBS, k => { state.verboOrigem = k; verboGradeAberta = false; render(); });
   const corpo = document.createElement('div'); corpo.className = 'verbo-corpo'; el.appendChild(corpo);
 
+  /* lista de verbos com "ver todos": recolhida mostra os primeiros + o verbo escolhido (sempre visível e em primeiro) */
+  const listaVerbos = vs => {
+    const box = document.createElement('div');
+    const lista = document.createElement('div'); lista.className = 'pronome-row verbo-choices'; box.appendChild(lista);
+    const curta = !verboListaAberta && vs.length > VERBO_LISTA_MAX + 2;
+    let mostra = vs;
+    if(curta){ mostra = vs.slice(0, VERBO_LISTA_MAX); if(vs.includes(cur) && !mostra.includes(cur)) mostra = [cur].concat(mostra.slice(0, VERBO_LISTA_MAX - 1)); }
+    mostra.forEach(v => lista.appendChild(pilula(v)));
+    if(vs.length > VERBO_LISTA_MAX + 2){
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'verbo-mais';
+      b.textContent = verboListaAberta ? '▴ mostrar menos' : `▾ ver todos os ${vs.length} verbos`;
+      b.setAttribute('aria-expanded', String(verboListaAberta));
+      b.onclick = () => { verboListaAberta = !verboListaAberta; pinta(); };
+      box.appendChild(b);
+    }
+    return box;
+  };
   const pinta = () => {
     corpo.innerHTML = '';
     const q = semAcento(state.verboBusca).trim();
@@ -6020,8 +6123,7 @@ function buildVerbo(){
         corpo.appendChild(grade);
       }
       const dica = document.createElement('div'); dica.className = 'verbo-nota'; dica.textContent = meta.dica; corpo.appendChild(dica);
-      const lista = document.createElement('div'); lista.className = 'pronome-row verbo-choices';
-      vs.forEach(v => lista.appendChild(pilula(v))); corpo.appendChild(lista);
+      corpo.appendChild(listaVerbos(vs));
       if(!vs.length){ const m = document.createElement('div'); m.className = 'verbo-nota'; m.textContent = 'Nenhum verbo deste tema com essa origem — troque o tema ou a origem.'; corpo.appendChild(m); }
     } else {
       const letras = document.createElement('div'); letras.className = 'pronome-row letter-row';
@@ -6033,9 +6135,7 @@ function buildVerbo(){
         letras.appendChild(b);
       });
       corpo.appendChild(letras);
-      const lista = document.createElement('div'); lista.className = 'pronome-row verbo-choices';
-      verbosPorOrigem(VERBS, state.verboOrigem).filter(v => verbGroupOf(v) === state.verboLetter).forEach(v => lista.appendChild(pilula(v)));
-      corpo.appendChild(lista);
+      corpo.appendChild(listaVerbos(verbosPorOrigem(VERBS, state.verboOrigem).filter(v => verbGroupOf(v) === state.verboLetter)));
     }
     /* ficha do verbo escolhido: tradução e temas */
     const ptInf = (PT_VERBS[cur.id] || {}).inf;
@@ -6086,10 +6186,10 @@ function buildVerbo(){
         arr.forEach(w => {
           const alvoV = verbPorNome(w);
           const c = document.createElement('span'); c.className = 'lex-item' + (alvoV && alvoV.id !== cur.id ? ' sin-link' : '');
-          c.innerHTML = `<b>${escapeHTML(w)}</b>`;
+          c.innerHTML = `<b>${escapeHTML(w)}</b>${btnAudio(w)}`;          /* v124: cada sinônimo/antônimo com o seu áudio */
           if(alvoV && alvoV.id !== cur.id){
             c.setAttribute('role', 'button'); c.tabIndex = 0; c.title = 'Abrir ' + w;
-            c.onclick = () => escolher(alvoV);
+            c.onclick = e => { if(e.target.closest('.audio-btn')) return; escolher(alvoV); };
             c.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); escolher(alvoV); } };
           }
           alvo.appendChild(c);
@@ -11657,7 +11757,8 @@ function segPopShow(el){
   const info = SEG_INFO[el.dataset.kind]; if(!info) return;
   const txt = el.textContent, p = document.createElement('div'); p.id = 'segPop'; p.setAttribute('role', 'dialog');
   const cj = el.dataset.kind === 'conj' ? segConjPT(txt) : null;
-  p.innerHTML = `<button class="x" type="button" aria-label="Fechar">✕</button><span class="k" style="color:${ADJ_COLOR[el.dataset.kind] || 'inherit'}">${escapeHTML(txt)} — ${info.k}</span>` +
+  const ouvir = /[A-Za-z]/.test(txt) ? `<button type="button" class="audio-btn sm" data-text="${escapeHTML(txt)}" title="Ouvir a expressão inteira" aria-label="Ouvir ${escapeHTML(txt)}">🔊</button>` : '';
+  p.innerHTML = `<button class="x" type="button" aria-label="Fechar">✕</button><span class="k" style="color:${ADJ_COLOR[el.dataset.kind] || 'inherit'}">${escapeHTML(txt)} — ${info.k}${ouvir}</span>` +
     (cj ? `<div>= <b>${escapeHTML(cj.pt)}</b>${cj.tipo ? ' · ' + escapeHTML(cj.tipo) : ''}</div>` : '') + `<div>${info.t}</div>`;
   document.body.appendChild(p);
   const r = el.getBoundingClientRect(), pr = p.getBoundingClientRect();
@@ -11665,7 +11766,7 @@ function segPopShow(el){
   p.style.top = (r.bottom + pr.height + 12 < window.innerHeight ? r.bottom + 8 : Math.max(8, r.top - pr.height - 8)) + 'px';
   p.querySelector('.x').onclick = segPopHide;
 }
-document.addEventListener('click', e => { const sg = e.target.closest && e.target.closest('#sentence .seg'); if(sg){ e.stopPropagation(); segPopShow(sg); } else if(!(e.target.closest && e.target.closest('#segPop'))) segPopHide(); });
+document.addEventListener('click', e => { const sg = e.target.closest && e.target.closest('#sentence .seg, #modalSentence .seg, .mont-frase .seg, .par-card .seg'); if(sg){ segPopShow(sg); } else if(!(e.target.closest && e.target.closest('#segPop'))) segPopHide(); });
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape') segPopHide();
   else if((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('seg')){ e.preventDefault(); segPopShow(document.activeElement); }
@@ -13767,337 +13868,548 @@ function parFrase(c, onde){
 const PAR_NIVEL = { 1:'Base', 2:'Intermediário', 3:'Avançado' };
 const PAR_TEMA_IC = { estudo:'📘', trabalho:'💼', 'saúde':'🏃', 'finanças':'💰', tecnologia:'💻', viagem:'🧳', vida:'🌱', casa:'🏠', carreira:'🧭', 'comunicação':'💬', 'negócios':'📈' };
 const PARAGRAFOS = [
- /* ===================== ESTUDO ===================== */
- { id:'est1', tema:'estudo', nivel:1, titulo:'A rotina que constrói o resultado',
+ { id:'est1', r:'objetivo', tema:'estudo', nivel:1, titulo:'A rotina que constrói o resultado',
    ideia:'Um hábito de estudo, um esforço pontual e o plano que vem a seguir.',
-   nota:'O parágrafo anda no tempo: <b>hábito</b> (presente simples), <b>fato pontual</b> (passado simples) e <b>plano</b> (futuro). Cada tempo chama as suas peças: o hábito aceita frequência e periodicidade, o fato pede uma data, o plano pede um marco futuro. As conjunções contam a lógica: primeiro o <b>objetivo</b>, depois um <b>obstáculo vencido</b>, por fim a <b>ordem</b> das próximas ações.',
+   n:{ v:'<i>Study</i> e <i>practice</i> são do mesmo campo (aprender fazendo), então o texto troca de verbo sem trocar de assunto. Os dois aceitam <i>English</i> como objeto, o que mantém o fio do parágrafo.',
+       t:'Presente simples para o <b>hábito</b>, passado simples para um <b>dia específico</b> e futuro para o <b>plano</b>. Tudo no aspecto simples: são fatos inteiros, não processos em andamento.',
+       e:'O hábito recebe três peças que se completam (<i>usually</i> = com que frequência, <i>at home</i> = onde, <i>every evening</i> = de quanto em quanto). O fato recebe só a data (<i>yesterday</i>) e o plano só o marco (<i>tomorrow</i>): cada tempo chama a sua peça.',
+       c:'<b>Finalidade + concessão + tempo</b> formam o esqueleto de um relato de progresso: para que eu faço, o que enfrento e o que vem a seguir. É a combinação mais útil para falar de metas, em entrevista, aula ou trabalho.' },
    s:[
-    { p:'She', t:'present', a:'simples', v:'study', col:'English', mid:['usually'], ends:['at home','every evening'], o2:{ k:'final', cj:'in order to', op:'get a better job' },
-      why:'Hábito pede presente simples. <i>Usually</i> vai antes do verbo; lugar vem antes de periodicidade (onde → quando). <i>In order to</i> + infinitivo dá o objetivo, com o mesmo sujeito.' },
-    { p:'She', t:'past', a:'simples', v:'study', col:'hard', ends:['yesterday'], o2:{ k:'conc', cj:'although', op:'tiring' },
-      why:'<i>Yesterday</i> fecha o tempo no passado simples. <i>Although</i> abre a frase com o obstáculo e a vírgula separa as orações: o esforço aconteceu <b>apesar</b> do cansaço.' },
-    { p:'She', t:'future', a:'simples', v:'practice', col:'English', ends:['tomorrow'], o2:{ k:'temp', cj:'as soon as', op:'the lesson' },
-      why:'A principal vai para <i>will</i>, mas depois de <i>as soon as</i> o inglês usa <b>presente simples</b> (finishes), nunca will. Em português vira futuro do subjuntivo (terminar).' }
+    { p:'She', t:'present', a:'simples', v:'study', col:'English', mid:['usually'], ends:['at home','every evening'], o2:{ k:'final', cj:'in order to', op:'get a better job' }, why:'Hábito pede presente simples. <i>Usually</i> vai antes do verbo; lugar vem antes de periodicidade (onde → quando). <i>In order to</i> + infinitivo dá o objetivo, com o mesmo sujeito.' },
+    { p:'She', t:'past', a:'simples', v:'study', col:'hard', ends:['yesterday'], o2:{ k:'conc', cj:'although', op:'tiring' }, why:'<i>Yesterday</i> fecha o tempo no passado simples. <i>Although</i> abre a frase com o obstáculo e a vírgula separa as orações: o esforço aconteceu <b>apesar</b> do cansaço.' },
+    { p:'She', t:'future', a:'simples', v:'practice', col:'English', ends:['tomorrow'], o2:{ k:'temp', cj:'as soon as', op:'the lesson' }, why:'A principal vai para <i>will</i>, mas depois de <i>as soon as</i> o inglês usa <b>presente simples</b> (finishes), nunca will. Em português vira futuro do subjuntivo (terminar).' }
    ] },
- { id:'est2', tema:'estudo', nivel:2, titulo:'Da leitura à prática diária',
+ { id:'est2', r:'sequencia', tema:'estudo', nivel:2, titulo:'Da leitura à prática diária',
    ideia:'Uma sequência no passado que explica o hábito de agora e uma previsão.',
-   nota:'Duas ações passadas são postas em ordem por <i>before</i> e <i>after that</i>. O salto para o presente é marcado por <i>now</i>, e o futuro vem com um grau de certeza (<i>probably</i>) e uma condição. O leitor acompanha: o que ele fez, o que faz hoje por causa disso e o que deve fazer.',
+   n:{ v:'<i>Read → write → practice → study</i>: os verbos seguem a ordem natural do aprendizado (receber, produzir, repetir, aprofundar). A escolha dos verbos já conta a história antes das conjunções.',
+       t:'Dois passados simples em cadeia, depois presente simples e futuro. O aspecto fica simples porque o interesse é a <b>ordem</b> dos fatos, não a duração de cada um.',
+       e:'<i>Slowly last night</i> (como → quando) descreve a leitura; <i>after that</i> costura a segunda ação à primeira; <i>now</i> vira a página para o presente; <i>probably</i> e <i>next week</i> dão certeza e data ao futuro.',
+       c:'<b>Tempo (before) + finalidade + causa + condição</b>: a ordem dos fatos, o objetivo, o motivo e o que depende de quê. Juntas, essas quatro ligações cobrem quase tudo o que se pergunta sobre uma ação: quando, para quê, por quê e em que caso.' },
    s:[
-    { p:'He', t:'past', a:'simples', v:'read', col:'the book', ends:['slowly','last night'], o2:{ k:'temp', cj:'before', op:'the notes' },
-      why:'Modo antes de tempo (como → quando): <i>slowly last night</i>. <i>Before</i> liga duas ações do passado e mostra qual veio primeiro.' },
-    { p:'He', t:'past', a:'simples', v:'write', col:'in English', ends:['after that'], o2:{ k:'final', cj:'in order to', op:'share {p} ideas' },
-      why:'<i>After that</i> é peça de <b>sequência</b>: abre a frase com vírgula e amarra esta frase à anterior. A finalidade explica para que ele escreveu.' },
-    { p:'He', t:'present', a:'simples', v:'practice', col:'English', mid:['now'], ends:['every day'], o2:{ k:'caus', cj:'because', op:'to learn more' },
-      why:'<i>Now</i> marca a virada para o presente; <i>every day</i> confirma o hábito. <i>Because</i> traz o motivo, com sujeito e verbo próprios.' },
-    { p:'He', t:'future', a:'simples', v:'study', mid:['probably'], ends:['next week'], o2:{ k:'cond', cj:'if', op:'a good grade' },
-      why:'<i>Probably</i> fica entre <i>will</i> e o verbo. Condicional real (tipo 1): <i>will</i> na principal, <b>presente</b> depois de <i>if</i>.' }
+    { p:'He', t:'past', a:'simples', v:'read', col:'the book', ends:['slowly','last night'], o2:{ k:'temp', cj:'before', op:'the notes' }, why:'Modo antes de tempo (como → quando): <i>slowly last night</i>. <i>Before</i> liga duas ações do passado e mostra qual veio primeiro.' },
+    { p:'He', t:'past', a:'simples', v:'write', col:'in English', ends:['after that'], o2:{ k:'final', cj:'in order to', op:'share {p} ideas' }, why:'<i>After that</i> é peça de <b>sequência</b>: abre a frase com vírgula e amarra esta frase à anterior. A finalidade explica para que ele escreveu.' },
+    { p:'He', t:'present', a:'simples', v:'practice', col:'English', mid:['now'], ends:['every day'], o2:{ k:'caus', cj:'because', op:'to learn more' }, why:'<i>Now</i> marca a virada para o presente; <i>every day</i> confirma o hábito. <i>Because</i> traz o motivo, com sujeito e verbo próprios.' },
+    { p:'He', t:'future', a:'simples', v:'study', mid:['probably'], ends:['next week'], o2:{ k:'cond', cj:'if', op:'a good grade' }, why:'<i>Probably</i> fica entre <i>will</i> e o verbo. Condicional real (tipo 1): <i>will</i> na principal, <b>presente</b> depois de <i>if</i>.' }
    ] },
- { id:'est3', tema:'estudo', nivel:3, titulo:'Quanto mais prática, mais resultado',
+ { id:'est3', r:'proporcao', tema:'estudo', nivel:3, titulo:'Quanto mais prática, mais resultado',
    ideia:'Proporção, hábito antigo, hipótese e resultado: quatro formas de ligar esforço e consequência.',
-   nota:'O mesmo assunto, quatro lógicas diferentes. A <b>proporção</b> (the more… the more) diz que as duas coisas crescem juntas; <i>whenever</i> no passado descreve um <b>hábito antigo</b>; a condicional com <i>would</i> imagina uma <b>hipótese</b>; e <i>so</i> entrega o <b>resultado</b> atual. Repare como o tempo verbal muda junto com a lógica.',
+   n:{ v:'<i>Practice</i> e <i>study</i> se alternam, e <i>learn</i> aparece só como resultado. Assim o texto separa o esforço (praticar, estudar) do ganho (aprender).',
+       t:'Presente simples para a regra geral, passado simples para o hábito antigo, <i>would</i> para a hipótese e present perfect para o que vem acontecendo. Quatro tempos, porque cada lógica pede o seu.',
+       e:'Quase não há peças: a proporção e a condicional já ocupam a frase com a própria estrutura. Só o present perfect ganha <i>lately</i>, que é justamente a peça que o justifica.',
+       c:'<b>Proporção + hábito no passado + hipótese + consequência</b>: quatro maneiras de ligar esforço e resultado. Saber alternar entre elas evita repetir <i>because</i> e <i>so</i> o tempo todo, que é o que deixa um texto com cara de iniciante.' },
    s:[
-    { p:'They', t:'present', a:'simples', v:'practice', col:'English', o2:{ k:'prop', cj:'the more … the more', v:'learn' },
-      why:'Estrutura fixa: <i>the more</i> + sujeito + verbo, vírgula, <i>the more</i> + sujeito + verbo. Sem encaixes: a própria estrutura já ocupa a frase.' },
-    { p:'They', t:'past', a:'simples', v:'study', col:'for the exam', o2:{ k:'temp', cj:'whenever', op:'the chapter' },
-      why:'<i>Whenever</i> no passado é repetição. O inglês usa passado simples nas duas orações; o português troca para o <b>imperfeito</b> (estudavam… liam).' },
-    { p:'They', t:'future', a:'simples', v:'study', col:'hard', o2:{ k:'cond', cj:'if', op:'a good grade', cnd:2 },
-      why:'Condicional hipotética (tipo 2): <i>would</i> na principal e <b>passado</b> depois de <i>if</i>. Em português: futuro do pretérito + imperfeito do subjuntivo.' },
-    { p:'They', t:'present', a:'perfeito', v:'practice', ends:['lately'], o2:{ k:'cons', cj:'so', op:'confident' },
-      why:'<i>Lately</i> pede present perfect: algo que começou antes e chega até agora. <i>So</i> vem depois de vírgula e apresenta a consequência.' }
+    { p:'They', t:'present', a:'simples', v:'practice', col:'English', o2:{ k:'prop', cj:'the more … the more', v:'learn' }, why:'Estrutura fixa: <i>the more</i> + sujeito + verbo, vírgula, <i>the more</i> + sujeito + verbo. Sem encaixes: a própria estrutura já ocupa a frase.' },
+    { p:'They', t:'past', a:'simples', v:'study', col:'for the exam', o2:{ k:'temp', cj:'whenever', op:'the chapter' }, why:'<i>Whenever</i> no passado é repetição. O inglês usa passado simples nas duas orações; o português troca para o <b>imperfeito</b> (estudavam… liam).' },
+    { p:'They', t:'future', a:'simples', v:'study', col:'hard', o2:{ k:'cond', cj:'if', op:'a good grade', cnd:2 }, why:'Condicional hipotética (tipo 2): <i>would</i> na principal e <b>passado</b> depois de <i>if</i>. Em português: futuro do pretérito + imperfeito do subjuntivo.' },
+    { p:'They', t:'present', a:'perfeito', v:'practice', ends:['lately'], o2:{ k:'cons', cj:'so', op:'confident' }, why:'<i>Lately</i> pede present perfect: algo que começou antes e chega até agora. <i>So</i> vem depois de vírgula e apresenta a consequência.' }
    ] },
- /* ===================== TRABALHO ===================== */
- { id:'trab1', tema:'trabalho', nivel:1, titulo:'A semana da apresentação',
+ { id:'prop1', r:'proporcao', tema:'estudo', nivel:2, titulo:'Ler mais, aprender mais',
+   ideia:'Uma regra de proporção, a intensidade do esforço e uma comparação.',
+   n:{ v:'<i>Read</i> e <i>study</i> para o esforço, <i>learn</i> para o ganho.',
+       t:'Tudo no presente simples: são regras gerais e comparações permanentes.',
+       e:'Nenhuma palavra-sinal: as três estruturas já ocupam os lugares da frase. O modo vem embutido na própria comparação (<i>seriously</i>, <i>carefully</i>).',
+       c:'<b>Proporção + consequência intensiva + comparação de igualdade</b>: três formas de medir. A primeira liga duas quantidades, a segunda mede pelo resultado (<i>so… that</i>) e a terceira mede contra outra pessoa (<i>as… as</i>). Juntas, ensinam a graduar o que se diz.' },
+   s:[
+    { p:'I', t:'present', a:'simples', v:'read', o2:{ k:'prop', cj:'the more … the more', v:'learn' }, why:'<i>The more</i> + oração, vírgula, <i>the more</i> + oração.' },
+    { p:'I', t:'present', a:'simples', v:'study', o2:{ k:'csq', cj:'so … that', op:'more' }, why:'<i>So</i> + advérbio + <i>that</i>: a intensidade produz o resultado.' },
+    { p:'I', t:'present', a:'simples', v:'read', col:'the book', o2:{ k:'cmp', cj:'as … as', op:'carefully' }, why:'<i>As</i> + advérbio + <i>as</i> + sujeito + auxiliar (<i>you do</i>): o auxiliar substitui o verbo repetido.' }
+   ] },
+ { id:'arg2', r:'argumento', tema:'estudo', nivel:3, titulo:'Uma tese com fundamento',
+   ideia:'Uma afirmação apresentada como evidente, a sua base e a verdade que se conclui.',
+   n:{ v:'<i>Study, practice, improve</i>: estudar, praticar, melhorar.',
+       t:'Presente simples para a tese e a base; present perfect para o que se comprova no fim.',
+       e:'<i>Hard</i> e <i>every day</i> sustentam a tese; <i>really… lately</i> dá força e recência à conclusão.',
+       c:'<b>Subjetiva + explicativa + predicativa</b>: afirmo (<i>It is obvious that</i>), fundamento (<i>for</i>) e declaro a verdade (<i>The truth is that</i>). É o esqueleto de um parágrafo argumentativo de redação: tese, argumento e fecho.' },
+   s:[
+    { p:'They', t:'present', a:'simples', v:'study', col:'hard', o2:{ k:'subj', cj:'It is … that', op:'obvious' }, why:'A tese entra como algo óbvio.' },
+    { p:'They', t:'present', a:'simples', v:'practice', col:'English', ends:['every day'], o2:{ k:'expl', cj:'for', op:'to learn more' }, why:'O fundamento, com <i>for</i> depois de vírgula.' },
+    { p:'They', t:'present', a:'perfeito', v:'improve', mid:['really'], ends:['lately'], o2:{ k:'pred', cj:'… is that', op:'truth' }, why:'O fecho: uma verdade no present perfect, porque vale até agora.' }
+   ] },
+ { id:'exp1', r:'explicar', tema:'estudo', nivel:2, titulo:'Explicar e concluir',
+   ideia:'Um hábito com o seu fundamento, o resultado que se conclui dele e o próximo passo.',
+   n:{ v:'<i>Study</i> e <i>practice</i>: o esforço é dito com dois verbos próximos, para que a explicação e a conclusão falem do mesmo assunto sem repetir a palavra.',
+       t:'Presente simples (hábito), present perfect (o que vem acontecendo) e futuro (previsão). O perfect é essencial na conclusão: o resultado nasce do passado recente e vale agora.',
+       e:'<i>Hard</i> e <i>every day</i> descrevem o hábito; <i>really</i> intensifica; <i>lately</i> justifica o present perfect; <i>probably… tomorrow</i> fecha.',
+       c:'<b>Explicação (for) + conclusão (so)</b> é o par do raciocínio: primeiro o fundamento, depois o que se conclui dele. <i>For</i> explica uma afirmação já feita (por isso vem depois de vírgula), e <i>so</i> tira a consequência. Quem domina o par consegue argumentar, não só relatar.' },
+   s:[
+    { p:'She', t:'present', a:'simples', v:'study', col:'hard', ends:['every day'], o2:{ k:'expl', cj:'for', op:'a good grade' }, why:'<i>For</i> explicativo vem depois de vírgula e justifica a afirmação anterior. É mais formal que <i>because</i> e nunca abre a frase.' },
+    { p:'She', t:'present', a:'perfeito', v:'practice', mid:['really'], ends:['lately'], o2:{ k:'cons', cj:'so', op:'confident' }, why:'<i>Lately</i> pede present perfect nas duas orações. <i>So</i>, depois de vírgula, apresenta o que se conclui do esforço.' },
+    { p:'She', t:'future', a:'simples', v:'practice', col:'English', mid:['probably'], ends:['tomorrow'], o2:{ k:'final', cj:'to', op:'reach fluency' }, why:'O fecho olha para a frente: previsão moderada (<i>probably</i>), data e objetivo.' }
+   ] },
+ { id:'exp4', r:'explicar', tema:'viagem', nivel:1, titulo:'Sair cedo tem motivo',
+   ideia:'Um hábito, a razão por trás dele e a prova de que funciona.',
+   n:{ v:'<i>Leave, drive, arrive</i>: sair, ir e chegar. Os três verbos cobrem o trajeto inteiro, então a explicação e a conclusão falam da mesma viagem.',
+       t:'Dois presentes simples para o hábito e um passado simples para o dia que serve de prova (<i>yesterday</i>).',
+       e:'<i>Always</i> e <i>every day</i> marcam a regra; <i>early</i> aparece no hábito e no resultado, ligando as duas pontas; <i>yesterday</i> data o exemplo.',
+       c:'<b>Explicação (for) + causa (because) + conclusão (so)</b>: duas razões e um resultado. <i>For</i> justifica a afirmação, <i>because</i> aponta o motivo concreto e <i>so</i> mostra o efeito. É a estrutura mínima de um argumento: digo, justifico e comprovo.' },
+   s:[
+    { p:'She', t:'present', a:'simples', v:'leave', col:'early', mid:['always'], o2:{ k:'expl', cj:'for', op:'to save time' }, why:'A afirmação vem primeiro; <i>for</i>, depois de vírgula, traz o fundamento. Nunca abre a frase.' },
+    { p:'She', t:'present', a:'simples', v:'drive', col:'to work', ends:['every day'], o2:{ k:'caus', cj:'because', op:'heavy traffic' }, why:'<i>Because</i> dá o motivo concreto, sem vírgula. Destino antes de periodicidade.' },
+    { p:'She', t:'past', a:'simples', v:'arrive', col:'early', ends:['yesterday'], o2:{ k:'cons', cj:'so', op:'time' }, why:'O caso de ontem funciona como prova: <i>so</i> mostra o ganho.' }
+   ] },
+ { id:'exp5', r:'explicar', tema:'casa', nivel:2, titulo:'A casa pronta para receber',
+   ideia:'O que está sendo feito e por quê, o que já rendeu e o que se espera.',
+   n:{ v:'<i>Clean, fix, cook</i>: limpar, consertar, cozinhar. Três tarefas de quem prepara a casa, cada uma num momento.',
+       t:'Presente <b>contínuo</b> (está acontecendo hoje), passado simples (já foi feito) e futuro (vai acontecer à noite).',
+       e:'<i>Today</i>, <i>yesterday</i> e <i>tonight</i>: uma peça de tempo por frase, cada uma combinando com o seu tempo verbal.',
+       c:'<b>Explicação + conclusão + conclusão</b>: uma razão (<i>for they expect guests</i>) organiza tudo, e dois resultados fecham, um já colhido (<i>so</i>) e um esperado (<i>and so</i>). Mostra que a conclusão acompanha o tempo da principal: passado com passado, futuro com futuro.' },
+   s:[
+    { p:'They', t:'present', a:'continuo', v:'clean', col:'the house', ends:['today'], o2:{ k:'expl', cj:'for', op:'guests' }, why:'Ação em curso + explicação. A oração com <i>for</i> fica no presente simples: o motivo vale agora.' },
+    { p:'They', t:'past', a:'simples', v:'fix', col:'the sink', ends:['yesterday'], o2:{ k:'cons', cj:'so', op:'time' }, why:'Fato e consequência no mesmo tempo (passado).' },
+    { p:'They', t:'future', a:'simples', v:'cook', col:'dinner', ends:['tonight'], o2:{ k:'cons', cj:'and so', op:'the meal' }, why:'<i>And so</i> soma e conclui. Com <i>will</i> na principal, a conclusão também leva <i>will</i>.' }
+   ] },
+ { id:'exp6', r:'explicar', tema:'comunicação', nivel:3, titulo:'Perguntar para ter clareza',
+   ideia:'Uma atitude justificada, o seu efeito e a ideia central.',
+   n:{ v:'<i>Ask, call, listen</i>: perguntar, ligar, escutar. Todos são verbos de buscar informação.',
+       t:'Presente simples (atitude), passado simples (um caso) e presente simples de novo (a conclusão geral).',
+       e:'Só <i>always</i>, <i>yesterday</i> e o modo <i>carefully</i>. O peso está nas ligações, não nas peças.',
+       c:'<b>Explicação + conclusão + predicativa</b>: depois de justificar e concluir, <i>The point is that…</i> resume o parágrafo numa tese. Fechar um raciocínio nomeando o ponto central é recurso de quem escreve bem.' },
+   s:[
+    { p:'He', t:'present', a:'simples', v:'ask', col:'the teacher', mid:['always'], o2:{ k:'expl', cj:'for', op:'to be clear' }, why:'Atitude + fundamento com <i>for</i>.' },
+    { p:'He', t:'past', a:'simples', v:'call', col:'the office', ends:['yesterday'], o2:{ k:'cons', cj:'so', op:'the plan' }, why:'Um exemplo concreto e o que resultou dele.' },
+    { p:'He', t:'present', a:'simples', v:'listen', col:'carefully', o2:{ k:'pred', cj:'… is that', op:'point' }, why:'<i>The point is that</i> + frase completa: a oração inteira funciona como o "ponto".' }
+   ] },
+ { id:'trab1', r:'objetivo', tema:'trabalho', nivel:1, titulo:'A semana da apresentação',
    ideia:'O que está em andamento, o que foi preparado e o que vem depois.',
-   nota:'Quatro tempos, uma linha do tempo: <b>agora</b> (presente contínuo), <b>ontem</b> (passado simples), <b>amanhã</b> e <b>depois disso</b> (futuro). Cada frase tem um motivo ou um objetivo, então o texto não só informa o que acontece, mas também por quê. <i>After that</i> na última frase costura a sequência.',
+   n:{ v:'<i>Work → prepare → present → rest</i>: o ciclo de uma entrega, do esforço ao descanso. São verbos de ação com objeto claro (<i>a presentation</i>, <i>the results</i>), o que deixa cada frase concreta.',
+       t:'Presente <b>contínuo</b> para o que está em curso agora, passado simples para o que já foi feito e futuro para o que falta. O contínuo aparece só na primeira frase porque só ela descreve algo em andamento.',
+       e:'<i>Currently</i> reforça o "agora" do contínuo; <i>carefully yesterday</i> segue como → quando; <i>at the office tomorrow</i> segue onde → quando; <i>after that</i> fecha a sequência.',
+       c:'<b>Causa + finalidade + concessão + finalidade</b>: cada ação vem com a sua razão. É o padrão de um bom relato profissional: não basta dizer o que se faz, é preciso dizer por quê e para quê, e admitir o que é difícil.' },
    s:[
-    { p:'He', t:'present', a:'continuo', v:'work', col:'on a project', mid:['currently'], o2:{ k:'caus', cj:'because', op:'a better career' },
-      why:'Ação em andamento pede presente contínuo, e <i>currently</i> (entre <i>is</i> e o verbo) reforça esse "agora". A causal explica a motivação.' },
-    { p:'He', t:'past', a:'simples', v:'prepare', col:'a presentation', ends:['carefully','yesterday'], o2:{ k:'final', cj:'in order to', op:'avoid mistakes' },
-      why:'Objeto, depois modo, depois tempo: <i>a presentation carefully yesterday</i>. A finalidade combina com o modo: preparou com cuidado <b>para</b> evitar erros.' },
-    { p:'He', t:'future', a:'simples', v:'present', col:'the results', ends:['at the office','tomorrow'], o2:{ k:'conc', cj:'even though', op:'stressful' },
-      why:'Lugar antes de tempo (onde → quando). <i>Even though</i> é uma concessão mais forte que <i>although</i> e abre a frase.' },
-    { p:'He', t:'future', a:'simples', v:'rest', ends:['after that'], o2:{ k:'final', cj:'to', op:'recover energy' },
-      why:'<i>After that</i> fecha a sequência. <i>To</i> + infinitivo é a forma mais curta de dizer finalidade.' }
+    { p:'He', t:'present', a:'continuo', v:'work', col:'on a project', mid:['currently'], o2:{ k:'caus', cj:'because', op:'a better career' }, why:'Ação em andamento pede presente contínuo, e <i>currently</i> (entre <i>is</i> e o verbo) reforça esse "agora". A causal explica a motivação.' },
+    { p:'He', t:'past', a:'simples', v:'prepare', col:'a presentation', ends:['carefully','yesterday'], o2:{ k:'final', cj:'in order to', op:'avoid mistakes' }, why:'Objeto, depois modo, depois tempo: <i>a presentation carefully yesterday</i>. A finalidade combina com o modo: preparou com cuidado <b>para</b> evitar erros.' },
+    { p:'He', t:'future', a:'simples', v:'present', col:'the results', ends:['at the office','tomorrow'], o2:{ k:'conc', cj:'even though', op:'stressful' }, why:'Lugar antes de tempo (onde → quando). <i>Even though</i> é uma concessão mais forte que <i>although</i> e abre a frase.' },
+    { p:'He', t:'future', a:'simples', v:'rest', ends:['after that'], o2:{ k:'final', cj:'to', op:'recover energy' }, why:'<i>After that</i> fecha a sequência. <i>To</i> + infinitivo é a forma mais curta de dizer finalidade.' }
    ] },
- { id:'trab2', tema:'trabalho', nivel:2, titulo:'Prazo cumprido, cliente informado',
+ { id:'trab2', r:'causa', tema:'trabalho', nivel:2, titulo:'Prazo cumprido, cliente informado',
    ideia:'Uma ação concluída antes de outra, um envio recente, o resultado e o próximo passo.',
-   nota:'O parágrafo usa três "passados" diferentes, e é a peça do meio que avisa qual é qual: <i>already</i> + past perfect = pronto <b>antes</b> de outro fato; <i>just</i> + present perfect = <b>acabou</b> de acontecer; <i>last week</i> + passado simples = fato <b>datado</b>. As conjunções seguem a mesma linha: quando, para quê, com que resultado.',
+   n:{ v:'<i>Finish → send → deliver → start</i>: verbos de conclusão e entrega, seguidos de um recomeço. Todos falam de etapas de um trabalho, por isso a sequência soa natural.',
+       t:'Três "passados" diferentes: past perfect (pronto <b>antes</b> de outro fato), present perfect (<b>acabou</b> de acontecer) e passado simples (fato <b>datado</b>). É o aspecto que diz qual é qual.',
+       e:'As peças são as que justificam cada tempo: <i>already</i> pede o perfect, <i>just</i> pede o present perfect, <i>last week</i> pede o passado simples. <i>Probably</i> e <i>next week</i> fecham no futuro.',
+       c:'<b>Tempo (when) + finalidade + consequência + finalidade</b>: quando ficou pronto, para que foi enviado e no que deu. É a combinação para prestar contas: fato, propósito e resultado.' },
    s:[
-    { p:'She', t:'past', a:'perfeito', v:'finish', col:'the report', mid:['already'], o2:{ k:'temp', cj:'when', op:'the payment' },
-      why:'Past perfect (<i>had finished</i>) para o que veio primeiro; passado simples depois de <i>when</i> para o que veio depois. <i>Already</i> fica entre <i>had</i> e o particípio.' },
-    { p:'She', t:'present', a:'perfeito', v:'send', col:'the report', mid:['just'], o2:{ k:'final', cj:'in order to', op:'inform the client' },
-      why:'<i>Just</i> + present perfect = ação recentíssima (em português, "acabou de"). A finalidade diz por que o envio importa.' },
-    { p:'She', t:'past', a:'simples', v:'deliver', col:'on time', ends:['last week'], o2:{ k:'cons', cj:'which is why', op:'a good deal' },
-      why:'<i>Which is why</i> retoma a oração inteira e apresenta o resultado: é um <i>so</i> mais enfático, sempre depois de vírgula.' },
-    { p:'She', t:'future', a:'simples', v:'start', mid:['probably'], ends:['next week'], o2:{ k:'final', cj:'to', op:'make progress' },
-      why:'O plano fecha o parágrafo: <i>probably</i> suaviza a previsão e <i>next week</i> dá a data.' }
+    { p:'She', t:'past', a:'perfeito', v:'finish', col:'the report', mid:['already'], o2:{ k:'temp', cj:'when', op:'the payment' }, why:'Past perfect (<i>had finished</i>) para o que veio primeiro; passado simples depois de <i>when</i> para o que veio depois. <i>Already</i> fica entre <i>had</i> e o particípio.' },
+    { p:'She', t:'present', a:'perfeito', v:'send', col:'the report', mid:['just'], o2:{ k:'final', cj:'in order to', op:'inform the client' }, why:'<i>Just</i> + present perfect = ação recentíssima (em português, "acabou de"). A finalidade diz por que o envio importa.' },
+    { p:'She', t:'past', a:'simples', v:'deliver', col:'on time', ends:['last week'], o2:{ k:'cons', cj:'which is why', op:'a good deal' }, why:'<i>Which is why</i> retoma a oração inteira e apresenta o resultado: é um <i>so</i> mais enfático, sempre depois de vírgula.' },
+    { p:'She', t:'future', a:'simples', v:'start', mid:['probably'], ends:['next week'], o2:{ k:'final', cj:'to', op:'make progress' }, why:'O plano fecha o parágrafo: <i>probably</i> suaviza a previsão e <i>next week</i> dá a data.' }
    ] },
- { id:'trab3', tema:'trabalho', nivel:3, titulo:'A negociação que quase não fechou',
+ { id:'trab3', r:'contraste', tema:'trabalho', nivel:3, titulo:'A negociação que quase não fechou',
    ideia:'Um impasse, uma revisão cuidadosa e a previsão de desfecho.',
-   nota:'A história tem três movimentos: <b>impasse</b> (<i>but</i> + negação), <b>reação</b> (<i>after that</i> + finalidade) e <b>previsão</b> (futuro com <i>probably</i> e <i>in the end</i>). As peças de sequência (<i>after that</i>, <i>in the end</i>) fazem o papel de dobradiças entre as frases, enquanto as conjunções ligam as orações dentro de cada frase.',
+   n:{ v:'<i>Negotiate</i> abre e volta na terceira frase, com outro objeto: a repetição mostra que o processo continua. <i>Review</i> e <i>sign</i> são as etapas que cercam a negociação.',
+       t:'Dois passados simples para o que já aconteceu e dois futuros para o que se espera. Aspecto simples em tudo: são etapas completas de um processo.',
+       e:'<i>At the office yesterday</i> (onde → quando), <i>carefully</i> depois do objeto, e as peças de sequência <i>after that</i> e <i>in the end</i> como dobradiças entre as frases. <i>Probably</i> marca a incerteza do desfecho.',
+       c:'<b>Contraste + finalidade + finalidade</b>, com sequência por fora: o impasse (<i>but</i>), a reação e a nova tentativa. É o desenho de qualquer relato de problema e solução.' },
    s:[
-    { p:'They', t:'past', a:'simples', v:'negotiate', col:'the price', ends:['at the office','yesterday'], o2:{ k:'adv', cj:'but', v:'accept', vneg:true },
-      why:'<i>But</i> coordena duas orações de mesmo peso e quebra a expectativa. Onde → quando no fim da primeira oração.' },
-    { p:'They', t:'past', a:'simples', v:'review', col:'the contract', ends:['carefully','after that'], o2:{ k:'final', cj:'in order to', op:'check the details' },
-      why:'A sequência abre a frase; o modo fica depois do objeto. Modo e finalidade se reforçam: com cuidado, para conferir os detalhes.' },
-    { p:'They', t:'future', a:'simples', v:'negotiate', col:'a better deal', ends:['next week'], o2:{ k:'final', cj:'in order to', op:'reach an agreement' },
-      why:'O mesmo verbo volta, agora no futuro e com outro objeto: a repetição mostra que a negociação continua.' },
-    { p:'They', t:'future', a:'simples', v:'sign', col:'a contract', mid:['probably'], ends:['in the end'],
-      why:'Frase curta de fecho, sem 2ª oração: <i>probably</i> dá a incerteza e <i>in the end</i> encerra a história.' }
+    { p:'They', t:'past', a:'simples', v:'negotiate', col:'the price', ends:['at the office','yesterday'], o2:{ k:'adv', cj:'but', v:'accept', vneg:true }, why:'<i>But</i> coordena duas orações de mesmo peso e quebra a expectativa. Onde → quando no fim da primeira oração.' },
+    { p:'They', t:'past', a:'simples', v:'review', col:'the contract', ends:['carefully','after that'], o2:{ k:'final', cj:'in order to', op:'check the details' }, why:'A sequência abre a frase; o modo fica depois do objeto. Modo e finalidade se reforçam: com cuidado, para conferir os detalhes.' },
+    { p:'They', t:'future', a:'simples', v:'negotiate', col:'a better deal', ends:['next week'], o2:{ k:'final', cj:'in order to', op:'reach an agreement' }, why:'O mesmo verbo volta, agora no futuro e com outro objeto: a repetição mostra que a negociação continua.' },
+    { p:'They', t:'future', a:'simples', v:'sign', col:'a contract', mid:['probably'], ends:['in the end'], why:'Frase curta de fecho, sem 2ª oração: <i>probably</i> dá a incerteza e <i>in the end</i> encerra a história.' }
    ] },
- /* ===================== SAÚDE ===================== */
- { id:'sau1', tema:'saúde', nivel:1, titulo:'De cansado a disposto',
+ { id:'cau1', r:'causa', tema:'trabalho', nivel:2, titulo:'Trabalho que rende',
+   ideia:'Motivos e resultados alternados: por que ele faz e no que dá.',
+   n:{ v:'<i>Finish, prepare, manage, improve</i>: cumprir, preparar, liderar, melhorar. A sequência mostra uma carreira subindo.',
+       t:'Presente simples (hábito), passado simples (um caso), presente simples (situação atual) e present perfect (melhora recente).',
+       e:'<i>Always… on time</i> descreve a constância; <i>carefully last week</i> segue como → quando; <i>now</i> marca a nova posição; <i>lately</i> pede o perfect.',
+       c:'<b>Causa + consequência + causa + consequência</b>: motivo e resultado se alternam, cada par numa frase. <i>Since</i> na frente trata o motivo como já sabido, e <i>which is why</i> dá ênfase ao efeito. Variar as conjunções de causa e de efeito é o que impede o texto de soar repetitivo.' },
+   s:[
+    { p:'He', t:'present', a:'simples', v:'finish', col:'the report', mid:['always'], ends:['on time'], o2:{ k:'caus', cj:'because', op:'a better career' }, why:'Hábito + motivo. <i>Because</i> não leva vírgula.' },
+    { p:'He', t:'past', a:'simples', v:'prepare', col:'a presentation', ends:['carefully','last week'], o2:{ k:'cons', cj:'so', op:'more money' }, why:'Um caso e o seu resultado: vírgula antes de <i>so</i>.' },
+    { p:'He', t:'present', a:'simples', v:'manage', col:'a team', mid:['now'], o2:{ k:'caus', cj:'since', op:'the job' }, why:'<i>Since</i> causal abre a frase com um motivo que o leitor já aceita.' },
+    { p:'He', t:'present', a:'perfeito', v:'improve', col:'the process', ends:['lately'], o2:{ k:'cons', cj:'which is why', op:'more' }, why:'<i>Which is why</i> retoma a oração inteira e destaca o efeito.' }
+   ] },
+ { id:'con3', r:'contraste', tema:'trabalho', nivel:2, titulo:'Trabalhar sem parar',
+   ideia:'Um desequilíbrio descrito de três jeitos e a decisão de corrigi-lo.',
+   n:{ v:'<i>Work</i> e <i>rest</i> são opostos e se enfrentam em duas frases; <i>manage</i> explica o peso; <i>rest</i> volta no fim como solução.',
+       t:'Presente simples (regra), present perfect continuous (o que vem acontecendo) e futuro (a decisão).',
+       e:'<i>Always</i> generaliza; <i>lately</i> acompanha o perfect continuous; <i>this weekend</i> data a mudança.',
+       c:'<b>Contraste (but) + concessão + contraste (yet) + finalidade</b>: o mesmo conflito aparece como oposição simples, como "apesar de" e como surpresa. Só depois de bem estabelecido o problema é que a finalidade apresenta a saída.' },
+   s:[
+    { p:'He', t:'present', a:'simples', v:'work', mid:['always'], o2:{ k:'adv', cj:'but', v:'rest', vneg:true }, why:'Oposição direta entre dois verbos contrários.' },
+    { p:'He', t:'present', a:'simples', v:'manage', col:'a team', o2:{ k:'conc', cj:'although', op:'stressful' }, why:'A concessão explica por que o descanso falta.' },
+    { p:'He', t:'present', a:'perfeito_continuo', v:'work', col:'from home', ends:['lately'], o2:{ k:'adv', cj:'yet', v:'rest', vneg:true }, why:'As duas orações no perfect continuous: o trabalho e a falta de descanso vêm juntos até agora.' },
+    { p:'He', t:'future', a:'simples', v:'rest', ends:['this weekend'], o2:{ k:'final', cj:'to', op:'recover energy' }, why:'A solução, com data e objetivo.' }
+   ] },
+ { id:'arg3', r:'argumento', tema:'trabalho', nivel:2, titulo:'Como combinado',
+   ideia:'Duas entregas conforme o acordo e o ponto que elas provam.',
+   n:{ v:'<i>Finish</i> e <i>deliver</i>: concluir e entregar.',
+       t:'Passado simples para os fatos e presente simples para a regra que eles provam.',
+       e:'<i>Last week</i> e <i>on time</i> nos fatos; <i>always</i> na regra.',
+       c:'<b>Conformativa + conformativa + predicativa</b>: <i>as we planned</i> e <i>just as we agreed</i> amarram os fatos ao combinado, e <i>The point is that…</i> tira a lição. É a combinação para mostrar confiabilidade: fiz o que disse, e isso é o que importa.' },
+   s:[
+    { p:'We', t:'past', a:'simples', v:'finish', col:'the report', ends:['last week'], o2:{ k:'conf', cj:'as', op:'the plan' }, why:'Fato + conformidade com o plano.' },
+    { p:'We', t:'past', a:'simples', v:'deliver', col:'on time', o2:{ k:'conf', cj:'just as', op:'the agreement' }, why:'<i>Just as</i> reforça: exatamente como combinado.' },
+    { p:'We', t:'present', a:'simples', v:'deliver', col:'on time', mid:['always'], o2:{ k:'pred', cj:'… is that', op:'point' }, why:'Dos fatos para a regra: o mesmo verbo passa ao presente com <i>always</i>.' }
+   ] },
+ { id:'sau1', r:'contraste', tema:'saúde', nivel:1, titulo:'De cansado a disposto',
    ideia:'Um antes e um depois: o passado ruim, os hábitos novos e os seus motivos.',
-   nota:'O contraste é feito só com o tempo verbal e duas peças: <i>never… last year</i> (passado) contra <i>now</i> (presente). Depois, cada hábito novo ganha uma razão diferente: objetivo (<i>in order to</i>), motivo (<i>because</i>) e concessão (<i>although</i>). <i>Also</i> avisa que a lista de hábitos continua.',
+   n:{ v:'<i>Sleep, train, eat, run</i>: os quatro pilares de uma rotina de saúde. Verbos simples, do dia a dia, para que a atenção fique nas peças e nas ligações.',
+       t:'Um passado simples contra três presentes simples: o "antes" é um fato encerrado, o "depois" é hábito.',
+       e:'<i>Never… last year</i> pinta o passado; <i>now</i> marca a virada; <i>at the gym three times a week</i> segue onde → quando; <i>also</i> soma um hábito ao outro; <i>every morning</i> fecha.',
+       c:'<b>Finalidade + causa + concessão</b>: três razões diferentes para três hábitos (objetivo, motivo e "apesar de"). Mostra que hábito bom não se explica só com <i>because</i>.' },
    s:[
-    { p:'I', t:'past', a:'simples', v:'sleep', col:'well', mid:['never'], ends:['last year'],
-      why:'Frase simples para abrir. <i>Never</i> antes do verbo já nega a frase (não use <i>didn\'t</i> junto).' },
-    { p:'I', t:'present', a:'simples', v:'train', mid:['now'], ends:['at the gym','three times a week'], o2:{ k:'final', cj:'in order to', op:'stay in shape' },
-      why:'<i>Now</i> marca a mudança. Lugar antes de periodicidade: <i>at the gym three times a week</i>.' },
-    { p:'I', t:'present', a:'simples', v:'eat', col:'healthy food', mid:['also'], o2:{ k:'caus', cj:'because', op:'more energy' },
-      why:'<i>Also</i> (antes do verbo) soma este hábito ao anterior. A causal dá o motivo.' },
-    { p:'I', t:'present', a:'simples', v:'run', col:'in the park', ends:['every morning'], o2:{ k:'conc', cj:'although', op:'tiring' },
-      why:'A concessão mostra que o hábito se mantém apesar do custo. Com <i>although</i> na frente, a vírgula é obrigatória.' }
+    { p:'I', t:'past', a:'simples', v:'sleep', col:'well', mid:['never'], ends:['last year'], why:'Frase simples para abrir. <i>Never</i> antes do verbo já nega a frase (não use <i>didn\'t</i> junto).' },
+    { p:'I', t:'present', a:'simples', v:'train', mid:['now'], ends:['at the gym','three times a week'], o2:{ k:'final', cj:'in order to', op:'stay in shape' }, why:'<i>Now</i> marca a mudança. Lugar antes de periodicidade: <i>at the gym three times a week</i>.' },
+    { p:'I', t:'present', a:'simples', v:'eat', col:'healthy food', mid:['also'], o2:{ k:'caus', cj:'because', op:'more energy' }, why:'<i>Also</i> (antes do verbo) soma este hábito ao anterior. A causal dá o motivo.' },
+    { p:'I', t:'present', a:'simples', v:'run', col:'in the park', ends:['every morning'], o2:{ k:'conc', cj:'although', op:'tiring' }, why:'A concessão mostra que o hábito se mantém apesar do custo. Com <i>although</i> na frente, a vírgula é obrigatória.' }
    ] },
- { id:'sau2', tema:'saúde', nivel:2, titulo:'O plano da maratona',
+ { id:'sau2', r:'condicao', tema:'saúde', nivel:2, titulo:'O plano da maratona',
    ideia:'Um treino em andamento, um hábito, uma meta com condição e a intensidade do esforço.',
-   nota:'O present perfect continuous mostra o esforço que <b>vem acontecendo</b>; o presente simples, o que é <b>rotina</b>; o futuro, a <b>meta</b>. A última frase muda de lógica: em vez de motivo ou objetivo, usa <i>so… that</i> para medir a intensidade pelo seu resultado.',
+   n:{ v:'<i>Train</i> e <i>run</i> se revezam: o treino é o meio, a corrida é o fim. A meta (<i>run a marathon</i>) usa o mesmo verbo do hábito (<i>runs in the park</i>), ligando rotina e objetivo.',
+       t:'Present perfect <b>continuous</b> para o esforço que vem acontecendo, presente simples para a rotina, futuro para a meta. O contínuo destaca a duração do treino, não o resultado.',
+       e:'<i>Lately</i> acompanha o perfect continuous; <i>usually… in the park every morning</i> enche a frase de hábito com três encaixes; <i>next year</i> data a meta.',
+       c:'<b>Causa + finalidade + condição + consequência intensiva</b>: por que treina, para que corre, do que a meta depende e quão forte é o esforço. <i>So… that</i> é o recurso para dizer "tanto que", raro em iniciantes e muito expressivo.' },
    s:[
-    { p:'She', t:'present', a:'perfeito_continuo', v:'train', col:'hard', ends:['lately'], o2:{ k:'caus', cj:'because', op:'more practice' },
-      why:'<i>Has been training</i> + <i>lately</i>: atividade recente que continua. A causal fica no presente simples porque o motivo vale agora.' },
-    { p:'She', t:'present', a:'simples', v:'run', mid:['usually'], ends:['in the park','every morning'], o2:{ k:'final', cj:'to', op:'clear {p} mind' },
-      why:'Três encaixes numa frase só: frequência antes do verbo, depois lugar e periodicidade no fim.' },
-    { p:'She', t:'future', a:'simples', v:'run', col:'a marathon', ends:['next year'], o2:{ k:'cond', cj:'if', op:'to win' },
-      why:'Meta com data (<i>next year</i>) e condição real: <i>will</i> na principal, presente depois de <i>if</i>.' },
-    { p:'She', t:'present', a:'simples', v:'train', o2:{ k:'csq', cj:'so … that', op:'stronger' },
-      why:'<i>So</i> + advérbio + <i>that</i>: a intensidade é tanta que produz o resultado. Sem vírgula antes de <i>that</i>.' }
+    { p:'She', t:'present', a:'perfeito_continuo', v:'train', col:'hard', ends:['lately'], o2:{ k:'caus', cj:'because', op:'more practice' }, why:'<i>Has been training</i> + <i>lately</i>: atividade recente que continua. A causal fica no presente simples porque o motivo vale agora.' },
+    { p:'She', t:'present', a:'simples', v:'run', mid:['usually'], ends:['in the park','every morning'], o2:{ k:'final', cj:'to', op:'clear {p} mind' }, why:'Três encaixes numa frase só: frequência antes do verbo, depois lugar e periodicidade no fim.' },
+    { p:'She', t:'future', a:'simples', v:'run', col:'a marathon', ends:['next year'], o2:{ k:'cond', cj:'if', op:'to win' }, why:'Meta com data (<i>next year</i>) e condição real: <i>will</i> na principal, presente depois de <i>if</i>.' },
+    { p:'She', t:'present', a:'simples', v:'train', o2:{ k:'csq', cj:'so … that', op:'stronger' }, why:'<i>So</i> + advérbio + <i>that</i>: a intensidade é tanta que produz o resultado. Sem vírgula antes de <i>that</i>.' }
    ] },
- { id:'sau3', tema:'saúde', nivel:2, titulo:'Energia para o dia',
+ { id:'sau3', r:'objetivo', tema:'saúde', nivel:2, titulo:'Energia para o dia',
    ideia:'Três hábitos com as suas finalidades e um resultado que já aparece.',
-   nota:'Parágrafo de rotina: tudo no presente simples, exceto o resultado, que vai para o present perfect continuous (<i>have been sleeping</i>) porque é um efeito que vem se acumulando. As peças de periodicidade (<i>every day</i>, <i>twice a week</i>) e de frequência (<i>usually</i>) se revezam para o texto não repetir a mesma marca de hábito.',
+   n:{ v:'<i>Wake, rest, train, sleep</i>: um dia inteiro, da manhã à noite. A ordem dos verbos é a ordem do dia.',
+       t:'Presente simples nas rotinas e present perfect continuous no fecho, porque o bom sono é um <b>efeito que vem se acumulando</b>.',
+       e:'As marcas de hábito se revezam para não repetir: <i>every day</i>, <i>usually</i>, <i>twice a week</i>. <i>Lately</i> aparece só com o perfect continuous.',
+       c:'<b>Finalidade + finalidade + concessão</b> e um fecho sem 2ª oração: dois objetivos, um custo admitido e o resultado. Terminar com uma frase curta dá ritmo ao parágrafo.' },
    s:[
-    { p:'I', t:'present', a:'simples', v:'wake', col:'early', ends:['every day'], o2:{ k:'final', cj:'in order to', op:'exercise before work' },
-      why:'Periodicidade no fim da oração; a finalidade vem depois dela.' },
-    { p:'I', t:'present', a:'simples', v:'rest', col:'after lunch', mid:['usually'], o2:{ k:'final', cj:'to', op:'recover energy' },
-      why:'Aqui o hábito é marcado no meio (<i>usually</i>), não no fim: mesma ideia, outro encaixe.' },
-    { p:'I', t:'present', a:'simples', v:'train', ends:['at the gym','twice a week'], o2:{ k:'conc', cj:'even though', op:'tiring' },
-      why:'Lugar antes de periodicidade. A concessão admite o custo sem desfazer o hábito.' },
-    { p:'I', t:'present', a:'perfeito_continuo', v:'sleep', col:'well', ends:['lately'],
-      why:'Fecho curto, sem 2ª oração. <i>Lately</i> + present perfect continuous: o resultado vem se repetindo até agora.' }
+    { p:'I', t:'present', a:'simples', v:'wake', col:'early', ends:['every day'], o2:{ k:'final', cj:'in order to', op:'exercise before work' }, why:'Periodicidade no fim da oração; a finalidade vem depois dela.' },
+    { p:'I', t:'present', a:'simples', v:'rest', col:'after lunch', mid:['usually'], o2:{ k:'final', cj:'to', op:'recover energy' }, why:'Aqui o hábito é marcado no meio (<i>usually</i>), não no fim: mesma ideia, outro encaixe.' },
+    { p:'I', t:'present', a:'simples', v:'train', ends:['at the gym','twice a week'], o2:{ k:'conc', cj:'even though', op:'tiring' }, why:'Lugar antes de periodicidade. A concessão admite o custo sem desfazer o hábito.' },
+    { p:'I', t:'present', a:'perfeito_continuo', v:'sleep', col:'well', ends:['lately'], why:'Fecho curto, sem 2ª oração. <i>Lately</i> + present perfect continuous: o resultado vem se repetindo até agora.' }
    ] },
- /* ===================== FINANÇAS ===================== */
- { id:'fin1', tema:'finanças', nivel:1, titulo:'Contas em dia',
+ { id:'exp3', r:'explicar', tema:'saúde', nivel:1, titulo:'Motivo e efeito',
+   ideia:'Um hábito explicado, outro com o seu efeito e o resultado geral.',
+   n:{ v:'<i>Eat, train, sleep</i>: alimentação, exercício e descanso.',
+       t:'Presente simples nos hábitos e present perfect continuous no efeito que vem se acumulando.',
+       e:'<i>Every day</i> marca o primeiro hábito; <i>also</i> soma o segundo; <i>at the gym three times a week</i> segue onde → quando; <i>lately</i> acompanha o perfect continuous do fecho.',
+       c:'<b>Explicação + conclusão</b> em escala pequena: um hábito com o seu fundamento (<i>for</i>) e outro com o seu efeito (<i>so</i>). Bom primeiro contato com o par antes de usá-lo em argumentos maiores.' },
+   s:[
+    { p:'I', t:'present', a:'simples', v:'eat', col:'healthy food', ends:['every day'], o2:{ k:'expl', cj:'for', op:'more energy' }, why:'Hábito + explicação: a vírgula antes de <i>for</i> é obrigatória.' },
+    { p:'I', t:'present', a:'simples', v:'train', mid:['also'], ends:['at the gym','three times a week'], o2:{ k:'cons', cj:'so', op:'stronger' }, why:'<i>Also</i> soma o segundo hábito; <i>so</i> mostra o efeito. Lugar antes de periodicidade.' },
+    { p:'I', t:'present', a:'perfeito_continuo', v:'sleep', col:'well', ends:['lately'], why:'Fecho curto: o efeito geral, que vem se repetindo até agora.' }
+   ] },
+ { id:'cau2', r:'causa', tema:'saúde', nivel:1, titulo:'Por que eu me cuido',
+   ideia:'Dois hábitos com os seus motivos e um efeito.',
+   n:{ v:'<i>Listen, cook, eat</i>: descanso e alimentação, as duas bases do autocuidado.',
+       t:'Tudo no presente simples: são hábitos e os seus efeitos permanentes.',
+       e:'<i>Every evening</i> e <i>usually… at home</i> dão a frequência e o lugar; a última frase fica sem peças para o efeito aparecer limpo.',
+       c:'<b>Causa + causa + consequência</b>: dois motivos ditos de formas diferentes (<i>because</i> no fim, <i>since</i> no começo) levam a um efeito. A posição do motivo muda a ênfase: no fim ele é a novidade, no começo é o ponto de partida.' },
+   s:[
+    { p:'I', t:'present', a:'simples', v:'listen', col:'to music', ends:['every evening'], o2:{ k:'caus', cj:'because', op:'more rest' }, why:'Motivo no fim da frase, como informação nova.' },
+    { p:'I', t:'present', a:'simples', v:'cook', col:'dinner', mid:['usually'], ends:['at home'], o2:{ k:'caus', cj:'since', op:'a healthy life' }, why:'Motivo na frente, com vírgula: ele prepara a frase principal.' },
+    { p:'I', t:'present', a:'simples', v:'eat', col:'healthy food', o2:{ k:'cons', cj:'which is why', op:'healthier' }, why:'O efeito fecha o parágrafo.' }
+   ] },
+ { id:'prop3', r:'proporcao', tema:'saúde', nivel:1, titulo:'Treino e medida',
+   ideia:'Uma proporção simples e duas comparações.',
+   n:{ v:'<i>Train</i> e <i>run</i> para o esforço, <i>improve</i> para o ganho.',
+       t:'Presente simples: hábito e regra.',
+       e:'Só o lugar <i>in the park</i>. As comparações já trazem o modo e a frequência.',
+       c:'<b>Proporção + igualdade + superioridade</b>: primeiro a regra (quanto mais, mais), depois dois jeitos de se comparar com alguém. É o primeiro degrau para falar de desempenho.' },
+   s:[
+    { p:'I', t:'present', a:'simples', v:'train', o2:{ k:'prop', cj:'the more … the more', v:'improve' }, why:'A regra geral abre o parágrafo.' },
+    { p:'I', t:'present', a:'simples', v:'train', o2:{ k:'cmp', cj:'as … as', op:'seriously' }, why:'Igualdade: <i>as seriously as you do</i>.' },
+    { p:'I', t:'present', a:'simples', v:'run', col:'in the park', o2:{ k:'cmp', cj:'than', op:'often' }, why:'Superioridade: <i>more often than you do</i>.' }
+   ] },
+ { id:'arg1', r:'argumento', tema:'saúde', nivel:2, titulo:'O problema e a saída',
+   ideia:'Nomear o problema, afirmar o que é evidente e apontar o plano.',
+   n:{ v:'<i>Sleep, need, rest</i>: o sintoma, a necessidade e o remédio.',
+       t:'Presente simples para o diagnóstico e futuro para o plano.',
+       e:'<i>Never</i> dá a gravidade; <i>this weekend</i> data a solução.',
+       c:'<b>Predicativa + subjetiva + conformativa</b>: <i>The problem is that…</i> nomeia o problema, <i>It is clear that…</i> afirma algo como evidente e <i>as we planned</i> liga a ação a um acordo. São as estruturas de quem apresenta um caso: diagnóstico, evidência e encaminhamento.' },
+   s:[
+    { p:'She', t:'present', a:'simples', v:'sleep', col:'well', mid:['never'], o2:{ k:'pred', cj:'… is that', op:'problem' }, why:'A oração inteira explica qual é o problema.' },
+    { p:'She', t:'present', a:'simples', v:'need', col:'more time', o2:{ k:'subj', cj:'It is … that', op:'clear' }, why:'<i>It is clear that</i> + frase: o <i>it</i> só guarda o lugar do sujeito, que é a oração.' },
+    { p:'She', t:'future', a:'simples', v:'rest', ends:['this weekend'], o2:{ k:'conf', cj:'as', op:'the plan' }, why:'<i>As we planned</i> = conforme planejamos. Sem vírgula.' }
+   ] },
+ { id:'fin1', r:'objetivo', tema:'finanças', nivel:1, titulo:'Contas em dia',
    ideia:'Um hábito financeiro, um segundo hábito com ressalva e o plano que eles permitem.',
-   nota:'Dois hábitos no presente simples preparam um plano no futuro. <i>Always</i> e <i>also</i> ocupam o meio da frase em encaixes diferentes (frequência e foco), por isso não competem. As três conjunções formam um raciocínio: fazemos X <b>para</b> evitar um problema, fazemos Y <b>embora</b> haja risco, e faremos Z <b>para</b> garantir o futuro.',
+   n:{ v:'<i>Pay</i> e <i>invest</i>: primeiro cumprir obrigações, depois fazer o dinheiro render. <i>Invest</i> se repete no futuro para mostrar o hábito virando plano.',
+       t:'Dois presentes simples (hábitos) e um futuro (plano). Aspecto simples: regras de conduta, não processos.',
+       e:'<i>Always</i> (frequência) e <i>also</i> (foco) ocupam encaixes diferentes do meio, por isso convivem no mesmo texto. <i>On time</i> e <i>next year</i> respondem "quando".',
+       c:'<b>Finalidade + concessão + finalidade</b>: faço X para evitar um problema, faço Y embora haja risco, farei Z para garantir o futuro. É o raciocínio de quem justifica decisões.' },
    s:[
-    { p:'We', t:'present', a:'simples', v:'pay', col:'the bill', mid:['always'], ends:['on time'], o2:{ k:'final', cj:'in order to', op:'avoid debt' },
-      why:'<i>Always</i> antes do verbo, <i>on time</i> depois do objeto. A finalidade justifica o hábito.' },
-    { p:'We', t:'present', a:'simples', v:'invest', col:'wisely', mid:['also'], o2:{ k:'conc', cj:'although', op:'risky' },
-      why:'<i>Also</i> liga esta frase à anterior. A concessão reconhece o risco e o modo (<i>wisely</i>) responde a ele.' },
-    { p:'We', t:'future', a:'simples', v:'invest', col:'money', ends:['next year'], o2:{ k:'final', cj:'to', op:'secure the future' },
-      why:'O mesmo verbo passa do presente para o futuro: o hábito vira plano, com data.' }
+    { p:'We', t:'present', a:'simples', v:'pay', col:'the bill', mid:['always'], ends:['on time'], o2:{ k:'final', cj:'in order to', op:'avoid debt' }, why:'<i>Always</i> antes do verbo, <i>on time</i> depois do objeto. A finalidade justifica o hábito.' },
+    { p:'We', t:'present', a:'simples', v:'invest', col:'wisely', mid:['also'], o2:{ k:'conc', cj:'although', op:'risky' }, why:'<i>Also</i> liga esta frase à anterior. A concessão reconhece o risco e o modo (<i>wisely</i>) responde a ele.' },
+    { p:'We', t:'future', a:'simples', v:'invest', col:'money', ends:['next year'], o2:{ k:'final', cj:'to', op:'secure the future' }, why:'O mesmo verbo passa do presente para o futuro: o hábito vira plano, com data.' }
    ] },
- { id:'fin2', tema:'finanças', nivel:2, titulo:'O erro do ano passado',
+ { id:'fin2', r:'contraste', tema:'finanças', nivel:2, titulo:'O erro do ano passado',
    ideia:'Um contraste no passado e a mudança de comportamento que veio dele.',
-   nota:'O parágrafo é um "antes e depois". O <b>antes</b> usa passado simples com <i>last year</i> e um contraste (<i>but</i> + negação). O <b>depois</b> usa presente simples com <i>now</i>, e fecha no present perfect com <i>this year</i>: um período que ainda não acabou, por isso não cabe o passado simples.',
+   n:{ v:'<i>Spend</i> e <i>save</i> são opostos e abrem o texto em conflito; <i>plan, buy, pay</i> mostram o novo comportamento em ações concretas.',
+       t:'Passado simples (<i>last year</i>, período encerrado), presente simples (rotina nova) e present perfect (<i>this year</i>, período que <b>ainda não acabou</b>).',
+       e:'<i>Last year</i> contra <i>now</i> faz o "antes e depois". <i>Every month</i> confirma a rotina, <i>online</i> ocupa o lugar e <i>always… this year</i> fecha.',
+       c:'<b>Contraste + finalidade + finalidade</b>: o erro vem com <i>but</i>, a correção vem com objetivos. Contraste seguido de finalidade é a fórmula para contar uma mudança de atitude.' },
    s:[
-    { p:'They', t:'past', a:'simples', v:'spend', col:'a fortune', ends:['last year'], o2:{ k:'adv', cj:'but', v:'save', vneg:true, c2:'none' },
-      why:'<i>Spend</i> e <i>save</i> são opostos: <i>but</i> + negação deixa o contraste explícito.' },
-    { p:'They', t:'present', a:'simples', v:'plan', col:'the budget', mid:['now'], ends:['every month'], o2:{ k:'final', cj:'in order to', op:'avoid problems' },
-      why:'<i>Now</i> marca a virada; <i>every month</i> mostra que virou rotina.' },
-    { p:'They', t:'present', a:'simples', v:'buy', col:'groceries', ends:['online'], o2:{ k:'final', cj:'to', op:'save money' },
-      why:'Um exemplo concreto do novo comportamento. <i>Online</i> ocupa o encaixe de lugar.' },
-    { p:'They', t:'present', a:'perfeito', v:'pay', col:'the rent', mid:['always'], ends:['this year'],
-      why:'<i>This year</i> ainda está em curso, então pede present perfect. <i>Always</i> fica entre <i>have</i> e o particípio.' }
+    { p:'They', t:'past', a:'simples', v:'spend', col:'a fortune', ends:['last year'], o2:{ k:'adv', cj:'but', v:'save', vneg:true, c2:'none' }, why:'<i>Spend</i> e <i>save</i> são opostos: <i>but</i> + negação deixa o contraste explícito.' },
+    { p:'They', t:'present', a:'simples', v:'plan', col:'the budget', mid:['now'], ends:['every month'], o2:{ k:'final', cj:'in order to', op:'avoid problems' }, why:'<i>Now</i> marca a virada; <i>every month</i> mostra que virou rotina.' },
+    { p:'They', t:'present', a:'simples', v:'buy', col:'groceries', ends:['online'], o2:{ k:'final', cj:'to', op:'save money' }, why:'Um exemplo concreto do novo comportamento. <i>Online</i> ocupa o encaixe de lugar.' },
+    { p:'They', t:'present', a:'perfeito', v:'pay', col:'the rent', mid:['always'], ends:['this year'], why:'<i>This year</i> ainda está em curso, então pede present perfect. <i>Always</i> fica entre <i>have</i> e o particípio.' }
    ] },
- { id:'fin3', tema:'finanças', nivel:3, titulo:'Gastar bem, investir sempre',
+ { id:'fin3', r:'causa', tema:'finanças', nivel:3, titulo:'Gastar bem, investir sempre',
    ideia:'Critério de gasto, ordem de pagamentos, investimento com risco e uma previsão.',
-   nota:'Cada frase usa uma ligação diferente e um tempo que combina com ela: <b>motivo</b> no presente, <b>anterioridade</b> no past perfect, <b>concessão</b> com hábito e <b>previsão</b> no futuro. É um bom exemplo de como a conjunção escolhe o tempo verbal: <i>when</i> depois de past perfect pede passado simples; <i>although</i> com hábito fica no presente.',
+   n:{ v:'<i>Spend, pay, invest</i>: gastar, quitar, aplicar. <i>Invest</i> aparece duas vezes, como hábito e como plano.',
+       t:'Presente simples (critério atual), past perfect (o que já estava pago <b>antes</b>), presente simples (hábito) e futuro (previsão).',
+       e:'<i>Now</i> e <i>already</i> ficam no meio; <i>every month</i> marca o hábito; <i>probably… next year</i> gradua e data a previsão.',
+       c:'<b>Causa + tempo + concessão + finalidade</b>: aqui se vê a conjunção escolhendo o tempo verbal. <i>When</i> depois de past perfect pede passado simples; <i>although</i> com hábito fica no presente.' },
    s:[
-    { p:'We', t:'present', a:'simples', v:'spend', col:'wisely', mid:['now'], o2:{ k:'caus', cj:'because', op:'good quality' },
-      why:'<i>Now</i> antes do verbo, modo depois dele. A causal dá o critério da escolha.' },
-    { p:'We', t:'past', a:'perfeito', v:'pay', col:'the bill', mid:['already'], o2:{ k:'temp', cj:'when', op:'the payment' },
-      why:'Duas ações passadas: a mais antiga em past perfect (<i>had paid</i>), a mais recente em passado simples depois de <i>when</i>.' },
-    { p:'We', t:'present', a:'simples', v:'invest', col:'in stocks', ends:['every month'], o2:{ k:'conc', cj:'although', op:'risky' },
-      why:'A periodicidade confirma o hábito, e a concessão mostra que ele resiste ao risco.' },
-    { p:'We', t:'future', a:'simples', v:'invest', col:'money', mid:['probably'], ends:['next year'], o2:{ k:'final', cj:'to', op:'build wealth' },
-      why:'Previsão com certeza moderada (<i>probably</i>), data e objetivo: três informações em encaixes diferentes.' }
+    { p:'We', t:'present', a:'simples', v:'spend', col:'wisely', mid:['now'], o2:{ k:'caus', cj:'because', op:'good quality' }, why:'<i>Now</i> antes do verbo, modo depois dele. A causal dá o critério da escolha.' },
+    { p:'We', t:'past', a:'perfeito', v:'pay', col:'the bill', mid:['already'], o2:{ k:'temp', cj:'when', op:'the payment' }, why:'Duas ações passadas: a mais antiga em past perfect (<i>had paid</i>), a mais recente em passado simples depois de <i>when</i>.' },
+    { p:'We', t:'present', a:'simples', v:'invest', col:'in stocks', ends:['every month'], o2:{ k:'conc', cj:'although', op:'risky' }, why:'A periodicidade confirma o hábito, e a concessão mostra que ele resiste ao risco.' },
+    { p:'We', t:'future', a:'simples', v:'invest', col:'money', mid:['probably'], ends:['next year'], o2:{ k:'final', cj:'to', op:'build wealth' }, why:'Previsão com certeza moderada (<i>probably</i>), data e objetivo: três informações em encaixes diferentes.' }
    ] },
- /* ===================== TECNOLOGIA ===================== */
- { id:'tec1', tema:'tecnologia', nivel:1, titulo:'Antes de lançar',
+ { id:'con1', r:'contraste', tema:'finanças', nivel:2, titulo:'Caro, mas resolvido',
+   ideia:'Uma compra apesar do preço, uma contradição e o ajuste.',
+   n:{ v:'<i>Buy, spend, pay</i>: comprar, gastar, pagar.',
+       t:'Passado simples para o episódio e presente simples para a situação e a regra nova.',
+       e:'<i>Yesterday</i> data a compra; <i>rarely</i> e <i>now… on time</i> descrevem o comportamento.',
+       c:'<b>Concessão + contraste (yet) + consequência</b>: <i>although</i> admite um obstáculo, <i>yet</i> aponta uma contradição inesperada e <i>so</i> mostra a saída. <i>Yet</i> é mais forte que <i>but</i>: diz que o segundo fato surpreende.' },
+   s:[
+    { p:'We', t:'past', a:'simples', v:'buy', col:'a gift', ends:['yesterday'], o2:{ k:'conc', cj:'although', op:'expensive' }, why:'A concessão abre a frase: o preço não impediu a compra.' },
+    { p:'We', t:'present', a:'simples', v:'spend', col:'money', mid:['rarely'], o2:{ k:'adv', cj:'yet', v:'save', vneg:true }, why:'<i>Yet</i>, depois de vírgula, marca o que não bate com o esperado.' },
+    { p:'We', t:'present', a:'simples', v:'pay', col:'the bill', mid:['now'], ends:['on time'], o2:{ k:'cons', cj:'so', op:'a good deal' }, why:'O ajuste e o seu resultado.' }
+   ] },
+ { id:'prop2', r:'proporcao', tema:'finanças', nivel:3, titulo:'Menos gasto, mais sobra',
+   ideia:'Proporção inversa, intensidade e comparação de superioridade.',
+   n:{ v:'<i>Spend</i> contra <i>save</i>, <i>work</i> ligado a <i>earn</i>, e <i>invest</i> como hábito.',
+       t:'Presente simples em tudo: são regras pessoais.',
+       e:'Só o modo <i>wisely</i>. As quantidades (<i>the less</i>, <i>so much</i>, <i>more often</i>) fazem o papel das peças.',
+       c:'<b>Proporção inversa + consequência intensiva + comparação (than)</b>: <i>the less… the more</i> liga duas coisas que andam em sentidos opostos. <i>So much that</i> intensifica o verbo, e não um advérbio. E <i>more often than</i> compara frequência.' },
+   s:[
+    { p:'I', t:'present', a:'simples', v:'spend', o2:{ k:'prop', cj:'the less … the more', v:'save' }, why:'Proporção inversa: menos de um lado, mais do outro.' },
+    { p:'I', t:'present', a:'simples', v:'work', o2:{ k:'csq', cj:'so much that', op:'more money' }, why:'<i>So much that</i> mede o verbo pela consequência.' },
+    { p:'I', t:'present', a:'simples', v:'invest', col:'wisely', o2:{ k:'cmp', cj:'than', op:'often' }, why:'<i>More often than</i> + sujeito + auxiliar.' }
+   ] },
+ { id:'tec1', r:'sequencia', tema:'tecnologia', nivel:1, titulo:'Antes de lançar',
    ideia:'A ordem certa das etapas: testar, atualizar, conferir.',
-   nota:'Um procedimento se descreve no presente simples. A ordem das etapas vem das peças de <b>sequência</b> (<i>first</i>, <i>after that</i>), que abrem a frase com vírgula; <i>also</i> acrescenta a última etapa. Cada etapa traz o seu porquê, alternando finalidade (<i>in order to</i>, <i>to</i>) e causa (<i>because</i>) para o texto não ficar repetitivo.',
+   n:{ v:'<i>Test → update → check</i>: as etapas de um procedimento seguro, na ordem em que acontecem.',
+       t:'Tudo no presente simples, porque procedimento é regra: vale sempre, não num dia específico.',
+       e:'A ordem vem das peças de sequência (<i>first</i>, <i>after that</i>), que abrem a frase com vírgula. <i>Always</i> diz que é regra, <i>also</i> acrescenta a etapa final e <i>twice</i> diz quantas vezes.',
+       c:'<b>Finalidade + finalidade + causa</b>: cada etapa traz o seu porquê. Alternar <i>in order to</i>, <i>to</i> e <i>because</i> evita a repetição e é a base de qualquer instrução bem escrita.' },
    s:[
-    { p:'We', t:'present', a:'simples', v:'test', col:'the code', mid:['always'], ends:['first'], o2:{ k:'final', cj:'in order to', op:'find the errors' },
-      why:'<i>First</i> abre a sequência; <i>always</i> mostra que é regra, não exceção.' },
-    { p:'We', t:'present', a:'simples', v:'update', col:'the software', ends:['after that'], o2:{ k:'final', cj:'to', op:'fix the bugs' },
-      why:'<i>After that</i> liga esta etapa à anterior. Finalidade curta com <i>to</i>.' },
-    { p:'We', t:'present', a:'simples', v:'check', col:'the results', mid:['also'], ends:['twice'], o2:{ k:'caus', cj:'because', op:'to save time' },
-      why:'<i>Also</i> soma a etapa; <i>twice</i> diz quantas vezes; a causal justifica o cuidado.' }
+    { p:'We', t:'present', a:'simples', v:'test', col:'the code', mid:['always'], ends:['first'], o2:{ k:'final', cj:'in order to', op:'find the errors' }, why:'<i>First</i> abre a sequência; <i>always</i> mostra que é regra, não exceção.' },
+    { p:'We', t:'present', a:'simples', v:'update', col:'the software', ends:['after that'], o2:{ k:'final', cj:'to', op:'fix the bugs' }, why:'<i>After that</i> liga esta etapa à anterior. Finalidade curta com <i>to</i>.' },
+    { p:'We', t:'present', a:'simples', v:'check', col:'the results', mid:['also'], ends:['twice'], o2:{ k:'caus', cj:'because', op:'to save time' }, why:'<i>Also</i> soma a etapa; <i>twice</i> diz quantas vezes; a causal justifica o cuidado.' }
    ] },
- { id:'tec2', tema:'tecnologia', nivel:2, titulo:'A atualização de ontem',
+ { id:'tec2', r:'sequencia', tema:'tecnologia', nivel:2, titulo:'A atualização de ontem',
    ideia:'O que foi feito apesar do risco, o que foi verificado e o que ainda falta.',
-   nota:'Relato técnico em ordem cronológica: <i>last night</i>, <i>after that</i>, <i>this morning</i>, <i>tomorrow</i>. As conjunções mudam de função a cada frase: <b>concessão</b>, <b>finalidade</b>, <b>consequência</b> e <b>tempo</b>. Na última, <i>as soon as</i> prende a próxima ação à conclusão de outra.',
+   n:{ v:'<i>Install → test → check → update</i>: o ciclo de uma mudança em sistema, do risco à verificação.',
+       t:'Três passados simples em ordem cronológica e um futuro. O simples basta porque cada ação é um fato concluído.',
+       e:'A cronologia inteira está nas peças: <i>last night</i>, <i>after that</i>, <i>this morning</i>, <i>tomorrow</i>. <i>Carefully</i> e <i>twice</i> descrevem o cuidado.',
+       c:'<b>Concessão + finalidade + consequência + tempo</b>: fez apesar do risco, testou para garantir, ganhou tempo, e o próximo passo depende de outro. É o formato de um relato técnico completo.' },
    s:[
-    { p:'She', t:'past', a:'simples', v:'install', col:'an update', ends:['last night'], o2:{ k:'conc', cj:'even though', op:'risky' },
-      why:'A concessão abre a frase e já avisa do risco antes do fato.' },
-    { p:'She', t:'past', a:'simples', v:'test', col:'the system', ends:['carefully','after that'], o2:{ k:'final', cj:'in order to', op:'make sure it works' },
-      why:'Sequência na frente, modo depois do objeto. A finalidade responde ao risco da frase anterior.' },
-    { p:'She', t:'past', a:'simples', v:'check', col:'the results', ends:['twice','this morning'], o2:{ k:'cons', cj:'so', op:'time' },
-      why:'Quantas vezes antes de quando: <i>twice this morning</i>. <i>So</i> mostra o que se ganhou com isso.' },
-    { p:'She', t:'future', a:'simples', v:'update', col:'the data', ends:['tomorrow'], o2:{ k:'temp', cj:'as soon as', op:'the bug' },
-      why:'Futuro na principal, presente depois de <i>as soon as</i> (nunca <i>will</i> na oração de tempo).' }
+    { p:'She', t:'past', a:'simples', v:'install', col:'an update', ends:['last night'], o2:{ k:'conc', cj:'even though', op:'risky' }, why:'A concessão abre a frase e já avisa do risco antes do fato.' },
+    { p:'She', t:'past', a:'simples', v:'test', col:'the system', ends:['carefully','after that'], o2:{ k:'final', cj:'in order to', op:'make sure it works' }, why:'Sequência na frente, modo depois do objeto. A finalidade responde ao risco da frase anterior.' },
+    { p:'She', t:'past', a:'simples', v:'check', col:'the results', ends:['twice','this morning'], o2:{ k:'cons', cj:'so', op:'time' }, why:'Quantas vezes antes de quando: <i>twice this morning</i>. <i>So</i> mostra o que se ganhou com isso.' },
+    { p:'She', t:'future', a:'simples', v:'update', col:'the data', ends:['tomorrow'], o2:{ k:'temp', cj:'as soon as', op:'the bug' }, why:'Futuro na principal, presente depois de <i>as soon as</i> (nunca <i>will</i> na oração de tempo).' }
    ] },
- { id:'tec3', tema:'tecnologia', nivel:3, titulo:'O sistema novo',
+ { id:'tec3', r:'condicao', tema:'tecnologia', nivel:3, titulo:'O sistema novo',
    ideia:'Anterioridade, hábito com motivo, hipótese e proporção.',
-   nota:'Quatro estruturas avançadas em sequência. O past perfect ordena duas ações passadas; a causal explica um hábito; a condicional com <i>would</i> abre uma hipótese; e a proporção fecha com uma regra geral. Só a segunda frase leva peças de tempo: nas outras, a própria estrutura já carrega a informação temporal.',
+   n:{ v:'<i>Test, use, update, test</i>: o parágrafo abre e fecha com <i>test</i>, primeiro como fato e depois como princípio.',
+       t:'Past perfect, presente simples, <i>would</i> e presente simples: anterioridade, hábito, hipótese e regra geral.',
+       e:'Só <i>already</i> e <i>every day</i>. Nas estruturas avançadas (hipótese, proporção) a própria construção já carrega a informação de tempo.',
+       c:'<b>Tempo + causa + condição hipotética + proporção</b>: quatro ligações de níveis diferentes no mesmo assunto. Serve de mapa: da ordem dos fatos até a regra abstrata.' },
    s:[
-    { p:'We', t:'past', a:'perfeito', v:'test', col:'the code', mid:['already'], o2:{ k:'temp', cj:'when', op:'the update' },
-      why:'<i>Had already tested</i> = pronto antes; passado simples depois de <i>when</i> = o que veio em seguida.' },
-    { p:'We', t:'present', a:'simples', v:'use', col:'the app', ends:['every day'], o2:{ k:'caus', cj:'because', op:'to finish early' },
-      why:'Hábito + motivo. A periodicidade fica antes da conjunção.' },
-    { p:'We', t:'future', a:'simples', v:'update', col:'the software', o2:{ k:'cond', cj:'if', op:'a faster system', cnd:2 },
-      why:'Hipótese (tipo 2): <i>would update</i> + <i>if</i> + passado (<i>needed</i>). Não é um plano, é uma suposição.' },
-    { p:'We', t:'present', a:'simples', v:'test', col:'the system', o2:{ k:'prop', cj:'the more … the more', v:'learn' },
-      why:'Proporção no presente simples: vale como regra geral, sem data.' }
+    { p:'We', t:'past', a:'perfeito', v:'test', col:'the code', mid:['already'], o2:{ k:'temp', cj:'when', op:'the update' }, why:'<i>Had already tested</i> = pronto antes; passado simples depois de <i>when</i> = o que veio em seguida.' },
+    { p:'We', t:'present', a:'simples', v:'use', col:'the app', ends:['every day'], o2:{ k:'caus', cj:'because', op:'to finish early' }, why:'Hábito + motivo. A periodicidade fica antes da conjunção.' },
+    { p:'We', t:'future', a:'simples', v:'update', col:'the software', o2:{ k:'cond', cj:'if', op:'a faster system', cnd:2 }, why:'Hipótese (tipo 2): <i>would update</i> + <i>if</i> + passado (<i>needed</i>). Não é um plano, é uma suposição.' },
+    { p:'We', t:'present', a:'simples', v:'test', col:'the system', o2:{ k:'prop', cj:'the more … the more', v:'learn' }, why:'Proporção no presente simples: vale como regra geral, sem data.' }
    ] },
- /* ===================== VIAGEM ===================== */
- { id:'via1', tema:'viagem', nivel:1, titulo:'A viagem bem planejada',
+ { id:'exp2', r:'explicar', tema:'tecnologia', nivel:2, titulo:'A razão e o resultado',
+   ideia:'Uma regra de trabalho com a sua justificativa e duas consequências.',
+   n:{ v:'<i>Test, check, update</i>: verificar duas vezes e depois agir.',
+       t:'Presente simples (regra), passado simples (o que foi feito) e futuro (o que será resolvido).',
+       e:'<i>Always… twice</i> mostra a regra; <i>carefully yesterday</i> segue como → quando; <i>tomorrow</i> data a solução.',
+       c:'<b>Explicação + conclusão + conclusão</b>: uma razão sustenta duas consequências, uma já colhida (<i>and so</i>) e outra esperada (<i>so</i>). É o formato de uma justificativa técnica: fazemos assim por isto, e por isso ganhamos aquilo.' },
+   s:[
+    { p:'We', t:'present', a:'simples', v:'test', col:'the code', mid:['always'], ends:['twice'], o2:{ k:'expl', cj:'for', op:'fewer errors' }, why:'A regra (<i>always… twice</i>) vem primeiro e a explicação com <i>for</i> vem depois da vírgula.' },
+    { p:'We', t:'past', a:'simples', v:'check', col:'the results', ends:['carefully','yesterday'], o2:{ k:'cons', cj:'and so', op:'time' }, why:'<i>And so</i> é um <i>so</i> com mais peso: liga o cuidado de ontem ao ganho que veio dele.' },
+    { p:'We', t:'future', a:'simples', v:'update', col:'the software', ends:['tomorrow'], o2:{ k:'cons', cj:'so', op:'the issue' }, why:'Com a principal no futuro, a conclusão também vai para <i>will</i>: é um resultado esperado, não um fato.' }
+   ] },
+ { id:'cau3', r:'causa', tema:'tecnologia', nivel:3, titulo:'A atualização que resolveu',
+   ideia:'A necessidade, a ação que ela provocou e as consequências de hoje.',
+   n:{ v:'<i>Install, send, check</i>: a ação que resolve e as rotinas que mudaram por causa dela.',
+       t:'Passado simples para a necessidade e a ação; presente simples para o que mudou no dia a dia.',
+       e:'<i>Now</i> e <i>every day</i> marcam a rotina nova; <i>rarely</i> mostra o que deixou de ser necessário.',
+       c:'<b>Causa virada em consequência + consequência + causa (now that)</b>: a primeira frase põe a causa na frente e a ação depois de <i>so</i>, o inverso de "…because". É a mesma informação com outra ênfase. <i>Now that</i> junta causa e tempo: "agora que".' },
+   s:[
+    { p:'We', t:'past', a:'simples', v:'install', col:'an update', o2:{ k:'caus', cj:'because', op:'a faster system', tr:'caus>cons' }, why:'Transformação: em vez de "instalamos porque precisávamos", "precisávamos, então instalamos". A causa ganha a primeira posição.' },
+    { p:'We', t:'present', a:'simples', v:'send', col:'the report', mid:['now'], ends:['every day'], o2:{ k:'cons', cj:'so', op:'time' }, why:'O efeito atual, com <i>now</i> marcando a mudança.' },
+    { p:'We', t:'present', a:'simples', v:'check', col:'the results', mid:['rarely'], o2:{ k:'caus', cj:'now that', op:'fewer errors' }, why:'<i>Now that</i> abre a frase: causa que começou a valer agora.' }
+   ] },
+ { id:'via1', r:'sequencia', tema:'viagem', nivel:1, titulo:'A viagem bem planejada',
    ideia:'Um costume, o planejamento feito e os dois próximos passos.',
-   nota:'Presente (costume), passado (planejamento) e futuro (execução). Os objetivos aparecem duas vezes com formas diferentes (<i>in order to</i> e <i>to</i>) e o motivo uma vez (<i>because</i>). A última frase não tem 2ª oração: <i>probably</i> e <i>in the end</i> bastam para fechar a história.',
+   n:{ v:'<i>Travel, plan, leave, arrive</i>: a viagem em quatro verbos, do costume à chegada.',
+       t:'Presente simples (costume), passado simples (planejamento feito) e dois futuros (execução).',
+       e:'<i>Usually</i> marca o costume; <i>last month</i> data o plano; <i>early tomorrow</i> ordena a saída; <i>probably… in the end</i> fecha com previsão.',
+       c:'<b>Causa + finalidade + finalidade</b> e um fecho simples: por que viajamos assim, para que planejamos, para que saímos cedo. Motivo primeiro, objetivos depois.' },
    s:[
-    { p:'We', t:'present', a:'simples', v:'travel', col:'by train', mid:['usually'], o2:{ k:'caus', cj:'because', op:'to save time' },
-      why:'Costume no presente simples; <i>usually</i> antes do verbo. A causal dá a razão da escolha.' },
-    { p:'We', t:'past', a:'simples', v:'plan', col:'the trip', ends:['last month'], o2:{ k:'final', cj:'in order to', op:'avoid problems' },
-      why:'<i>Last month</i> data o planejamento; a finalidade diz para que ele serviu.' },
-    { p:'We', t:'future', a:'simples', v:'leave', col:'early', ends:['tomorrow'], o2:{ k:'final', cj:'to', op:'avoid traffic' },
-      why:'Modo/hora (<i>early</i>) antes de tempo (<i>tomorrow</i>), e a finalidade no fim.' },
-    { p:'We', t:'future', a:'simples', v:'arrive', col:'on time', mid:['probably'], ends:['in the end'],
-      why:'Fecho: previsão moderada por <i>probably</i> e encerrada por <i>in the end</i>.' }
+    { p:'We', t:'present', a:'simples', v:'travel', col:'by train', mid:['usually'], o2:{ k:'caus', cj:'because', op:'to save time' }, why:'Costume no presente simples; <i>usually</i> antes do verbo. A causal dá a razão da escolha.' },
+    { p:'We', t:'past', a:'simples', v:'plan', col:'the trip', ends:['last month'], o2:{ k:'final', cj:'in order to', op:'avoid problems' }, why:'<i>Last month</i> data o planejamento; a finalidade diz para que ele serviu.' },
+    { p:'We', t:'future', a:'simples', v:'leave', col:'early', ends:['tomorrow'], o2:{ k:'final', cj:'to', op:'avoid traffic' }, why:'Modo/hora (<i>early</i>) antes de tempo (<i>tomorrow</i>), e a finalidade no fim.' },
+    { p:'We', t:'future', a:'simples', v:'arrive', col:'on time', mid:['probably'], ends:['in the end'], why:'Fecho: previsão moderada por <i>probably</i> e encerrada por <i>in the end</i>.' }
    ] },
- { id:'via2', tema:'viagem', nivel:2, titulo:'O dia em que tudo atrasou',
+ { id:'via2', r:'contraste', tema:'viagem', nivel:2, titulo:'O dia em que tudo atrasou',
    ideia:'Um contratempo, a cena do momento e a decisão para o futuro.',
-   nota:'Três tempos para três papéis: passado simples para o <b>fato</b>, passado contínuo para a <b>cena</b> em andamento e futuro para a <b>decisão</b>. <i>From now on</i> é a peça que transforma o episódio em regra.',
+   n:{ v:'<i>Leave</i> e <i>arrive</i> são opostos (sair e chegar); <i>drive</i> preenche o meio do caminho. <i>Leave</i> volta no fim como decisão.',
+       t:'Passado simples para o fato, passado <b>contínuo</b> para a cena em andamento e futuro para a decisão.',
+       e:'<i>Yesterday</i> data o episódio; <i>from now on</i> transforma o episódio em regra para o futuro.',
+       c:'<b>Contraste + tempo + finalidade</b>: o que deu errado, a cena, e a mudança. O par passado contínuo + <i>when</i> + passado simples é o jeito clássico de narrar.' },
    s:[
-    { p:'She', t:'past', a:'simples', v:'leave', col:'home', ends:['yesterday'], o2:{ k:'adv', cj:'but', v:'arrive', vneg:true, c2:1 },
-      why:'<i>Leave</i> e <i>arrive</i> são opostos; <i>but</i> + negação mostra que o esperado não aconteceu.' },
-    { p:'She', t:'past', a:'continuo', v:'drive', col:'to work', o2:{ k:'temp', cj:'when', op:'the bridge' },
-      why:'Passado contínuo para a ação longa (<i>was driving</i>) e passado simples depois de <i>when</i> para o ponto no tempo.' },
-    { p:'She', t:'future', a:'simples', v:'leave', col:'early', ends:['from now on'], o2:{ k:'final', cj:'in order to', op:'avoid traffic' },
-      why:'<i>From now on</i> projeta a decisão para todas as vezes seguintes; a finalidade explica a mudança.' }
+    { p:'She', t:'past', a:'simples', v:'leave', col:'home', ends:['yesterday'], o2:{ k:'adv', cj:'but', v:'arrive', vneg:true, c2:1 }, why:'<i>Leave</i> e <i>arrive</i> são opostos; <i>but</i> + negação mostra que o esperado não aconteceu.' },
+    { p:'She', t:'past', a:'continuo', v:'drive', col:'to work', o2:{ k:'temp', cj:'when', op:'the bridge' }, why:'Passado contínuo para a ação longa (<i>was driving</i>) e passado simples depois de <i>when</i> para o ponto no tempo.' },
+    { p:'She', t:'future', a:'simples', v:'leave', col:'early', ends:['from now on'], o2:{ k:'final', cj:'in order to', op:'avoid traffic' }, why:'<i>From now on</i> projeta a decisão para todas as vezes seguintes; a finalidade explica a mudança.' }
    ] },
- /* ===================== VIDA ===================== */
- { id:'vida1', tema:'vida', nivel:3, titulo:'Trabalhar mais ou mudar o plano',
+ { id:'cond1', r:'condicao', tema:'viagem', nivel:2, titulo:'Tudo depende do trânsito',
+   ideia:'Quatro planos, cada um preso a uma condição diferente.',
+   n:{ v:'<i>Leave, arrive, travel, drive</i>: quatro verbos de deslocamento para quatro planos alternativos.',
+       t:'Sempre futuro na principal e <b>presente</b> na condição: é a condicional real, de coisas que podem acontecer.',
+       e:'Só <i>early tomorrow</i> na primeira frase. Nas outras, a condição já ocupa o lugar das circunstâncias.',
+       c:'<b>Quatro condições</b>: <i>if</i> (se), <i>unless</i> (a não ser que), <i>as long as</i> (desde que) e <i>in case</i> (caso). Cada uma muda o sentido: <i>unless</i> já é negativa, <i>as long as</i> impõe uma exigência e <i>in case</i> é precaução. Saber escolher entre elas dá precisão ao que se promete.' },
+   s:[
+    { p:'We', t:'future', a:'simples', v:'leave', col:'early', ends:['tomorrow'], o2:{ k:'cond', cj:'if', op:'heavy traffic' }, why:'Condição simples: <i>will</i> + <i>if</i> + presente.' },
+    { p:'We', t:'future', a:'simples', v:'arrive', col:'on time', o2:{ k:'cond', cj:'unless', op:'heavy traffic' }, why:'<i>Unless</i> = "if not": a oração fica afirmativa, mas o sentido é negativo.' },
+    { p:'We', t:'future', a:'simples', v:'travel', col:'by train', o2:{ k:'cond', cj:'as long as', op:'to save time' }, why:'<i>As long as</i> põe uma exigência: só vale enquanto a condição valer.' },
+    { p:'We', t:'future', a:'simples', v:'drive', col:'to work', o2:{ k:'cond', cj:'in case', op:'to arrive early' }, why:'<i>In case</i> é precaução: fazemos isso para o caso de precisar.' }
+   ] },
+ { id:'vida1', r:'proporcao', tema:'vida', nivel:3, titulo:'Trabalhar mais ou mudar o plano',
    ideia:'Uma situação recente, o seu custo, a regra por trás dela e uma decisão.',
-   nota:'O texto vai do <b>diagnóstico</b> à <b>decisão</b>. O present perfect continuous descreve o que vem acontecendo; a concessão admite o custo; a proporção explica por que a situação se mantém; e o futuro com finalidade anuncia a mudança. As peças são poucas (<i>lately</i>, <i>every day</i>, <i>next year</i>): quando a estrutura já é rica, encaixar menos deixa a frase mais limpa.',
+   n:{ v:'<i>Work</i> domina três frases e <i>change</i> aparece só na última: a repetição do verbo reforça a rotina que o parágrafo quer quebrar.',
+       t:'Present perfect continuous (situação recente em curso), presente simples (hábito e regra) e futuro (decisão).',
+       e:'Poucas peças: <i>lately</i>, <i>every day</i>, <i>next year</i>. Quando a estrutura já é rica, encaixar menos deixa a frase mais limpa.',
+       c:'<b>Causa + concessão + proporção + finalidade</b>: do diagnóstico à decisão. Motivo, custo, a regra que mantém a situação e o objetivo da mudança.' },
    s:[
-    { p:'I', t:'present', a:'perfeito_continuo', v:'work', col:'from home', ends:['lately'], o2:{ k:'caus', cj:'because', op:'the money' },
-      why:'<i>Have been working</i> + <i>lately</i>: situação recente e ainda em curso. O motivo vem no presente simples.' },
-    { p:'I', t:'present', a:'simples', v:'work', col:'on a project', ends:['every day'], o2:{ k:'conc', cj:'although', op:'tiring' },
-      why:'A concessão abre a frase; <i>every day</i> mostra que o esforço é constante.' },
-    { p:'I', t:'present', a:'simples', v:'work', o2:{ k:'prop', cj:'the more … the more', v:'earn' },
-      why:'A proporção dá a lógica que sustenta o hábito: mais trabalho, mais ganho.' },
-    { p:'I', t:'future', a:'simples', v:'change', col:'the plan', ends:['next year'], o2:{ k:'final', cj:'in order to', op:'try something new' },
-      why:'A decisão vem com data e objetivo: <i>will</i> + <i>next year</i> + <i>in order to</i>.' }
+    { p:'I', t:'present', a:'perfeito_continuo', v:'work', col:'from home', ends:['lately'], o2:{ k:'caus', cj:'because', op:'the money' }, why:'<i>Have been working</i> + <i>lately</i>: situação recente e ainda em curso. O motivo vem no presente simples.' },
+    { p:'I', t:'present', a:'simples', v:'work', col:'on a project', ends:['every day'], o2:{ k:'conc', cj:'although', op:'tiring' }, why:'A concessão abre a frase; <i>every day</i> mostra que o esforço é constante.' },
+    { p:'I', t:'present', a:'simples', v:'work', o2:{ k:'prop', cj:'the more … the more', v:'earn' }, why:'A proporção dá a lógica que sustenta o hábito: mais trabalho, mais ganho.' },
+    { p:'I', t:'future', a:'simples', v:'change', col:'the plan', ends:['next year'], o2:{ k:'final', cj:'in order to', op:'try something new' }, why:'A decisão vem com data e objetivo: <i>will</i> + <i>next year</i> + <i>in order to</i>.' }
    ] },
- /* ===================== CASA ===================== */
- { id:'casa1', tema:'casa', nivel:1, titulo:'O jantar de domingo',
+ { id:'casa1', r:'objetivo', tema:'casa', nivel:1, titulo:'O jantar de domingo',
    ideia:'Uma rotina de casa em duas etapas e um episódio recente.',
-   nota:'As duas primeiras frases descrevem uma rotina (presente simples), ligadas por <i>after that</i>. A terceira sai da rotina e conta um episódio (<i>last night</i> + passado simples). Repare no possessivo: <i>his family</i>, <i>his guests</i> acompanham o sujeito <i>he</i>.',
+   n:{ v:'<i>Cook</i> e <i>clean</i>: as duas tarefas de receber alguém. <i>Cook</i> volta no passado para contar um episódio.',
+       t:'Presente simples para a rotina e passado simples para o episódio de <i>last night</i>.',
+       e:'<i>Usually</i> + <i>on Sundays</i> marcam a rotina por dois encaixes diferentes; <i>after that</i> liga as etapas; <i>last night</i> tira a frase da rotina.',
+       c:'<b>Finalidade + finalidade + concessão</b>: duas ações com propósito e um detalhe humano. A concessão no fim dá cor a um texto que seria só uma lista.' },
    s:[
-    { p:'He', t:'present', a:'simples', v:'cook', col:'dinner', mid:['usually'], ends:['on Sundays'], o2:{ k:'final', cj:'to', op:'feed {p} family' },
-      why:'<i>Usually</i> antes do verbo e <i>on Sundays</i> no fim: frequência e periodicidade se completam.' },
-    { p:'He', t:'present', a:'simples', v:'clean', col:'the kitchen', ends:['after that'], o2:{ k:'final', cj:'in order to', op:'welcome {p} guests' },
-      why:'A sequência amarra a segunda etapa à primeira.' },
-    { p:'He', t:'past', a:'simples', v:'cook', col:'for the family', ends:['last night'], o2:{ k:'conc', cj:'although', op:'messy' },
-      why:'Do hábito para o fato: <i>last night</i> exige passado simples. A concessão acrescenta o detalhe humano.' }
+    { p:'He', t:'present', a:'simples', v:'cook', col:'dinner', mid:['usually'], ends:['on Sundays'], o2:{ k:'final', cj:'to', op:'feed {p} family' }, why:'<i>Usually</i> antes do verbo e <i>on Sundays</i> no fim: frequência e periodicidade se completam.' },
+    { p:'He', t:'present', a:'simples', v:'clean', col:'the kitchen', ends:['after that'], o2:{ k:'final', cj:'in order to', op:'welcome {p} guests' }, why:'A sequência amarra a segunda etapa à primeira.' },
+    { p:'He', t:'past', a:'simples', v:'cook', col:'for the family', ends:['last night'], o2:{ k:'conc', cj:'although', op:'messy' }, why:'Do hábito para o fato: <i>last night</i> exige passado simples. A concessão acrescenta o detalhe humano.' }
    ] },
- { id:'casa2', tema:'casa', nivel:2, titulo:'Preparando a casa',
+ { id:'casa2', r:'sequencia', tema:'casa', nivel:2, titulo:'Preparando a casa',
    ideia:'Uma tarefa que vem sendo feita, uma tarefa concluída e o descanso planejado.',
-   nota:'Três aspectos, três relações com o tempo: <b>vem acontecendo</b> (present perfect continuous + <i>lately</i>), <b>aconteceu</b> (passado simples + <i>yesterday</i>) e <b>vai acontecer</b> (futuro + <i>this weekend</i>). Cada frase traz o motivo ou o objetivo da ação.',
+   n:{ v:'<i>Clean, pack, stay</i>: preparar, organizar, descansar.',
+       t:'Present perfect continuous (<b>vem acontecendo</b>), passado simples (<b>aconteceu</b>) e futuro (<b>vai acontecer</b>).',
+       e:'Cada aspecto com a sua peça: <i>lately</i>, <i>yesterday</i>, <i>this weekend</i>. <i>Carefully</i> combina com a finalidade de proteger.',
+       c:'<b>Causa + finalidade + finalidade</b>: por que a pressa e para que cada ação. Um motivo no início sustenta os objetivos que vêm depois.' },
    s:[
-    { p:'They', t:'present', a:'perfeito_continuo', v:'clean', col:'the house', ends:['lately'], o2:{ k:'caus', cj:'because', op:'guests' },
-      why:'Atividade repetida nos últimos dias: <i>have been cleaning</i> + <i>lately</i>. A causal explica a pressa.' },
-    { p:'They', t:'past', a:'simples', v:'pack', col:'the boxes', ends:['carefully','yesterday'], o2:{ k:'final', cj:'in order to', op:'protect the items' },
-      why:'Modo antes de tempo. O modo (<i>carefully</i>) combina com a finalidade (proteger).' },
-    { p:'They', t:'future', a:'simples', v:'stay', col:'at home', ends:['this weekend'], o2:{ k:'final', cj:'to', op:'rest' },
-      why:'Plano próximo: lugar, depois tempo, depois o objetivo.' }
+    { p:'They', t:'present', a:'perfeito_continuo', v:'clean', col:'the house', ends:['lately'], o2:{ k:'caus', cj:'because', op:'guests' }, why:'Atividade repetida nos últimos dias: <i>have been cleaning</i> + <i>lately</i>. A causal explica a pressa.' },
+    { p:'They', t:'past', a:'simples', v:'pack', col:'the boxes', ends:['carefully','yesterday'], o2:{ k:'final', cj:'in order to', op:'protect the items' }, why:'Modo antes de tempo. O modo (<i>carefully</i>) combina com a finalidade (proteger).' },
+    { p:'They', t:'future', a:'simples', v:'stay', col:'at home', ends:['this weekend'], o2:{ k:'final', cj:'to', op:'rest' }, why:'Plano próximo: lugar, depois tempo, depois o objetivo.' }
    ] },
- /* ===================== CARREIRA ===================== */
- { id:'car1', tema:'carreira', nivel:2, titulo:'A nova carreira',
+ { id:'car1', r:'objetivo', tema:'carreira', nivel:2, titulo:'A nova carreira',
    ideia:'Um aprendizado em curso, o esforço diário e a escolha que vem depois.',
-   nota:'O parágrafo avança de <b>processo</b> (present perfect continuous) para <b>rotina</b> (presente simples) e <b>previsão</b> (futuro). A última frase junta três recursos: <i>probably</i> (certeza), <i>next year</i> (tempo) e <i>as soon as</i> (a condição de tempo para a escolha acontecer).',
+   n:{ v:'<i>Learn, study, choose</i>: aprender, insistir, decidir. Três momentos de uma transição de carreira.',
+       t:'Present perfect continuous (processo), presente simples (rotina) e futuro (previsão).',
+       e:'<i>Lately</i> e <i>every evening</i> marcam o esforço; <i>probably</i> e <i>next year</i> graduam e datam a escolha.',
+       c:'<b>Finalidade + concessão + tempo</b>: objetivo, custo e o momento da decisão. É o mesmo esqueleto do relato de progresso, agora com um processo em curso.' },
    s:[
-    { p:'She', t:'present', a:'perfeito_continuo', v:'learn', col:'a new skill', ends:['lately'], o2:{ k:'final', cj:'in order to', op:'get a better job' },
-      why:'Processo em andamento com objetivo declarado.' },
-    { p:'She', t:'present', a:'simples', v:'study', ends:['every evening'], o2:{ k:'conc', cj:'even though', op:'tiring' },
-      why:'A concessão forte (<i>even though</i>) valoriza a constância marcada por <i>every evening</i>.' },
-    { p:'She', t:'future', a:'simples', v:'choose', col:'a career', mid:['probably'], ends:['next year'], o2:{ k:'temp', cj:'as soon as', op:'the next step' },
-      why:'<i>Will</i> na principal e presente depois de <i>as soon as</i>. <i>Probably</i> fica entre <i>will</i> e o verbo.' }
+    { p:'She', t:'present', a:'perfeito_continuo', v:'learn', col:'a new skill', ends:['lately'], o2:{ k:'final', cj:'in order to', op:'get a better job' }, why:'Processo em andamento com objetivo declarado.' },
+    { p:'She', t:'present', a:'simples', v:'study', ends:['every evening'], o2:{ k:'conc', cj:'even though', op:'tiring' }, why:'A concessão forte (<i>even though</i>) valoriza a constância marcada por <i>every evening</i>.' },
+    { p:'She', t:'future', a:'simples', v:'choose', col:'a career', mid:['probably'], ends:['next year'], o2:{ k:'temp', cj:'as soon as', op:'the next step' }, why:'<i>Will</i> na principal e presente depois de <i>as soon as</i>. <i>Probably</i> fica entre <i>will</i> e o verbo.' }
    ] },
- { id:'car2', tema:'carreira', nivel:3, titulo:'Decidir sob pressão',
+ { id:'car2', r:'condicao', tema:'carreira', nivel:3, titulo:'Decidir sob pressão',
    ideia:'Reflexão, constatação, hipótese e decisão.',
-   nota:'Aqui a 2ª oração muda de natureza a cada frase: <b>finalidade</b>, <b>oração objeto</b> (o que ele sabe), <b>condição hipotética</b> e <b>finalidade</b> de novo. A oração com <i>that</i> não é um "extra": ela é o próprio objeto do verbo <i>know</i>. E o contraste entre <i>would decide</i> (hipótese) e <i>will decide</i> (plano) é a chave do parágrafo.',
+   n:{ v:'<i>Think, know, decide</i>: verbos de mente, não de ação. Por isso a 2ª oração muda de natureza: o que ele sabe é uma oração inteira.',
+       t:'Passado simples (reflexão feita), presente simples (constatação), <i>would</i> (hipótese) e <i>will</i> (plano).',
+       e:'<i>Carefully yesterday</i> na reflexão e <i>tomorrow</i> na decisão. As frases do meio dispensam peças.',
+       c:'<b>Finalidade + oração objeto + condição hipotética + finalidade</b>: a oração com <i>that</i> não é um extra, é o próprio objeto de <i>know</i>. E o contraste <i>would decide</i> / <i>will decide</i> separa o imaginado do planejado.' },
    s:[
-    { p:'He', t:'past', a:'simples', v:'think', col:'carefully', ends:['yesterday'], o2:{ k:'final', cj:'in order to', op:'make a good decision' },
-      why:'Modo antes de tempo; o modo combina com a finalidade.' },
-    { p:'He', t:'present', a:'simples', v:'know', o2:{ k:'obj', cj:'that', op:'difficult' },
-      why:'Verbos de pensar e saber pedem uma oração como objeto: <i>know that</i> + frase completa. Sem vírgula.' },
-    { p:'He', t:'future', a:'simples', v:'decide', col:'quickly', o2:{ k:'cond', cj:'if', op:'a clear answer', cnd:2 },
-      why:'Hipótese: <i>would</i> + <i>if</i> + passado. A situação é imaginada, por isso não é <i>will</i>.' },
-    { p:'He', t:'future', a:'simples', v:'decide', col:'everything', ends:['tomorrow'], o2:{ k:'final', cj:'in order to', op:'move forward' },
-      why:'Agora sim um plano real: <i>will</i> + <i>tomorrow</i>. O mesmo verbo, outro modo de ver o futuro.' }
+    { p:'He', t:'past', a:'simples', v:'think', col:'carefully', ends:['yesterday'], o2:{ k:'final', cj:'in order to', op:'make a good decision' }, why:'Modo antes de tempo; o modo combina com a finalidade.' },
+    { p:'He', t:'present', a:'simples', v:'know', o2:{ k:'obj', cj:'that', op:'difficult' }, why:'Verbos de pensar e saber pedem uma oração como objeto: <i>know that</i> + frase completa. Sem vírgula.' },
+    { p:'He', t:'future', a:'simples', v:'decide', col:'quickly', o2:{ k:'cond', cj:'if', op:'a clear answer', cnd:2 }, why:'Hipótese: <i>would</i> + <i>if</i> + passado. A situação é imaginada, por isso não é <i>will</i>.' },
+    { p:'He', t:'future', a:'simples', v:'decide', col:'everything', ends:['tomorrow'], o2:{ k:'final', cj:'in order to', op:'move forward' }, why:'Agora sim um plano real: <i>will</i> + <i>tomorrow</i>. O mesmo verbo, outro modo de ver o futuro.' }
    ] },
- /* ===================== COMUNICAÇÃO ===================== */
- { id:'com1', tema:'comunicação', nivel:1, titulo:'Falar para ser entendido',
+ { id:'cond2', r:'condicao', tema:'carreira', nivel:3, titulo:'E se fosse diferente',
+   ideia:'Uma hipótese sobre o presente, outra sobre o passado e o que continua real.',
+   n:{ v:'<i>Start, accept, work</i>: começar, aceitar, continuar.',
+       t:'<i>Would</i> + verbo (hipótese de agora), <i>would have</i> + particípio (o que não aconteceu) e presente simples (o real).',
+       e:'Apenas <i>still</i>, na última frase: é ele que traz o texto de volta à realidade.',
+       c:'<b>Condição hipotética + condição do passado irreal + concessão (even if)</b>: do imaginável ao impossível e de volta ao real. <i>Even if</i> fecha dizendo que o fato se mantém em qualquer hipótese. É a combinação para pesar escolhas.' },
+   s:[
+    { p:'I', t:'future', a:'simples', v:'start', col:'a business', o2:{ k:'cond', cj:'if', op:'the money', cnd:2 }, why:'Tipo 2: <i>would</i> + <i>if</i> + passado. Hipótese sobre agora.' },
+    { p:'I', t:'future', a:'perfeito', v:'accept', col:'the offer', o2:{ k:'cond', cj:'if', op:'a fair price', cnd:3 }, why:'Tipo 3: <i>would have</i> + <i>if</i> + <i>had</i>. Fala do que não aconteceu.' },
+    { p:'I', t:'present', a:'simples', v:'work', col:'on a project', mid:['still'], o2:{ k:'conc', cj:'even if', op:'tiring' }, why:'<i>Even if</i> = "mesmo que": o fato resiste à hipótese. <i>Still</i> reforça a continuidade.' }
+   ] },
+ { id:'com1', r:'objetivo', tema:'comunicação', nivel:1, titulo:'Falar para ser entendido',
    ideia:'Três atitudes de quem aprende, cada uma com a sua razão.',
-   nota:'Tudo no presente simples: são atitudes permanentes. O interesse está nas peças: dois <b>modos</b> (<i>slowly</i>, <i>carefully</i>) depois do verbo e duas peças do meio (<i>always</i>, <i>also</i>) antes dele. Modo e finalidade trabalham juntos: falo devagar <b>para</b> ser entendido, escuto com atenção <b>para</b> entender.',
+   n:{ v:'<i>Speak, listen, ask</i>: os três gestos de uma boa conversa.',
+       t:'Tudo no presente simples: são atitudes permanentes.',
+       e:'Dois modos depois do verbo (<i>slowly</i>, <i>carefully</i>) e duas peças do meio antes dele (<i>always</i>, <i>also</i>).',
+       c:'<b>Finalidade + finalidade + causa</b>: modo e finalidade trabalham juntos (falo devagar <b>para</b> ser entendido). É a combinação para explicar o próprio método.' },
    s:[
-    { p:'I', t:'present', a:'simples', v:'speak', col:'slowly', mid:['always'], o2:{ k:'final', cj:'in order to', op:'be understood' },
-      why:'Frequência antes do verbo, modo depois. A finalidade explica o modo.' },
-    { p:'I', t:'present', a:'simples', v:'listen', col:'carefully', mid:['also'], o2:{ k:'final', cj:'to', op:'understand the problem' },
-      why:'<i>Also</i> soma a segunda atitude. Mesma lógica, com <i>to</i> no lugar de <i>in order to</i>.' },
-    { p:'I', t:'present', a:'simples', v:'ask', col:'the teacher', o2:{ k:'caus', cj:'because', op:'an answer' },
-      why:'A terceira frase troca finalidade por causa, para variar a ligação.' }
+    { p:'I', t:'present', a:'simples', v:'speak', col:'slowly', mid:['always'], o2:{ k:'final', cj:'in order to', op:'be understood' }, why:'Frequência antes do verbo, modo depois. A finalidade explica o modo.' },
+    { p:'I', t:'present', a:'simples', v:'listen', col:'carefully', mid:['also'], o2:{ k:'final', cj:'to', op:'understand the problem' }, why:'<i>Also</i> soma a segunda atitude. Mesma lógica, com <i>to</i> no lugar de <i>in order to</i>.' },
+    { p:'I', t:'present', a:'simples', v:'ask', col:'the teacher', o2:{ k:'caus', cj:'because', op:'an answer' }, why:'A terceira frase troca finalidade por causa, para variar a ligação.' }
    ] },
- { id:'com2', tema:'comunicação', nivel:2, titulo:'A ligação que resolveu',
+ { id:'com2', r:'objetivo', tema:'comunicação', nivel:2, titulo:'A ligação que resolveu',
    ideia:'Uma ação com objetivo, uma atitude difícil e o encontro marcado.',
-   nota:'Dois fatos no passado levam a um compromisso no futuro. A frase do meio é a mais delicada: a concessão (<i>although it was awkward</i>) vem na frente para preparar o leitor antes do fato principal. As peças de tempo (<i>yesterday</i>, <i>tomorrow</i>) seguram a cronologia.',
+   n:{ v:'<i>Call, tell, meet</i>: contato, franqueza e encontro.',
+       t:'Dois passados simples e um futuro: o que foi feito leva ao que está marcado.',
+       e:'Só as datas (<i>yesterday</i>, <i>tomorrow</i>): elas bastam para segurar a cronologia.',
+       c:'<b>Finalidade + concessão + finalidade</b>: a concessão vem na frente para preparar o leitor antes do fato difícil. Útil para dar uma notícia delicada.' },
    s:[
-    { p:'She', t:'past', a:'simples', v:'call', col:'the office', ends:['yesterday'], o2:{ k:'final', cj:'in order to', op:'confirm the meeting' },
-      why:'Fato datado + objetivo.' },
-    { p:'She', t:'past', a:'simples', v:'tell', col:'the truth', o2:{ k:'conc', cj:'although', op:'awkward' },
-      why:'A concessão abre a frase e a vírgula separa: o difícil vem antes, o fato depois.' },
-    { p:'She', t:'future', a:'simples', v:'meet', col:'the team', ends:['tomorrow'], o2:{ k:'final', cj:'to', op:'discuss the plan' },
-      why:'O resultado das duas ações: um encontro com data e objetivo.' }
+    { p:'She', t:'past', a:'simples', v:'call', col:'the office', ends:['yesterday'], o2:{ k:'final', cj:'in order to', op:'confirm the meeting' }, why:'Fato datado + objetivo.' },
+    { p:'She', t:'past', a:'simples', v:'tell', col:'the truth', o2:{ k:'conc', cj:'although', op:'awkward' }, why:'A concessão abre a frase e a vírgula separa: o difícil vem antes, o fato depois.' },
+    { p:'She', t:'future', a:'simples', v:'meet', col:'the team', ends:['tomorrow'], o2:{ k:'final', cj:'to', op:'discuss the plan' }, why:'O resultado das duas ações: um encontro com data e objetivo.' }
    ] },
- /* ===================== NEGÓCIOS ===================== */
- { id:'neg1', tema:'negócios', nivel:2, titulo:'Do time ao site',
+ { id:'neg1', r:'causa', tema:'negócios', nivel:2, titulo:'Do time ao site',
    ideia:'A origem de um negócio, a operação atual, um resultado recente e o próximo investimento.',
-   nota:'Linha do tempo completa de um negócio: <i>last year</i> (passado simples), <i>now</i> (presente simples), <i>lately</i> (present perfect) e <i>next year</i> (futuro). Três frases têm finalidade, mas a terceira usa <b>consequência</b> (<i>so</i>): é ela que mostra que o esforço deu resultado.',
+   n:{ v:'<i>Build, sell, improve, build</i>: construir, vender, melhorar e construir de novo. O verbo que abre também fecha.',
+       t:'Passado simples, presente simples, present perfect e futuro: a linha do tempo completa de um negócio.',
+       e:'Uma peça de tempo por frase, cada uma do seu tempo verbal: <i>last year</i>, <i>now</i>, <i>lately</i>, <i>next year</i>.',
+       c:'<b>Finalidade + finalidade + consequência + finalidade</b>: é a consequência (<i>so</i>) no meio que prova que os objetivos deram resultado. Sem ela, o texto seria só intenção.' },
    s:[
-    { p:'We', t:'past', a:'simples', v:'build', col:'a team', ends:['last year'], o2:{ k:'final', cj:'to', op:'grow the business' },
-      why:'Ponto de partida datado, com objetivo.' },
-    { p:'We', t:'present', a:'simples', v:'sell', col:'products online', mid:['now'], o2:{ k:'final', cj:'in order to', op:'reach new customers' },
-      why:'<i>Now</i> traz o leitor para o presente.' },
-    { p:'We', t:'present', a:'perfeito', v:'improve', col:'the quality', ends:['lately'], o2:{ k:'cons', cj:'so', op:'more money' },
-      why:'Present perfect nas duas orações: a melhora e o ganho vêm do passado recente até agora.' },
-    { p:'We', t:'future', a:'simples', v:'build', col:'a website', ends:['next year'], o2:{ k:'final', cj:'to', op:'serve {p} customers' },
-      why:'O verbo da primeira frase volta no futuro: o negócio continua sendo construído.' }
+    { p:'We', t:'past', a:'simples', v:'build', col:'a team', ends:['last year'], o2:{ k:'final', cj:'to', op:'grow the business' }, why:'Ponto de partida datado, com objetivo.' },
+    { p:'We', t:'present', a:'simples', v:'sell', col:'products online', mid:['now'], o2:{ k:'final', cj:'in order to', op:'reach new customers' }, why:'<i>Now</i> traz o leitor para o presente.' },
+    { p:'We', t:'present', a:'perfeito', v:'improve', col:'the quality', ends:['lately'], o2:{ k:'cons', cj:'so', op:'more money' }, why:'Present perfect nas duas orações: a melhora e o ganho vêm do passado recente até agora.' },
+    { p:'We', t:'future', a:'simples', v:'build', col:'a website', ends:['next year'], o2:{ k:'final', cj:'to', op:'serve {p} customers' }, why:'O verbo da primeira frase volta no futuro: o negócio continua sendo construído.' }
    ] },
- { id:'neg2', tema:'negócios', nivel:3, titulo:'Vender ou manter',
+ { id:'neg2', r:'condicao', tema:'negócios', nivel:3, titulo:'Vender ou manter',
    ideia:'Uma decisão arriscada, o que poderia ter sido diferente e o que foi feito depois.',
-   nota:'O centro do parágrafo é a condicional do <b>passado irreal</b> (tipo 3): <i>would have</i> + particípio na principal e <i>had</i> + particípio depois de <i>if</i>. Ela fala de algo que <b>não</b> aconteceu. As frases em volta são fatos reais no passado simples, e esse contraste entre o real e o imaginado é o que dá sentido ao texto.',
+   n:{ v:'<i>Sell</i> aparece como fato e como hipótese; <i>invest</i> mostra o que foi feito depois.',
+       t:'Passado simples para o real e <i>would have</i> + particípio para o que <b>não</b> aconteceu.',
+       e:'<i>Last year</i> e <i>after that</i> seguram a linha dos fatos; a hipótese fica sem peças, fora do tempo real.',
+       c:'<b>Concessão + condição do passado irreal + finalidade</b>: o contraste entre o que aconteceu e o que poderia ter acontecido. É a combinação para avaliar decisões passadas.' },
    s:[
-    { p:'They', t:'past', a:'simples', v:'sell', col:'the house', ends:['last year'], o2:{ k:'conc', cj:'although', op:'risky' },
-      why:'Fato real, datado, com a ressalva na frente.' },
-    { p:'They', t:'future', a:'perfeito', v:'sell', col:'everything', o2:{ k:'cond', cj:'if', op:'a better price', cnd:3 },
-      why:'Passado irreal: <i>would have sold</i> + <i>if</i> + <i>had wanted</i>. Em português: "teriam vendido… se tivessem querido".' },
-    { p:'They', t:'past', a:'simples', v:'invest', col:'money', ends:['after that'], o2:{ k:'final', cj:'in order to', op:'grow {p} money' },
-      why:'De volta ao real: <i>after that</i> retoma a linha dos fatos.' }
+    { p:'They', t:'past', a:'simples', v:'sell', col:'the house', ends:['last year'], o2:{ k:'conc', cj:'although', op:'risky' }, why:'Fato real, datado, com a ressalva na frente.' },
+    { p:'They', t:'future', a:'perfeito', v:'sell', col:'everything', o2:{ k:'cond', cj:'if', op:'a better price', cnd:3 }, why:'Passado irreal: <i>would have sold</i> + <i>if</i> + <i>had wanted</i>. Em português: "teriam vendido… se tivessem querido".' },
+    { p:'They', t:'past', a:'simples', v:'invest', col:'money', ends:['after that'], o2:{ k:'final', cj:'in order to', op:'grow {p} money' }, why:'De volta ao real: <i>after that</i> retoma a linha dos fatos.' }
    ] }
 ];
-let parFiltro = { tema:null, nivel:null }, parAbertos = new Set(), parCache = null;
+/* v125: LINHAS DE RACIOCÍNIO — o eixo principal da seção. Cada parágrafo encadeia ideias de um jeito; é isso que se aprende aqui. */
+const PAR_RAC = {
+  explicar:  { ic:'💡', nome:'Explicar e concluir',   d:'Afirmo, dou o fundamento (<i>for</i>) e tiro a conclusão (<i>so</i>). É a base de qualquer argumento.' },
+  causa:     { ic:'🎯', nome:'Causa e efeito',        d:'Motivo (<i>because, since, now that</i>) e resultado (<i>so, which is why</i>), em ordens e ênfases diferentes.' },
+  objetivo:  { ic:'🧗', nome:'Objetivo e obstáculo',  d:'Para que faço (<i>to, in order to</i>) e apesar de quê (<i>although, even though</i>): o relato de quem persegue uma meta.' },
+  contraste: { ic:'⚖️', nome:'Contraste e virada',    d:'O que era contra o que é (<i>but, yet</i>), e a mudança que nasce desse choque.' },
+  condicao:  { ic:'🔀', nome:'Condição e hipótese',   d:'O que depende de quê: condições reais (<i>if, unless</i>), hipóteses (<i>would</i>) e o passado que não aconteceu (<i>would have</i>).' },
+  sequencia: { ic:'🪜', nome:'Sequência e processo',  d:'Uma coisa depois da outra (<i>first, after that, as soon as, before</i>): como narrar etapas na ordem certa.' },
+  proporcao: { ic:'📈', nome:'Proporção e medida',    d:'Quanto mais, mais (<i>the more… the more</i>), tanto que (<i>so… that</i>) e comparações: como graduar o que se diz.' },
+  argumento: { ic:'🗣️', nome:'Afirmar e sustentar',   d:'Nomear o problema (<i>The problem is that</i>), afirmar o evidente (<i>It is clear that</i>) e amarrar ao combinado (<i>as we planned</i>).' }
+};
+/* dimensões de filtro: o aluno escolhe COMO quer percorrer o acervo */
+const PAR_DIMS = [ { k:'r', nome:'🧠 Raciocínio' }, { k:'o', nome:'🔗 Tipo de oração' }, { k:'t', nome:'⏱ Tempo verbal' }, { k:'tema', nome:'🗂 Tema' } ];
+let parFiltro = { dim:'r', val:null, nivel:null }, parAbertos = new Set(), parCache = null;
+/* valores que um parágrafo tem em cada dimensão (tipo de oração e tempo saem das frases já montadas) */
+function parValores(x, dim){
+  if(dim === 'r') return [x.P.r];
+  if(dim === 'tema') return [x.P.tema];
+  if(dim === 'o') return [...new Set(x.fr.filter(r => r.tipo).map(r => r.tipo.k))];
+  return [...new Set(x.P.s.map(c => c.t + '_' + c.a))];
+}
+function parRotulo(dim, v){
+  if(dim === 'r') return PAR_RAC[v].ic + ' ' + PAR_RAC[v].nome;
+  if(dim === 'tema') return (PAR_TEMA_IC[v] || '') + ' ' + v;
+  if(dim === 'o'){ const T = O2_TIPOS.find(t => t.k === v); return T.ic + ' ' + T.nome.replace(/\s*\(.*\)$/, ''); }
+  const [t, a] = [v.slice(0, v.indexOf('_')), v.slice(v.indexOf('_') + 1)]; return TENSE_LABEL[t] + ' · ' + ASPECT_LABEL[a];
+}
 /* monta todas as frases UMA vez (o banco não muda durante a sessão) */
 function parMontados(){
   if(!parCache) parCache = PARAGRAFOS.map(P => ({ P, fr:P.s.map((c, j) => parFrase(c, P.titulo + ' #' + (j + 1))) }));
@@ -14113,26 +14425,47 @@ function parEtiquetas(c, r){
   r.sl2.forEach(s => { h += tag('2ª oração · ' + escapeHTML(s.nome) + ': <b>' + escapeHTML(s.w) + '</b>', ADJ_COLOR[s.kind]); });
   return h;
 }
+/* assinatura do parágrafo: os tipos de oração na ordem em que aparecem (em magenta, a cor das conjunções) */
+function parAssinatura(fr, curta){
+  if(curta) return fr.map(r => r.tipo ? escapeHTML(r.trLabel || r.conj) : '—').join(' → ');
+  const l = fr.map(r => r.tipo ? `<b style="color:${ADJ_COLOR.conj}">${escapeHTML(r.tipo.nome.replace(/\s*\(.*\)$/, ''))}</b> <i>${escapeHTML(r.trLabel || r.conj)}</i>` : '<span>frase simples</span>');
+  return l.join(' → ');
+}
 function buildParagrafos(){
   const wrap = document.getElementById('paragrafosWrap'); if(!wrap) return;
-  const todos = parMontados();
-  const temas = []; todos.forEach(x => { if(!temas.includes(x.P.tema)) temas.push(x.P.tema); });
-  const vis = todos.filter(x => (!parFiltro.tema || x.P.tema === parFiltro.tema) && (!parFiltro.nivel || x.P.nivel === parFiltro.nivel));
+  const todos = parMontados(), dim = parFiltro.dim;
+  /* valores da dimensão, na ordem natural de cada uma */
+  let vals = [];
+  if(dim === 'r') vals = Object.keys(PAR_RAC);
+  else if(dim === 'o') vals = O2_TIPOS.map(t => t.k);
+  else if(dim === 't') ['past', 'present', 'future'].forEach(t => ['simples', 'continuo', 'perfeito', 'perfeito_continuo'].forEach(a => vals.push(t + '_' + a)));
+  else todos.forEach(x => { if(!vals.includes(x.P.tema)) vals.push(x.P.tema); });
+  const conta = v => todos.filter(x => parValores(x, dim).includes(v)).length;
+  vals = vals.filter(v => conta(v) > 0);
+  if(parFiltro.val !== null && !vals.includes(parFiltro.val)) parFiltro.val = null;
+  const vis = todos.filter(x => (parFiltro.val === null || parValores(x, dim).includes(parFiltro.val)) && (!parFiltro.nivel || x.P.nivel === parFiltro.nivel));
   const pill = (txt, on, attr) => `<button type="button" class="pronome-pill par-f" data-active="${on}" ${attr}>${txt}</button>`;
   let h = `<div class="par-legenda">Cores: <b style="color:${ADJ_COLOR.quando}">quando</b> · <b style="color:${ADJ_COLOR.como}">como</b> · <b style="color:${ADJ_COLOR.onde}">onde</b> · <b style="color:${ADJ_COLOR.regencia}">colocação</b> · <b style="color:${ADJ_COLOR.conj}">conjunção</b></div>
-    <div class="ref-class-label">Tema</div>
-    <div class="pronome-row par-filtros">${pill('Todos ' + todos.length, !parFiltro.tema, 'data-tema=""')}${temas.map(t => pill((PAR_TEMA_IC[t] || '') + ' ' + t + ' ' + todos.filter(x => x.P.tema === t).length, parFiltro.tema === t, `data-tema="${t}"`)).join('')}</div>
+    <div class="ref-class-label">Percorrer por</div>
+    <div class="pronome-row par-filtros">${PAR_DIMS.map(d => pill(d.nome, dim === d.k, `data-dim="${d.k}"`)).join('')}</div>
+    <div class="pronome-row par-filtros par-vals">${pill('Todos ' + todos.length, parFiltro.val === null, 'data-val=""')}${vals.map(v => pill(escapeHTML(parRotulo(dim, v)) + ' ' + conta(v), parFiltro.val === v, `data-val="${v}"`)).join('')}</div>
+    ${dim === 'r' && parFiltro.val ? `<div class="par-rac-d">${PAR_RAC[parFiltro.val].d}</div>` : ''}
     <div class="ref-class-label">Nível</div>
     <div class="pronome-row par-filtros">${pill('Todos', !parFiltro.nivel, 'data-nivel=""')}${[1, 2, 3].map(n => pill(PAR_NIVEL[n], parFiltro.nivel === n, `data-nivel="${n}"`)).join('')}</div>
     <div class="par-conta">${vis.length} parágrafo${vis.length === 1 ? '' : 's'}</div>`;
   if(!vis.length) h += '<div class="matrix-note">Nenhum parágrafo com esses filtros. Troque o tema ou o nível.</div>';
-  vis.forEach(({ P, fr }) => {
+  /* sem valor escolhido na dimensão Raciocínio: agrupa por linha de raciocínio, cada grupo com a sua descrição */
+  const ordem = (dim === 'r' && parFiltro.val === null) ? vis.slice().sort((a, b) => Object.keys(PAR_RAC).indexOf(a.P.r) - Object.keys(PAR_RAC).indexOf(b.P.r)) : vis;
+  let grupo = null;
+  ordem.forEach(({ P, fr }) => {
+    if(dim === 'r' && parFiltro.val === null && P.r !== grupo){ grupo = P.r; h += `<div class="par-grupo"><b>${PAR_RAC[grupo].ic} ${PAR_RAC[grupo].nome}</b><span>${PAR_RAC[grupo].d}</span></div>`; }
     const i = PARAGRAFOS.indexOf(P), aberto = parAbertos.has(P.id);
     const en = fr.map((r, j) => `<span class="par-s" data-n="${j + 1}">${r.html}</span>`).join(' ');
     const texto = fr.map(r => r.texto).join(' '), pt = fr.map(r => r.pt).join(' ');
     h += `<div class="anat-card par-card" data-par="${i}">
       <h4>${PAR_TEMA_IC[P.tema] || ''} ${escapeHTML(P.titulo)}<span class="anat-usar">${PAR_NIVEL[P.nivel]}</span></h4>
       <div class="par-ideia">${escapeHTML(P.ideia)}</div>
+      <div class="par-rac-tag">${PAR_RAC[P.r].ic} ${PAR_RAC[P.r].nome} · <span>${parAssinatura(fr, true)}</span></div>
       <div class="anat-frase-row">
         <div class="anat-frase par-en">${en}</div>
         <button class="audio-btn sm" data-text="${escapeHTML(texto)}" title="Ouvir o parágrafo">🔊</button>
@@ -14140,7 +14473,13 @@ function buildParagrafos(){
       <div class="anat-pt par-pt">${escapeHTML(pt)}</div>
       <button type="button" class="par-ver" data-par="${i}" aria-expanded="${aberto}">${aberto ? '▴ Ocultar explicação' : '🔎 Ver explicação'}</button>
       ${aberto ? `<div class="par-nota">
-        <div class="par-nota-geral"><b>Como as peças se combinam.</b> ${P.nota}</div>
+        <div class="par-eixos">
+          <div class="par-eixo"><b>🔤 Por que estes verbos</b><span>${P.n.v}</span></div>
+          <div class="par-eixo"><b>⏱ Por que este tempo e aspecto</b><span>${P.n.t}</span></div>
+          <div class="par-eixo"><b>🧩 Por que estes encaixes</b><span>${P.n.e}</span></div>
+          <div class="par-eixo dest"><b>🔗 Por que esta combinação de orações</b><div class="par-assin">${parAssinatura(fr)}</div><span>${P.n.c}</span></div>
+        </div>
+        <div class="ref-class-label" style="margin:2px 0 8px;">Frase por frase</div>
         ${fr.map((r, j) => `<div class="par-item">
           <div class="par-item-n">${j + 1}</div>
           <div class="par-item-c">
@@ -14155,7 +14494,9 @@ function buildParagrafos(){
   });
   wrap.innerHTML = h;
   wrap.querySelectorAll('.par-f').forEach(b => { b.onclick = () => {
-    if('tema' in b.dataset) parFiltro.tema = b.dataset.tema || null; else parFiltro.nivel = b.dataset.nivel ? +b.dataset.nivel : null;
+    if('dim' in b.dataset){ parFiltro.dim = b.dataset.dim; parFiltro.val = null; }
+    else if('val' in b.dataset) parFiltro.val = b.dataset.val || null;
+    else parFiltro.nivel = b.dataset.nivel ? +b.dataset.nivel : null;
     buildParagrafos(); }; });
   wrap.querySelectorAll('.par-ver').forEach(b => { b.onclick = () => {
     const id = PARAGRAFOS[+b.dataset.par].id; if(parAbertos.has(id)) parAbertos.delete(id); else parAbertos.add(id);
@@ -14177,6 +14518,75 @@ buildAdverbsList();
 buildErros();
 buildOracoes();
 buildParagrafos();
+/* ---- v124: INTRODUÇÃO DE CADA SEÇÃO ----
+   O que a seção faz (o) e como tirar o melhor dela (u). Fica num <details> aberto por padrão; se o aluno recolher,
+   o app lembra (por seção) e não abre de novo. Texto em um só lugar para ser fácil de revisar. */
+const SEC_INTRO = {
+  'console-tempos': { o:'Monta frases em inglês peça por peça: você escolhe quem fala, o verbo, o tempo, o aspecto e o formato, e o motor mostra a frase, a tradução e a estrutura.',
+    u:['Mude <b>uma peça de cada vez</b> e observe o que muda na frase: é assim que a regra aparece.', 'Toque em <b>qualquer palavra</b> da frase para ouvir só ela; nas palavras coloridas, o toque também mostra a função.', 'Depois de dominar a frase simples, acrescente encaixes (palavras-sinal, complemento) e, por fim, a 2ª oração.'] },
+  'console-modais': { o:'Monta frases com verbos modais (can, must, should, might…) a partir da <b>função</b> que você quer expressar: habilidade, obrigação, conselho, possibilidade.',
+    u:['Comece pela função, não pelo modal: pergunte "o que eu quero dizer?" e veja qual modal o motor escolhe.', 'Troque o tempo para ver como cada modal se comporta no passado e no futuro.', 'Toque nas palavras da frase para ouvir a pronúncia de cada uma.'] },
+  'console-pratica': { o:'Treino ativo: o app mostra uma frase em português e você escreve em inglês. O que você erra entra numa fila de revisão.',
+    u:['Tente responder <b>antes</b> de pedir a resposta: errar e corrigir fixa mais do que só ler.', 'Volte à fila de erros até ela zerar.', 'Use depois de explorar um tempo no motor, para testar se a regra ficou.'] },
+  'console-expressoes': { o:'Banco de consulta com as expressões do app (palavras-sinal, conectivos e famílias), com tradução, busca e áudio.',
+    u:['Use a busca em inglês ou em português quando souber o que quer dizer, mas não a expressão.', 'Navegue por família para aprender expressões parecidas juntas.', 'Ouça cada expressão: muitas mudam de ritmo quando ditas inteiras.'] },
+  'block-matrix': { o:'A tabela-mestra: os 12 tempos do inglês lado a lado (passado, presente e futuro × 4 aspectos), nos quatro formatos.',
+    u:['Leia na <b>horizontal</b> para comparar tempos e na <b>vertical</b> para comparar aspectos.', 'Toque numa linha da tabela para ouvir a frase.', 'Troque o verbo de origem para ver a mesma estrutura com outro verbo e baixe a tabela em PNG para revisar.'] },
+  'block-posicao': { o:'Guia rápido de onde cada advérbio fica <b>no meio</b> da frase e de como montar perguntas com palavras interrogativas.',
+    u:['Consulte quando ficar em dúvida entre "I always work" e "I work always".', 'Compare sempre o exemplo certo com o errado: o erro mostrado é o que o português induz.', 'Toque nos exemplos para ouvir.'] },
+  'block-anatomia': { o:'Mostra os <b>encaixes</b> da frase: quantas peças cabem, em que ordem entram (como → onde → quando) e quais combinações valem a pena.',
+    u:['Decore primeiro o atalho <b>como → onde → quando</b>: ele resolve a maioria das frases.', 'Toque num exemplo para carregá-lo no montador e depois tire e ponha peças.', 'Use o glossário por encaixe para descobrir que expressões cabem em cada posição.'] },
+  'block-adverbs-tempo': { o:'Lista completa das palavras-sinal e conjunções, organizada por tempo verbal e aspecto: o caminho de "qual tempo?" para "quais expressões combinam?".',
+    u:['Procure o tempo que você está estudando e veja as expressões que o acompanham.', '<b>Toque em qualquer expressão para ouvir.</b>', 'As cores são as mesmas dos encaixes: laranja = como, verde = onde, violeta = quando.'] },
+  'block-conj': { o:'Regras das conjunções de tempo (when, as soon as, before, since, for…) e a armadilha clássica: depois delas o inglês não usa <i>will</i>.',
+    u:['Leia antes de montar frases no futuro com <i>when</i> ou <i>as soon as</i>.', 'Toque nos exemplos para ouvir.', 'Depois, teste a regra no motor ligando uma 2ª oração temporal.'] },
+  'block-oracoes': { o:'Catálogo dos tipos de oração composta: como cada um se forma, as conjunções que usa, exemplos e restrições, além do treino de conjunções.',
+    u:['Abra um tipo de cada vez e leia a formação antes dos exemplos.', 'Toque no <b>nome da conjunção</b> para ouvir; cada exemplo tem o seu botão de áudio.', 'Use o botão que leva ao motor para montar a sua própria frase com aquele tipo, e feche a sessão com o treino.'] },
+  'block-paragrafos': { o:'Repositório de parágrafos prontos em que as três frentes do app trabalham juntas: <b>tempo verbal</b>, <b>encaixes</b> e <b>orações ligadas por conjunção</b>. Todas as frases são montadas pelo motor.',
+    u:['Percorra por <b>raciocínio</b> (explicar e concluir, causa e efeito, condição…): é assim que se aprende a encadear ideias. Tipo de oração, tempo verbal e tema são outros caminhos pelo mesmo acervo.', 'Leia o parágrafo inteiro primeiro e tente adivinhar por que cada peça está ali.', 'Abra <b>Ver explicação</b>: ela diz por que aqueles verbos, aquele aspecto, aqueles encaixes e por que aquela combinação de orações importa.', 'Leve uma frase ao console e troque uma peça para ver o que muda. Toque nas palavras para ouvir.'] },
+  'block-erros': { o:'Os erros mais comuns de quem fala português, cada um com a forma correta e a explicação.',
+    u:['Leia a forma errada em voz alta e depois a correta: o contraste ajuda a fixar.', 'Ouça a forma correta no botão de áudio.', 'Volte aqui quando o modo Praticar apontar um erro repetido.'] },
+  'block-algo': { o:'O roteiro mental para montar qualquer frase: as perguntas a fazer, na ordem certa.',
+    u:['Use como lista de conferência enquanto ainda monta as frases devagar.', 'Com a prática, as etapas ficam automáticas e você deixa de precisar dele.'] }
+};
+/* ---- v125: MENU DA REFERÊNCIA ----
+   Antes o botão só rolava até a primeira seção; as outras oito ficavam escondidas no fim de uma página longa. */
+const REF_MENU = [ ['block-paragrafos', '📚', 'Parágrafos', true], ['block-oracoes', '🔗', 'Orações compostas'], ['block-anatomia', '🧩', 'Anatomia da frase'], ['block-matrix', '📊', 'Tabela de tempos'],
+  ['block-adverbs-tempo', '🗂️', 'Expressões por tempo'], ['block-posicao', '🎯', 'Guia de posição'], ['block-conj', '⏳', 'Conjunções de tempo'], ['block-erros', '⚠️', 'Erros comuns'], ['block-algo', '🧭', 'Algoritmo mental'] ];
+function refMenuFecha(){ const m = document.getElementById('refMenu'); if(m) m.hidden = true; const b = document.getElementById('navRef'); if(b) b.setAttribute('aria-expanded', 'false'); }
+function refMenuToggle(e){
+  if(e) e.stopPropagation();
+  let m = document.getElementById('refMenu');
+  if(!m){
+    m = document.createElement('div'); m.id = 'refMenu'; m.hidden = true; m.setAttribute('role', 'menu');
+    m.innerHTML = REF_MENU.map(x => `<button type="button" role="menuitem" data-ref="${x[0]}"${x[3] ? ' class="dest"' : ''}><b>${x[1]}</b>${x[2]}</button>`).join('');
+    document.body.appendChild(m);
+    m.querySelectorAll('button').forEach(b => { b.onclick = () => {
+      refMenuFecha();
+      const sec = document.getElementById(b.dataset.ref); if(!sec) return;
+      if(sec.dataset.open !== 'true') toggleBlock(sec.id);
+      setTimeout(() => sec.scrollIntoView({ behavior:'smooth', block:'start' }), 60);
+    }; });
+  }
+  const abrir = m.hidden;
+  if(abrir){ const nav = document.querySelector('.topnav'); m.style.top = ((nav ? nav.getBoundingClientRect().bottom : 56) + 6) + 'px'; }
+  m.hidden = !abrir; document.getElementById('navRef').setAttribute('aria-expanded', String(abrir));
+}
+document.addEventListener('click', e => { if(!(e.target.closest && e.target.closest('#refMenu, #navRef'))) refMenuFecha(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') refMenuFecha(); });
+const INTRO_KEY = 'pm_intro_v2';
+(function buildIntros(){
+  let fechadas = {}; try { fechadas = JSON.parse(localStorage.getItem(INTRO_KEY) || '{}') || {}; } catch(e){ fechadas = {}; }
+  Object.keys(SEC_INTRO).forEach(id => {
+    const sec = document.getElementById(id); if(!sec || sec.querySelector(':scope .sec-intro')) return;
+    /* v125: o propósito fica sempre à vista (1–2 linhas); as dicas de uso abrem ao toque e o app lembra a escolha */
+    const I = SEC_INTRO[id], d = document.createElement('details'); d.className = 'sec-intro'; d.open = fechadas[id] === false;
+    d.innerHTML = `<summary><span class="si-o">ℹ️ ${I.o}</span><span class="si-k">como usar</span></summary><div class="si-c"><ul>${I.u.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+    d.addEventListener('toggle', () => { fechadas[id] = !d.open; try { localStorage.setItem(INTRO_KEY, JSON.stringify(fechadas)); } catch(e){} });
+    const corpo = sec.querySelector('.block-body-inner'), rot = sec.querySelector('.console-label');
+    if(corpo) corpo.insertBefore(d, corpo.firstChild); else if(rot) rot.insertAdjacentElement('afterend', d); else sec.insertBefore(d, sec.firstChild);
+  });
+})();
 /* Restaura a sessão anterior antes do primeiro render. Cada bloco é validado: um estado
    salvo por uma versão antiga (verbo que não existe mais, tempo removido) é descartado
    em silêncio em vez de quebrar a abertura. */
