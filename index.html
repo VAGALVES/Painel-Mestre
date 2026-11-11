@@ -384,6 +384,136 @@
   .ref-tense-block:last-child{border-bottom:none; margin-bottom:0; padding-bottom:0;}
   .ref-tense-title{font-family:'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:14px; font-weight:700; color:var(--paper); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
   .ref-subhead{font-size:11px; font-weight:700; color:var(--paper); margin:8px 0 4px; display:flex; align-items:center; gap:5px;}
+  /* ===== v134: GRAMÁTICA DAS ORAÇÕES ===== */
+  #gramaticaWrap{--gf:var(--brass);}
+  .gr-hero{font-size:12.5px; line-height:1.6; color:var(--paper); background:var(--panel-deep); border:1px solid var(--line); border-left:3px solid var(--brass); border-radius:10px; padding:10px 12px; margin:0 0 12px;}
+  .gr-idx{display:flex; gap:6px; overflow-x:auto; padding:2px 0 10px; margin:0 0 6px; scrollbar-width:thin;}
+  .gr-idx-b{flex:0 0 auto; background:var(--panel-raised); border:1px solid var(--line); border-radius:16px; padding:6px 11px; font-size:11.5px; color:var(--paper-dim); cursor:pointer; white-space:nowrap; font-family:inherit; min-height:34px;}
+  .gr-idx-b:hover,.gr-idx-b:focus-visible{color:var(--brass); border-color:var(--brass); outline:none;}
+  .gr-sec{margin:0 0 28px; scroll-margin-top:calc(var(--nav-h, 56px) + 8px);}
+  .gr-h{font-family:'Space Grotesk','Inter',-apple-system,sans-serif; font-size:16px; margin:0 0 8px; color:var(--paper); display:flex; align-items:center; gap:9px;}
+  .gr-h span{display:inline-flex; flex:0 0 24px; width:24px; height:24px; border-radius:50%; background:var(--brass); color:#1a1408; font-size:12px; align-items:center; justify-content:center; font-weight:700;}
+  .gr-p{font-size:13px; line-height:1.65; color:var(--paper); margin:0 0 10px;}
+  .gr-dim{color:var(--paper-dim); font-size:12px;}
+  .gr-ref-t{font-size:9.5px; color:var(--brass-dim); text-transform:uppercase; letter-spacing:0.06em; margin:14px 0 6px;}
+  .gr-trio{display:grid; gap:10px;}
+  .gr-leg{font-size:11.5px; line-height:1.5; color:var(--paper-dim); margin-top:6px;}
+  .gr-ex{border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:var(--panel-raised); margin:8px 0;}
+  .gr-ex-ctx{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--brass-dim); margin-bottom:3px;}
+  .gr-ex-row{display:flex; gap:8px; align-items:flex-start; justify-content:space-between;}
+  .gr-en{flex:1; min-width:0; font-size:13.5px; line-height:1.7; color:var(--paper); cursor:pointer; overflow-wrap:break-word;}
+  .gr-pt{font-size:12px; font-style:italic; color:var(--paper-dim); margin-top:2px;}
+  .gr-abrir{margin-top:6px;}
+  .gr-duo,.gr-trio3{display:grid; gap:10px; grid-template-columns:minmax(0,1fr);}
+  .gr-box{border:1px solid var(--line); border-left:3px solid var(--gf, var(--brass)); border-radius:10px; padding:10px 12px; background:var(--panel-raised); font-size:12.5px; line-height:1.6; color:var(--paper);}
+  .gr-box p{margin:6px 0 0;}
+  .gr-tree{border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--panel-deep);}
+  .gr-root{text-align:center; font-weight:700; font-size:13px; color:var(--paper); padding:8px; border:1px dashed var(--brass-dim); border-radius:10px; margin-bottom:12px;}
+  .gr-root small,.gr-tn small{display:block; font-weight:400; color:var(--paper-dim); font-size:10.5px;}
+  .gr-branches,.gr-subs{display:grid; gap:12px; grid-template-columns:minmax(0,1fr);}
+  .gr-br{border-left:3px solid var(--gf, var(--line)); padding:2px 0 2px 10px; min-width:0;}
+  .gr-tn{font-weight:700; font-size:12.5px; color:var(--gf, var(--paper)); margin-bottom:6px;}
+  .gr-tn-sub{color:var(--paper);}
+  .gr-sub{border-left-color:var(--orange);}
+  .gr-leaves,.gr-int-l{display:flex; flex-wrap:wrap; gap:6px;}
+  .gr-leaf{background:var(--panel-raised); border:1px solid var(--gf, var(--line)); color:var(--paper); border-radius:16px; padding:5px 10px; font-size:11.5px; cursor:pointer; font-family:inherit; display:inline-flex; gap:5px; align-items:center; min-height:34px;}
+  .gr-leaf:hover,.gr-leaf:focus-visible{background:color-mix(in srgb, var(--gf, var(--brass)) 14%, var(--panel-raised)); outline:none;}
+  .gr-ints{display:grid; gap:8px; grid-template-columns:minmax(0,1fr);}
+  .gr-int{border:1px solid var(--line); border-radius:10px; padding:8px 10px; background:var(--panel-raised);}
+  .gr-int-t{font-size:12.5px; color:var(--paper); margin-bottom:6px; display:flex; gap:7px;}
+  .gr-tools{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; margin:6px 0 4px;}
+  .gr-acts{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .gr-fam-box{border:1px solid var(--line); border-left:3px solid var(--gf, var(--brass)); border-radius:10px; padding:10px 12px; font-size:12.5px; line-height:1.6; color:var(--paper); background:var(--panel-deep); margin:8px 0;}
+  .gr-fam-box p{margin:6px 0 0;}
+  .gr-grp-t{font-weight:700; font-size:13px; color:var(--gf); margin:16px 0 2px; display:flex; flex-wrap:wrap; gap:4px 8px; align-items:baseline;}
+  .gr-grp-t small{font-weight:400; font-size:11px; color:var(--paper-dim);}
+  .gr-lista{display:grid; gap:0 14px; grid-template-columns:minmax(0,1fr); align-items:start;}
+  details.gr-t{border:1px solid var(--line); border-left:3px solid var(--gf); border-radius:12px; background:var(--panel-raised); margin:7px 0;}
+  details.gr-t > summary{list-style:none; cursor:pointer; display:flex; gap:10px; align-items:center; padding:10px 12px; min-height:48px; border-radius:12px;}
+  details.gr-t > summary::-webkit-details-marker{display:none;}
+  details.gr-t > summary::after{content:'▾'; color:var(--brass-dim); transition:transform .15s;}
+  details.gr-t[open] > summary::after{transform:rotate(180deg);}
+  details.gr-t > summary:hover{background:color-mix(in srgb, var(--gf) 8%, transparent);}
+  details.gr-t > summary:focus-visible{outline:2px solid var(--brass); outline-offset:1px;}
+  .gr-t-ic{font-size:20px; flex:0 0 auto;}
+  .gr-t-main{flex:1; min-width:0; display:flex; flex-direction:column; gap:1px;}
+  .gr-t-main b{font-size:13px; color:var(--paper);}
+  .gr-t-main small{font-size:11px; color:var(--paper-dim); line-height:1.4;}
+  .gr-t-meta{display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-size:10px; color:var(--paper-dim); flex:0 0 auto;}
+  .gr-dots{color:var(--gf, var(--brass)); letter-spacing:1px; font-size:10px;}
+  .gr-t-body{padding:2px 12px 12px; border-top:1px solid var(--line);}
+  .gr-fam-tag{font-size:10px; text-transform:uppercase; color:var(--gf); letter-spacing:.06em; margin:8px 0 2px; font-weight:700;}
+  .gr-row{display:grid; grid-template-columns:100px minmax(0,1fr); gap:8px; padding:7px 0; border-bottom:1px dashed var(--line); font-size:12.5px; line-height:1.6; color:var(--paper);}
+  .gr-lab{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--brass-dim); font-weight:700; padding-top:2px;}
+  .gr-cjs{display:flex; flex-wrap:wrap; gap:5px;}
+  .gr-cj{border:1px solid var(--line); border-radius:14px; padding:3px 9px; font-size:11.5px; background:var(--panel); cursor:pointer;}
+  .gr-cj b{font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--conj);}
+  .gr-cj i{font-style:normal; color:var(--paper-dim); margin-left:5px;}
+  .gr-onde{display:inline-block; border:1px solid var(--line); border-radius:12px; padding:2px 9px; font-size:11px; margin:0 5px 4px 0; background:var(--panel);}
+  .gr-warn{display:block; border-left:2px solid var(--amber); padding-left:8px;}
+  .gr-exs{margin-top:8px;}
+  .gr-hoje{background:color-mix(in srgb, var(--brass) 9%, transparent); border:1px solid var(--line); border-radius:10px; padding:8px 10px; margin:10px 0 8px; font-size:12.5px; line-height:1.6; color:var(--paper);}
+  details.gr-kit{border:1px solid var(--line); border-radius:12px; background:var(--panel-raised); margin:7px 0;}
+  details.gr-kit > summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:10px 12px; min-height:48px;}
+  details.gr-kit > summary::-webkit-details-marker{display:none;}
+  details.gr-kit > summary::after{content:'▾'; margin-left:auto; color:var(--brass-dim);}
+  details.gr-kit[open] > summary::after{transform:rotate(180deg);}
+  details.gr-kit > summary span{font-size:20px;}
+  .gr-kit-m{flex:1; min-width:0; display:flex; flex-direction:column; gap:1px;}
+  .gr-kit-m b{font-size:13px; color:var(--paper);}
+  .gr-kit-m small{font-size:11px; color:var(--paper-dim); line-height:1.4;}
+  details.gr-kit ul{list-style:none; margin:0; padding:0 12px 10px;}
+  details.gr-kit li{padding:6px 0; border-top:1px dashed var(--line); font-size:12.5px; line-height:1.9; color:var(--paper);}
+  .gr-estilos{display:grid; gap:8px; grid-template-columns:minmax(0,1fr);}
+  .gr-estilo{border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--panel-raised);}
+  .gr-estilo-t{font-weight:700; font-size:12.5px; margin-bottom:3px;}
+  .gr-estilo p{font-size:12.5px; line-height:1.6; color:var(--paper); margin:0 0 4px;}
+  .gr-lab-card{border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:var(--panel-deep); margin:10px 0;}
+  .gr-lab-t{font-weight:700; font-size:13px; color:var(--brass); margin-bottom:6px;}
+  .gr-lab-s{border-left:3px solid var(--gf, var(--line)); padding:4px 0 6px 10px; margin:6px 0;}
+  .gr-lab-f{font-size:11px; font-weight:700; color:var(--gf); margin-bottom:2px;}
+  .gr-lab-f span{font-weight:400; color:var(--paper-dim);}
+  .gr-q-placar{font-size:11.5px; color:var(--brass-dim); margin-bottom:6px;}
+  .gr-q-enun{font-size:13px; color:var(--paper); margin-bottom:4px;}
+  .gr-q-ops{display:grid; gap:8px; grid-template-columns:minmax(0,1fr); margin-top:6px;}
+  .gr-q-op{display:flex; flex-direction:column; align-items:flex-start; gap:1px; text-align:left; background:var(--panel-raised); border:1px solid var(--line); border-radius:10px; padding:9px 12px; cursor:pointer; color:var(--paper); font-family:inherit; font-size:12.5px; min-height:48px;}
+  .gr-q-op small{font-size:10.5px; color:var(--paper-dim);}
+  .gr-q-op:hover:not([disabled]){border-color:var(--brass);}
+  .gr-q-op[data-st="ok"]{border-color:var(--teal); background:color-mix(in srgb, var(--teal) 16%, var(--panel-raised));}
+  .gr-q-op[data-st="no"]{border-color:var(--red); background:color-mix(in srgb, var(--red) 14%, var(--panel-raised));}
+  .gr-q-op[data-st="dim"]{opacity:.55;}
+  .gr-q-fb{border:1px solid var(--line); border-left:3px solid var(--red); border-radius:10px; padding:9px 12px; margin-top:8px; font-size:12.5px; line-height:1.6; color:var(--paper); background:var(--panel-deep);}
+  .gr-q-fb[data-ok="true"]{border-left-color:var(--teal);}
+  .gr-q-forma{color:var(--paper-dim);}
+  @media (max-width:560px){ .gr-row{grid-template-columns:minmax(0,1fr); gap:2px;} }
+  @media (min-width:760px){
+    .gr-duo{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .gr-trio3,.gr-trio{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .gr-ints,.gr-estilos{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .gr-q-ops{grid-template-columns:repeat(2,minmax(0,1fr));}
+  }
+  @media (min-width:1000px){
+    .gr-branches{grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);}
+    .gr-subs{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .gr-lista{grid-template-columns:repeat(2,minmax(0,1fr));}
+    details.gr-t[open]{grid-column:1 / -1;}
+    .gr-t-body{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 22px;}
+    .gr-t-body > .gr-fam-tag,.gr-t-body > .gr-hoje,.gr-t-body > .gr-acts{grid-column:1 / -1;}
+    .gr-t-body > .gr-exs{grid-column:2; grid-row:2 / span 9;}
+  }
+
+  /* v133: aspectos recolhíveis na referência por tempo verbal */
+  details.ref-asp{border:1px solid var(--line); border-radius:10px; margin:6px 0; background:var(--panel-raised);}
+  details.ref-asp > summary{list-style:none; cursor:pointer; margin:0; padding:9px 12px; font-size:12px; border-radius:10px; min-height:40px;}
+  details.ref-asp > summary::-webkit-details-marker{display:none;}
+  details.ref-asp > summary::after{content:'▾'; margin-left:auto; color:var(--brass-dim); transition:transform .15s;}
+  details.ref-asp[open] > summary::after{transform:rotate(180deg);}
+  details.ref-asp > summary:hover{background:color-mix(in srgb, var(--brass) 8%, transparent);}
+  details.ref-asp > summary:focus-visible{outline:2px solid var(--brass); outline-offset:1px;}
+  details.ref-asp[open]{padding-bottom:10px;}
+  details.ref-asp[open] > :not(summary){margin-left:12px; margin-right:12px;}
+  .ref-n{font-weight:400; font-size:10.5px; color:var(--paper-dim); margin-left:6px;}
+  .ref-asp-tools{display:flex; gap:8px; margin:0 0 6px;}
   .ref-class-label{font-size:9.5px; color:var(--brass-dim); text-transform:uppercase; letter-spacing:0.06em; margin:5px 0 3px;}
   .ref-tag{display:inline-block; background:var(--panel-raised); border:1px solid var(--line); border-radius:14px; padding:4px 10px; font-size:11px; font-family:'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, 'Roboto Mono', 'Courier New', monospace; color:var(--paper-dim); margin:0 5px 5px 0;}
   .ref-tag[data-cat]{color:var(--cat); border-color:color-mix(in srgb, var(--cat) 40%, var(--line));}
@@ -513,7 +643,7 @@
   .par-assin{font-size:11px; line-height:1.6; margin:2px 0 6px; color:var(--paper-dim); overflow-wrap:anywhere;}
   .par-assin i{font-style:normal; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:10.5px;}
   /* v124: toque para ouvir — palavra a palavra nas frases dos motores e itens de vocabulário das listas */
-  #sentence, #modalSentence, .mont-frase, .par-en, .par-item .anat-frase, #practiceEN{cursor:pointer;}
+  #sentence, #modalSentence, .mont-frase, .par-en, .gr-en, .par-item .anat-frase, #practiceEN{cursor:pointer;}
   .w-on{background:color-mix(in srgb, var(--teal) 30%, transparent); border-radius:3px; box-shadow:0 0 0 2px color-mix(in srgb, var(--teal) 30%, transparent);}
   .ref-tag, .conj-card .ex:not(.no), .orac-conj-c, .ct-conj, table.matrix .cell-lines div{cursor:pointer;}
   .conj-card .ex:not(.no)::after, .orac-conj-c::after, .ct-conj::after{content:' 🔊'; font-size:.78em; opacity:.6;}
@@ -696,50 +826,85 @@
     .color-legend{gap:8px 20px; font-size:11.5px;}
   }
 
-  /* ---- NOTEBOOK / DESKTOP (≥ 1080px) ----
-     Os consoles passam a duas colunas: a frase resultante ocupa a largura toda
-     e continua fixa no topo, enquanto os dials se distribuem ao lado dela.
-     Assim a frase permanece visível enquanto se mexe em qualquer controle —
-     que é o gesto central do app. */
-  @media (min-width: 1080px){
-    body{padding: 36px 32px 80px;}
+  /* ---- NOTEBOOK / DESKTOP (≥ 1000px) — v132 ----
+     Ideia central: em tela larga a FRASE fica numa coluna fixa à esquerda e os CONTROLES correm à direita.
+     Antes a frase ficava fixa no topo, em largura total, e num notebook de 768 px de altura ela consumia
+     um quarto da tela; os controles se espalhavam em duas colunas automáticas, com buracos e títulos de
+     etapa desalinhados. Agora:
+       coluna 1 = painel da frase (sticky, com rolagem própria se a nota for longa)
+       coluna 2 = os dials em coluna única, na mesma ordem do celular (a ordem é a lição: etapas 1 → 2 → 3)
+     Tudo em CSS: a marcação é a mesma do celular e nada é reposicionado por JavaScript.
+     O painel da frase ocupa "60 linhas" da grade (grid-row: 3 / span 60) só para acompanhar a altura da
+     coluna de controles; as linhas vazias têm altura zero porque a grade não tem espaçamento vertical. */
+  @media (min-width: 1000px){
+    body{padding: 32px 28px 80px;}
     .app{max-width:1180px;}
-    .console{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:0 26px; align-items:start;}
-    .console > .console-label,
-    .console > .readout,
-    .console > .modal-readout,
-    .console > .practice-card,
-    .console > .db-toolbar,
-    .console > #modalAlerta,
-    .console > #dbList,
-    .console > #dbFamilyHead{grid-column:1 / -1;}
-    .console > .dial-group{margin-bottom:20px;}
-    /* seletores largos (verbos, sinais, regência) merecem a linha inteira */
-    #verboDialGroup, #signalDialGroup, #bankDialGroup, #colDialGroup{grid-column:1 / -1;}
-    /* a aba de expressões é navegação sequencial: tipo → família → grupo → lista.
-       Dividi-la em colunas quebraria a leitura, então tudo ocupa a largura toda. */
-    #console-expressoes > *{grid-column:1 / -1;}
-    .readout-sentence{font-size:30px;}
+    /* barra do topo: as seções à esquerda e as três ferramentas (velocidade, sotaque, tema) juntas à direita */
+    .topnav{justify-content:flex-start;}
+    .topnav .nav-pills{margin-right:auto;}
+
+    #console-tempos, #console-modais{display:grid; grid-template-columns:minmax(320px, 5fr) minmax(0, 8fr); gap:0 28px; align-items:start;}
+    #console-tempos > *, #console-modais > *{grid-column:2; min-width:0;}
+    #console-tempos > .console-label, #console-modais > .console-label,
+    #console-tempos > .sec-intro, #console-modais > .sec-intro{grid-column:1 / -1;}
+    #console-tempos > .readout, #console-modais > .modal-readout{
+      grid-column:1; grid-row:3 / span 60; margin-bottom:0;
+      top:calc(var(--nav-h, 56px) + 14px); max-height:calc(100vh - var(--nav-h, 56px) - 28px); overflow-y:auto; overscroll-behavior:contain;}
+    /* a 1ª etapa abre a coluna de controles: sem a linha e o respiro que a separavam do painel no celular */
+    #console-tempos > .readout + .etapa, #console-modais > .modal-readout + .etapa{margin-top:0; padding-top:2px; border-top:0;}
+    /* na coluna estreita a frase quebra por palavra, nunca no meio dela */
+    #console-tempos > .readout .readout-sentence, #console-modais > .modal-readout .readout-sentence{font-size:26px; overflow-wrap:break-word;}
+
+    /* prática: o cartão do desafio à esquerda (é onde se digita) e as configurações à direita */
+    #console-pratica{display:grid; grid-template-columns:minmax(0, 8fr) minmax(280px, 5fr); gap:0 28px; align-items:start;}
+    #console-pratica > *{grid-column:2; min-width:0;}
+    #console-pratica > .console-label, #console-pratica > .sec-intro{grid-column:1 / -1;}
+    #console-pratica > .practice-card{grid-column:1; grid-row:3 / span 20; margin-bottom:0; max-width:none;
+      top:calc(var(--nav-h, 56px) + 14px);}
     .practice-pt{font-size:22px;}
-    .practice-card{max-width:none;}
-    .modal-grid{grid-template-columns:repeat(6,1fr);}
+
+    .modal-grid{grid-template-columns:repeat(3,1fr);}
     .db-maps{grid-template-columns:repeat(3,1fr);}
+    /* cartões de leitura (atalhos e exemplos da Anatomia, parágrafos): em 1 coluna cada cartão ficava com ~1100 px de
+       largura e linhas longas demais para ler; em 2 colunas (a partir de 1000 px) o texto volta a ~500 px, e a página fica metade mais curta.
+       align-items:start: um cartão que cresce não estica o vizinho. Rótulos e filtros ocupam a linha inteira. */
+    .anat-grid, #paragrafosWrap{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:0 18px; align-items:start;}
+    .anat-grid > .ref-class-label, #paragrafosWrap > :not(.par-card){grid-column:1 / -1;}
+    /* parágrafo com a explicação aberta precisa da largura toda: são quatro eixos lado a lado */
+    #paragrafosWrap > .par-card:has(.par-nota){grid-column:1 / -1;}
     .bank-body{max-height:420px;}
-    /* a lista do banco em duas colunas aproveita a altura da tela */
     /* rolagem lateral é gesto de toque; com mouse, o natural é ver tudo de uma vez */
     .fam-row{flex-wrap:wrap; overflow-x:visible;}
     .letter-row{flex-wrap:wrap;}
+    /* a lista do banco em duas colunas aproveita a altura da tela */
     #dbList{column-count:2; column-gap:32px;}
     #dbList .db-item{break-inside:avoid;}
     #dbList .db-more{column-span:all;}
     table.matrix{font-size:12px;}
   }
 
-  /* ---- MONITOR GRANDE (≥ 1500px) ---- */
-  @media (min-width: 1500px){
-    .app{max-width:1360px;}
-    .readout-sentence{font-size:34px;}
+  /* ---- NOTEBOOK LARGO (≥ 1280px): mais ar e frase maior ---- */
+  @media (min-width: 1280px){
+    body{padding: 36px 32px 80px;}
+    .app{max-width:1240px;}
+    #console-tempos, #console-modais{grid-template-columns:minmax(380px, 5fr) minmax(0, 8fr); gap:0 32px;}
+    #console-tempos > .readout .readout-sentence, #console-modais > .modal-readout .readout-sentence{font-size:29px;}
+    .modal-grid{grid-template-columns:repeat(4,1fr);}
+  }
+
+  /* ---- DESKTOP (≥ 1536px) ---- */
+  @media (min-width: 1536px){
+    .app{max-width:1440px;}
+    #console-tempos, #console-modais{grid-template-columns:minmax(440px, 5fr) minmax(0, 8fr); gap:0 36px;}
+    #console-tempos > .readout .readout-sentence, #console-modais > .modal-readout .readout-sentence{font-size:32px;}
     #dbList{column-count:3;}
+  }
+
+  /* ---- MONITOR GRANDE (≥ 1920px): a largura cresce, mas com teto — linhas longas demais cansam a leitura ---- */
+  @media (min-width: 1920px){
+    .app{max-width:1600px;}
+    #console-tempos > .readout .readout-sentence, #console-modais > .modal-readout .readout-sentence{font-size:34px;}
+    .modal-grid{grid-template-columns:repeat(6,1fr);}
   }
 
   /* ---- Dispositivos com mouse: estados de hover que o toque não tem ---- */
@@ -1138,6 +1303,16 @@
   </section>
 
 
+  <section class="block" data-open="false" id="block-gramatica">
+    <div class="block-head" onclick="toggleBlock('block-gramatica')">
+      <div class="block-head-title"><div class="block-num">🌳</div><h2>Gramática das orações — o que são e quando usar</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div id="gramaticaWrap"></div>
+    </div></div>
+  </section>
+
   <section class="block" data-open="false" id="block-oracoes">
     <div class="block-head" onclick="toggleBlock('block-oracoes')">
       <div class="block-head-title"><div class="block-num">🔗</div><h2>Orações compostas — tipos e como ligar</h2></div>
@@ -1234,8 +1409,8 @@ document.addEventListener('click', function(e){
    (1) Nas frases dos motores, tocar numa palavra fala só aquela palavra. Não mexe no HTML da frase (as peças coloridas
        continuam abrindo o significado): a palavra é achada pela posição do toque e destacada por um instante.
    (2) Nas listas de vocabulário (expressões por tempo, nomes de conjunção, exemplos, linhas da tabela), tocar no item fala o item. */
-const FALA_FRASES = '#sentence, #modalSentence, .mont-frase, .par-en, .par-item .anat-frase, #practiceEN';
-const FALA_ITENS = '.ref-tag, .conj-card .ex:not(.no), .orac-conj-c, .ct-conj, table.matrix .cell-lines div';
+const FALA_FRASES = '#sentence, #modalSentence, .mont-frase, .par-en, .gr-en, .par-item .anat-frase, #practiceEN';
+const FALA_ITENS = '.ref-tag, .gr-cj, .conj-card .ex:not(.no), .orac-conj-c, .ct-conj, table.matrix .cell-lines div';
 function palavraNoPonto(x, y){
   let node = null, off = 0;
   if(document.caretRangeFromPoint){ const r = document.caretRangeFromPoint(x, y); if(r){ node = r.startContainer; off = r.startOffset; } }
@@ -1278,7 +1453,7 @@ document.addEventListener('click', function(e){
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.42';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.45';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -1463,7 +1638,9 @@ document.addEventListener('keydown', e=>{
 function setupNavSpy(){
   const pills = [...document.querySelectorAll('.nav-pill[data-section]')];
   const alvos = pills.map(p=>document.getElementById(p.dataset.section)).filter(Boolean);
-  const marcar = (id)=> pills.forEach(p=> p.setAttribute('data-current', String(p.dataset.section === id)));
+  /* seções de referência (block-*) não têm botão próprio: todas acendem "Referência", cujo alvo é block-matrix */
+  const marcar = (id)=>{ const alvo = /^block-/.test(id) ? 'block-matrix' : id;
+    pills.forEach(p=> p.setAttribute('data-current', String(p.dataset.section === alvo))); };
 
   if('IntersectionObserver' in window && alvos.length){
     const visiveis = new Map();
@@ -1474,6 +1651,7 @@ function setupNavSpy(){
       if(melhor) marcar(melhor);
     }, { rootMargin: '-64px 0px -55% 0px', threshold: [0, .15, .4, .75] });
     alvos.forEach(a=>io.observe(a));
+    document.querySelectorAll('section.block').forEach(a=>io.observe(a));     /* v132: seções de referência também */
   }
 
   const btn = document.getElementById('toTop');
@@ -11844,7 +12022,7 @@ function segPopShow(el){
   p.style.top = (r.bottom + pr.height + 12 < window.innerHeight ? r.bottom + 8 : Math.max(8, r.top - pr.height - 8)) + 'px';
   p.querySelector('.x').onclick = segPopHide;
 }
-document.addEventListener('click', e => { const sg = e.target.closest && e.target.closest('#sentence .seg, #modalSentence .seg, .mont-frase .seg, .par-card .seg'); if(sg){ segPopShow(sg); } else if(!(e.target.closest && e.target.closest('#segPop'))) segPopHide(); });
+document.addEventListener('click', e => { const sg = e.target.closest && e.target.closest('#sentence .seg, #modalSentence .seg, .mont-frase .seg, .par-card .seg, .gr-en .seg'); if(sg){ segPopShow(sg); } else if(!(e.target.closest && e.target.closest('#segPop'))) segPopHide(); });
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape') segPopHide();
   else if((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('seg')){ e.preventDefault(); segPopShow(document.activeElement); }
@@ -11983,15 +12161,19 @@ function buildAdverbsList(){
     <span><i style="background:${ADJ_COLOR.como}"></i>como / quanto</span>
     <span><i style="background:${ADJ_COLOR.onde}"></i>onde</span>
     <span><i style="background:${ADJ_COLOR.quando}"></i>quando</span>
-  </div>`;
+  </div>
+  <div class="ref-asp-tools"><button type="button" class="cross-link" data-asp-all="1">▾ Abrir todos</button><button type="button" class="cross-link" data-asp-all="0">▴ Recolher todos</button></div>`;
   tenseOrder.forEach(t=>{
     html += `<div class="ref-tense-block"><div class="ref-tense-title">${TENSE_ICON[t]} ${TENSE_LABEL[t]}</div>`;
     aspectOrder.forEach(asp=>{
       const key = `${t}_${asp}`; const words = SIGNAL_WORDS[key];
       if(!words || !words.length) return;
-      html += `<div class="ref-subhead">${ASPECT_ICON[asp]} ${ASPECT_LABEL[asp]}</div>`;
+      const todas = words.concat(SPLIT_SIGNALS[key] || []);
+      /* v133: o bloco tinha ~37 mil px de altura em tela larga. Cada aspecto agora é um <details>
+         recolhido: o aluno vê o mapa (tempo → aspecto → quantas expressões) e abre só o que procura. */
+      html += `<details class="ref-asp"><summary class="ref-subhead">${ASPECT_ICON[asp]} ${ASPECT_LABEL[asp]}<span class="ref-n">${todas.length} expressões</span></summary>`;
       const groups = {};
-      words.concat(SPLIT_SIGNALS[key] || []).forEach(w=>{ (groups[w.cls]=groups[w.cls]||[]).push(w); });
+      todas.forEach(w=>{ (groups[w.cls]=groups[w.cls]||[]).push(w); });
       Object.keys(CLASS_INFO).forEach(cls=>{
         if(!groups[cls]) return;
         html += `<div class="ref-class-label">${CLASS_INFO[cls].label}</div><div>`;
@@ -12003,6 +12185,7 @@ function buildAdverbsList(){
         });
         html += `</div>`;
       });
+      html += `</details>`;
     });
     const cj = CONJ_BY_TEMPO[t];
     if(cj.list.length){
@@ -12017,6 +12200,7 @@ function buildAdverbsList(){
     <span class="ref-tag">since 2020</span><span class="ref-tag">since Monday</span><span class="ref-tag">for three years</span><span class="ref-tag">for two hours</span>
   </div><div class="ref-conj-note">💡 "Since" marca o ponto de partida (desde X); "for" marca a duração (por/há X). Combinam com o perfeito em qualquer tempo — presente, passado ou futuro.</div></div>`;
   wrap.innerHTML = html;
+  wrap.querySelectorAll('[data-asp-all]').forEach(b=>{ b.onclick = ()=> wrap.querySelectorAll('details.ref-asp').forEach(d=>{ d.open = b.dataset.aspAll === '1'; }); });
 }
 /* A tabela nasceu como referência fixa (work / I) — um ponto de comparação estável.
    Com 114 verbos no banco, faz sentido poder vê-la com o verbo e o pronome do console:
@@ -13804,7 +13988,7 @@ function buildAnatomia(){
     </div>
 
     <div class="ref-class-label">Seis atalhos mentais</div>
-    ${atalhosHTML}
+    <div class="anat-grid">${atalhosHTML}</div>
 
     <div class="ref-class-label">O teto por cor</div>
     <div class="cor-resumo">
@@ -13852,7 +14036,7 @@ function buildAnatomia(){
     <div id="glossarioWrap"></div>
 
     <div class="ref-class-label">Combinações que valem a pena — por situação</div>
-    ${cards}
+    <div class="anat-grid">${cards}</div>
 
     <div class="ref-class-label">O limite — e por que não usá-lo</div>
     <div class="anat-frase-row">
@@ -15236,11 +15420,476 @@ function parAbrir(pi, si){
   const alvo = document.getElementById('console-tempos'); if(alvo) alvo.scrollIntoView({ behavior:'smooth' });
 }
 
+/* ================= v134: GRAMÁTICA DAS ORAÇÕES =================
+   Seção conceitual: o que é uma oração, como ligar ideias (coordenar × subordinar), a árvore dos 22 tipos, para que serve
+   cada um, onde aparece no dia a dia e como combinar. Complementa o catálogo técnico de "Orações compostas" (fórmulas,
+   restrições, verbos) e o acervo de "Parágrafos": aqui o foco é entender, imaginar usos e treinar o reconhecimento.
+   Regra do app mantida: NENHUMA frase em inglês é digitada à mão. Todos os exemplos vêm do motor, por referência
+   "id#n" a uma frase do acervo de Parágrafos (assim ficam sempre iguais ao que o console gera). Só os textos de
+   explicação, em português, são autorais. */
+const GRAM_FAM = {
+  coord:{ ic:'🔗', nome:'Orações coordenadas', lema:'ideias de mesmo peso, lado a lado',
+    o:`Ligam orações <b>independentes</b>: cada uma tem sentido sozinha e nenhuma manda na outra. A conjunção é só o fio entre elas.`,
+    teste:`<b>Teste do ponto final.</b> Troque a conjunção por um ponto. Se as duas metades continuam sendo frases completas, é coordenação.`,
+    quando:`Quando as ideias têm o mesmo peso e você quer ritmo, sequência ou contraste direto.`,
+    estilo:`Estilo direto: frases em linha reta, fáceis de seguir. É o jeito natural de falar e de relatar.` },
+  subst:{ ic:'🧱', nome:'Orações subordinadas substantivas', lema:'a ideia inteira no lugar de um substantivo',
+    o:`A oração <b>ocupa o lugar de um substantivo</b>: faz papel de sujeito, objeto, predicativo ou complemento de outra palavra. É a ideia inteira que se pensa, sabe, diz ou afirma.`,
+    teste:`<b>Teste do "isso".</b> Troque a oração por <i>it / this / that</i>. Se a frase continua funcionando ("She knows <i>it</i>"), é substantiva.`,
+    quando:`Quando o conteúdo de uma opinião, de uma dúvida, de um fato ou de uma tese é uma oração inteira.`,
+    estilo:`Estilo de ideias: opiniões, análises e relatos de pensamento. Dá profundidade e é a base do texto argumentativo.` },
+  adj:{ ic:'🏷️', nome:'Orações subordinadas adjetivas (relativas)', lema:'descrevem ou identificam um substantivo',
+    o:`A oração <b>descreve ou identifica um substantivo</b>, como um adjetivo faria: responde "qual?" ou "que tipo de?". Entra por um pronome relativo (<i>who, which, that, whose, where, when</i>).`,
+    teste:`<b>Teste do adjetivo.</b> Dá para trocar a oração por um adjetivo? ("the developer we needed" ≈ "the needed developer").`,
+    quando:`Quando você quer especificar ou acrescentar informação sobre uma pessoa ou coisa sem abrir outra frase.`,
+    estilo:`Estilo de precisão: frases compactas, com o detalhe carregado dentro do substantivo.` },
+  adv:{ ic:'🧭', nome:'Orações subordinadas adverbiais', lema:'dão a circunstância da ação principal',
+    o:`A oração <b>faz papel de advérbio</b>: dá a circunstância da ação principal (por quê, quando, para quê, em que condição, apesar de quê, comparado a quê). É o maior grupo: 9 tipos.`,
+    teste:`<b>Teste da circunstância.</b> Ela responde <i>por quê? quando? para quê? se? apesar de quê?</i> e pode mudar para o começo da frase.`,
+    quando:`Quando você quer dar contexto ao que diz: justificar, situar no tempo, impor condição, admitir um obstáculo.`,
+    estilo:`Estilo circunstanciado: motivo, tempo, condição e ressalva tornam o texto explicativo e elegante.` }
+};
+/* ordem de exibição (por família) */
+const GRAM_ORDEM = ['adit', 'adv', 'alt', 'expl', 'cons', 'subj', 'pred', 'obj', 'oi', 'cn', 'ap', 'rel', 'relx', 'caus', 'temp', 'cond', 'conc', 'final', 'cmp', 'conf', 'prop', 'csq'];
+/* freq: 1–3 = quanto aparece na fala e na escrita comuns (estimativa didática, não contagem de corpus)
+   reg: registro típico · onde: situações em que mais aparece · ex: frases do acervo (id#n) */
+const GRAM_TIPOS = {
+  adit:{ ic:'➕', nome:'Aditiva', freq:3, reg:'neutro', onde:['🗣️ conversa', '📖 narrativa', '💼 relato de rotina'],
+    o:`Soma duas ideias de mesmo peso: uma não depende da outra, e cada uma tem o seu sujeito e o seu verbo.`,
+    q:`Use para acumular informações, narrar uma sequência (<i>and then</i>) ou mostrar que duas coisas valem juntas.`,
+    pense:`Faça o teste do ponto final: troque o <i>and</i> por um ponto e as duas metades continuam frases completas. Quando o sujeito é o mesmo, dá para cortar o segundo (<i>She studies and reviews</i>).`,
+    atencao:`Em orações curtas dispensa vírgula; em orações longas a vírgula ajuda. Mantenha os tempos paralelos: <i>She studied and works</i> soa errado.`,
+    hoje:`Conte a sua manhã em três ações ligadas por <i>and</i> e <i>and then</i>: acordar, treinar, começar a trabalhar.`,
+    ex:['k5#4', 'k1#2', 'm1#3'] },
+  adv:{ ic:'↔️', nome:'Adversativa', freq:3, reg:'neutro', onde:['🗣️ conversa', '💼 feedback', '🧭 argumentação'],
+    o:`Contrapõe duas ideias: a segunda quebra a expectativa criada pela primeira.`,
+    q:`Use para marcar um contraste, uma ressalva ou uma surpresa: "faz X, mas não faz Y".`,
+    pense:`<i>But</i> é o contraste do dia a dia. <i>Yet</i> acrescenta surpresa ("e ainda assim"). <i>Whereas</i> e <i>while</i> comparam dois fatos lado a lado, sem surpresa.`,
+    atencao:`<i>However</i> não liga duas orações só com vírgula: ponha ponto final ou ponto e vírgula antes (<i>…; however, …</i>). E nunca use <i>but</i> junto com <i>although</i> (<i>Although… but…</i> ✗).`,
+    hoje:`Dê um feedback equilibrado a três pessoas do seu dia: "gostei do X, mas faltou Y".`,
+    ex:['con3#1', 'fin2#1', 'via2#1'] },
+  alt:{ ic:'🔀', nome:'Alternativa', freq:2, reg:'neutro', onde:['🗣️ planos', '🤝 negociação', '📅 agenda'],
+    o:`Apresenta alternativas: só uma das ideias vai acontecer, ou escolher uma exclui a outra.`,
+    q:`Use para propor opções, deixar uma decisão em aberto ou avisar de uma consequência ("ou… ou").`,
+    pense:`<i>Or</i> abre opções. <i>Either… or</i> reforça que são só duas. <i>Neither… nor</i> nega as duas. <i>Otherwise</i> funciona como "senão": a segunda oração é o preço de não fazer a primeira.`,
+    atencao:`Em <i>either… or</i> e <i>neither… nor</i>, o verbo concorda com o sujeito mais próximo (<i>Neither he nor I know</i>).`,
+    hoje:`Ofereça duas opções a alguém ("almoçamos agora ou esperamos a reunião") e dê o aviso com <i>otherwise</i>.`,
+    ex:['m11#1', 'k1#4', 'm2#2'] },
+  expl:{ ic:'📝', nome:'Explicativa', freq:1, reg:'formal', onde:['📰 texto escrito', '🎓 acadêmico', '✍️ narração'],
+    o:`Dá a justificativa do que acabou de ser dito. É coordenada porque a explicação vem depois, solta, sem se encaixar na principal.`,
+    q:`Use para justificar uma afirmação sem fazer da razão o centro da frase. Soa cuidado e escrito.`,
+    pense:`No dia a dia, <i>because</i> faz o mesmo trabalho e é muito mais comum. <i>For</i> como conjunção é de escrita cuidada e vem sempre depois de vírgula.`,
+    atencao:`<i>For</i> só explica depois: nunca abre a frase (<i>For he wants to learn, she studies</i> ✗). Na fala, prefira <i>because</i>.`,
+    hoje:`Reescreva três frases suas com <i>because</i> e depois com <i>, for</i>, e sinta a diferença de registro.`,
+    ex:['exp1#1', 'exp4#1', 'exp3#1'] },
+  cons:{ ic:'➡️', nome:'Conclusiva', freq:3, reg:'neutro', onde:['🗣️ conversa', '📊 relatório', '💼 e-mail'],
+    o:`Tira a consequência ou a conclusão da ideia anterior.`,
+    q:`Use quando o segundo fato é resultado do primeiro: "fez X, então Y".`,
+    pense:`<i>So</i> é o "então" da conversa. <i>Therefore</i>, <i>thus</i> e <i>hence</i> são formais. <i>Which is why</i> põe o resultado em destaque ("e é por isso que").`,
+    atencao:`Na escrita formal, <i>therefore</i> vem depois de ponto ou ponto e vírgula (<i>…; therefore, …</i>). O <i>so</i> liga com vírgula, mas é informal para texto acadêmico.`,
+    hoje:`Termine o relato do seu dia com <i>so</i>: o que aconteceu e o que você fez por causa disso.`,
+    ex:['exp4#3', 'exp3#2', 'trab2#3'] },
+  subj:{ ic:'🔎', nome:'Subjetiva', freq:2, reg:'neutro', onde:['💼 reuniões', '📊 relatórios', '🧭 argumentação'],
+    o:`A oração faz o papel de sujeito. Em inglês quase sempre entra por <i>It is + adjetivo + that / to</i>: o <i>it</i> segura o lugar e a ideia vem depois.`,
+    q:`Use para apresentar uma ideia como fato, princípio ou avaliação, sem dizer quem pensa isso: "é importante que…".`,
+    pense:`Troque a oração por "isso": <i>It is important to plan</i> = "planejar é importante". O <i>it</i> é só um lugar reservado; o assunto de verdade vem no fim.`,
+    atencao:`O <i>it</i> é obrigatório: <i>Is important to plan</i> ✗. Em português o sujeito pode sumir; em inglês, não.`,
+    hoje:`Dê uma opinião sobre algo do seu trabalho começando com <i>It is important / clear / true…</i>.`,
+    ex:['m7#1', 'm17#1', 'm8#4'] },
+  pred:{ ic:'📌', nome:'Predicativa', freq:2, reg:'neutro', onde:['💼 reuniões', '🗣️ conversa', '📊 diagnóstico'],
+    o:`A oração é o predicativo: depois de <i>be</i>, ela diz o que o sujeito (um substantivo como <i>the problem, the truth, the point</i>) é.`,
+    q:`Use para nomear o problema, a verdade ou o ponto central antes de explicar: "o problema é que…".`,
+    pense:`Fórmula de três peças: <i>The (problem / truth / point / reason) is that</i> + oração completa. Ela anuncia e depois revela.`,
+    atencao:`A oração depois de <i>is that</i> precisa de sujeito próprio: <i>The problem is never sleeps</i> ✗. Na fala o <i>that</i> pode cair.`,
+    hoje:`Apresente o próximo problema do seu dia com <i>The problem is that…</i> e a solução com <i>The point is that…</i>.`,
+    ex:['arg1#1', 'k7#1', 'k3#1'] },
+  obj:{ ic:'💭', nome:'Objetiva direta', freq:3, reg:'neutro', onde:['🗣️ conversa', '📰 notícias', '💼 relatos'],
+    o:`A oração é o objeto direto de verbos de pensar, saber, dizer e sentir: ela diz o <b>conteúdo</b> do que se pensa ou se afirma.`,
+    q:`Use para relatar opinião, informação ou dúvida: <i>I think…, She says…, He asks whether…</i>.`,
+    pense:`Troque a oração por "isso": <i>She knows that…</i> = "ela sabe isso". Para sim ou não use <i>if / whether</i>; para "quem, quando, como" use a palavra interrogativa, mas com ordem de frase afirmativa.`,
+    atencao:`A pergunta indireta mantém a ordem de afirmação e não leva interrogação: <i>She asks whether the test is difficult</i>. Na fala o <i>that</i> some: <i>I think it is risky</i>.`,
+    hoje:`Relate algo que alguém disse hoje com <i>She said (that)…</i> e algo que você ainda não sabe com <i>I wonder whether…</i>.`,
+    ex:['m12#1', 'k9#2', 'm13#1'] },
+  oi:{ ic:'🧷', nome:'Objetiva indireta', freq:2, reg:'neutro', onde:['🗣️ conversa', '💼 reuniões', '🎓 debate'],
+    o:`A oração vem depois de verbo + preposição (<i>talk about, depend on, insist on, think about</i>). Funciona como objeto preposicionado.`,
+    q:`Use para falar sobre um assunto que é uma ideia inteira: "falamos sobre como é difícil".`,
+    pense:`Depois de preposição não entra <i>that</i>. Use <i>how / whether / what / why</i> ou o verbo em <i>-ing</i>: <i>insist on understanding</i>, <i>talk about how tight it is</i>.`,
+    atencao:`Nunca use <i>that</i> depois de preposição (<i>We talk about that it is hard</i> ✗). Troque por <i>how</i>, <i>whether</i> ou <i>-ing</i>.`,
+    hoje:`Descreva uma conversa recente com <i>We talked about how / whether…</i>.`,
+    ex:['m4#1', 'm12#2', 'm9#1'] },
+  cn:{ ic:'🗞️', nome:'Completiva nominal', freq:1, reg:'formal', onde:['🎓 escrita', '📰 notícias', '🧭 argumentação'],
+    o:`A oração completa um substantivo abstrato (<i>fact, idea, belief, possibility, news, rumor</i>): diz <b>qual</b> é o fato, a ideia, a crença.`,
+    q:`Use para dar conteúdo a conceitos: "o fato de que…", "a possibilidade de que…", "a crença de que…".`,
+    pense:`O português pede preposição depois do substantivo ("a ideia <b>de</b> que"). O inglês não: <i>the idea that</i>. O erro mais comum é <i>the idea of that</i>.`,
+    atencao:`Não confunda com relativa: em <i>the fact that it is hard</i> a oração é completa e o <i>that</i> não some. Em <i>the book (that) she needs</i> falta o objeto, e o <i>that</i> pode sumir.`,
+    hoje:`Abra uma opinião com <i>the fact that…</i> ou <i>the possibility that…</i> para falar de algo que incomoda.`,
+    ex:['m10#1', 'm2#1', 'k17#1'] },
+  ap:{ ic:'✒️', nome:'Apositiva', freq:1, reg:'formal', onde:['✍️ escrita', '🎤 apresentações', '🧭 discursos'],
+    o:`A oração explica o substantivo que vem antes dela e entra depois de dois-pontos.`,
+    q:`Use para anunciar e revelar: "uma meta: aprender", "um fato: ele saiu". Dá ritmo e ênfase.`,
+    pense:`Dois tempos: primeiro o substantivo (<i>one goal, one fact</i>), uma pausa (os dois-pontos) e depois a revelação. Metas e intenções pedem <i>to</i> + verbo; fatos e ideias pedem <i>that</i> + oração.`,
+    atencao:`Não misture: <i>one goal: that she…</i> soa estranho; meta pede <i>to</i> (<i>one goal: to earn more</i>), fato pede <i>that</i>.`,
+    hoje:`Apresente a sua meta da semana: <i>I have one goal: to…</i>.`,
+    ex:['m5#1', 'm13#3', 'k4#1'] },
+  rel:{ ic:'🏷️', nome:'Adjetiva restritiva', freq:3, reg:'neutro', onde:['🗣️ conversa', '💼 trabalho', '📖 qualquer texto'],
+    o:`A oração descreve um substantivo e o <b>identifica</b>: responde "qual?". Sem ela, a frase perde o sentido.`,
+    q:`Use para especificar de quem ou de que você fala: "o desenvolvedor <i>de que precisávamos</i>".`,
+    pense:`Sem vírgula, sempre. <i>Who</i> para pessoas, <i>which / that</i> para coisas, <i>whose</i> para posse. Quando o pronome é objeto da oração, ele pode sumir: <i>the developer we needed</i>.`,
+    atencao:`Não repita o objeto: <i>the book that she needs it</i> ✗. O pronome relativo já ocupa o lugar do objeto.`,
+    hoje:`Descreva três coisas do seu dia com <i>the … (that) I …</i>: o café que bebi, o livro que li, o cliente de quem falei.`,
+    ex:['m1#1', 'k3#2', 'k14#2'] },
+  relx:{ ic:'💬', nome:'Adjetiva explicativa', freq:2, reg:'formal', onde:['📰 notícias', '✍️ escrita', '🎓 acadêmico'],
+    o:`A oração acrescenta uma informação <b>extra</b> sobre algo que já está identificado. Vem entre vírgulas e poderia ser apagada.`,
+    q:`Use para comentar de passagem: dar um dado, uma opinião ou um detalhe sem restringir de quem você fala.`,
+    pense:`Vírgulas são parênteses. Apague a oração: se a frase continua identificando o mesmo substantivo, ela é explicativa. Aqui nunca entra <i>that</i>: só <i>who, which, whose, where</i>.`,
+    atencao:`A vírgula muda o sentido: <i>My brother who lives in Rome</i> (tenho outros irmãos) ≠ <i>My brother, who lives in Rome</i> (só tenho este).`,
+    hoje:`Apresente alguém com um comentário extra: <i>My manager, who…</i>.`,
+    ex:['k5#1', 'm5#2', 'k11#1'] },
+  caus:{ ic:'❓', nome:'Causal', freq:3, reg:'neutro', onde:['🗣️ conversa', '💼 e-mails', '🤝 negociação'],
+    o:`Dá o motivo da ação principal: responde "por quê?".`,
+    q:`Use para justificar uma decisão, explicar um atraso ou dar crédito a quem merece.`,
+    pense:`<i>Because</i> põe o motivo em destaque (resposta a "why?"), geralmente no fim. <i>Since</i> e <i>as</i> apresentam um motivo já conhecido, normalmente no começo e com vírgula. <i>Because of</i> pede substantivo.`,
+    atencao:`<i>Because of</i> + substantivo (<i>because of the traffic</i>); <i>because</i> + oração (<i>because there was traffic</i>). Como frase sozinha, <i>Because…</i> só vale em resposta a um "why?".`,
+    hoje:`Justifique a sua próxima decisão com <i>because</i> e a seguinte com <i>since</i>; note onde cada um cai bem.`,
+    ex:['via1#1', 'k15#3', 'cau1#3'] },
+  temp:{ ic:'⏳', nome:'Temporal', freq:3, reg:'neutro', onde:['💼 prazos', '🗣️ planos', '📖 narrativas'],
+    o:`Situa a ação no tempo: diz <b>quando</b>, em que ordem ou por quanto tempo.`,
+    q:`Use para narrar, combinar prazos e encadear tarefas: "quando chegar, ligo", "assim que terminar, envio".`,
+    pense:`Se a ação é futura, a oração de tempo fica no <b>presente</b>: <i>I will call you when I arrive</i>. O <i>will</i> fica só na principal. <i>Before</i> e <i>after</i> ordenam; <i>while</i> mostra ações simultâneas; <i>until</i> marca o limite.`,
+    pt:`Em português o verbo vai para o futuro do subjuntivo ("quando eu chegar"); em inglês é presente simples (<i>when I arrive</i>).`,
+    atencao:`A armadilha clássica: <i>when I will arrive</i> ✗. E <i>while</i> pede ação em andamento (<i>while she was driving</i>).`,
+    hoje:`Combine um prazo de hoje com <i>as soon as</i> e outro com <i>by the time</i>.`,
+    ex:['trab2#1', 'est1#3', 'via2#2'] },
+  cond:{ ic:'🚦', nome:'Condicional', freq:3, reg:'neutro', onde:['🤝 negociação', '💼 prazos', '🗣️ planos', '🧭 hipóteses'],
+    o:`Põe uma condição: a principal só vale se a oração com <i>if</i> (ou equivalente) se cumprir.`,
+    q:`Use para prometer, negociar, avisar e imaginar: "se chover, ficamos", "se eu tivesse tempo, faria".`,
+    pense:`Quatro graus. (0) fatos: <i>if</i> + presente, presente. (1) realista: <i>if</i> + presente, <i>will</i>. (2) hipotético: <i>if</i> + passado, <i>would</i>. (3) impossível, no passado: <i>if</i> + <i>had</i> + particípio, <i>would have</i>. <i>Unless</i> = "if not"; <i>as long as</i> = "contanto que"; <i>in case</i> = "caso", como precaução.`,
+    pt:`O português usa o subjuntivo ("se eu tivesse", "se chover"); o inglês usa tempos do indicativo (<i>if I had</i>, <i>if it rains</i>).`,
+    atencao:`Não use <i>will</i> logo depois de <i>if</i> (<i>if it will rain</i> ✗). E <i>in case</i> não é <i>if</i>: <i>Take an umbrella in case it rains</i> = leve por precaução, não "se chover".`,
+    hoje:`Faça uma proposta com <i>if</i>, uma ressalva com <i>unless</i> e uma precaução com <i>in case</i>.`,
+    ex:['cond1#1', 'cond2#1', 'cond1#2'] },
+  conc:{ ic:'🚧', nome:'Concessiva', freq:2, reg:'neutro', onde:['🧭 argumentação', '💼 negociação', '✍️ escrita', '🗣️ conversa'],
+    o:`Admite um obstáculo ou um fato contrário, mas mostra que a principal continua valendo: "apesar de ser difícil, ela fez".`,
+    q:`Use para reconhecer o ponto contrário antes de rebater, mantendo a sua posição. É o movimento de quem argumenta com elegância.`,
+    pense:`<i>Although / though / even though</i> + oração completa. <i>Despite / in spite of</i> + substantivo ou <i>-ing</i>. <i>Even though</i> reforça um fato real; <i>even if</i> imagina uma hipótese. <i>While</i> também pode conceder ("embora").`,
+    pt:`O português usa <i>embora</i> + subjuntivo ("embora seja difícil"); o inglês usa o indicativo normal (<i>although it is hard</i>).`,
+    atencao:`Não repita a ideia de contraste: <i>Although it is hard, but she studies</i> ✗. E <i>despite of</i> não existe: use <i>despite</i> ou <i>in spite of</i>.`,
+    hoje:`Antes de discordar de alguém hoje, reconheça o ponto dele com <i>Although…</i> e só depois dê o seu.`,
+    ex:['sau1#4', 'fin1#2', 'con3#2'] },
+  final:{ ic:'🎯', nome:'Final', freq:3, reg:'neutro', onde:['💼 e-mails', '🗣️ conversa', '📋 planos'],
+    o:`Diz o objetivo da ação principal: responde "para quê?".`,
+    q:`Use para explicar intenções, planos e propósitos: "treino para ficar forte".`,
+    pense:`Mesmo sujeito: <i>to / in order to / so as to</i> + verbo base. Sujeitos diferentes ou propósito mais formal: <i>so that</i> + oração (geralmente com <i>can, will, could, would</i>). Para negar: <i>in order not to</i> / <i>so as not to</i>.`,
+    pt:`O português usa "para" + infinitivo (mesmo sujeito) e "para que" + subjuntivo (sujeitos diferentes).`,
+    atencao:`Não use <i>for</i> + verbo para dizer objetivo: <i>I study for pass</i> ✗. Use <i>to pass</i>.`,
+    hoje:`Explique três coisas que você faz hoje terminando cada uma com <i>to</i> ou <i>in order to</i>.`,
+    ex:['sau2#2', 'com2#1', 'fin2#3'] },
+  cmp:{ ic:'⚖️', nome:'Comparativa', freq:2, reg:'neutro', onde:['🗣️ conversa', '💼 avaliação', '📊 análise'],
+    o:`Compara duas ações, qualidades ou quantidades: uma mede a outra.`,
+    q:`Use para igualar (<i>as… as</i>), superar (<i>more… than</i>) ou ficar abaixo (<i>less… than</i>).`,
+    pense:`A segunda parte é uma oração reduzida pelo auxiliar: <i>than he does</i>, <i>as you do</i>. O auxiliar evita repetir o verbo da primeira.`,
+    atencao:`<i>As… as</i> pede <i>as</i> nos dois lados (<i>as hard as</i>; <i>as hard than</i> ✗), e <i>than</i> só com comparativo (<i>more… than</i>).`,
+    hoje:`Compare o seu ritmo com o de um colega: <i>I work as … as</i> ou <i>more … than</i>.`,
+    ex:['prop3#3', 'k10#4', 'k13#3'] },
+  conf:{ ic:'📐', nome:'Conformativa', freq:1, reg:'formal', onde:['💼 e-mails', '📋 relatórios', '🤝 contratos'],
+    o:`Diz que a ação segue um combinado, um plano ou algo que foi dito: "conforme combinamos".`,
+    q:`Use para registrar que algo está de acordo com o planejado e dar segurança a quem lê: "conforme discutimos", "como planejado".`,
+    pense:`<i>As</i> + sujeito + verbo (<i>as we agreed</i>). <i>Just as</i> reforça a fidelidade ("exatamente como"). <i>According to</i> pede substantivo (<i>according to the plan</i>).`,
+    atencao:`Aqui <i>as</i> não é comparação nem causa: é "conforme". Em texto profissional, prefira <i>as</i> a <i>like</i> + oração, que é informal.`,
+    hoje:`Comece o seu próximo e-mail de acompanhamento com <i>As we agreed…</i>.`,
+    ex:['arg3#2', 'k13#2', 'm16#1'] },
+  prop:{ ic:'📈', nome:'Proporcional', freq:1, reg:'neutro', onde:['🗣️ máximas', '🎓 estudo', '📊 análise'],
+    o:`Liga duas ideias que crescem ou diminuem juntas: "quanto mais X, mais Y".`,
+    q:`Use para formular regras de proporção, ganhos de esforço e tendências.`,
+    pense:`Molde fixo: <i>The more + oração, the more + oração</i>. As duas partes são comparativos; para o inverso, <i>the less</i>.`,
+    atencao:`Os dois lados começam com <i>the</i>. O verbo segue o tempo normal: <i>The more I read, the more I learn</i>.`,
+    hoje:`Formule a sua regra de vida: <i>The more I…, the more I…</i>.`,
+    ex:['prop2#1', 'prop1#1', 'prop3#1'] },
+  csq:{ ic:'🎚️', nome:'Consecutiva', freq:2, reg:'neutro', onde:['🗣️ conversa', '📖 narrativa', '🧭 ênfase'],
+    o:`Mede a intensidade pelo resultado: a ação é tão forte que produz um efeito.`,
+    q:`Use para mostrar causa e efeito com ênfase: "trabalha tanto que…".`,
+    pense:`<i>So</i> + adjetivo ou advérbio + <i>that</i> + oração. Com substantivo: <i>such a</i> (+ adjetivo) + substantivo + <i>that</i>.`,
+    atencao:`Não é o <i>so</i> conclusivo: lá ele liga duas orações (<i>…, so she…</i>); aqui vem antes do adjetivo ou advérbio. O <i>that</i> pode sumir na fala.`,
+    hoje:`Exagere de propósito: <i>I was so tired that…</i>.`,
+    ex:['sau2#4', 'prop2#2', 'k12#3'] }
+};
+/* mapa de intenções: o que eu quero fazer com a segunda ideia → quais orações servem */
+const GRAM_INTENTS = [
+  ['➕', 'Somar mais uma ideia', ['adit']],
+  ['🪜', 'Sequenciar ações (primeiro… depois)', ['adit', 'temp']],
+  ['↔️', 'Contrastar ou fazer uma ressalva', ['adv', 'conc']],
+  ['🧱', 'Admitir o obstáculo e seguir em frente', ['conc']],
+  ['🔀', 'Oferecer opções ou avisar de uma consequência', ['alt']],
+  ['❓', 'Dar o motivo', ['caus', 'expl']],
+  ['➡️', 'Concluir ou mostrar o efeito', ['cons', 'csq']],
+  ['🎯', 'Dizer para quê', ['final']],
+  ['🚦', 'Impor ou imaginar uma condição', ['cond']],
+  ['⏳', 'Dizer quando ou em que ordem', ['temp']],
+  ['⚖️', 'Comparar', ['cmp', 'prop']],
+  ['📐', 'Mostrar que segue o combinado', ['conf']],
+  ['💭', 'Contar o que alguém pensa, sabe ou disse', ['obj', 'oi']],
+  ['📌', 'Enunciar a tese ("o problema é…")', ['pred', 'subj']],
+  ['🗞️', 'Dar conteúdo a um conceito (fato, ideia, crença)', ['cn', 'ap']],
+  ['🏷️', 'Identificar de quem ou de que falo', ['rel']],
+  ['💬', 'Acrescentar um comentário de passagem', ['relx']],
+  ['🎚️', 'Dar ênfase à intensidade', ['csq']]
+];
+/* kits por situação: que orações mais rendem em cada contexto, e como */
+const GRAM_KITS = [
+  { ic:'🗣️', nome:'Conversa do dia a dia', d:'Frases curtas, ritmo de fala, justificativas na hora.', it:[
+    ['adit', 'narra a rotina em linha reta: <i>and</i>, <i>and then</i>.'], ['adv', 'dá o "mas" que torna a conversa honesta.'],
+    ['caus', '<i>because</i> responde ao "por quê?" na hora.'], ['temp', '<i>when / after / before</i> combinam horários.'],
+    ['cond', '<i>if</i> faz convites e planos: "se der, a gente vai".'], ['rel', 'identifica pessoas e coisas ("o cara que…").'],
+    ['obj', '<i>I think / she said (that)</i> relata opiniões.']] },
+  { ic:'💼', nome:'Reunião e e-mail profissional', d:'Precisão, polidez e registro do que foi combinado.', it:[
+    ['final', 'explica o objetivo: <i>to align</i>, <i>in order to confirm</i>.'], ['conf', '<i>as we agreed</i> registra o combinado.'],
+    ['temp', '<i>as soon as / by the time</i> fixam prazos.'], ['cond', '<i>as long as / unless</i> impõem condições com educação.'],
+    ['caus', '<i>since / given that</i> justificam sem soar defensivo.'], ['conc', '<i>although</i> reconhece o risco e mantém a proposta.']] },
+  { ic:'🤝', nome:'Negociação', d:'Propostas firmes, limites claros e trocas.', it:[
+    ['cond', 'tipo 1 para propostas firmes, tipo 2 para hipóteses; <i>provided that</i> reforça.'], ['conc', '<i>even if</i> sinaliza até onde você vai.'],
+    ['alt', '<i>either… or</i> oferece duas saídas controladas; <i>otherwise</i> mostra o preço de recusar.'],
+    ['prop', '<i>the more… the less</i> mostra a troca entre as partes.'], ['cons', '<i>so</i> e <i>which is why</i> amarram a conclusão.']] },
+  { ic:'📊', nome:'Relatório, análise e diagnóstico', d:'Nomear o achado, tratá-lo como premissa e concluir.', it:[
+    ['pred', '<i>The problem is that…</i> nomeia o achado.'], ['cn', '<i>the fact that…</i> trata um dado como premissa.'],
+    ['subj', '<i>It is clear that…</i> apresenta a conclusão sem dono.'], ['cmp', 'compara resultados e períodos.'],
+    ['relx', 'acrescenta um dado extra entre vírgulas.'], ['cons', '<i>therefore</i> encerra a análise.']] },
+  { ic:'🎓', nome:'Estudo e escrita acadêmica', d:'Objeções reconhecidas, conceitos nomeados, relações formuladas.', it:[
+    ['conc', 'reconhece a objeção antes da tese.'], ['cn', 'dá nome ao conceito: <i>the idea that…</i>.'],
+    ['ap', 'anuncia a tese com dois-pontos: <i>one claim: that…</i>.'], ['relx', 'define termos com comentário extra.'],
+    ['prop', 'formula relações: <i>the more… the more…</i>.'], ['expl', '<i>for</i>, em texto formal, justifica depois da afirmação.']] },
+  { ic:'🧭', nome:'Argumentar e convencer', d:'Admitir, justificar, imaginar e intensificar.', it:[
+    ['conc', 'admite o ponto contrário e rebate.'], ['caus', 'dá a razão da posição.'], ['cond', 'testa a posição com uma hipótese.'],
+    ['csq', 'intensifica: "tão grave que…".'], ['pred', 'enuncia o ponto central: <i>The point is that…</i>.'], ['alt', 'monta um dilema: "ou… ou".']] },
+  { ic:'📖', nome:'Contar uma história', d:'Ordem dos fatos, viradas e consequências.', it:[
+    ['temp', '<i>when / while / before / after</i> ordenam e dão simultaneidade.'], ['adit', '<i>and then</i> encadeia as ações.'],
+    ['adv', '<i>but</i> traz a virada.'], ['cons', '<i>so</i> mostra a consequência.'], ['csq', '<i>so… that</i> dramatiza.'],
+    ['relx', 'comentário de narrador entre vírgulas.']] }
+];
+/* laboratório: parágrafos do acervo em que as 4 famílias aparecem sobre a mesma ideia */
+const GRAM_LAB = ['k3', 'k14'];
+/* ---- estado e utilitários ---- */
+let gramFiltro = 'todas';
+let gramQuiz = { cur:null, feitas:0, certas:0, ultima:null };
+const gramNomeCurto = k => GRAM_TIPOS[k].nome;
+const gramFamCor = f => PAR_FAMS[f].cor;
+const gramCap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const gramPontos = n => '●'.repeat(n) + '○'.repeat(3 - n);
+/* frase do acervo por referência "id#n" → { i, j, r (frase montada), P } */
+function gramFraseRef(ref){
+  const [id, n] = ref.split('#'), i = PARAGRAFOS.findIndex(p => p.id === id), j = +n - 1;
+  const m = parMontados()[i]; if(!m || !m.fr[j]){ console.warn('[gramática] frase ausente: ' + ref); return null; }
+  return { i, j, r:m.fr[j], P:PARAGRAFOS[i] };
+}
+function gramExHTML(ref){
+  const x = gramFraseRef(ref); if(!x) return '';
+  const tema = x.P.tema;
+  return `<div class="gr-ex"><div class="gr-ex-ctx">${PAR_TEMA_IC[tema] || ''} ${gramCap(tema)}</div>
+    <div class="gr-ex-row"><div class="gr-en">${x.r.html}</div>${btnAud(x.r.texto)}</div>
+    <div class="gr-pt">${escapeHTML(x.r.pt)}</div>
+    <button type="button" class="cross-link gr-abrir" data-i="${x.i}" data-j="${x.j}">⚙️ montar no console</button></div>`;
+}
+/* cartão de um tipo (details recolhido) */
+function gramCardHTML(k){
+  const G = GRAM_TIPOS[k], T = O2_TIPOS.find(t => t.k === k), f = parFam(k), F = GRAM_FAM[f];
+  const conjs = T.conjs.map(c => `<span class="gr-cj"><b>${escapeHTML(c.en)}</b><i>${escapeHTML(c.pt)}</i></span>`).join('');
+  const forma = PAR_FORMA[k].replace(/\{c\}/g, T.conjs[0].en);
+  const reg = { informal:'🗣️ informal', neutro:'⚖️ neutro', formal:'🎩 formal' }[G.reg];
+  const linha = (rot, txt) => `<div class="gr-row"><div class="gr-lab">${rot}</div><div class="gr-val">${txt}</div></div>`;
+  return `<details class="gr-t" id="gr-t-${k}" data-k="${k}" data-f="${f}" style="--gf:${gramFamCor(f)}">
+    <summary><span class="gr-t-ic">${G.ic}</span><span class="gr-t-main"><b>${G.nome}</b><small>${PAR_PAPEL[k]}</small></span>
+      <span class="gr-t-meta"><span class="gr-dots" title="uso no dia a dia (estimativa didática)">${gramPontos(G.freq)}</span><span class="gr-reg">${reg}</span></span></summary>
+    <div class="gr-t-body">
+      <div class="gr-fam-tag">${F.ic} ${F.nome}</div>
+      ${linha('O que é', G.o)}
+      ${linha('Use quando', G.q)}
+      ${linha('Como se forma', forma)}
+      ${linha('Conjunções', `<div class="gr-cjs">${conjs}</div>`)}
+      ${linha('Pense assim', G.pense)}
+      ${G.pt ? linha('Em português', G.pt) : ''}
+      ${linha('Onde aparece', G.onde.map(o => `<span class="gr-onde">${o}</span>`).join(''))}
+      ${linha('Armadilha', `<span class="gr-warn">${G.atencao}</span>`)}
+      <div class="gr-exs"><div class="gr-lab">No dia a dia (gerado pelo motor)</div>${G.ex.map(gramExHTML).join('')}</div>
+      <div class="gr-hoje"><b>🧪 Experimente hoje:</b> ${G.hoje}</div>
+      <div class="gr-acts">
+        <button type="button" class="signal-chip" data-gr-motor="${k}">⚙️ Usar no motor</button>
+        <button type="button" class="signal-chip" data-gr-par="${k}">📚 Ver parágrafos com este tipo</button>
+        <button type="button" class="signal-chip" data-gr-cat="${k}">🔗 Ver no catálogo técnico</button>
+      </div>
+    </div></details>`;
+}
+/* abre um cartão e leva até ele (mostra todos se o filtro o escondia) */
+function gramAbrir(k){
+  const card = document.getElementById('gr-t-' + k); if(!card) return;
+  if(card.hidden) gramFiltra('todas');
+  card.open = true;
+  const ajuste = (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 56) + 10;
+  const y = card.getBoundingClientRect().top + window.scrollY - ajuste;
+  window.scrollTo({ top:y, behavior:'smooth' });
+}
+function gramFiltra(f){
+  gramFiltro = f;
+  const raiz = document.getElementById('gramaticaWrap'); if(!raiz) return;
+  raiz.querySelectorAll('.gr-fil').forEach(b => b.setAttribute('data-active', String(b.dataset.f === f)));
+  raiz.querySelectorAll('.gr-t').forEach(c => { c.hidden = f !== 'todas' && c.dataset.f !== f; });
+  raiz.querySelectorAll('.gr-grp').forEach(g => { g.hidden = f !== 'todas' && g.dataset.f !== f; });
+  const caixa = document.getElementById('gr-fam-box');
+  if(caixa){
+    if(f === 'todas'){ caixa.hidden = true; caixa.innerHTML = ''; }
+    else { const F = GRAM_FAM[f]; caixa.hidden = false; caixa.style.setProperty('--gf', gramFamCor(f));
+      caixa.innerHTML = `<b>${F.ic} ${F.nome}</b> — ${F.lema}.<p>${F.o}</p><p>${F.teste}</p><p><b>Quando usar:</b> ${F.quando}</p><p><b>Estilo que dá:</b> ${F.estilo}</p>`; }
+  }
+}
+/* ---- treino: qual é o tipo da oração? ---- */
+function gramQuizNova(){
+  const pool = [];
+  parMontados().forEach((m, i) => m.fr.forEach((r, j) => { if(r.tipo && GRAM_TIPOS[r.tipo.k]) pool.push({ i, j, r, k:r.tipo.k }); }));
+  let x; do { x = pool[Math.floor(Math.random() * pool.length)]; } while(gramQuiz.ultima && x.r.texto === gramQuiz.ultima && pool.length > 1);
+  gramQuiz.ultima = x.r.texto;
+  const f = parFam(x.k), mesma = GRAM_ORDEM.filter(k => k !== x.k && parFam(k) === f), outras = GRAM_ORDEM.filter(k => parFam(k) !== f);
+  const sorteia = (l, n) => l.slice().sort(() => Math.random() - 0.5).slice(0, n);
+  const opcoes = [x.k].concat(sorteia(mesma, 1), sorteia(outras, 3 - Math.min(1, mesma.length))).slice(0, 4).sort(() => Math.random() - 0.5);
+  gramQuiz.cur = { ...x, opcoes, resp:null };
+  gramQuizDesenha();
+}
+function gramQuizDesenha(){
+  const el = document.getElementById('gramQuiz'); if(!el) return;
+  const q = gramQuiz.cur; if(!q){ el.innerHTML = ''; return; }
+  const placar = `<div class="gr-q-placar">Acertos: <b>${gramQuiz.certas}</b> de ${gramQuiz.feitas}</div>`;
+  let h = `${placar}<div class="gr-q-enun">Que tipo de oração é a <b>segunda oração</b> desta frase?</div>
+    <div class="gr-ex"><div class="gr-ex-row"><div class="gr-en">${q.r.html}</div>${btnAud(q.r.texto)}</div><div class="gr-pt">${escapeHTML(q.r.pt)}</div></div>
+    <div class="gr-q-ops">${q.opcoes.map(k => {
+      const G = GRAM_TIPOS[k], F = GRAM_FAM[parFam(k)];
+      const est = q.resp === null ? '' : k === q.k ? 'ok' : k === q.resp ? 'no' : 'dim';
+      return `<button type="button" class="gr-q-op" data-k="${k}" data-st="${est}"${q.resp !== null ? ' disabled' : ''}><b>${G.ic} ${G.nome}</b><small>${F.nome.replace('Orações ', '').replace('subordinadas ', '')}</small></button>`; }).join('')}</div>`;
+  if(q.resp !== null){
+    const G = GRAM_TIPOS[q.k], F = GRAM_FAM[parFam(q.k)], ok = q.resp === q.k;
+    h += `<div class="gr-q-fb" data-ok="${ok}"><b>${ok ? '✅ Certo.' : '❌ Quase.'}</b> É uma oração <b>${G.nome.toLowerCase()}</b> (${F.nome.replace('Orações ', '')}): ${PAR_PAPEL[q.k]}.<br>
+      <span class="gr-q-forma">${PAR_FORMA[q.k].replace(/\{c\}/g, escapeHTML(q.r.conj || ''))}</span></div>
+      <div class="gr-acts"><button type="button" class="signal-chip" id="gramQuizProx">➡️ Próxima frase</button>
+      <button type="button" class="signal-chip" data-gr-abre="${q.k}">📖 Ver este tipo</button></div>`;
+  }
+  el.innerHTML = h;
+  el.querySelectorAll('.gr-q-op').forEach(b => b.onclick = () => { if(gramQuiz.cur.resp !== null) return;
+    gramQuiz.cur.resp = b.dataset.k; gramQuiz.feitas++; if(b.dataset.k === gramQuiz.cur.k) gramQuiz.certas++; gramQuizDesenha(); });
+  const prox = document.getElementById('gramQuizProx'); if(prox) prox.onclick = gramQuizNova;
+  el.querySelectorAll('[data-gr-abre]').forEach(b => b.onclick = () => gramAbrir(b.dataset.grAbre));
+}
+/* ---- montagem da seção ---- */
+function buildGramatica(){
+  const wrap = document.getElementById('gramaticaWrap'); if(!wrap) return;
+  const folhas = f => GRAM_ORDEM.filter(k => parFam(k) === f).map(k => `<button type="button" class="gr-leaf" data-k="${k}"><span>${GRAM_TIPOS[k].ic}</span>${GRAM_TIPOS[k].nome}</button>`).join('');
+  const base = (spec, leg) => { const r = parFrase(spec, 'gramática'); return `<div class="gr-ex"><div class="gr-ex-row"><div class="gr-en">${r.html}</div>${btnAud(r.texto)}</div><div class="gr-pt">${escapeHTML(r.pt)}</div><div class="gr-leg">${leg}</div></div>`; };
+  const SPEC1 = { p:'She', t:'present', a:'simples', v:'study', col:'English' };
+  const cont = ref => { const x = gramFraseRef(ref); return `<div class="gr-ex"><div class="gr-ex-row"><div class="gr-en">${x.r.html}</div>${btnAud(x.r.texto)}</div><div class="gr-pt">${escapeHTML(x.r.pt)}</div>`; };
+  const h = [];
+  /* índice */
+  h.push(`<div class="gr-hero"><b>Para que serve esta seção.</b> Aqui você entende <b>o que cada oração faz</b>, imagina <b>onde usá-la</b> e treina a reconhecê-la. Os detalhes técnicos (fórmulas, restrições, verbos) ficam em <button type="button" class="cross-link" data-goto="block-oracoes">🔗 Orações compostas</button>; os textos prontos, em <button type="button" class="cross-link" data-goto="block-paragrafos">📚 Parágrafos</button>.</div>
+    <nav class="gr-idx" aria-label="Partes desta seção">${[['gr-s1', '1 · O que é'], ['gr-s2', '2 · Coordenar × subordinar'], ['gr-s3', '3 · O mapa'], ['gr-s4', '4 · Intenções'], ['gr-s5', '5 · Os 22 tipos'], ['gr-s6', '6 · Situações'], ['gr-s7', '7 · Estilo'], ['gr-s8', '8 · Laboratório'], ['gr-s9', '9 · Treino']].map(a => `<button type="button" class="gr-idx-b" data-gr-ir="${a[0]}">${a[1]}</button>`).join('')}</nav>`);
+  /* 1 */
+  h.push(`<section class="gr-sec" id="gr-s1"><h3 class="gr-h"><span>1</span>O que é uma oração?</h3>
+    <p class="gr-p">Uma <b>oração</b> é um <b>verbo conjugado com o seu sujeito</b>. Uma <b>frase</b> é o que se diz de uma vez e pode ter uma ou várias orações. Para saber quantas há, conte os verbos conjugados.</p>
+    <div class="gr-trio">
+      ${base(SPEC1, '<b>1 verbo</b> (<i>studies</i>) → <b>1 oração</b>. Frase simples.')}
+      ${cont('k1#3')}<div class="gr-leg"><b>2 verbos</b> (<i>started</i>, <i>didn't stop</i>) → <b>2 orações</b>, de mesmo peso: <b>coordenadas</b>.</div></div>
+      ${cont('k1#1')}<div class="gr-leg"><b>2 verbos</b> (<i>knows</i>, <i>is</i>) → <b>2 orações</b>, mas a segunda <b>depende</b> da primeira: <b>subordinada</b>.</div></div>
+    </div>
+    <p class="gr-p gr-dim">Exceção útil: as <b>orações reduzidas</b> (<i>to</i> + verbo, <i>-ing</i>) fazem papel de oração sem verbo conjugado nem sujeito próprio. É o caso da finalidade: <i>…to reach fluency</i>.</p></section>`);
+  /* 2 */
+  h.push(`<section class="gr-sec" id="gr-s2"><h3 class="gr-h"><span>2</span>Dois jeitos de ligar ideias</h3>
+    <div class="gr-duo">
+      <div class="gr-box" style="--gf:var(--teal)"><b>🔗 Coordenar</b><p>As orações são <b>independentes</b>. Nenhuma manda na outra, e cada uma poderia ser uma frase.</p><p class="gr-dim">${GRAM_FAM.coord.teste}</p><p><b>5 tipos:</b> aditiva, adversativa, alternativa, explicativa, conclusiva.</p></div>
+      <div class="gr-box" style="--gf:var(--orange)"><b>🧱 Subordinar</b><p>Uma oração <b>depende</b> da outra e cumpre uma <b>função</b> dentro dela: faz o papel de substantivo, adjetivo ou advérbio.</p><p class="gr-dim">Ela não vive sozinha: <i>Although it is hard</i> não é uma frase completa.</p><p><b>17 tipos</b> em três famílias, pela função que exercem.</p></div>
+    </div>
+    <div class="gr-ref-t">Como descobrir a família de uma subordinada</div>
+    <div class="gr-trio3">
+      <div class="gr-box" style="--gf:var(--blue)"><b>${GRAM_FAM.subst.ic} Substantiva</b><p>${GRAM_FAM.subst.teste}</p></div>
+      <div class="gr-box" style="--gf:var(--lime)"><b>${GRAM_FAM.adj.ic} Adjetiva</b><p>${GRAM_FAM.adj.teste}</p></div>
+      <div class="gr-box" style="--gf:var(--orange)"><b>${GRAM_FAM.adv.ic} Adverbial</b><p>${GRAM_FAM.adv.teste}</p></div>
+    </div></section>`);
+  /* 3 */
+  h.push(`<section class="gr-sec" id="gr-s3"><h3 class="gr-h"><span>3</span>O mapa completo</h3>
+    <p class="gr-p">Toque em qualquer tipo para abrir a explicação.</p>
+    <div class="gr-tree">
+      <div class="gr-root">Oração composta <small>duas ou mais orações na mesma frase</small></div>
+      <div class="gr-branches">
+        <div class="gr-br" style="--gf:var(--teal)"><div class="gr-tn">🔗 Coordenadas <small>5 · independentes</small></div><div class="gr-leaves">${folhas('coord')}</div></div>
+        <div class="gr-br gr-sub"><div class="gr-tn gr-tn-sub">🧱 Subordinadas <small>17 · dependem de uma principal</small></div>
+          <div class="gr-subs">
+            <div class="gr-br" style="--gf:var(--blue)"><div class="gr-tn">${GRAM_FAM.subst.ic} Substantivas <small>6 · fazem papel de substantivo</small></div><div class="gr-leaves">${folhas('subst')}</div></div>
+            <div class="gr-br" style="--gf:var(--lime)"><div class="gr-tn">${GRAM_FAM.adj.ic} Adjetivas <small>2 · fazem papel de adjetivo</small></div><div class="gr-leaves">${folhas('adj')}</div></div>
+            <div class="gr-br" style="--gf:var(--orange)"><div class="gr-tn">${GRAM_FAM.adv.ic} Adverbiais <small>9 · fazem papel de advérbio</small></div><div class="gr-leaves">${folhas('adv')}</div></div>
+          </div></div>
+      </div></div></section>`);
+  /* 4 */
+  h.push(`<section class="gr-sec" id="gr-s4"><h3 class="gr-h"><span>4</span>Mapa de intenções</h3>
+    <p class="gr-p">Em vez de perguntar "que oração é esta?", pergunte <b>"o que eu quero fazer com a segunda ideia?"</b>. É assim que se escolhe na hora de falar.</p>
+    <div class="gr-ints">${GRAM_INTENTS.map(([ic, txt, ks]) => `<div class="gr-int"><div class="gr-int-t"><span>${ic}</span>${txt}</div><div class="gr-int-l">${ks.map(k => `<button type="button" class="gr-leaf" data-k="${k}" style="--gf:${gramFamCor(parFam(k))}"><span>${GRAM_TIPOS[k].ic}</span>${GRAM_TIPOS[k].nome}</button>`).join('')}</div></div>`).join('')}</div></section>`);
+  /* 5 */
+  h.push(`<section class="gr-sec" id="gr-s5"><h3 class="gr-h"><span>5</span>Os 22 tipos, um a um</h3>
+    <p class="gr-p">Cada cartão explica <b>o que é</b>, <b>quando usar</b>, <b>como se forma</b>, <b>onde aparece</b>, a <b>armadilha</b> e traz <b>exemplos do motor</b> para você montar no console. Os pontos <span class="gr-dots">●●●</span> estimam o quanto o tipo aparece no dia a dia (estimativa didática, não contagem).</p>
+    <div class="gr-tools"><div class="pronome-row gr-filtros">${[['todas', 'Todos 22'], ['coord', '🔗 Coordenadas 5'], ['subst', '🧱 Substantivas 6'], ['adj', '🏷️ Adjetivas 2'], ['adv', '🧭 Adverbiais 9']].map(a => `<button type="button" class="pronome-pill gr-fil" data-f="${a[0]}" data-active="${a[0] === 'todas'}">${a[1]}</button>`).join('')}</div>
+      <div class="gr-acts"><button type="button" class="cross-link" data-gr-todos="1">▾ Abrir todos</button><button type="button" class="cross-link" data-gr-todos="0">▴ Recolher todos</button></div></div>
+    <div class="gr-fam-box" id="gr-fam-box" hidden></div>
+    ${['coord', 'subst', 'adj', 'adv'].map(f => `<div class="gr-grp" data-f="${f}"><div class="gr-grp-t" style="--gf:${gramFamCor(f)}">${GRAM_FAM[f].ic} ${GRAM_FAM[f].nome}<small>${GRAM_FAM[f].lema}</small></div><div class="gr-lista">${GRAM_ORDEM.filter(k => parFam(k) === f).map(gramCardHTML).join('')}</div></div>`).join('')}
+  </section>`);
+  /* 6 */
+  h.push(`<section class="gr-sec" id="gr-s6"><h3 class="gr-h"><span>6</span>Onde usar: kits por situação</h3>
+    <p class="gr-p">Cada situação pede um <b>arsenal</b> diferente. Abra uma e veja que orações mais rendem ali.</p>
+    ${GRAM_KITS.map(K => `<details class="gr-kit"><summary><span>${K.ic}</span><span class="gr-kit-m"><b>${K.nome}</b><small>${K.d}</small></span></summary><ul>${K.it.map(([k, d]) => `<li><button type="button" class="gr-leaf" data-k="${k}" style="--gf:${gramFamCor(parFam(k))}"><span>${GRAM_TIPOS[k].ic}</span>${GRAM_TIPOS[k].nome}</button> ${d}</li>`).join('')}</ul></details>`).join('')}</section>`);
+  /* 7 */
+  const todos = parMontados(), fams = ['coord', 'subst', 'adj', 'adv'];
+  const pares = Object.keys(PAR_ESTILO).map(pf => { const n = todos.filter(x => parFamilias(x).join('+') === pf).length; return { pf, n }; });
+  h.push(`<section class="gr-sec" id="gr-s7"><h3 class="gr-h"><span>7</span>Estilo: o que cada combinação de famílias produz</h3>
+    <p class="gr-p">Falar bem não é só escolher uma oração certa: é <b>combinar famílias</b>. Cada par dá um estilo diferente.</p>
+    <div class="gr-estilos">${pares.map(({ pf, n }) => `<div class="gr-estilo"><div class="gr-estilo-t">${pf.split('+').map(f => `<span style="color:${gramFamCor(f)}">${gramCap(PAR_FAMS[f].nome)}</span>`).join(' + ')}</div><p>${PAR_ESTILO[pf]}</p>${n ? `<button type="button" class="cross-link" data-gr-fam="${pf}">📚 ${n} parágrafo${n === 1 ? '' : 's'} com esta combinação</button>` : ''}</div>`).join('')}</div></section>`);
+  /* 8 */
+  h.push(`<section class="gr-sec" id="gr-s8"><h3 class="gr-h"><span>8</span>Laboratório: uma ideia, quatro famílias</h3>
+    <p class="gr-p">Os parágrafos abaixo falam de <b>uma só ideia</b> usando as <b>quatro famílias</b>. Repare no que cada frase faz com o mesmo assunto.</p>
+    ${GRAM_LAB.map(id => { const i = PARAGRAFOS.findIndex(p => p.id === id), m = parMontados()[i];
+      return `<div class="gr-lab-card"><div class="gr-lab-t">${PAR_TEMA_IC[PARAGRAFOS[i].tema] || ''} ${escapeHTML(PARAGRAFOS[i].titulo)}</div>${m.fr.map((r, j) => { const f = r.tipo ? parFam(r.tipo.k) : null;
+        return `<div class="gr-lab-s"${f ? ` style="--gf:${gramFamCor(f)}"` : ''}>${f ? `<div class="gr-lab-f">${GRAM_FAM[f].ic} ${PAR_FAMS[f].nome} · ${GRAM_TIPOS[r.tipo.k].nome}: <span>${PAR_PAPEL[r.tipo.k]}</span></div>` : ''}<div class="gr-ex-row"><div class="gr-en">${r.html}</div>${btnAud(r.texto)}</div><div class="gr-pt">${escapeHTML(r.pt)}</div></div>`; }).join('')}</div>`; }).join('')}</section>`);
+  /* 9 */
+  h.push(`<section class="gr-sec" id="gr-s9"><h3 class="gr-h"><span>9</span>Treino: que oração é esta?</h3>
+    <p class="gr-p">O app mostra uma frase do acervo e você diz o tipo da segunda oração. Errou? A explicação aparece na hora.</p>
+    <div id="gramQuiz"></div><div class="gr-acts" id="gramQuizIni"><button type="button" class="signal-chip" id="gramQuizIniciar">▶️ Começar o treino</button></div></section>`);
+  wrap.innerHTML = h.join('');
+  /* ---- eventos (delegados na raiz) ---- */
+  wrap.addEventListener('click', e => {
+    const t = e.target;
+    const leaf = t.closest('.gr-leaf'); if(leaf){ gramAbrir(leaf.dataset.k); return; }
+    const ir = t.closest('[data-gr-ir]'); if(ir){ const s = document.getElementById(ir.dataset.grIr); if(s) window.scrollTo({ top:s.getBoundingClientRect().top + window.scrollY - ((parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 56) + 8), behavior:'smooth' }); return; }
+    const fil = t.closest('.gr-fil'); if(fil){ gramFiltra(fil.dataset.f); return; }
+    const todosB = t.closest('[data-gr-todos]'); if(todosB){ wrap.querySelectorAll('.gr-t:not([hidden])').forEach(d => { d.open = todosB.dataset.grTodos === '1'; }); return; }
+    const ab = t.closest('.gr-abrir'); if(ab){ parAbrir(+ab.dataset.i, +ab.dataset.j); return; }
+    const mo = t.closest('[data-gr-motor]'); if(mo){ o2UsarNoMotor(mo.dataset.grMotor); return; }
+    const pa = t.closest('[data-gr-par]'); if(pa){ gramParagrafos('o', pa.dataset.grPar); return; }
+    const ca = t.closest('[data-gr-cat]'); if(ca){ gramCatalogo(ca.dataset.grCat); return; }
+    const fm = t.closest('[data-gr-fam]'); if(fm){ gramParagrafos('f', fm.dataset.grFam); return; }
+    if(t.closest('#gramQuizIniciar')){ document.getElementById('gramQuizIni').hidden = true; gramQuizNova(); return; }
+  });
+}
+/* leva ao acervo de parágrafos já filtrado */
+function gramParagrafos(dim, val){
+  parFiltro.dim = dim; parFiltro.val = val; parFiltro.val2 = null; parFiltro.nivel = null; buildParagrafos();
+  const b = document.getElementById('block-paragrafos'); if(b.dataset.open !== 'true') toggleBlock('block-paragrafos');
+  b.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+/* leva ao catálogo técnico, abrindo o cartão do tipo (a ordem do catálogo é a de ORACOES) */
+function gramCatalogo(k){
+  const b = document.getElementById('block-oracoes'); if(b.dataset.open !== 'true') toggleBlock('block-oracoes');
+  let alvo = null; ORACOES.forEach((gr, gi) => gr.itens.forEach((it, ii) => { if(it.motor === k) alvo = { gi, ii }; }));
+  const cards = [...document.querySelectorAll('#oracoesWrap .orac-card')];
+  let n = 0, card = null; ORACOES.forEach((gr, gi) => gr.itens.forEach((it, ii) => { if(alvo && gi === alvo.gi && ii === alvo.ii) card = cards[n]; n++; }));
+  if(card){ if(card.dataset.open !== 'true') card.querySelector('.o2-card-head').click(); setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'center' }), 360); }
+  else b.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
 buildAnatomia();
 buildAdverbsList();
 buildErros();
 buildOracoes();
 buildParagrafos();
+buildGramatica();
 /* ---- v124: INTRODUÇÃO DE CADA SEÇÃO ----
    O que a seção faz (o) e como tirar o melhor dela (u). Fica num <details> aberto por padrão; se o aluno recolher,
    o app lembra (por seção) e não abre de novo. Texto em um só lugar para ser fácil de revisar. */
@@ -15263,6 +15912,8 @@ const SEC_INTRO = {
     u:['Procure o tempo que você está estudando e veja as expressões que o acompanham.', '<b>Toque em qualquer expressão para ouvir.</b>', 'As cores são as mesmas dos encaixes: laranja = como, verde = onde, violeta = quando.'] },
   'block-conj': { o:'Regras das conjunções de tempo (when, as soon as, before, since, for…) e a armadilha clássica: depois delas o inglês não usa <i>will</i>.',
     u:['Leia antes de montar frases no futuro com <i>when</i> ou <i>as soon as</i>.', 'Toque nos exemplos para ouvir.', 'Depois, teste a regra no motor ligando uma 2ª oração temporal.'] },
+  'block-gramatica': { o:'Explica, com testes simples e exemplos do dia a dia, <b>o que é uma oração</b>, como ligar ideias (<b>coordenar</b> ou <b>subordinar</b>) e <b>quando usar cada um dos 22 tipos</b>.',
+    u:['Comece pelos <b>testes</b> (ponto final, "isso", adjetivo, circunstância): eles dizem a família de qualquer oração.', 'Use o <b>mapa de intenções</b> quando souber o que quer dizer, mas não souber a oração.', 'Em cada cartão, toque em <b>montar no console</b> para mexer na frase, e faça a tarefa <b>Experimente hoje</b> na vida real.', 'Feche com o <b>treino</b> no fim da seção: reconhecer o tipo é o que faz você escolher bem ao falar.'] },
   'block-oracoes': { o:'Catálogo dos tipos de oração composta: como cada um se forma, as conjunções que usa, exemplos e restrições, além do treino de conjunções.',
     u:['Abra um tipo de cada vez e leia a formação antes dos exemplos.', 'Toque no <b>nome da conjunção</b> para ouvir; cada exemplo tem o seu botão de áudio.', 'Use o botão que leva ao motor para montar a sua própria frase com aquele tipo, e feche a sessão com o treino.'] },
   'block-paragrafos': { o:'Repositório de parágrafos prontos em que as três frentes do app trabalham juntas: <b>tempo verbal</b>, <b>encaixes</b> e <b>orações ligadas por conjunção</b>. Todas as frases são montadas pelo motor.',
@@ -15274,7 +15925,7 @@ const SEC_INTRO = {
 };
 /* ---- v125: MENU DA REFERÊNCIA ----
    Antes o botão só rolava até a primeira seção; as outras oito ficavam escondidas no fim de uma página longa. */
-const REF_MENU = [ ['block-paragrafos', '📚', 'Parágrafos', true], ['block-oracoes', '🔗', 'Orações compostas'], ['block-anatomia', '🧩', 'Anatomia da frase'], ['block-matrix', '📊', 'Tabela de tempos'],
+const REF_MENU = [ ['block-paragrafos', '📚', 'Parágrafos', true], ['block-gramatica', '🌳', 'Gramática das orações', true], ['block-oracoes', '🔗', 'Orações compostas'], ['block-anatomia', '🧩', 'Anatomia da frase'], ['block-matrix', '📊', 'Tabela de tempos'],
   ['block-adverbs-tempo', '🗂️', 'Expressões por tempo'], ['block-posicao', '🎯', 'Guia de posição'], ['block-conj', '⏳', 'Conjunções de tempo'], ['block-erros', '⚠️', 'Erros comuns'], ['block-algo', '🧭', 'Algoritmo mental'] ];
 function refMenuFecha(){ const m = document.getElementById('refMenu'); if(m) m.hidden = true; const b = document.getElementById('navRef'); if(b) b.setAttribute('aria-expanded', 'false'); }
 function refMenuToggle(e){
