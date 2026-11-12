@@ -674,40 +674,65 @@
   #pronSheet .pron-dicas{margin:6px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55;}
   #pronSheet .pron-nota,#pronSheet .pron-rodape{font-size:11px; color:var(--paper-dim); margin:6px 0 0;}
   /* v145: bloco "Pronúncia do -ed" */
-  #edBloco .ed-nota{font-size:12.5px; line-height:1.55; color:var(--paper-dim); margin:6px 0;}
-  #edBloco .ed-sub{font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--brass); margin:16px 0 6px;}
-  #edBloco .ed-cards{display:grid; grid-template-columns:1fr; gap:8px;}
-  @media (min-width:720px){ #edBloco .ed-cards{grid-template-columns:repeat(3,1fr);} }
-  #edBloco .ed-card{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--brass); border-radius:10px; padding:8px 12px;}
-  #edBloco .ed-card h4{margin:0 0 2px; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:20px;}
-  #edBloco .ed-card p{margin:0 0 6px; font-size:12px; line-height:1.5; color:var(--paper);}
-  #edBloco .ed-card ul,#edBloco .ed-arm{margin:0; padding:0; list-style:none; font-size:12.5px;}
-  #edBloco .ed-card li{display:flex; align-items:center; gap:8px; padding:3px 0;}
-  #edBloco .ed-arm li{padding:5px 0; border-top:1px dashed var(--line); line-height:1.5;}
-  #edBloco .ed-card.ed-t{border-left-color:var(--amber);} #edBloco .ed-card.ed-d{border-left-color:var(--blue);} #edBloco .ed-card.ed-id{border-left-color:var(--lime);}
-  #edBloco .ed-ipa{font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--teal); font-size:12px; overflow-wrap:anywhere;}
-  #edBloco .ed-ipa em{font-style:normal; font-size:9.5px; color:var(--paper-dim); letter-spacing:.05em;}
-  #edBloco .ed-tag{display:inline-block; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11px; border-radius:7px; padding:0 6px; margin:0 6px; border:1px solid currentColor;}
-  #edBloco .ed-tag.ed-t{color:var(--amber);} #edBloco .ed-tag.ed-d{color:var(--blue);} #edBloco .ed-tag.ed-id{color:var(--lime);}
-  #edBloco .ed-excs{display:flex; flex-wrap:wrap; gap:6px;}
-  #edBloco .ed-exc,#edBloco .ed-chip,#edBloco .ed-prox{background:var(--panel-raised); color:var(--paper); border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:12.5px; cursor:pointer;}
-  #edBloco .ed-chip.on{border-color:var(--teal); color:var(--teal);}
-  #edBloco .ed-filtros{display:flex; flex-wrap:wrap; gap:6px; margin:6px 0;}
-  #edBloco .ed-busca{width:100%; box-sizing:border-box; background:var(--panel); color:var(--paper); border:1px solid var(--line); border-radius:10px; padding:9px 12px; font-size:14px; margin-bottom:6px;}
-  #edBloco .ed-row{padding:7px 0; border-top:1px dashed var(--line);}
-  #edBloco .ed-l1{display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px; font-size:14px;}
-  #edBloco .ed-seta{color:var(--paper-dim);} #edBloco .ed-past{color:var(--brass);}
-  #edBloco .ed-uk{font-size:10px; font-weight:700;}
-  #edBloco .ed-mais{margin-top:8px;}
-  #edBloco .ed-n{font-weight:400; color:var(--paper-dim); text-transform:none; letter-spacing:0;}
-  #edBloco .ed-quiz{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px;}
-  #edBloco .ed-q-palavra{display:flex; align-items:center; gap:10px; font-size:26px;}
-  #edBloco .ed-q-palavra b{color:var(--brass);}
-  #edBloco .ed-q-opc{display:flex; gap:8px; margin:10px 0;}
-  #edBloco .ed-q-btn{flex:1; min-height:44px; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:17px; background:var(--panel-raised); color:var(--paper); border:1px solid var(--line); border-radius:10px; cursor:pointer;}
-  #edBloco .ed-q-btn.ok{border-color:var(--teal); color:var(--teal);} #edBloco .ed-q-btn.erro{border-color:var(--red); color:var(--red);}
-  #edBloco .ed-q-res{font-size:12.5px; line-height:1.55;} #edBloco .ed-q-res.ok{color:var(--teal);} #edBloco .ed-q-res.erro{color:var(--paper);}
-  #edBloco .ed-placar{font-size:11.5px; color:var(--paper-dim); margin-top:8px;}
+  :is(#edBloco,#fonBloco) .ed-nota{font-size:12.5px; line-height:1.55; color:var(--paper-dim); margin:6px 0;}
+  :is(#edBloco,#fonBloco) .ed-sub{font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--brass); margin:16px 0 6px;}
+  :is(#edBloco,#fonBloco) .ed-cards{display:grid; grid-template-columns:1fr; gap:8px;}
+  @media (min-width:720px){ :is(#edBloco,#fonBloco) .ed-cards{grid-template-columns:repeat(3,1fr);} }
+  :is(#edBloco,#fonBloco) .ed-card{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--brass); border-radius:10px; padding:8px 12px;}
+  :is(#edBloco,#fonBloco) .ed-card h4{margin:0 0 2px; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:20px;}
+  :is(#edBloco,#fonBloco) .ed-card p{margin:0 0 6px; font-size:12px; line-height:1.5; color:var(--paper);}
+  :is(#edBloco,#fonBloco) .ed-card ul,:is(#edBloco,#fonBloco) .ed-arm{margin:0; padding:0; list-style:none; font-size:12.5px;}
+  :is(#edBloco,#fonBloco) .ed-card li{display:flex; align-items:center; gap:8px; padding:3px 0;}
+  :is(#edBloco,#fonBloco) .ed-arm li{padding:5px 0; border-top:1px dashed var(--line); line-height:1.5;}
+  :is(#edBloco,#fonBloco) .ed-card.ed-t{border-left-color:var(--amber);} :is(#edBloco,#fonBloco) .ed-card.ed-d{border-left-color:var(--blue);} :is(#edBloco,#fonBloco) .ed-card.ed-id{border-left-color:var(--lime);}
+  :is(#edBloco,#fonBloco) .ed-ipa{font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--teal); font-size:12px; overflow-wrap:anywhere;}
+  :is(#edBloco,#fonBloco) .ed-ipa em{font-style:normal; font-size:9.5px; color:var(--paper-dim); letter-spacing:.05em;}
+  :is(#edBloco,#fonBloco) .ed-tag{display:inline-block; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11px; border-radius:7px; padding:0 6px; margin:0 6px; border:1px solid currentColor;}
+  :is(#edBloco,#fonBloco) .ed-tag.ed-t{color:var(--amber);} :is(#edBloco,#fonBloco) .ed-tag.ed-d{color:var(--blue);} :is(#edBloco,#fonBloco) .ed-tag.ed-id{color:var(--lime);}
+  :is(#edBloco,#fonBloco) .ed-excs{display:flex; flex-wrap:wrap; gap:6px;}
+  :is(#edBloco,#fonBloco) .ed-exc,:is(#edBloco,#fonBloco) .ed-chip,:is(#edBloco,#fonBloco) .ed-prox{background:var(--panel-raised); color:var(--paper); border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:12.5px; cursor:pointer;}
+  :is(#edBloco,#fonBloco) .ed-chip.on{border-color:var(--teal); color:var(--teal);}
+  :is(#edBloco,#fonBloco) .ed-filtros{display:flex; flex-wrap:wrap; gap:6px; margin:6px 0;}
+  :is(#edBloco,#fonBloco) .ed-busca{width:100%; box-sizing:border-box; background:var(--panel); color:var(--paper); border:1px solid var(--line); border-radius:10px; padding:9px 12px; font-size:14px; margin-bottom:6px;}
+  :is(#edBloco,#fonBloco) .ed-row{padding:7px 0; border-top:1px dashed var(--line);}
+  :is(#edBloco,#fonBloco) .ed-l1{display:flex; flex-wrap:wrap; align-items:center; gap:4px 6px; font-size:14px;}
+  :is(#edBloco,#fonBloco) .ed-seta{color:var(--paper-dim);} :is(#edBloco,#fonBloco) .ed-past{color:var(--brass);}
+  :is(#edBloco,#fonBloco) .ed-uk{font-size:10px; font-weight:700;}
+  :is(#edBloco,#fonBloco) .ed-mais{margin-top:8px;}
+  :is(#edBloco,#fonBloco) .ed-n{font-weight:400; color:var(--paper-dim); text-transform:none; letter-spacing:0;}
+  :is(#edBloco,#fonBloco) .ed-quiz{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px;}
+  :is(#edBloco,#fonBloco) .ed-q-palavra{display:flex; align-items:center; gap:10px; font-size:26px;}
+  :is(#edBloco,#fonBloco) .ed-q-palavra b{color:var(--brass);}
+  :is(#edBloco,#fonBloco) .ed-q-opc{display:flex; gap:8px; margin:10px 0;}
+  :is(#edBloco,#fonBloco) .ed-q-btn{flex:1; min-height:44px; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:17px; background:var(--panel-raised); color:var(--paper); border:1px solid var(--line); border-radius:10px; cursor:pointer;}
+  :is(#edBloco,#fonBloco) .ed-q-btn.ok{border-color:var(--teal); color:var(--teal);} :is(#edBloco,#fonBloco) .ed-q-btn.erro{border-color:var(--red); color:var(--red);}
+  :is(#edBloco,#fonBloco) .ed-q-res{font-size:12.5px; line-height:1.55;} :is(#edBloco,#fonBloco) .ed-q-res.ok{color:var(--teal);} :is(#edBloco,#fonBloco) .ed-q-res.erro{color:var(--paper);}
+  :is(#edBloco,#fonBloco) .ed-placar{font-size:11.5px; color:var(--paper-dim); margin-top:8px;}
+  .fon-abas{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0;}
+  #fonBloco .fon-regra{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin:8px 0;}
+  #fonBloco .fon-regra h4{margin:0 0 4px; font-size:14px; color:var(--brass);}
+  #fonBloco .fon-regra p{margin:0 0 6px; font-size:12.5px; line-height:1.55;}
+  #fonBloco .fon-stat{font-size:12px; color:var(--paper-dim); margin:6px 0;}
+  #fonBloco .fon-barra{display:block; height:6px; border-radius:3px; background:color-mix(in srgb, var(--paper) 10%, transparent); margin-bottom:4px; overflow:hidden;}
+  #fonBloco .fon-barra i{display:block; height:100%; background:var(--teal);}
+  #fonBloco .fon-sub2{font-size:11px; font-weight:700; color:var(--paper-dim); text-transform:none; letter-spacing:.05em; margin:8px 0 2px;}
+  #fonBloco .fon-lista{list-style:none; margin:0; padding:0;}
+  #fonBloco .fon-w{display:flex; flex-wrap:wrap; align-items:center; gap:3px 8px; padding:4px 0; border-top:1px dashed var(--line); font-size:13.5px;}
+  #fonBloco .fon-fin{padding:6px 0; border-top:1px dashed var(--line); font-size:12.5px; line-height:1.7;}
+  #fonBloco .fon-fin-t{font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--brass); margin-right:8px;}
+  #fonBloco .fon-fin-s{display:block; padding-left:6px;}
+  #fonBloco .fon-suf{background:var(--panel); border:1px solid var(--line); border-radius:10px; margin:6px 0; padding:0 12px;}
+  #fonBloco .fon-suf>summary{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:10px 0; cursor:pointer; list-style:none; font-size:13px;}
+  #fonBloco .fon-suf>summary::-webkit-details-marker{display:none;}
+  #fonBloco .fon-suf[open]{padding-bottom:8px;}
+  #fonBloco .fon-suf p{margin:0 0 6px; font-size:12.5px; line-height:1.55;}
+  #fonBloco .fon-pct{font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11.5px; border-radius:9px; padding:1px 8px; border:1px solid currentColor; flex-shrink:0;}
+  #fonBloco .fon-pct.alto{color:var(--teal);} #fonBloco .fon-pct.medio{color:var(--amber);} #fonBloco .fon-pct.baixo{color:var(--red);}
+  #fonBloco .fon-tn{font-size:10.5px; color:var(--paper-dim); border:1px solid var(--line); border-radius:8px; padding:0 6px;}
+  #fonBloco .fon-par{display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px; padding:6px 0; border-top:1px dashed var(--line); font-size:13px;}
+  #fonBloco .fon-par>b{min-width:78px; color:var(--brass);}
+  #fonBloco .fon-par-c{display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:12px;}
+  #fonBloco .fon-par-c em{font-style:normal; font-family:inherit; font-size:9.5px; color:var(--paper-dim); text-transform:uppercase;}
   .w-on{background:color-mix(in srgb, var(--teal) 30%, transparent); border-radius:3px; box-shadow:0 0 0 2px color-mix(in srgb, var(--teal) 30%, transparent);}
   .ref-tag, .conj-card .ex:not(.no), .orac-conj-c, .ct-conj, table.matrix .cell-lines div{cursor:pointer;}
   .conj-card .ex:not(.no)::after, .orac-conj-c::after, .ct-conj::after{content:' 🔊'; font-size:.78em; opacity:.6;}
@@ -1421,6 +1446,16 @@
     </div></div>
   </section>
 
+  <section class="block" data-open="false" id="block-fon">
+    <div class="block-head" onclick="toggleBlock('block-fon')">
+      <div class="block-head-title"><div class="block-num">🔤</div><h2>Regras fonéticas</h2></div>
+      <span class="chev">▾</span>
+    </div>
+    <div class="block-body"><div class="block-body-inner">
+      <div id="fonBloco"><p class="ed-nota">Carregando…</p></div>
+    </div></div>
+  </section>
+
   <section class="block" data-open="false" id="block-algo">
     <div class="block-head" onclick="toggleBlock('block-algo')">
       <div class="block-head-title"><div class="block-num">🧭</div><h2>Algoritmo mental</h2></div>
@@ -1534,7 +1569,7 @@ function pronCarregar(cb){
   if(pronCarga === 'carregando'){ if(cb) setTimeout(() => pronCarregar(cb), 150); return; }
   pronCarga = 'carregando';
   let falta = 2;
-  const fim = () => { if(--falta === 0){ pronCarga = 'pronto'; if(cb) cb(); if(typeof edRender === 'function') edRender(); } };
+  const fim = () => { if(--falta === 0){ pronCarga = 'pronto'; if(cb) cb(); if(typeof edRender === 'function') edRender(); if(typeof fonRender === 'function') fonRender(); } };
   ['ipa.js', 'ipa-uk.js'].forEach(src => {
     const s = document.createElement('script');
     s.src = src; s.async = true; s.onload = fim; s.onerror = fim;
@@ -1858,7 +1893,7 @@ function edRender(){
       '<div class="ed-card ed-id"><h4>/ɪd/</h4><p>Depois de <b>/t/ ou /d/</b>: ganha uma sílaba extra.</p><ul>' + ex('id') + '</ul></div>' +
     '</div>' +
     '<div class="ed-sub">Armadilhas: a letra engana</div><ul class="ed-arm">' + (arm || '<li class="ed-nota">Carregando…</li>') + '</ul>' +
-    '<div class="ed-sub">Exceções: adjetivos com /ɪd/</div><p class="ed-nota">Como adjetivos, estas palavras mantêm a sílaba extra /ɪd/, mesmo sem t/d no fim da base.</p><div class="ed-excs">' + exc + '</div>' +
+    '<div class="ed-sub">Exceções: adjetivos com sílaba extra</div><p class="ed-nota">Como adjetivos, estas palavras mantêm a sílaba extra /ɪd/, mesmo sem t/d no fim da base.</p><div class="ed-excs">' + exc + '</div>' +
     '<div class="ed-sub">Treino: qual é o som?</div><div id="edQuiz" class="ed-quiz"></div>' +
     '<div class="ed-sub">Todos os verbos regulares do app <span class="ed-n" id="edContagem"></span></div>' +
     '<div class="ed-filtros">' + [['todos', 'Todos'], ['t', '/t/'], ['d', '/d/'], ['id', '/ɪd/']].map(f => '<button type="button" class="ed-chip' + (edFiltro === f[0] ? ' on' : '') + '" data-ed-filtro="' + f[0] + '">' + f[1] + '</button>').join('') + '</div>' +
@@ -1878,12 +1913,374 @@ document.addEventListener('click', e => {
   const ex = t.closest('.ed-exc'); if(ex) speak(ex.dataset.text, ex.dataset.lang);
 });
 document.addEventListener('input', e => { if(e.target && e.target.id === 'edBusca'){ edBusca = e.target.value; edLimite = 30; edRenderLista(); } });
+/* ---- v146: REGRAS FONÉTICAS ----
+   Seção de regras de grafia → som, com dados reais: cada regra é TESTADA contra o vocabulário inglês do app
+   (palavras do app + ~9 mil palavras mais comuns do inglês, com IPA) e mostra quantas palavras a seguem, quais são as exceções e o IPA US/UK.
+   Abas: -s/-es · som final · e mudo · C e G · -tion · letras mudas · TH · OUGH · ea/oo/ou/ow. */
+let _fonV = null;
+function fonVocab(){
+  if(_fonV && _fonV.n === pronCarga) return _fonV.l;
+  const S = new Set(), V = new Set(), add = (t, ehVerbo) => { (String(t || '').toLowerCase().match(/[a-z][a-z'-]*/g) || []).forEach(w => { S.add(w); if(ehVerbo) V.add(w); }); };
+  VERBS.forEach(v => { ['base', 's3', 'ing', 'past', 'pp'].forEach(k => add(v[k], true)); (v.col || []).forEach(c => add(c.en)); });
+  if(typeof VERB_EXTRA !== 'undefined') Object.values(VERB_EXTRA).forEach(x => { (x.syn || []).forEach(t => add(t)); (x.ant || []).forEach(t => add(t)); (x.pat || []).forEach(p => add(p.w)); (x.adv || []).forEach(a => add(a.w)); });
+  if(typeof IPA_COMUM !== 'undefined') IPA_COMUM.forEach(w => S.add(w));   /* v147: + ~9 mil palavras mais comuns do inglês */
+  const l = [];
+  S.forEach(w => { if(w.length < 3 || /[-']/.test(w)) return; const r = pronIpa(w, 'us'); if(r && !r.estimado) l.push({ w, ipa:r.ipa, verbo:V.has(w) }); });
+  _fonV = { n:pronCarga, l };
+  return l;
+}
+const FON_VOGAL = /aɪ|aʊ|eɪ|oʊ|ɔɪ|[ɑæʌɔɛɝɪiʊuəɚ]/;
+const fonSem = i => i.replace(/[ˈˌː]/g, '');
+const fonNucleo = i => { const m = fonSem(i).match(FON_VOGAL); return m ? m[0] : ''; };
+/* escolhe exemplos variados: verbos do app primeiro, palavras curtas antes */
+function fonPick(arr, n){
+  return arr.slice().sort((a, b) => (b.verbo - a.verbo) || (a.w.length - b.w.length) || (a.w < b.w ? -1 : 1)).slice(0, n);
+}
+function fonRow(x){
+  const u = pronIpa(x.w, 'us'), k = pronIpa(x.w, 'uk');
+  return '<li class="fon-w"><b>' + pronEsc(x.w) + '</b><span class="ed-ipa"><em>US</em> /' + pronEsc(u ? u.ipa : '—') + '/ <em>UK</em> /' + pronEsc(k ? k.ipa : '—') + '/</span>' +
+    '<button type="button" class="audio-btn sm" data-text="' + pronEsc(x.w) + '" data-lang="en-US" aria-label="Ouvir em US">🔊</button>' +
+    '<button type="button" class="audio-btn sm ed-uk" data-text="' + pronEsc(x.w) + '" data-lang="en-GB" aria-label="Ouvir em UK">UK</button></li>';
+}
+/* ---------- regras testáveis (pega = quais palavras a regra cobre; ok = se o som confere) ---------- */
+const FON_C = 'bcdfghjklmnpqrstvwxz';
+const FON_GRUPOS = {
+  e:[ { t:'E final mudo', txt:'O -e no fim da palavra quase nunca soa. Ele é um sinal: a vogal anterior fica longa ou vira ditongo (mat → mate, rid → ride) e a palavra termina em consoante.',
+        pega:w => new RegExp('[' + FON_C + ']e$').test(w) && w.length > 3 && !/le$/.test(w), ok:(w, i) => /[ɚɝ]$|[^aeiouɑæʌɔɛɪʊəɐɒɜ]$/.test(fonSem(i)) } ],
+  cg:[ { t:'C antes de e, i, y = /s/', txt:'Antes de e, i ou y o C soa /s/ (city, face, cycle). Em "ci" antes de vogal pode virar /ʃ/ (special).',
+         pega:w => /(^|[^c])c[eiy]/.test(w), ok:(w, i) => /[sʃ]/.test(i) },
+       { t:'C nos demais casos = /k/', txt:'Antes de a, o, u ou consoante o C soa /k/ (can, cost, cut, class).',
+         pega:w => /c(?![eiyhk])/.test(w) && !/cc/.test(w), ok:(w, i) => /k/.test(i) },
+       { t:'G antes de e, i, y = /dʒ/ (só tendência)', txt:'Antes de e, i, y o G costuma soar /dʒ/ (age, giant, gym), mas há muitas exceções (get, give, begin, girl). Trate como tendência, não como regra.',
+         pega:w => /g[eiy]/.test(w) && !/gg/.test(w), ok:(w, i) => /dʒ/.test(i) },
+       { t:'G nos demais casos = /ɡ/', txt:'Antes de a, o, u ou consoante o G soa /ɡ/ (game, go, gun, green).',
+         pega:w => /(^|[^n])g(?![eiyhn])/.test(w) && !/gg/.test(w), ok:(w, i) => /ɡ/.test(i) } ],
+  tion:[ { t:'-tion / -sion / -cian = /ʃən/', txt:'Estas terminações soam /ʃən/ (action, station) — ou /ʒən/ depois de vogal em -sion (decision). A sílaba anterior é a tônica.',
+           pega:w => /(tion|sion|cian)s?$/.test(w), ok:(w, i) => /[ʃʒ](ə?n)[sz]?$|tʃən$/.test(fonSem(i)) } ],
+  mudas:[ { t:'kn- : o K é mudo', txt:'Começa direto no N (know, knee, knife).', pega:w => /^kn/.test(w), ok:(w, i) => /^n/.test(fonSem(i)) },
+          { t:'wr- : o W é mudo', txt:'Começa direto no R (write, wrong, wrap).', pega:w => /^wr/.test(w), ok:(w, i) => /^r/.test(fonSem(i)) },
+          { t:'gn- / -gn : o G é mudo', txt:'O G antes do N não soa (sign, design, foreign).', pega:w => /^gn|[^n]gn(ed|s|ing)?$/.test(w), ok:(w, i) => !/ɡ/.test(i) },
+          { t:'-mb : o B final é mudo', txt:'Depois de M, o B final não soa (climb, comb, thumb).', pega:w => /mb(s|ed|ing)?$/.test(w), ok:(w, i) => !/b/.test(i) },
+          { t:'-lk e -alm : o L é mudo', txt:'Em talk, walk, chalk, calm, palm o L não soa — mas milk e help mantêm o L.', pega:w => /(alk|olk|alm)s?$/.test(w), ok:(w, i) => !/l/.test(i) },
+          { t:'-ght : GH é mudo', txt:'O "gh" some e a vogal alonga (night, light, thought).', pega:w => /ght/.test(w), ok:(w, i) => !/ɡ/.test(i) } ]
+};
+function fonTesta(r){
+  const v = fonVocab(), ok = [], falha = [];
+  v.forEach(x => { if(r.pega(x.w)) (r.ok(x.w, x.ipa) ? ok : falha).push(x); });
+  return { ok, falha };
+}
+function fonRenderRegra(r){
+  const t = fonTesta(r), n = t.ok.length + t.falha.length, pct = n ? Math.round(100 * t.ok.length / n) : 0;
+  return '<div class="fon-regra"><h4>' + pronEsc(r.t) + '</h4><p>' + pronEsc(r.txt) + '</p>' +
+    '<div class="fon-stat"><span class="fon-barra"><i style="width:' + pct + '%"></i></span> vale em <b>' + t.ok.length + ' de ' + n + '</b> palavras do app (' + pct + '%)</div>' +
+    '<ul class="fon-lista">' + fonPick(t.ok, 4).map(fonRow).join('') + '</ul>' +
+    (t.falha.length ? '<div class="fon-sub2">Exceções (' + t.falha.length + ')</div><ul class="fon-lista">' + fonPick(t.falha, 4).map(fonRow).join('') + '</ul>' : '') + '</div>';
+}
+/* ---------- TH ---------- */
+function fonRenderTh(){
+  const v = fonVocab().filter(x => /th/.test(x.w)), vz = v.filter(x => /ð/.test(x.ipa)), vs = v.filter(x => /θ/.test(x.ipa));
+  return '<div class="fon-regra"><h4>TH: dois sons</h4><p>/θ/ (surdo, sem voz) aparece em palavras de conteúdo, no início ou no fim (think, three, month, truth). /ð/ (sonoro, com voz) aparece em palavras gramaticais (the, this, that, they, there, with) e entre vogais (mother, other, rather). Ponta da língua entre os dentes nos dois casos; só muda a voz.</p>' +
+    '<div class="fon-sub2">/θ/ (' + vs.length + ' palavras)</div><ul class="fon-lista">' + fonPick(vs, 6).map(fonRow).join('') + '</ul>' +
+    '<div class="fon-sub2">/ð/ (' + vz.length + ' palavras)</div><ul class="fon-lista">' + fonPick(vz, 6).map(fonRow).join('') + '</ul></div>';
+}
+/* ---------- grupos por som: CH e X ---------- */
+function fonRenderGrupoSom(titulo, txt, pega, classe, nomes){
+  const g = {}; fonVocab().filter(x => pega(x.w)).forEach(x => { const k = classe(x.ipa, x.w); if(k) (g[k] = g[k] || []).push(x); });
+  const ks = Object.keys(g).sort((a, b) => g[b].length - g[a].length), tot = ks.reduce((a, k) => a + g[k].length, 0);
+  return '<div class="fon-regra"><h4>' + pronEsc(titulo) + ' <span class="ed-n">(' + tot + ' palavras)</span></h4><p>' + pronEsc(txt) + '</p>' +
+    ks.map(k => '<div class="fon-sub2">' + pronEsc(nomes[k] || k) + ' · ' + g[k].length + ' (' + Math.round(100 * g[k].length / tot) + '%)</div><ul class="fon-lista">' + fonPick(g[k], 4).map(fonRow).join('') + '</ul>').join('') + '</div>';
+}
+function fonRenderCh(){
+  return fonRenderGrupoSom('CH: três sons', 'O "ch" soa /tʃ/ na maioria das palavras (church, teach). Em palavras de origem grega soa /k/ (school, chemistry, technical) e, nas de origem francesa, /ʃ/ (machine, chef, brochure). A classificação usa o IPA da palavra (aproximação).',
+    w => /ch/.test(w) && !/sch|tch/.test(w), (i, w) => /tʃ/.test(i) ? 'tʃ' : (/ʃ/.test(i) ? 'ʃ' : (/k/.test(i) ? 'k' : '')), { tʃ:'/tʃ/ (church)', k:'/k/ (origem grega)', ʃ:'/ʃ/ (origem francesa)' });
+}
+function fonRenderX(){
+  return fonRenderGrupoSom('X: ks, ɡz ou z', 'O X costuma soar /ks/ (box, fix, next). Depois de "e" átono e antes de vogal tônica soa /ɡz/ (exam, example, exist). No início da palavra soa /z/ (xylophone, xenon).',
+    w => /x/.test(w), (i, w) => /^z/.test(fonSem(i)) && /^x/.test(w) ? 'z' : (/ɡz/.test(i) ? 'ɡz' : (/ks|kʃ/.test(i) ? 'ks' : '')), { ks:'/ks/ (box, next)', ɡz:'/ɡz/ (exam, exist)', z:'/z/ (início)' });
+}
+/* ---------- OUGH ---------- */
+function fonRenderOugh(){
+  const v = fonVocab().filter(x => /ough/.test(x.w)).sort((a, b) => fonSem(a.ipa).slice(-3) < fonSem(b.ipa).slice(-3) ? -1 : 1);
+  return '<div class="fon-regra"><h4>OUGH: sete sons para a mesma grafia</h4><p>Não existe regra: "ough" pode ser /uː/ (through), /oʊ/ (though), /ɔ/ (thought), /ʌf/ (tough), /ɔf/ (cough), /aʊ/ (bough), /ʌ/ (thorough). Decore cada palavra com o IPA.</p>' +
+    '<ul class="fon-lista">' + v.slice(0, 14).map(fonRow).join('') + '</ul></div>';
+}
+/* ---------- grupos vocálicos: a grafia não decide o som ---------- */
+function fonRenderVog(){
+  const out = ['ea', 'oo', 'ou', 'ow', 'ie', 'ai'].map(dg => {
+    const re = new RegExp('^[^aeiouy]*' + dg + '[^aeiouy]*e?$'), v = fonVocab().filter(x => re.test(x.w) && x.w.length > 2), g = {};
+    v.forEach(x => { const n = fonNucleo(x.ipa) || '?'; (g[n] = g[n] || []).push(x); });
+    const ks = Object.keys(g).sort((a, b) => g[b].length - g[a].length).slice(0, 4);
+    return '<div class="fon-regra"><h4>"' + dg + '" em palavras de uma sílaba <span class="ed-n">(' + v.length + ')</span></h4>' +
+      ks.map(k => '<div class="fon-sub2">/' + pronEsc(k) + '/ · ' + g[k].length + ' (' + Math.round(100 * g[k].length / v.length) + '%)</div><ul class="fon-lista">' + fonPick(g[k], 3).map(fonRow).join('') + '</ul>').join('') + '</div>';
+  }).join('');
+  return '<p class="ed-nota">A mesma grafia tem vários sons, mostrados abaixo por frequência. Quando a grafia não decide, o IPA decide.</p>' + out;
+}
+/* ---------- som final ≠ letra final ---------- */
+function fonRenderFinal(){
+  const fins = [['se', 'use, close, house'], ['ce', 'dance, place'], ['ge', 'judge, change'], ['ve', 'live, move'], ['the', 'bathe, breathe'], ['x', 'fix, relax'], ['ch', 'watch, teach'], ['sh', 'wash, push'], ['ng', 'sing, bring'], ['gh', 'laugh, though'], ['que', 'unique, technique']];
+  const v = fonVocab();
+  const linhas = fins.map(f => {
+    const l = v.filter(x => x.w.length > 3 && x.w.endsWith(f[0])), g = {};
+    l.forEach(x => { const s = edUltimoSom(x.ipa) || '∅'; (g[s] = g[s] || []).push(x); });
+    const ks = Object.keys(g).sort((a, b) => g[b].length - g[a].length).slice(0, 3);
+    return '<div class="fon-fin"><b class="fon-fin-t">-' + f[0] + '</b>' + ks.map(k => '<span class="fon-fin-s"><span class="ed-tag ed-' + (k === 's' || k === 'ʃ' || k === 'tʃ' || k === 'f' || k === 'k' || k === 'θ' ? 't' : 'd') + '">/' + pronEsc(k) + '/</span> ' + g[k].length + ' · ' + fonPick(g[k], 3).map(x => '<i>' + pronEsc(x.w) + '</i>').join(', ') + '</span>').join('') + '</div>';
+  }).join('');
+  return '<div class="fon-regra"><h4>A letra final não é o som final</h4><p>Para decidir o -ed e o -s, olhe o <b>último som</b>, não a última letra. Em <b>use</b> o "se" soa /z/ (verbo); em <b>dance</b> o "ce" soa /s/; em <b>judge</b> o "ge" soa /dʒ/; em <b>laugh</b> o "gh" soa /f/. As colunas mostram quais sons cada terminação costuma ter no vocabulário do app. Por isso: use → used /d/, uses /ɪz/; dance → danced /t/, dances /ɪz/.</p>' + linhas + '</div>';
+}
+/* ---------- -s / -es (3ª pessoa e plural) ---------- */
+const S_SIBILANTES = ['s', 'z', 'ʃ', 'ʒ', 'tʃ', 'dʒ'], S_SURDOS = ['p', 't', 'k', 'f', 'θ'];
+const S_EXEMPLOS = { s:['work', 'stop', 'help', 'eat', 'laugh', 'ask'], z:['play', 'call', 'move', 'go', 'give', 'clean'], iz:['use', 'dance', 'watch', 'wash', 'judge', 'miss'] };
+const S_ARMADILHAS = ['use', 'dance', 'watch', 'judge', 'wash', 'live', 'laugh', 'stop'];
+const S_IRREGULARES = ['does', 'says', 'has', 'is', 'was'];
+const S_NOME = { s:'/s/', z:'/z/', iz:'/ɪz/' };
+let sFiltro = 'todos', sBusca = '', sLimite = 30, sQuiz = { ok:0, n:0, v:null, resp:'' }, _sIdx = null, _sIdxK = '';
+function sClasseDe(ipa){
+  const x = ipa.replace(/[ˈˌː]/g, '').replace(/[aeɔ]ɪ/g, 'X');
+  return /[ɪəɐ]z$/.test(x) ? 'iz' : (/s$/.test(x) ? 's' : 'z');
+}
+function sIndice(){
+  if(_sIdx && _sIdxK === ENG + pronCarga) return _sIdx;
+  _sIdx = [];
+  VERBS.forEach(v => {
+    if(v.phrasal) return;
+    const f = ENG === 'uk' ? v.uk : v.us, base = (f && f.base) || v.base, s3 = (f && f.s3) || v.s3;
+    if(!s3 || !(s3 === base + 's' || s3 === base + 'es' || (/y$/.test(base) && s3 === base.slice(0, -1) + 'ies'))) return;
+    const bu = pronIpa(base, 'us'), su = pronIpa(s3, 'us'); if(!bu || !su) return;
+    const sk = pronIpa(s3, 'uk');
+    _sIdx.push({ base, past:s3, bipa:bu.ipa, us:su.ipa, uk:sk ? sk.ipa : '', cls:sClasseDe(su.ipa) });
+  });
+  _sIdxK = ENG + pronCarga;
+  return _sIdx;
+}
+function sExplica(x){
+  const u = edUltimoSom(x.bipa), m = '/' + u + '/';
+  if(x.cls === 'iz') return x.base + ' termina no som ' + m + ' (chiado): o -s vira uma sílaba extra /ɪz/.';
+  if(x.cls === 's') return x.base + ' termina no som ' + m + ' (surdo, sem vibrar a garganta) → o -s vira /s/.';
+  return x.base + ' termina em ' + (/[aeiouɑæʌɔɛɝɪʊəɚɐɒɜ]$/.test(u) ? 'vogal' : 'som ' + m) + ' (sonoro, a garganta vibra) → o -s vira /z/.';
+}
+function sLinha(x){
+  return '<div class="ed-row"><div class="ed-l1"><b>' + pronEsc(x.base) + '</b> <span class="ed-seta">→</span> <b class="ed-past">' + pronEsc(x.past) + '</b><span class="ed-tag ed-' + (x.cls === 's' ? 't' : x.cls === 'z' ? 'd' : 'id') + '">' + S_NOME[x.cls] + '</span>' +
+    '<button type="button" class="audio-btn sm" data-text="' + pronEsc(x.past) + '" data-lang="en-US" aria-label="Ouvir em US">🔊</button><button type="button" class="audio-btn sm ed-uk" data-text="' + pronEsc(x.past) + '" data-lang="en-GB" aria-label="Ouvir em UK">UK</button></div>' + edLinhaIpa(x) + '</div>';
+}
+function sRenderLista(){
+  const box = document.getElementById('sLista'); if(!box) return;
+  const q = sBusca.trim().toLowerCase();
+  const tudo = sIndice().filter(x => (sFiltro === 'todos' || x.cls === sFiltro) && (!q || x.base.includes(q) || x.past.includes(q)));
+  box.innerHTML = tudo.slice(0, sLimite).map(sLinha).join('') || '<p class="ed-nota">Nenhum verbo encontrado.</p>';
+  const mais = document.getElementById('sMais');
+  if(mais){ mais.hidden = tudo.length <= sLimite; mais.textContent = '+ ' + Math.min(30, tudo.length - sLimite) + ' verbos (' + (tudo.length - sLimite) + ' restantes)'; }
+  const n = document.getElementById('sContagem'); if(n) n.textContent = tudo.length + ' verbos';
+}
+function sNovoQuiz(){
+  const l = sIndice(); if(!l.length) return;
+  let x; do { x = l[Math.floor(Math.random() * l.length)]; } while(l.length > 1 && sQuiz.v && x === sQuiz.v);
+  sQuiz.v = x; sQuiz.resp = ''; sRenderQuiz();
+}
+function sRenderQuiz(){
+  const box = document.getElementById('sQuiz'); if(!box) return;
+  const x = sQuiz.v; if(!x){ box.innerHTML = '<p class="ed-nota">Carregando os dicionários de pronúncia…</p>'; return; }
+  const r = sQuiz.resp;
+  box.innerHTML = '<div class="ed-q-palavra"><b>' + pronEsc(x.past) + '</b><button type="button" class="audio-btn" data-text="' + pronEsc(x.past) + '" data-lang="' + ENG_LANG[ENG] + '" aria-label="Ouvir">🔊</button></div>' +
+    '<div class="ed-q-opc">' + ['s', 'z', 'iz'].map(c => '<button type="button" class="ed-q-btn' + (r ? (c === x.cls ? ' ok' : (c === r ? ' erro' : '')) : '') + '" data-s-resp="' + c + '"' + (r ? ' disabled' : '') + '>' + S_NOME[c] + '</button>').join('') + '</div>' +
+    (r ? '<div class="ed-q-res ' + (r === x.cls ? 'ok' : 'erro') + '">' + (r === x.cls ? 'Certo. ' : 'Não: é ' + S_NOME[x.cls] + '. ') + pronEsc(sExplica(x)) + edLinhaIpa(x) + '<button type="button" class="ed-prox" data-s-prox="1">Próxima →</button></div>' : '<p class="ed-nota">Qual é o som final de <b>' + pronEsc(x.past) + '</b>? Pense no último som de <b>' + pronEsc(x.base) + '</b>.</p>') +
+    '<div class="ed-placar">Acertos: ' + sQuiz.ok + ' / ' + sQuiz.n + '</div>';
+}
+function fonRenderS(){
+  const idx = sIndice(), ex = c => S_EXEMPLOS[c].map(id => idx.find(x => x.base === id)).filter(Boolean).slice(0, 5)
+    .map(x => '<li><b>' + pronEsc(x.past) + '</b> <span class="ed-ipa">/' + pronEsc(ENG === 'uk' && x.uk ? x.uk : x.us) + '/</span><button type="button" class="audio-btn sm" data-text="' + pronEsc(x.past) + '" data-lang="' + ENG_LANG[ENG] + '" aria-label="Ouvir">🔊</button></li>').join('');
+  const arm = S_ARMADILHAS.map(id => idx.find(x => x.base === id)).filter(Boolean).map(x => '<li><b>' + pronEsc(x.past) + '</b> <span class="ed-tag ed-' + (x.cls === 's' ? 't' : x.cls === 'z' ? 'd' : 'id') + '">' + S_NOME[x.cls] + '</span> ' + pronEsc(sExplica(x)) + '</li>').join('');
+  const irr = S_IRREGULARES.map(w => ({ w, verbo:true })).filter(x => pronIpa(x.w, 'us')).map(fonRow).join('');
+  return '<p class="ed-nota"><b>-s / -es</b> na 3ª pessoa do presente (works), no plural dos substantivos (books) e no possessivo (Tom\'s). A regra é a mesma, e também vale pelo <b>último som</b>, não pela letra.</p>' +
+    '<div class="ed-cards">' +
+      '<div class="ed-card ed-t"><h4>/s/</h4><p>Depois de som <b>surdo</b>: /p t k f θ/.</p><ul>' + ex('s') + '</ul></div>' +
+      '<div class="ed-card ed-d"><h4>/z/</h4><p>Depois de <b>vogal</b> ou de consoante sonora: /b d ɡ v ð m n ŋ l r/.</p><ul>' + ex('z') + '</ul></div>' +
+      '<div class="ed-card ed-id"><h4>/ɪz/</h4><p>Depois de <b>chiado</b>: /s z ʃ ʒ tʃ dʒ/. Ganha sílaba extra.</p><ul>' + ex('iz') + '</ul></div></div>' +
+    '<div class="ed-sub">Armadilhas: a letra engana</div><ul class="ed-arm">' + (arm || '<li class="ed-nota">Carregando…</li>') + '</ul>' +
+    '<div class="ed-sub">Irregulares: a vogal muda</div><p class="ed-nota">Em does e says o -s soa /z/, mas a vogal também muda; has e is seguem /z/ com vogal própria.</p><ul class="fon-lista">' + irr + '</ul>' +
+    '<div class="ed-sub">Treino: qual é o som?</div><div id="sQuiz" class="ed-quiz"></div>' +
+    '<div class="ed-sub">Todos os verbos do app <span class="ed-n" id="sContagem"></span></div>' +
+    '<div class="ed-filtros">' + [['todos', 'Todos'], ['s', '/s/'], ['z', '/z/'], ['iz', '/ɪz/']].map(f => '<button type="button" class="ed-chip' + (sFiltro === f[0] ? ' on' : '') + '" data-s-filtro="' + f[0] + '">' + f[1] + '</button>').join('') + '</div>' +
+    '<input type="search" id="sBusca" class="ed-busca" placeholder="buscar verbo…" value="' + pronEsc(sBusca) + '" autocomplete="off">' +
+    '<div id="sLista" class="ed-lista"></div><button type="button" class="ed-chip ed-mais" id="sMais" data-s-mais="1" hidden></button>';
+}
+/* ---- v147: SUFIXOS e SÍLABA TÔNICA (mesma ideia das outras abas: regra testada contra o vocabulário do app) ---- */
+function fonSil(ipa){   /* { n: nº de sílabas, ini: índice da tônica a partir do início (0-based), fim: posição a partir do fim (1 = última) } */
+  const s = ipa.replace(/[ˌː]/g, ''), p = s.lastIndexOf('ˈ'),   /* últimas ˈ: o dicionário às vezes marca duas tônicas; vale a última */ n = (s.replace(/ˈ/g, '').match(new RegExp(FON_VOGAL.source, 'g')) || []).length;
+  if(p < 0 || n < 2) return null;
+  const antes = (s.slice(0, p).match(new RegExp(FON_VOGAL.source, 'g')) || []).length;
+  return { n, ini:antes, fim:n - antes };
+}
+const fonOrd = k => k + 'ª';
+/* regras de SOM de sufixo: pega = palavras cobertas; ok = o IPA termina/contém o som esperado */
+const FON_SUF = [
+  { t:'-sion depois de vogal = /ʒən/', txt:'Depois de vogal, -sion soa /ʒən/ (vision, decision, television).', pega:w => /[aeiou]sions?$/.test(w), ok:(w, i) => /ʒə?n[sz]?$/.test(fonSem(i)) },
+  { t:'-rsion = /ʒən/ (americano)', txt:'Depois de R, o -sion soa /ʒən/ no inglês americano: version = "vârjân", conversion, immersion. O britânico costuma usar /ʃən/.', pega:w => /rsions?$/.test(w), ok:(w, i) => /ʒə?n[sz]?$/.test(fonSem(i)) },
+  { t:'-nsion / -lsion / -ssion = /ʃən/', txt:'Depois de N, L ou S, o -sion soa /ʃən/ (tension, expulsion, mission, passion).', pega:w => /([nl]sion|ssion)s?$/.test(w), ok:(w, i) => /ʃə?n[sz]?$/.test(fonSem(i)) },
+  { t:'-ism = /ɪzəm/', txt:'O -ism soa /ɪzəm/: o S vira Z e a vogal final é fraca (capitalism = "capitalizâm").', pega:w => /isms?$/.test(w) && w.length > 4, ok:(w, i) => /ɪzə?m[sz]?$/.test(fonSem(i)) },
+  { t:'-ist = /ɪst/', txt:'O -ist soa /ɪst/ (artist, specialist).', pega:w => /ists?$/.test(w) && w.length > 4, ok:(w, i) => /[ɪə]sts?$/.test(fonSem(i)) },
+  { t:'-ture = /tʃɚ/', txt:'O -ture soa /tʃɚ/: "tchâr" (future, picture, culture).', pega:w => /tures?$/.test(w) && w.length > 5, ok:(w, i) => /tʃɚz?$/.test(fonSem(i)) },
+  { t:'-sure = /ʒɚ/ (e -sure depois de vogal)', txt:'Depois de vogal, -sure soa /ʒɚ/ (measure, pleasure, treasure).', pega:w => /[aeiou]sures?$/.test(w), ok:(w, i) => /ʒɚz?$/.test(fonSem(i)) },
+  { t:'-cial / -tial = /ʃəl/', txt:'Soa /ʃəl/ (special, social, essential).', pega:w => /(ci|ti)al(ly)?$/.test(w), ok:(w, i) => /ʃə?l(i)?$/.test(fonSem(i)) },
+  { t:'-cious / -tious = /ʃəs/', txt:'Soa /ʃəs/ (delicious, conscious, ambitious).', pega:w => /(ci|ti)ous(ly)?$/.test(w), ok:(w, i) => /ʃəs(li)?$/.test(fonSem(i)) },
+  { t:'-ious / -eous = /iəs/', txt:'Soa /iəs/ (serious, various, curious).', pega:w => /([^ct]i|e)ous$/.test(w), ok:(w, i) => /(i|j)əs$|dʒəs$/.test(fonSem(i)) },
+  { t:'-ous = /əs/', txt:'Soa /əs/, sem acento (famous, nervous, dangerous).', pega:w => /[bcdfghjklmnpqrstvwxz]ous$/.test(w) && !/(ci|ti)ous$/.test(w) && w.length > 4, ok:(w, i) => /əs$/.test(fonSem(i)) },
+  { t:'-age = /ɪdʒ/', txt:'Em palavras de 2+ sílabas, -age soa /ɪdʒ/ (message, village, language). Exceções vêm do francês (garage, massage).', pega:w => /age$/.test(w) && w.length > 4, ok:(w, i) => /[ɪə]dʒ$/.test(fonSem(i)) },
+  { t:'-ive = /ɪv/', txt:'Soa /ɪv/, sem acento (active, positive, creative).', pega:w => /ive$/.test(w) && w.length > 5, ok:(w, i) => /[ɪə]v$/.test(fonSem(i)) },
+  { t:'-able / -ible = /əbəl/', txt:'Soa /əbəl/, sem acento (possible, available, comfortable).', pega:w => /[ai]ble$/.test(w) && w.length > 5, ok:(w, i) => /bə?l$/.test(fonSem(i)) },
+  { t:'-ment = /mənt/', txt:'Soa /mənt/ (movement, agreement, environment).', pega:w => /ments?$/.test(w) && w.length > 6, ok:(w, i) => /m[əɛ]nts?$/.test(fonSem(i)) },
+  { t:'-ness = /nəs/', txt:'Soa /nəs/ (happiness, business, awareness).', pega:w => /nesses?$/.test(w) || (/ness$/.test(w) && w.length > 5), ok:(w, i) => /n[əɪ]s([əɪ]z)?$/.test(fonSem(i)) },
+  { t:'-less = /ləs/ · -ful = /fəl/', txt:'Sufixos fracos, sem acento (useless, careless, helpful, useful).', pega:w => (/less$/.test(w) && w.length > 5) || (/ful$/.test(w) && w.length > 5), ok:(w, i) => /l[əɪ]s$|f[əʊ]l$/.test(fonSem(i)) },
+  { t:'-ity = /əti/', txt:'Soa /əti/ e puxa a tônica para a sílaba anterior (ability, quality, security). No americano, o T entre vogais soa como "d" rápido.', pega:w => /ity$/.test(w), ok:(w, i) => /[əɪ]ti$/.test(fonSem(i)) },
+  { t:'-ic / -ical = /ɪk/ · /ɪkəl/', txt:'Soa /ɪk/ ou /ɪkəl/ (economic, basic, practical).', pega:w => /(ic|ical)$/.test(w) && w.length > 4, ok:(w, i) => /[ɪə]k(ə?l)?$/.test(fonSem(i)) },
+  { t:'-ize / -ise = /aɪz/', txt:'Soa /aɪz/, com ditongo (organize, realize, recognise). O ditongo não leva a tônica principal em palavras longas.', pega:w => /(ize|ise)$/.test(w) && w.length > 5, ok:(w, i) => /aɪz$/.test(fonSem(i)) },
+  { t:'-ify = /ɪfaɪ/', txt:'Soa /ɪfaɪ/ (identify, simplify, verify).', pega:w => /ify$/.test(w), ok:(w, i) => /[ɪə]faɪ$/.test(fonSem(i)) },
+  { t:'-ology = /ɑlədʒi/', txt:'Soa /ɑlədʒi/ (technology, biology, psychology); a tônica fica no "ol".', pega:w => /ology$/.test(w), ok:(w, i) => /ɑlədʒi$/.test(fonSem(i)) },
+  { t:'-tain = /tən/', txt:'Em certain e mountain soa /tən/; em contain, obtain, maintain a vogal é /eɪn/ (verbos).', pega:w => /tain$/.test(w), ok:(w, i) => /tə?n$/.test(fonSem(i)) },
+  { t:'-ey final = /i/', txt:'Soa /i/ (money, journey, key).', pega:w => /ey$/.test(w) && w.length > 3, ok:(w, i) => /i$/.test(fonSem(i)) },
+  { t:'-er / -or final = /ɚ/ (americano)', txt:'No americano, soa /ɚ/ (teacher, doctor, worker). No britânico, /ə/.', pega:w => /(er|or)$/.test(w) && w.length > 4, ok:(w, i) => /ɚ$/.test(fonSem(i)) },
+  { t:'-ate: verbo /eɪt/, resto /ət/ (só tendência)', txt:'Verbos soam /eɪt/ (communicate, estimate); substantivos e adjetivos soam /ət/ (private, accurate). O app não separa a classe da palavra, por isso a % mistura os dois.', pega:w => /ate$/.test(w) && w.length > 5, ok:(w, i) => /eɪt$/.test(fonSem(i)) }
+];
+/* regras de TÔNICA: esp = posição esperada a partir do fim (1 = última, 2 = penúltima, 3 = antepenúltima) */
+const FON_TON = [
+  { t:'-tion / -sion / -cian: tônica na penúltima', txt:'A sílaba imediatamente antes do sufixo leva a força (inforMAtion, deCIsion, muSIcian).', pega:w => /(tion|sion|cian)s?$/.test(w), esp:2 },
+  { t:'-ic: tônica na penúltima', txt:'Palavras em -ic têm a força na sílaba antes do sufixo (ecoNOMic, specIFic).', pega:w => /ic$/.test(w) && w.length > 4, esp:2 },
+  { t:'-ical: tônica na antepenúltima', txt:'Em -ical a força cai uma sílaba antes de -ic (PRACtical, ecoNOMical).', pega:w => /ical$/.test(w), esp:3 },
+  { t:'-ity: tônica na antepenúltima', txt:'Em -ity a força cai na sílaba antes de "i" (aBIlity, quAlity, seCUrity).', pega:w => /ity$/.test(w) && w.length > 5, esp:3 },
+  { t:'-ify / -ize: tônica na antepenúltima', txt:'Em verbos -ify/-ize de 3 sílabas a força cai antes do sufixo (IDentify, ORganize), não no ditongo final. Em palavras mais longas (capitalize) aparece uma segunda força.', pega:w => /(ify|ize)$/.test(w) && w.length > 5, esp:3 },
+  { t:'-logy / -graphy: tônica na antepenúltima', txt:'Em -logy e -graphy a força cai antes do sufixo (techNOlogy, geOGraphy).', pega:w => /(logy|graphy)$/.test(w), esp:3 },
+  { t:'-tial / -cial: tônica na penúltima', txt:'Com som /ʃəl/, a força cai na sílaba antes do sufixo (esSENtial, SOcial, speCIal).', pega:w => /(ti|ci)al$/.test(w), esp:2 },
+  { t:'-ial / -ian / -ious (com "i" soando): tônica antes do "i"', txt:'Quando o "i" soa como sílaba (iə), a força cai na sílaba antes dele (MAterial, SErious, VAriable). No IPA o "i" e a vogal seguinte contam como duas sílabas.', pega:(w, i) => /([^ct]ial|ian|ious)$/.test(w) && w.length > 5 && /iə[lns]$/.test(fonSem(i)), esp:3 },
+  { t:'-ee / -eer / -ese / -ique: tônica na última', txt:'Estas terminações carregam a força elas mesmas (employEE, engiNEER, ChiNESE, techNIQUE).', pega:w => /(ee|eer|ese|ique)$/.test(w) && w.length > 4, esp:1 }
+];
+function fonTestaTon(r){
+  const ok = [], falha = [];
+  fonVocab().forEach(x => { if(!r.pega(x.w, x.ipa)) return; const s = fonSil(x.ipa); if(!s) return; x.sil = s; (s.fim === r.esp ? ok : falha).push(x); });
+  return { ok, falha };
+}
+function fonRowT(x){
+  const s = fonSil(x.ipa), base = fonRow(x);
+  return s ? base.replace('</li>', '<span class="fon-tn" title="Sílaba com a força principal">tônica: ' + fonOrd(s.ini + 1) + ' de ' + s.n + '</span></li>') : base;
+}
+function fonRenderSufixo(r){
+  const t = fonTesta(r), n = t.ok.length + t.falha.length; if(!n) return '';
+  const pct = Math.round(100 * t.ok.length / n);
+  return '<details class="fon-suf"><summary><b>' + pronEsc(r.t) + '</b><span class="fon-pct ' + (pct >= 90 ? 'alto' : pct >= 65 ? 'medio' : 'baixo') + '">' + pct + '%</span></summary>' +
+    '<p>' + pronEsc(r.txt) + '</p><div class="fon-stat">vale em <b>' + t.ok.length + ' de ' + n + '</b> palavras do app</div>' +
+    '<ul class="fon-lista">' + fonPick(t.ok, 4).map(fonRow).join('') + '</ul>' +
+    (t.falha.length ? '<div class="fon-sub2">Exceções (' + t.falha.length + ')</div><ul class="fon-lista">' + fonPick(t.falha, 4).map(fonRow).join('') + '</ul>' : '') + '</details>';
+}
+function fonRenderSuf(){
+  return '<p class="ed-nota">Sufixos têm sons fixos e quase sempre <b>sem acento</b>. Toque numa regra para ver exemplos e exceções. A % mostra quanto a regra vale no vocabulário do app: acima de 90% é regra; abaixo de 65% é só tendência.</p>' +
+    FON_SUF.map(fonRenderSufixo).join('');
+}
+function fonRenderTonRegra(r){
+  const t = fonTestaTon(r), n = t.ok.length + t.falha.length; if(!n) return '';
+  const pct = Math.round(100 * t.ok.length / n);
+  return '<details class="fon-suf"><summary><b>' + pronEsc(r.t) + '</b><span class="fon-pct ' + (pct >= 90 ? 'alto' : pct >= 65 ? 'medio' : 'baixo') + '">' + pct + '%</span></summary>' +
+    '<p>' + pronEsc(r.txt) + '</p><div class="fon-stat">vale em <b>' + t.ok.length + ' de ' + n + '</b> palavras do app</div>' +
+    '<ul class="fon-lista">' + fonPick(t.ok, 4).map(fonRowT).join('') + '</ul>' +
+    (t.falha.length ? '<div class="fon-sub2">Exceções (' + t.falha.length + ')</div><ul class="fon-lista">' + fonPick(t.falha, 4).map(fonRowT).join('') + '</ul>' : '') + '</details>';
+}
+/* a tônica de palavras de 2, 3 e 4 sílabas no vocabulário do app (padrão geral) */
+function fonRenderTonGeral(){
+  const g = {};
+  fonVocab().forEach(x => { const s = fonSil(x.ipa); if(!s || s.n > 4) return; const k = s.n; (g[k] = g[k] || {}); (g[k][s.fim] = g[k][s.fim] || []).push(x); });
+  return [2, 3, 4].map(n => {
+    const tot = Object.values(g[n] || {}).reduce((a, l) => a + l.length, 0); if(!tot) return '';
+    const pos = Object.keys(g[n]).map(Number).sort((a, b) => (g[n][b].length - g[n][a].length));
+    return '<div class="fon-fin"><b class="fon-fin-t">' + n + ' sílabas</b>' + pos.map(f => '<span class="fon-fin-s"><span class="ed-tag ed-id">' + (f === 1 ? 'última' : f === 2 ? 'penúltima' : f === 3 ? 'antepenúltima' : 'quarta do fim') + '</span> ' + Math.round(100 * g[n][f].length / tot) + '% · ' + fonPick(g[n][f], 3).map(x => '<i>' + pronEsc(x.w) + '</i>').join(', ') + '</span>').join('') + '</div>';
+  }).join('');
+}
+/* pares substantivo/verbo cuja tônica muda com a classe da palavra (lista curada; o áudio usa "the X" e "to X") */
+const FON_PARES = ['record', 'present', 'permit', 'produce', 'object', 'project', 'increase', 'decrease', 'import', 'export', 'contract', 'conduct', 'conflict', 'contrast', 'rebel', 'subject', 'transport', 'insult', 'progress', 'refund', 'desert'];
+function fonRenderPares(){
+  const bt = w => { const m = w.charAt(0).toUpperCase() + w.slice(1); return m; };
+  const forma = (w, forte) => {   /* forte = índice da sílaba tônica (0 = 1ª, 1 = 2ª) → escreve a sílaba forte em maiúsculas */
+    const cortes = { record:3, present:3, permit:3, produce:3, object:2, project:3, increase:2, decrease:2, import:2, export:2, contract:3, conduct:3, conflict:3, contrast:3, rebel:3, subject:3, transport:5, insult:2, progress:3, refund:2, desert:3 };
+    const c = cortes[w] || Math.ceil(w.length / 2), a = w.slice(0, c), b = w.slice(c);
+    return forte === 0 ? a.toUpperCase() + '-' + b : a + '-' + b.toUpperCase();
+  };
+  return '<div class="fon-regra"><h4>Mesma palavra, tônica diferente</h4><p>Em muitos pares de 2 sílabas, o <b>substantivo</b> tem a força na 1ª sílaba e o <b>verbo</b> na 2ª. Toque em 🔊 para ouvir cada leitura (o app lê "the …" e "to …" para orientar a voz).</p>' +
+    FON_PARES.map(w => '<div class="fon-par"><b>' + pronEsc(w) + '</b>' +
+      '<span class="fon-par-c"><em>subst.</em> ' + pronEsc(forma(w, 0)) + '<button type="button" class="audio-btn sm" data-text="the ' + pronEsc(w) + '" data-lang="' + ENG_LANG[ENG] + '" aria-label="Ouvir substantivo">🔊</button></span>' +
+      '<span class="fon-par-c"><em>verbo</em> ' + pronEsc(forma(w, 1)) + '<button type="button" class="audio-btn sm" data-text="to ' + pronEsc(w) + '" data-lang="' + ENG_LANG[ENG] + '" aria-label="Ouvir verbo">🔊</button></span></div>').join('') + '</div>';
+}
+/* sufixos neutros (não mexem na tônica) e sufixos que deslocam a tônica — pares base → derivada achados no vocabulário */
+function fonDerivada(d, suf){
+  const L = suf.length, st = d.slice(0, -L), c = [st, st + 'e', st + 'y', st.replace(/i$/, 'y')];
+  if(st.length > 2 && st[st.length - 1] === st[st.length - 2]) c.push(st.slice(0, -1));
+  return c;
+}
+function fonPares(suf){
+  const v = fonVocab(), mapa = {}; v.forEach(x => { mapa[x.w] = x; });
+  const out = [];
+  v.forEach(d => {
+    if(!d.w.endsWith(suf) || d.w.length <= suf.length + 2) return;
+    for(const b of fonDerivada(d.w, suf)){
+      const x = mapa[b]; if(!x || x.w === d.w) continue;
+      const sa = fonSil(x.ipa), sb = fonSil(d.ipa); if(!sa || !sb) continue;
+      out.push({ b:x, d, mesma:sa.ini === sb.ini }); break;
+    }
+  });
+  return out;
+}
+function fonRenderMuda(){
+  const neutros = ['ing', 'ment', 'ness', 'ful', 'less', 'ly', 'er', 'able', 'ship'], desloca = ['ic', 'ical', 'ity', 'ion', 'ian', 'ial', 'ious'];
+  const li = x => '<li class="fon-w"><b>' + pronEsc(x.b.w) + '</b><span class="ed-ipa">/' + pronEsc(x.b.ipa) + '/</span><span class="ed-seta">→</span><b>' + pronEsc(x.d.w) + '</b><span class="ed-ipa">/' + pronEsc(x.d.ipa) + '/</span><button type="button" class="audio-btn sm" data-text="' + pronEsc(x.d.w) + '" data-lang="en-US" aria-label="Ouvir">🔊</button></li>';
+  const n = neutros.map(s => { const p = fonPares(s), ok = p.filter(x => x.mesma); if(p.length < 4) return ''; const pct = Math.round(100 * ok.length / p.length);
+    return '<details class="fon-suf"><summary><b>-' + s + '</b> não muda a tônica<span class="fon-pct ' + (pct >= 90 ? 'alto' : pct >= 65 ? 'medio' : 'baixo') + '">' + pct + '%</span></summary><div class="fon-stat">a tônica ficou no mesmo lugar em <b>' + ok.length + ' de ' + p.length + '</b> pares do app</div><ul class="fon-lista">' + fonPick(ok.map(x => ({ w:x.d.w, x, verbo:x.d.verbo })), 3).map(y => li(y.x)).join('') + '</ul></details>'; }).join('');
+  const d = desloca.map(s => { const p = fonPares(s), mv = p.filter(x => !x.mesma); if(p.length < 3) return ''; const pct = Math.round(100 * mv.length / p.length);
+    return '<details class="fon-suf"><summary><b>-' + s + '</b> desloca a tônica<span class="fon-pct ' + (pct >= 90 ? 'alto' : pct >= 65 ? 'medio' : 'baixo') + '">' + pct + '%</span></summary><div class="fon-stat">a tônica mudou de sílaba em <b>' + mv.length + ' de ' + p.length + '</b> pares do app</div><ul class="fon-lista">' + fonPick(mv.map(x => ({ w:x.d.w, x, verbo:x.d.verbo })), 4).map(y => li(y.x)).join('') + '</ul></details>'; }).join('');
+  return '<div class="fon-regra"><h4>Sufixos neutros</h4><p>Estes sufixos se juntam à palavra sem mudar a sílaba tônica (HAPpy → HAPpiness).</p></div>' + n +
+    '<div class="fon-regra"><h4>Sufixos que deslocam a tônica</h4><p>Estes puxam a força para perto deles (PHOtograph → phoTOgraphy, ECOnomy → econOMic).</p></div>' + d;
+}
+function fonRenderTon(){
+  return '<p class="ed-nota">A <b>sílaba tônica</b> é a que soa mais forte, mais longa e mais aguda. Errar a tônica atrapalha a compreensão mais do que errar uma vogal. O IPA marca a tônica com <b>ˈ</b> antes da sílaba. Toque numa regra para ver exemplos e exceções.</p>' +
+    '<div class="fon-regra"><h4>Padrão geral no vocabulário do app</h4>' + fonRenderTonGeral() + '</div>' +
+    FON_TON.map(fonRenderTonRegra).join('');
+}
+/* ---------- bloco ---------- */
+const FON_ABAS = [['s', '-s / -es'], ['final', 'Som final'], ['suf', 'Sufixos'], ['ton', 'Tônica'], ['pares', 'Tônica: pares'], ['muda', 'Tônica: sufixos'], ['e', 'E mudo'], ['cg', 'C e G'], ['tion', '-tion'], ['mudas', 'Letras mudas'], ['th', 'TH'], ['ch', 'CH'], ['x', 'X'], ['ough', 'OUGH'], ['vog', 'ea · oo · ou']];
+let fonAba = 's';
+function fonRender(){
+  const el = document.getElementById('fonBloco'); if(!el) return;
+  if(pronCarga === 'nao') pronCarregar();
+  let corpo;
+  if(pronCarga !== 'pronto') corpo = '<p class="ed-nota">Carregando os dicionários de pronúncia…</p>';
+  else if(fonAba === 's') corpo = fonRenderS();
+  else if(fonAba === 'final') corpo = fonRenderFinal();
+  else if(fonAba === 'suf') corpo = fonRenderSuf();
+  else if(fonAba === 'ton') corpo = fonRenderTon();
+  else if(fonAba === 'pares') corpo = fonRenderPares();
+  else if(fonAba === 'muda') corpo = fonRenderMuda();
+  else if(fonAba === 'ch') corpo = fonRenderCh();
+  else if(fonAba === 'x') corpo = fonRenderX();
+  else if(fonAba === 'th') corpo = fonRenderTh();
+  else if(fonAba === 'ough') corpo = fonRenderOugh();
+  else if(fonAba === 'vog') corpo = fonRenderVog();
+  else corpo = FON_GRUPOS[fonAba].map(fonRenderRegra).join('');
+  el.innerHTML = '<p class="ed-nota">Regras de grafia → som, testadas contra o vocabulário do app: cada regra mostra em quantas palavras vale e quais são as exceções. O teste confere se o som esperado aparece no IPA da palavra (aproximação, não análise sílaba a sílaba).</p>' +
+    '<div class="fon-abas">' + FON_ABAS.map(a => '<button type="button" class="ed-chip' + (fonAba === a[0] ? ' on' : '') + '" data-fon-aba="' + a[0] + '">' + a[1] + '</button>').join('') + '</div>' + corpo;
+  if(pronCarga === 'pronto' && fonAba === 's'){ sRenderLista(); if(!sQuiz.v && sIndice().length) sNovoQuiz(); else sRenderQuiz(); }
+}
+document.addEventListener('click', e => {
+  const t = e.target; if(!t.closest || !t.closest('#fonBloco')) return;
+  const a = t.closest('[data-fon-aba]');
+  if(a){ fonAba = a.dataset.fonAba; fonRender(); return; }
+  const f = t.closest('[data-s-filtro]');
+  if(f){ sFiltro = f.dataset.sFiltro; sLimite = 30; document.querySelectorAll('#fonBloco .ed-chip[data-s-filtro]').forEach(b => b.classList.toggle('on', b.dataset.sFiltro === sFiltro)); sRenderLista(); return; }
+  if(t.closest('[data-s-mais]')){ sLimite += 30; sRenderLista(); return; }
+  const r = t.closest('[data-s-resp]');
+  if(r && !sQuiz.resp){ sQuiz.resp = r.dataset.sResp; sQuiz.n++; if(sQuiz.resp === sQuiz.v.cls) sQuiz.ok++; sRenderQuiz(); speak(sQuiz.v.past); return; }
+  if(t.closest('[data-s-prox]')) sNovoQuiz();
+});
+document.addEventListener('input', e => { if(e.target && e.target.id === 'sBusca'){ sBusca = e.target.value; sLimite = 30; sRenderLista(); } });
 /* ---- Persistência local ----
    Guarda no dispositivo o que o usuário construiu ao longo do estudo: tema, configuração
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.56';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.58';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -2115,6 +2512,7 @@ function setEng(v, semSalvar){
   if(Array.isArray(modalState.signals)) modalState.signals = modalState.signals.map(trocar);
   if(!semSalvar){
     render(); renderModal();
+    if(typeof fonRender === 'function') fonRender();   /* v146 */
     if(typeof edRender === 'function') edRender();   /* v145: a lista do -ed segue a variante */
     if(typeof nextChallenge === 'function' && practiceState.challenge){ nextChallenge(); }
     saveState();
@@ -13970,6 +14368,7 @@ function renderModal(){
 
 function toggleBlock(id){
   const block = document.getElementById(id);
+  if(id === 'block-fon' && typeof fonRender === 'function') fonRender();   /* v146 */
   if(id === 'block-ed' && typeof edRender === 'function') edRender();   /* v145: monta o bloco do -ed ao abrir */
   const isOpen = block.dataset.open === "true";
   const body = block.querySelector('.block-body');
@@ -17600,6 +17999,8 @@ const SEC_INTRO = {
     u:['Percorra por <b>raciocínio</b> (explicar e concluir, causa e efeito, condição…): é assim que se aprende a encadear ideias. O acervo cobre as ' + (O2_TIPOS.length * (O2_TIPOS.length - 1) / 2) + ' combinações possíveis de dois tipos de oração, reduzidas incluídas.', 'Em <b>Combinação</b>, veja como as quatro famílias de oração (coordenadas, substantivas, adjetivas, adverbiais) se misturam; em <b>Tipo de oração</b>, escolha um tipo e depois <b>combine com</b> outro.', 'Leia o parágrafo inteiro primeiro e tente adivinhar por que cada peça está ali.', 'Abra <b>Ver explicação</b>: ela diz por que aqueles verbos, aquele aspecto, aqueles encaixes e por que aquela combinação de orações importa.', 'Leve uma frase ao console e troque uma peça para ver o que muda. Toque nas palavras para ouvir.'] },
   'block-ed': { o:'Como pronunciar o -ed dos verbos regulares: /t/, /d/ ou /ɪd/, conforme o último som do verbo, com IPA americano e britânico.',
     u:['Ache o <b>último som</b> do verbo (não a letra) e decida: surdo → /t/, sonoro → /d/, t/d → /ɪd/.', 'Faça o treino até acertar sem pensar na regra.', 'Toque em 🔊 (US) ou UK para comparar o som das duas variantes.'] },
+  'block-fon': { o:'Regras de grafia → som testadas contra o vocabulário do app: -s/-es, som final, e mudo, C e G, -tion, letras mudas, TH, OUGH e grupos vocálicos.',
+    u:['Comece por <b>-s / -es</b>: é a mesma lógica do -ed, vale pelo último SOM.', 'Veja a barra de cada regra: quando vale em quase todas as palavras é regra; quando falha muito, é só tendência.', 'Toque em 🔊 (US) ou UK para comparar o som das duas variantes.'] },
   'block-erros': { o:'Os erros mais comuns de quem fala português, cada um com a forma correta e a explicação.',
     u:['Leia a forma errada em voz alta e depois a correta: o contraste ajuda a fixar.', 'Ouça a forma correta no botão de áudio.', 'Volte aqui quando o modo Praticar apontar um erro repetido.'] },
   'block-algo': { o:'O roteiro mental para montar qualquer frase: as perguntas a fazer, na ordem certa.',
@@ -17608,7 +18009,7 @@ const SEC_INTRO = {
 /* ---- v125: MENU DA REFERÊNCIA ----
    Antes o botão só rolava até a primeira seção; as outras oito ficavam escondidas no fim de uma página longa. */
 const REF_MENU = [ ['block-paragrafos', '📚', 'Parágrafos', true], ['block-gramatica', '🌳', 'Gramática das orações', true], ['block-oracoes', '🔗', 'Orações compostas'], ['block-anatomia', '🧩', 'Anatomia da frase'], ['block-matrix', '📊', 'Tabela de tempos'],
-  ['block-adverbs-tempo', '🗂️', 'Expressões por tempo'], ['block-posicao', '🎯', 'Guia de posição'], ['block-conj', '⏳', 'Conjunções de tempo'], ['block-erros', '⚠️', 'Erros comuns'], ['block-ed', '🔔', 'Pronúncia do -ed'], ['block-algo', '🧭', 'Algoritmo mental'] ];
+  ['block-adverbs-tempo', '🗂️', 'Expressões por tempo'], ['block-posicao', '🎯', 'Guia de posição'], ['block-conj', '⏳', 'Conjunções de tempo'], ['block-erros', '⚠️', 'Erros comuns'], ['block-ed', '🔔', 'Pronúncia do -ed'], ['block-fon', '🔤', 'Regras fonéticas'], ['block-algo', '🧭', 'Algoritmo mental'] ];
 function refMenuFecha(){ const m = document.getElementById('refMenu'); if(m) m.hidden = true; const b = document.getElementById('navRef'); if(b) b.setAttribute('aria-expanded', 'false'); }
 function refMenuToggle(e){
   if(e) e.stopPropagation();
