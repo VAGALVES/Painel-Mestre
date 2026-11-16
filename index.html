@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
 <meta name="description" content="Console de gramática inglesa: motor de tempos verbais com 461 verbos em 20 temas, modais, 973 palavras-sinal em 46 famílias, banco de 1.668 expressões e modo prática — com tradução PT e áudio.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#10151c">
@@ -1070,6 +1071,70 @@
   .block-head{padding:15px 16px;}
   /* barras de rolagem discretas */
   *{scrollbar-width:thin; scrollbar-color:color-mix(in srgb, var(--paper) 22%, transparent) transparent;}
+  /* ---- v155: barra do topo no celular — duas linhas alinhadas em vez de pílulas soltas ----
+     Linha 1: as três seções principais, em terços iguais. Linha 2: as seções restantes esticam e as quatro
+     ferramentas (velocidade, sotaque, tema, TV) ficam juntas à direita, do mesmo tamanho. As pílulas viram
+     filhas diretas da barra (display:contents) para que tudo se alinhe numa grade só. */
+  @media (max-width:560px){
+    .topnav{flex-wrap:wrap; justify-content:flex-start; align-items:center; gap:6px; padding:calc(8px + env(safe-area-inset-top, 0px)) 10px 8px;}
+    .topnav .nav-pills{display:contents;}
+    .topnav .nav-pill{flex:1 1 auto; min-height:36px; padding:6px 8px; font-size:11px; letter-spacing:0; display:inline-flex; align-items:center; justify-content:center; gap:4px; border-radius:12px;}
+    .topnav .nav-pill:nth-child(-n+3){flex:1 1 calc(33.333% - 4px);}
+    .topnav .nav-pill:nth-child(n+4){padding:6px 6px; font-size:10.5px;}
+    .topnav .theme-toggle{width:34px; height:36px; margin:0; font-size:14px; border-radius:12px;}
+    .topnav .eng-toggle{font-size:10.5px;}
+    /* o modo TV não faz sentido numa tela de celular: sem o botão, a 2ª linha fecha certinha */
+    .topnav #tvToggle{display:none;}
+  }
+  /* ================= v154: MODO TV e aviso de áudio ================= */
+  #ttsAviso{position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:9500; max-width:640px; margin:0 auto; background:var(--panel-raised); color:var(--paper);
+    border:1px solid var(--amber); border-radius:14px; padding:12px 14px; font-size:13px; line-height:1.5; box-shadow:0 18px 40px -14px rgba(0,0,0,.6);}
+  #ttsAviso[hidden]{display:none;}
+  #ttsAviso .tts-bts{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+  #ttsAviso button{min-height:40px; padding:0 14px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--paper); font:inherit; font-weight:600; cursor:pointer;}
+  #ttsAviso #ttsLigar{background:var(--teal); color:#06231f; border-color:var(--teal);}
+  #tvToggle[data-on="true"]{border-color:var(--brass); color:var(--brass); box-shadow:var(--brilho-latao);}
+  /* chips viraram focalizáveis: o anel de foco só aparece para teclado/controle, nunca para o toque */
+  [data-tvk]:focus:not(:focus-visible){outline:none;}
+  /* --- layout de TV: desenhado para 960 px de largura, visto a 3 m --- */
+  html[data-tv="true"] body{padding:10px 16px 40px;}
+  html[data-tv="true"] .app{max-width:none;}
+  /* na TV cada linha de tela conta: o cabeçalho e os textos de ajuda saem, a frase aparece já na 1ª tela */
+  html[data-tv="true"] header{display:none;}
+  html[data-tv="true"] .ptx .ptx-dica{display:none;}
+  html[data-tv="true"] .console .dial-group.ptx{margin-bottom:8px;}
+  html[data-tv="true"] .topnav{flex-wrap:nowrap; margin:0 -16px 12px; padding:8px 16px; justify-content:flex-start; gap:8px;}
+  html[data-tv="true"] .topnav .nav-pills{flex-wrap:nowrap; margin-right:auto; gap:6px;}
+  html[data-tv="true"] .nav-pill{font-size:13px; padding:8px 13px; min-height:40px; white-space:nowrap;}
+  html[data-tv="true"] .theme-toggle{min-width:42px; min-height:42px;}
+  /* frase à esquerda (fixa), controles à direita */
+  html[data-tv="true"] #console-tempos, html[data-tv="true"] #console-modais{display:grid; grid-template-columns:minmax(0, 5fr) minmax(0, 7fr); gap:0 22px; align-items:start;}
+  html[data-tv="true"] #console-tempos > *, html[data-tv="true"] #console-modais > *{grid-column:2; min-width:0;}
+  html[data-tv="true"] #console-tempos > .console-label, html[data-tv="true"] #console-modais > .console-label,
+  html[data-tv="true"] #console-tempos > .sec-intro, html[data-tv="true"] #console-modais > .sec-intro{grid-column:1 / -1;}
+  html[data-tv="true"] #console-tempos > .readout, html[data-tv="true"] #console-modais > .modal-readout{grid-column:1; grid-row:2 / span 60; margin-bottom:0;
+    top:calc(var(--nav-h, 56px) + 10px); max-height:calc(var(--tv-vh, 100vh) - var(--nav-h, 56px) - 20px); overflow-y:auto; overscroll-behavior:contain;}
+  html[data-tv="true"] #console-tempos > .readout + .etapa, html[data-tv="true"] #console-modais > .modal-readout + .etapa{margin-top:0; padding-top:2px; border-top:0;}
+  html[data-tv="true"] .console{padding:16px 18px 20px;}
+  html[data-tv="true"] .sec-intro{display:none;}
+  /* tipografia para distância */
+  html[data-tv="true"] .readout-sentence{font-size:27px !important; line-height:1.3; overflow-wrap:break-word;}
+  html[data-tv="true"] .readout .translation, html[data-tv="true"] .modal-readout .translation{font-size:15px;}
+  html[data-tv="true"] .note-box{font-size:13px;}
+  html[data-tv="true"] .dial-group-title{font-size:12.5px;}
+  html[data-tv="true"] .signal-chip{font-size:13.5px; padding:9px 14px; min-height:42px; display:inline-flex; align-items:center;}
+  html[data-tv="true"] .pronome-pill{font-size:15px; padding:9px 16px; min-height:44px;}
+  html[data-tv="true"] .wh-group-label{font-size:11px;}
+  html[data-tv="true"] .formato-row{grid-template-columns:repeat(4,1fr);}
+  html[data-tv="true"] .fam-row, html[data-tv="true"] .letter-row{flex-wrap:wrap; overflow-x:visible;}
+  html[data-tv="true"] .ptx textarea{font-size:17px;}
+  html[data-tv="true"] .block-head h2{font-size:17px;}
+  html[data-tv="true"] .to-top, html[data-tv="true"] .matrix-scroll-hint{display:none;}
+  /* foco bem visível de longe: anel de latão + leve aumento */
+  html[data-tv="true"] :focus{outline:3px solid var(--brass) !important; outline-offset:3px; box-shadow:0 0 0 7px color-mix(in srgb, var(--brass) 30%, transparent) !important; border-radius:10px; position:relative; z-index:3;
+    scroll-margin:calc(var(--nav-h, 56px) + 24px) 16px 40px;}
+  html[data-tv="true"] .signal-chip:focus, html[data-tv="true"] .pronome-pill:focus, html[data-tv="true"] .nav-pill:focus{border-radius:999px; transform:scale(1.06);}
+  html[data-tv="true"] #pronSheet{max-height:60%;}
 </style>
 </head>
 <body>
@@ -1092,6 +1157,7 @@
     <button class="theme-toggle eng-toggle" id="speedToggle" onclick="toggleSpeed()" title="Velocidade do áudio: 1×" aria-label="Velocidade do áudio">1×</button>
     <button class="theme-toggle eng-toggle" id="engToggle" onclick="toggleEng()" title="Variante do inglês: americano / britânico" aria-label="Variante do inglês">US</button>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar tema">🌙</button>
+    <button class="theme-toggle" id="tvToggle" onclick="toggleTV()" title="Modo TV: tela grande e controle remoto" aria-label="Modo TV">📺</button>
   </div>
 
   <div class="console" id="console-tempos" style="scroll-margin-top:64px;">
@@ -1566,14 +1632,207 @@ function toggleSpeed(){
   speak(speedIdx === 0 ? 'Slow and clear.' : (speedIdx === 3 ? 'A bit faster now.' : 'This is the speed.'));
   saveState();
 }
-function speak(text, lang, rate){
-  if(!('speechSynthesis' in window) || !text) return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = lang || ENG_LANG[ENG];
-  u.rate = rate || SPEEDS[speedIdx].r;   /* v144: 'rate' opcional (botão 🐢 do painel de pronúncia) */
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(u);
+/* ================= v154: ÁUDIO ROBUSTO + MODO TV =================
+   ÁUDIO: muitas TVs Android (e navegadores baseados em WebView) não têm a API de voz do navegador ou não têm voz
+   instalada — o app ficava mudo sem avisar. Agora: escolhe a voz explicitamente, vigia se a fala começou e, se o
+   aparelho não fala, AVISA e oferece um áudio online opcional (o texto da frase é enviado ao serviço de voz do
+   Google Tradutor; só liga se o usuário aceitar, e a escolha fica salva). */
+const TTS_ONLINE_KEY = 'pm_tts_online';
+let ttsNativoOk = null, ttsFalhas = 0, ttsVigia = null, ttsUltimo = null, ttsAudio = null, ttsAvisoVisto = false;
+function ttsOnlineLigado(){ try { return localStorage.getItem(TTS_ONLINE_KEY) === '1'; } catch(e){ return false; } }
+function ttsTemNativo(){ return ('speechSynthesis' in window) && typeof SpeechSynthesisUtterance !== 'undefined'; }
+function ttsVoz(L){
+  let vs = []; try { vs = window.speechSynthesis.getVoices() || []; } catch(e){}
+  const n = x => String(x.lang || '').replace('_', '-').toLowerCase(), l = L.toLowerCase();
+  return vs.find(x => n(x) === l) || vs.find(x => n(x).slice(0, 2) === l.slice(0, 2)) || null;
 }
+function speak(text, lang, rate){
+  if(!text) return;
+  const L = lang || ENG_LANG[ENG], R = rate || SPEEDS[speedIdx].r;   /* 'rate' opcional (botão 🐢 do painel de pronúncia) */
+  ttsUltimo = { text, L, R };
+  if(ttsAudio){ try { ttsAudio.pause(); } catch(e){} ttsAudio = null; }
+  if(!ttsTemNativo() || ttsNativoOk === false){ ttsSemVoz(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = L; u.rate = R;
+  const v = ttsVoz(L); if(v) u.voice = v;                            /* alguns Android só falam com a voz definida */
+  let comecou = false;
+  u.onstart = () => { comecou = true; ttsNativoOk = true; ttsFalhas = 0; };
+  u.onerror = e => { if(e && (e.error === 'interrupted' || e.error === 'canceled')) return; ttsContaFalha(); };
+  try { window.speechSynthesis.cancel(); window.speechSynthesis.resume(); window.speechSynthesis.speak(u); } catch(e){ ttsContaFalha(); return; }
+  /* vigia: se em 2,5 s nada começou, não há fila e o aparelho não lista nenhuma voz, a fala nativa não existe aqui */
+  clearTimeout(ttsVigia);
+  ttsVigia = setTimeout(() => {
+    let sem = true; try { sem = !window.speechSynthesis.speaking && !window.speechSynthesis.pending && !(window.speechSynthesis.getVoices() || []).length; } catch(e){}
+    if(!comecou && sem && ttsNativoOk !== true) ttsContaFalha();
+  }, 2500);
+}
+function ttsContaFalha(){
+  if(ttsNativoOk === true) return;
+  if(++ttsFalhas >= 2){ ttsNativoOk = false; ttsSemVoz(); }
+}
+function ttsSemVoz(){
+  if(ttsOnlineLigado()){ if(ttsUltimo) ttsOnline(ttsUltimo.text, ttsUltimo.L, ttsUltimo.R); return; }
+  ttsAviso('sem');
+}
+/* áudio online: frases longas vão em pedaços de até ~180 caracteres, tocados em sequência */
+function ttsOnline(text, L, R){
+  const partes = []; let resto = String(text).trim();
+  while(resto.length > 180){ let c = resto.lastIndexOf(' ', 180); if(c < 60) c = 180; partes.push(resto.slice(0, c)); resto = resto.slice(c).trim(); }
+  if(resto) partes.push(resto);
+  let i = 0;
+  const toca = () => {
+    if(i >= partes.length){ ttsAudio = null; return; }
+    const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=' + encodeURIComponent(L) + '&q=' + encodeURIComponent(partes[i++]));
+    try { a.playbackRate = Math.max(0.5, Math.min(1.5, R / 0.92)); } catch(e){}
+    a.onended = toca; a.onerror = () => { ttsAudio = null; ttsAviso('online'); };
+    ttsAudio = a; const p = a.play(); if(p && p.catch) p.catch(() => { ttsAudio = null; ttsAviso('online'); });
+  };
+  toca();
+}
+function ttsAviso(tipo){
+  if(tipo === 'sem' && ttsAvisoVisto) return;
+  let el = document.getElementById('ttsAviso');
+  if(!el){ el = document.createElement('div'); el.id = 'ttsAviso'; el.setAttribute('role', 'alert'); document.body.appendChild(el); }
+  if(tipo === 'sem'){
+    el.innerHTML = '<b>🔇 Este aparelho não tem voz de leitura.</b> É comum em TVs e em navegadores sem o mecanismo de voz. ' +
+      'Duas saídas: instalar "Serviços de Fala do Google" (Speech Services by Google) na loja de apps do aparelho, ou ligar o áudio online — o texto da frase é enviado ao serviço de voz do Google Tradutor e precisa de internet.' +
+      '<div class="tts-bts"><button type="button" id="ttsLigar">Ligar áudio online</button><button type="button" id="ttsFechar">Agora não</button></div>';
+  } else {
+    el.innerHTML = '<b>🔇 O áudio online não respondeu.</b> Verifique a internet; o serviço também pode estar indisponível neste aparelho.' +
+      '<div class="tts-bts"><button type="button" id="ttsDesligar">Desligar áudio online</button><button type="button" id="ttsFechar">Fechar</button></div>';
+  }
+  el.hidden = false;
+  const b = el.querySelector('button'); if(b && tvModo) b.focus();
+}
+document.addEventListener('click', e => {
+  const t = e.target; if(!t || !t.id) return;
+  const el = document.getElementById('ttsAviso'); if(!el) return;
+  if(t.id === 'ttsLigar'){ try { localStorage.setItem(TTS_ONLINE_KEY, '1'); } catch(x){} el.hidden = true; if(ttsUltimo) ttsOnline(ttsUltimo.text, ttsUltimo.L, ttsUltimo.R); }
+  else if(t.id === 'ttsDesligar'){ try { localStorage.removeItem(TTS_ONLINE_KEY); } catch(x){} el.hidden = true; }
+  else if(t.id === 'ttsFechar'){ el.hidden = true; ttsAvisoVisto = true; }
+});
+if(ttsTemNativo()){ try { window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged = () => {}; } catch(e){} }   /* dispara o carregamento das vozes */
+
+/* ---- MODO TV: tela grande vista de longe e controle remoto (setas + OK) ----
+   1) Escala: a página é desenhada com 960 px de largura (o "canvas" clássico de TV) e ampliada até encher a tela —
+      pela meta viewport onde ela é respeitada (Android) ou por zoom onde não é. Assim um chip de 13 px fica com
+      ~1,3 cm numa TV de 42".
+   2) Foco: tudo o que é clicável vira focalizável; as setas levam o foco ao vizinho mais próximo naquela direção;
+      OK/Enter aciona. Como os dials são redesenhados a cada escolha, o foco é devolvido ao mesmo lugar.
+   3) Layout: frase fixa à esquerda, controles à direita; barra do topo numa linha só. */
+const TV_KEY = 'pm_tv', TV_LARGURA = 960;
+let tvModo = false, tvTeclado = false, tvUltimo = null;
+function tvDetecta(){
+  let s = null; try { s = localStorage.getItem(TV_KEY); } catch(e){}
+  if(s === '1') return true; if(s === '0') return false;
+  const ua = navigator.userAgent || '';
+  if(/Android TV|GoogleTV|Google TV|SMART-TV|SmartTV|BRAVIA|AFT[A-Z]|; TV\b|Tizen|Web0S|WebOS|CrKey|MiTV|MIBOX|SHIELD Android TV|Philips|HbbTV/i.test(ua)) return true;
+  /* Android sem toque e com tela larga: quase sempre TV ou TV box */
+  return /Android/i.test(ua) && (navigator.maxTouchPoints || 0) === 0 && Math.max(screen.width || 0, window.innerWidth) >= 900;
+}
+function tvAplica(){
+  const html = document.documentElement, meta = document.querySelector('meta[name="viewport"]'), bt = document.getElementById('tvToggle');
+  if(bt){ bt.dataset.on = String(tvModo); bt.title = tvModo ? 'Modo TV ligado (toque para voltar ao normal)' : 'Modo TV: tela grande e controle remoto'; }
+  if(!tvModo){
+    delete html.dataset.tv; html.style.zoom = ''; html.style.removeProperty('--tv-vh');
+    if(meta) meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover');
+    if(typeof updateNavHeight === 'function') updateNavHeight();
+    return;
+  }
+  html.dataset.tv = 'true';
+  if(meta) meta.setAttribute('content', 'width=' + TV_LARGURA);
+  /* a meta foi respeitada? se a largura não virou ~960, cai no zoom */
+  const ajusta = () => {
+    if(!tvModo) return;
+    html.style.zoom = '';
+    const w = window.innerWidth, z = Math.abs(w - TV_LARGURA) <= 40 ? 1 : Math.max(1, Math.min(3, w / TV_LARGURA));
+    html.style.zoom = z === 1 ? '' : String(z);
+    html.style.setProperty('--tv-vh', (window.innerHeight / z) + 'px');
+    if(typeof updateNavHeight === 'function') updateNavHeight();
+  };
+  requestAnimationFrame(() => requestAnimationFrame(ajusta));
+  window.removeEventListener('resize', tvAplica._r || (() => {})); tvAplica._r = () => { clearTimeout(tvAplica._t); tvAplica._t = setTimeout(ajusta, 150); }; window.addEventListener('resize', tvAplica._r);
+}
+function toggleTV(){ tvModo = !tvModo; try { localStorage.setItem(TV_KEY, tvModo ? '1' : '0'); } catch(e){} tvAplica(); }
+/* torna focalizável o que é clicável mas não é botão (os chips são <div> com onclick) */
+function tvFocalizaveis(raizes){
+  const marca = el => {
+    if(el.dataset.tvk || !/^(DIV|SPAN|LI|TD|SUMMARY)$/.test(el.tagName)) return;
+    if(el.onclick || el.hasAttribute('onclick')){ el.dataset.tvk = '1'; if(!el.hasAttribute('tabindex')) el.tabIndex = 0; if(!el.hasAttribute('role') && el.tagName !== 'SUMMARY') el.setAttribute('role', 'button'); }
+  };
+  /* só o que acabou de entrar na página é examinado (a varredura completa acontece uma vez, na abertura) */
+  (raizes || [document.body]).forEach(r => { if(!r.isConnected) return; marca(r); r.querySelectorAll('div,span,li,td,summary').forEach(marca); });
+}
+const TV_SEL = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),summary,[tabindex]:not([tabindex="-1"])';
+function tvVisiveis(raiz){
+  return [...(raiz || document).querySelectorAll(TV_SEL)].filter(el => { if(el.offsetParent === null && getComputedStyle(el).position !== 'fixed') return false; const r = el.getBoundingClientRect(); return r.width > 1 && r.height > 1; });
+}
+function tvDescreve(el){
+  let raiz = el.parentElement; while(raiz && !raiz.id) raiz = raiz.parentElement;
+  if(!raiz) return null;
+  return { raiz: raiz.id, i: tvVisiveis(raiz).indexOf(el), txt: (el.textContent || '').trim().slice(0, 40) };
+}
+function tvRestaura(){
+  if(!tvUltimo || !(tvModo || tvTeclado)) return;
+  const a = document.activeElement; if(a && a !== document.body && a.isConnected) return;
+  const raiz = document.getElementById(tvUltimo.raiz); if(!raiz) return;
+  const l = tvVisiveis(raiz); if(!l.length) return;
+  const el = l.find((x, i) => i === tvUltimo.i && (x.textContent || '').trim().slice(0, 40) === tvUltimo.txt) || l.find(x => (x.textContent || '').trim().slice(0, 40) === tvUltimo.txt) || l[Math.min(Math.max(tvUltimo.i, 0), l.length - 1)];
+  if(el) try { el.focus({ preventScroll:true }); } catch(e){}
+}
+/* navegação espacial: o candidato mais próximo na direção da seta (quem está alinhado com o atual ganha) */
+function tvMove(dir){
+  const atual = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+  const todos = tvVisiveis();
+  if(!atual){ const vh = window.innerHeight, p = todos.find(el => { const r = el.getBoundingClientRect(); return r.top >= 0 && r.bottom <= vh; }) || todos[0]; if(p) p.focus(); return !!p; }
+  const c = atual.getBoundingClientRect(), cx = c.left + c.width / 2, cy = c.top + c.height / 2;
+  let melhor = null, nota = Infinity;
+  todos.forEach(el => {
+    if(el === atual) return;
+    const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    let prim, orto;
+    if(dir === 'right'){ if(r.left < c.right - 2 && x <= cx + 2) return; prim = Math.max(0, r.left - c.right); orto = (r.bottom < c.top || r.top > c.bottom) ? Math.abs(y - cy) : 0; if(x <= cx) return; }
+    else if(dir === 'left'){ if(x >= cx) return; prim = Math.max(0, c.left - r.right); orto = (r.bottom < c.top || r.top > c.bottom) ? Math.abs(y - cy) : 0; }
+    else if(dir === 'down'){ if(y <= cy || r.top < c.bottom - 2) return; prim = Math.max(0, r.top - c.bottom); orto = (r.right < c.left || r.left > c.right) ? Math.abs(x - cx) : 0; }
+    else { if(y >= cy || r.bottom > c.top + 2) return; prim = Math.max(0, c.top - r.bottom); orto = (r.right < c.left || r.left > c.right) ? Math.abs(x - cx) : 0; }
+    const n = prim + orto * ((dir === 'left' || dir === 'right') ? 4 : 2) + (orto ? 30 : 0);
+    if(n < nota){ nota = n; melhor = el; }
+  });
+  if(!melhor) return false;
+  melhor.focus({ preventScroll:true });
+  try { melhor.scrollIntoView({ block:'nearest', inline:'nearest' }); } catch(e){}
+  return true;
+}
+document.addEventListener('pointerdown', () => { tvTeclado = false; }, true);
+document.addEventListener('focusin', e => { if(e.target && e.target !== document.body){ const d = tvDescreve(e.target); if(d) tvUltimo = d; } });
+document.addEventListener('keydown', e => {
+  const k = e.key, t = e.target, tag = t && t.tagName;
+  if(k === 'Tab' || k.indexOf('Arrow') === 0 || k === 'Enter') tvTeclado = true;
+  /* OK/Enter ou espaço num chip (div com role=button) = clique */
+  if((k === 'Enter' || k === ' ') && t && t.dataset && t.dataset.tvk && tag !== 'SUMMARY'){ e.preventDefault(); t.click(); return; }
+  if(!tvModo) return;
+  if(k === 'Escape' || k === 'GoBack' || k === 'BrowserBack' || (k === 'Backspace' && tag !== 'INPUT' && tag !== 'TEXTAREA')){
+    const ps = document.getElementById('pronSheet'), av = document.getElementById('ttsAviso'), rm = document.getElementById('refMenu');
+    if(av && !av.hidden){ av.hidden = true; e.preventDefault(); }
+    else if(ps && !ps.hidden){ pronFechar(); e.preventDefault(); }
+    else if(rm && !rm.hidden){ rm.hidden = true; e.preventDefault(); }
+    return;
+  }
+  const dir = { ArrowRight:'right', ArrowLeft:'left', ArrowDown:'down', ArrowUp:'up' }[k]; if(!dir) return;
+  if(tag === 'SELECT') return;
+  if(tag === 'INPUT' || tag === 'TEXTAREA'){
+    /* dentro de um campo de texto, ← → movem o cursor; ↑ ↓ saem do campo */
+    if(dir === 'left' || dir === 'right') return;
+  }
+  if(tvMove(dir)) e.preventDefault();
+});
+/* depois de cada redesenho: novos chips viram focalizáveis e o foco perdido volta ao lugar */
+{ let t = null, novos = new Set();
+  const obs = new MutationObserver(muts => {
+    muts.forEach(m => m.addedNodes.forEach(n => { if(n.nodeType === 1) novos.add(n); }));
+    clearTimeout(t); t = setTimeout(() => { const l = [...novos]; novos = new Set(); tvFocalizaveis(l); tvRestaura(); }, 60);
+  });
+  window.addEventListener('load', () => { tvFocalizaveis(); obs.observe(document.body, { childList:true, subtree:true }); tvModo = tvDetecta(); tvAplica(); }); }
 document.addEventListener('click', function(e){
   const btn = e.target.closest('.audio-btn');
   if(btn && btn.dataset.text) speak(btn.dataset.text, btn.dataset.lang || ENG_LANG[ENG]);
@@ -2344,7 +2603,7 @@ document.addEventListener('input', e => { if(e.target && e.target.id === 'sBusca
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.64';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.66';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -2475,7 +2734,8 @@ function loadState(){
 function updateNavHeight(){
   const nav = document.querySelector('.topnav');
   if(!nav) return;
-  document.documentElement.style.setProperty('--nav-h', Math.round(nav.getBoundingClientRect().height) + 'px');
+  /* v154: offsetHeight (px de layout) em vez de getBoundingClientRect — com o zoom do modo TV as duas medidas divergem */
+  document.documentElement.style.setProperty('--nav-h', Math.round(nav.offsetHeight) + 'px');
 }
 window.addEventListener('resize', ()=>{ updateNavHeight(); updateScrollShadows(); }, {passive:true});
 function updateScrollShadows(){
