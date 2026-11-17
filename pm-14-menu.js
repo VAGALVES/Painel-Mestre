@@ -18,7 +18,7 @@ function ipaAnota(raiz){
   const chip = raiz.querySelector('.ipa-chip'); if(chip){ chip.classList.toggle('on', NUM_IPA); chip.setAttribute('aria-pressed', String(NUM_IPA)); }
   raiz.querySelectorAll('.num-ipa').forEach(e => e.remove());
   if(!NUM_IPA) return;
-  raiz.querySelectorAll('.num-en').forEach(e => {
+  raiz.querySelectorAll('.num-en, .tr-en').forEach(e => {
     const b = e.querySelector('.audio-btn'), t = b ? b.dataset.text : '';
     if(!t) return;   /* só linhas em inglês (as que têm áudio) */ const d = document.createElement('div'); d.className = 'num-ipa'; d.textContent = '/' + ipaFraseTxt(t) + '/';
     e.appendChild(d);
@@ -28,8 +28,8 @@ function ipaChipHTML(){ return `<button type="button" class="chip ipa-chip${NUM_
 document.addEventListener('click', e => {
   if(!(e.target.closest && e.target.closest('.ipa-chip'))) return;
   NUM_IPA = !NUM_IPA; try { localStorage.setItem('pm_numipa', NUM_IPA ? '1' : '0'); } catch(x){}
-  if(NUM_IPA && typeof pronCarregar === 'function') pronCarregar(() => { ipaAnota(document.getElementById('numWrap')); ipaAnota(document.getElementById('estWrap')); });
-  ipaAnota(document.getElementById('numWrap')); ipaAnota(document.getElementById('estWrap'));
+  if(NUM_IPA && typeof pronCarregar === 'function') pronCarregar(() => { ipaAnota(document.getElementById('numWrap')); ipaAnota(document.getElementById('estWrap')); ipaAnota(document.getElementById('trilhaWrap')); });
+  ipaAnota(document.getElementById('numWrap')); ipaAnota(document.getElementById('estWrap')); ipaAnota(document.getElementById('trilhaWrap'));
 });
 
 /* ---- v124: INTRODUÇÃO DE CADA SEÇÃO ----

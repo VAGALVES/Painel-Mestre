@@ -463,6 +463,18 @@
   .est-det{margin:4px 0;} .est-det summary{cursor:pointer; font-size:13px; padding:4px 0;} .num-card select{background:var(--panel); color:var(--paper); border:1px solid var(--line); border-radius:8px; padding:5px 6px; font-size:14px; margin:0 4px 6px 0; max-width:48%;}
   .tr-rota{border:1px solid var(--line); border-radius:10px; background:var(--panel-deep); padding:8px 10px; margin:0 0 12px;} .tr-rota-t{font-size:13px; font-weight:600; margin-bottom:6px;} .tr-rota-t small{font-weight:400; color:var(--paper-dim); font-size:11px; margin-left:6px;}
   .tr-rota-l{font-size:12px; margin:4px 0; display:flex; flex-wrap:wrap; gap:6px; align-items:center;} .tr-rota-l > b{flex:0 0 100%;}
+
+  /* v172: verbetes da Trilha */
+  .tr-vb{display:contents;}
+  .tr-ul{margin:0; padding-left:18px;} .tr-ul li{margin:3px 0; line-height:1.45; font-size:13px;}
+  .tk{font-weight:600;} .tk-n{font-weight:700;}
+  .tr-fm{margin:4px 0; font-size:14px; line-height:1.7;} .tr-fl{display:inline-block; min-width:78px; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--paper-dim); margin-right:6px;}
+  .tr-ex{padding:5px 0; border-top:1px dashed var(--line);} .tr-ex:first-child{border-top:0;}
+  .tr-en{font-size:15px; font-weight:600; line-height:1.5; overflow-wrap:anywhere;} .tr-pt{font-size:12.5px; color:var(--paper-dim);} .tr-nt{font-size:12px; color:var(--paper-dim); margin-top:2px;}
+  .tr-pp{font-size:13px; line-height:1.5;}
+  .tr-er{padding:5px 0; border-top:1px dashed var(--line);} .tr-er:first-child{border-top:0;} .tr-er-x{font-size:14px; color:var(--red);} .tr-er-x s{text-decoration-thickness:1px;} .tr-er-o{font-size:14px; font-weight:600; color:var(--teal);}
+  .tr-q{padding:6px 0; border-top:1px dashed var(--line);} .tr-q:first-child{border-top:0;} .tr-q-p{font-size:13.5px; margin-bottom:6px; line-height:1.5;} .tr-q-a{font-size:14px; font-weight:600; margin-bottom:6px;} .tr-q-feito{opacity:.65;}
+  .tr-leg{display:flex; flex-wrap:wrap; gap:4px 12px; font-size:11px; color:var(--paper-dim); margin:0 0 10px;} .tr-leg-t{flex:0 0 100%; font-weight:600;} .tr-leg-i{display:inline-flex; align-items:center; gap:5px;} .tr-leg-i i{width:10px; height:10px; border-radius:3px; display:inline-block;}
   .tr-stats{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:var(--paper); margin:6px 0 10px;}
   .tr-niv{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin:0 0 12px;}
   .tr-nv-c{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--paper-dim); border:1px solid var(--line); border-radius:8px; padding:4px 8px; background:var(--panel-deep); min-width:0;}

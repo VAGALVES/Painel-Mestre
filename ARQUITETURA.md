@@ -1,4 +1,4 @@
-# Painel Mestre do Inglês — arquitetura (v171)
+# Painel Mestre do Inglês — arquitetura (v172)
 
 App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clássico. O que roda no navegador é exatamente o que está no repositório.
 
@@ -10,8 +10,9 @@ App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clá
 | `pm.css` | Todo o estilo (temas claro/escuro, modo TV, componentes). |
 | `pm-01` … `pm-14-*.js` | Código do app, na **ordem de carga** (ver abaixo). |
 | `expressoes.js` | Dados: banco de 100 famílias de expressões (carregado sob demanda). |
-| `ipa.js`, `ipa-uk.js` | Dados: dicionário de pronúncia US e UK (carregados sob demanda). |
+| `data-trilha.js` | Dados: os 110 assuntos da Trilha (`TRILHA_DADOS`) e os **verbetes** (`TRILHA_VERBETES`). Carrega com a página, antes de `pm-13`. |
 | `sw.js` | Service worker: pré-cache de tudo e funcionamento offline. |
+| `ipa.js`, `ipa-uk.js` | Dados: dicionário de pronúncia US e UK (carregados sob demanda). |
 | `manifest.json`, `icon-*.png`, `*.woff2` | PWA e fontes. |
 
 ## Módulos JS, em ordem de carga
@@ -32,7 +33,8 @@ A ordem importa: todos compartilham o mesmo escopo global (como antes, quando er
 | 10 | `pm-10-glossario.js` | Glossário por encaixe |
 | 11 | `pm-11-reduzidas.js` | Cobertura das reduzidas e utilitários da Gramática |
 | 12 | `pm-12-relativas.js` | Relativa × pergunta indireta |
-| 13 | `pm-13-trilha-estruturas.js` | Trilha (+ repetição espaçada), respostas curtas, números, estruturas, IPA sob demanda |
+| — | `data-trilha.js` | (dados, carregado antes do 13) assuntos e verbetes da Trilha |
+| 13 | `pm-13-trilha-estruturas.js` | Trilha (+ repetição espaçada e Teste-se dos verbetes), respostas curtas, números, estruturas, IPA sob demanda |
 | 14 | `pm-14-menu.js` | Introdução de cada seção e menu da Referência |
 
 ## Como publicar uma versão
@@ -42,13 +44,17 @@ A ordem importa: todos compartilham o mesmo escopo global (como antes, quando er
 3. Se mudar a versão exibida, altere `APP_VERSION` em `pm-01-base.js`.
 4. Suba apenas os arquivos alterados + `sw.js`.
 
-Se criar um módulo novo: adicione o `<script defer src="…">` em `index.html` **e** o caminho em `ASSETS` no `sw.js`. Sem isso ele não funciona offline.
+Se criar um módulo novo (ou arquivo de dados): adicione o `<script defer src="…">` em `index.html` **e** o caminho em `ASSETS` no `sw.js`. Sem isso ele não funciona offline.
+
+## Verbetes da Trilha
+
+Cada assunto tem um verbete em `TRILHA_VERBETES[id]` com: `r` (como funciona), `f` (fórmula), `x` (exemplos: texto marcado à mão ou uma especificação do **motor**, que gera frase colorida + tradução), `p` (contraste com o português), `e` (armadilhas: errado → certo → porquê) e `t` (Teste-se, que alimenta as caixas da repetição espaçada). O verbete é montado só quando o assunto é aberto. Marcas à mão: `{f:}` formato, `{x:}` negação, `{y:}` pergunta, `{q:}` quando, `{c:}` como, `{o:}` onde, `{r:}` regência, `{j:}` conector, `{s:}` sujeito, `{v:}` verbo.
 
 ## Regras que mantêm o app consistente
 
 - Scripts clássicos com `defer` (não módulos ES): funcionam em `file://` e compartilham o escopo global.
 - Não renomear nem reordenar os arquivos sem rever a ordem de carga.
-- Dados grandes e opcionais ficam em arquivos próprios (`expressoes.js`, `ipa*.js`) e carregam sob demanda, para a abertura ser rápida no celular.
+- Dados grandes ficam em arquivos próprios (`expressoes.js`, `ipa*.js`, `data-trilha.js`); só os opcionais e pesados (`expressoes.js`, `ipa*.js`) carregam sob demanda, para a abertura ser rápida no celular.
 
 ## Dívida técnica conhecida
 
