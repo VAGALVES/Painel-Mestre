@@ -1,6 +1,21 @@
-const CACHE_NAME = "painel-mestre-ingles-v170";
+const CACHE_NAME = "painel-mestre-ingles-v171";
 const ASSETS = [
   "./index.html",
+  "./pm.css",
+  "./pm-01-base.js",
+  "./pm-02-verbos.js",
+  "./pm-03-wh-dials.js",
+  "./pm-04-lexico.js",
+  "./pm-05-geografia.js",
+  "./pm-06-oracoes.js",
+  "./pm-07-modais.js",
+  "./pm-08-treino.js",
+  "./pm-09-expressoes.js",
+  "./pm-10-glossario.js",
+  "./pm-11-reduzidas.js",
+  "./pm-12-relativas.js",
+  "./pm-13-trilha-estruturas.js",
+  "./pm-14-menu.js",
   "./expressoes.js",
   "./ipa.js",
   "./ipa-uk.js",
