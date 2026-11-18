@@ -597,6 +597,18 @@
   .mont-busca{display:block; width:100%; box-sizing:border-box; border:0; border-bottom:1px solid var(--line); background:transparent; color:var(--paper); font:inherit; font-size:12px; padding:9px 12px; outline:none;}
   .mont-busca:focus{background:color-mix(in srgb, var(--cat) 8%, transparent);}
   .mont-op[hidden]{display:none;}
+  /* v175: subcategorias dos adjetivos — chips roláveis + título de cada grupo */
+  .np-subs{display:flex; gap:6px; overflow-x:auto; padding:8px 10px; border-bottom:1px solid var(--line); scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+  .np-subs::-webkit-scrollbar{display:none;}
+  .np-sub{flex:0 0 auto; white-space:nowrap; border:1px solid var(--line); background:transparent; color:var(--paper-dim); border-radius:999px; font:inherit; font-size:10.5px; padding:5px 11px; min-height:30px; cursor:pointer;}
+  .np-sub i{font-style:normal; opacity:.7; margin-left:3px;}
+  .np-sub[data-on="true"]{border-color:var(--cat); color:var(--cat); background:color-mix(in srgb, var(--cat) 14%, transparent);}
+  .np-subh{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--brass-dim); padding:10px 12px 4px; background:color-mix(in srgb, var(--cat) 6%, transparent);}
+  .np-subh[hidden]{display:none;}
+  .gloss-grid .np-subh{grid-column:1 / -1; padding:12px 2px 5px; background:none; border-bottom:1px solid var(--line);}
+  .np-wrap .np-subs{padding-left:0; padding-right:0;}
+  @media (pointer:coarse){ .np-sub{min-height:36px;} }
+  .comb-leg{flex:0 0 auto; align-self:center; font-size:10.5px; color:var(--paper-dim); padding:0 4px; white-space:nowrap;}
   .mont-picker-list{max-height:min(230px, 42vh); overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .mont-op{display:flex; justify-content:space-between; gap:12px; width:100%; text-align:left;
     background:transparent; border:0; border-bottom:1px solid var(--line); padding:9px 12px;
@@ -617,6 +629,7 @@
   .gloss-grid{display:grid; grid-template-columns:1fr; gap:0;}
   .gloss-item{display:flex; justify-content:space-between; gap:12px; padding:7px 2px; border-bottom:1px solid var(--line);}
   .gloss-item:last-child{border-bottom:0;}
+  .gloss-item[hidden]{display:none;}
   .gloss-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
   .anat-frase-row{display:flex; align-items:flex-start; gap:10px;}
   .anat-frase-row .anat-frase, .anat-frase-row .mont-frase{flex:1; min-width:0;}

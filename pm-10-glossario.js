@@ -27,10 +27,21 @@ function buildGlossario(){
   const box = document.getElementById('glossarioWrap');
   if(!box) return;
   const mapa = glossPorEncaixe();
-  const slots = SLOT_ORDEM.filter(r=>mapa[r]);
+  /* v173: o objeto (determinante, substantivo e os 8 adjetivos, ids 30–39) entra na ordem real da frase:
+     depois dos encaixes do meio e antes dos de fim. Suas peças vêm das tabelas de data-adjetivos.js,
+     não do SIGNAL_WORDS, por isso têm um ramo próprio abaixo. */
+  const iFim = SLOT_ORDEM.findIndex(r => SLOT_ZONA(r) === 'fim');
+  const ordem = SLOT_ORDEM.slice(0, iFim).concat(NP_IDS, SLOT_ORDEM.slice(iFim));
+  const slots = ordem.filter(r => npEhId(r) || mapa[r]);
   if(glossSlot !== null && !slots.includes(glossSlot)) glossSlot = null;
+  const npRot = r => r >= 32 ? `${r - 31}. ${NP_NOME[r]}` : NP_NOME[r];
 
   const abas = slots.map(r=>{
+    if(npEhId(r)){
+      const kn = r >= 32 ? 'adj_' + NP_ADJ_DO_ID[r] : 'regencia';
+      return `<div class="signal-chip fam-chip" data-gloss="${r}" data-active="${glossSlot===r}"
+        style="--cat:${npCorId(r)}" data-cat="${kn}">${npRot(r)}<span class="fam-count">${npOpcoesId(r).length}</span></div>`;
+    }
     const s0 = mapa[r].values().next().value;
     const k = adjKind(s0.cls, s0.w);
     return `<div class="signal-chip fam-chip" data-gloss="${r}" data-active="${glossSlot===r}"
@@ -38,7 +49,29 @@ function buildGlossario(){
   }).join('');
 
   let corpo = `<div class="gloss-head">Toque em um encaixe acima para ver as expressões que o preenchem.</div>`;
-  if(glossSlot !== null){
+  if(glossSlot !== null && npEhId(glossSlot)){
+    /* encaixes do objeto: lista alfabética das opções, com filtro (opinião e origem passam de 40) */
+    const ops = npOpcoesId(glossSlot).slice().sort((a,b)=> a.w.localeCompare(b.w));
+    const cor = npCorId(glossSlot);
+    /* adjetivos: agrupados pelas subcategorias, na ordem em que foram escritas; os demais, em ordem alfabética */
+    const lista = glossSlot >= 32 ? npOpcoesId(glossSlot) : ops;
+    const itens = npItensHTML(lista, o => `<div class="gloss-item" style="--cat:${cor}" data-sub="${escapeHTML(o.sub || '')}" data-w="${escapeHTML(o.w.toLowerCase())}">
+        <span class="gloss-en">${escapeHTML(o.w)}</span>
+        <span class="gloss-right">
+          <span class="gloss-pt">${escapeHTML(o.pt)}</span>
+          <button class="audio-btn sm" data-text="${escapeHTML(o.w)}" title="Ouvir">🔊</button>
+        </span></div>`);
+    corpo = `<div class="gloss-head">
+        <b style="color:${cor}">${npRot(glossSlot)}</b>
+        — responde <i>${NP_PERGUNTA[glossSlot]}</i> · ${ops.length} opções${glossSlot >= 32 ? ' · ordem fixa antes do substantivo' : ''}
+        <button class="gloss-fechar" data-gloss-close="1">recolher ✕</button>
+      </div>
+      <div class="np-wrap" style="--cat:${cor}">
+        <input type="search" class="mont-busca" id="glossBusca" placeholder="filtrar opções…" autocomplete="off">
+        ${npChipsHTML(glossSlot)}
+      </div>
+      <div class="gloss-grid">${itens}</div>`;
+  } else if(glossSlot !== null){
     const itens = [...mapa[glossSlot].values()]
       .sort((a,b)=> a.w.localeCompare(b.w))
       .map(s=>{
@@ -64,6 +97,7 @@ function buildGlossario(){
   }
 
   box.innerHTML = `<div class="signal-row-inner fam-row" id="glossAbas">${abas}</div>${corpo}`;
+  npFiltroLiga(box, '.gloss-item');                               /* busca + chips de subcategoria */
   const fechar = box.querySelector('[data-gloss-close]');
   if(fechar) fechar.onclick = ()=>{ glossSlot = null; buildGlossario(); updateScrollShadows(); };
 
@@ -206,6 +240,9 @@ function buildAnatomia(){
     <div class="ref-class-label">Seis atalhos mentais</div>
     <div class="anat-grid">${atalhosHTML}</div>
 
+    <div class="ref-class-label">Combinações dos 8 adjetivos — duplas, trios e quartetos</div>
+    <div id="combosWrap"></div>
+
     <div class="ref-class-label">O teto por cor</div>
     <div class="cor-resumo">
       <div class="cor-card"><div class="bolha" style="background:${ADJ_COLOR.como}"></div>
@@ -247,7 +284,7 @@ function buildAnatomia(){
     <div class="ref-class-label">Glossário por encaixe</div>
     <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:2px;">
       O banco inteiro reorganizado pela pergunta que cada expressão responde — útil quando
-      você sabe qual encaixe quer preencher e precisa da peça.
+      você sabe qual encaixe quer preencher e precisa da peça. Inclui o objeto: determinantes, substantivos e as opções de cada um dos 8 adjetivos, na ordem da frase.
     </div>
     <div id="glossarioWrap"></div>
 
@@ -289,6 +326,118 @@ function buildAnatomia(){
 
   buildMontador();
   buildGlossario();
+  buildCombos();
+}
+
+/* ================================================================================
+   v176 · COMBINAÇÕES DOS 8 ADJETIVOS — duplas, trios e quartetos como atalho de estudo
+   Escolher 2, 3 ou 4 dos 8 tipos dá C(8,2)=28, C(8,3)=56 e C(8,4)=70 combinações. A ORDEM de dentro de cada
+   uma é sempre a fixa (opinião → … → propósito), então o aluno treina "quais tipos costumam andar juntos"
+   sem nunca decorar posição. Cada cartão tem uma frase pronta (toque → carrega no montador).
+   Estado: combN (2/3/4, ou 0 = "as mais úteis"), combFiltro (tipos que a combinação precisa conter) e
+   combSem (0 = palavras-modelo fixas; >0 = sorteio reproduzível com as ~1.090 opções). */
+let combN = 0, combFiltro = new Set(), combSem = 0, combAtual = [];
+const COMB_NOMES = ['table', 'car', 'bag', 'lamp', 'jacket', 'vase', 'watch', 'chair', 'dress', 'box', 'bottle', 'hat'];
+/* palavras-modelo: as mais frequentes de cada tipo (as que o aluno de fato vai usar) */
+const COMB_BASE = {
+  opiniao:['lovely', 'nice', 'beautiful', 'strange', 'comfortable', 'famous', 'cheap', 'useful'],
+  tamanho:['big', 'small', 'tall', 'long', 'huge', 'tiny', 'wide', 'heavy'],
+  idade:['old', 'new', 'modern', 'antique', 'vintage', 'young', 'classic', 'used'],
+  forma:['round', 'square', 'flat', 'curved', 'rectangular', 'oval', 'pointed', 'straight'],
+  cor:['red', 'blue', 'black', 'green', 'white', 'brown', 'grey', 'yellow'],
+  origem:['Italian', 'French', 'Japanese', 'Chinese', 'German', 'Brazilian', 'Swiss', 'English'],
+  material:['wooden', 'leather', 'metal', 'silk', 'glass', 'plastic', 'cotton', 'stone'],
+  proposito:['dining', 'sleeping', 'running', 'travel', 'cooking', 'writing', 'shopping', 'party']
+};
+/* as combinações que mais aparecem no inglês de verdade, com a razão de cada uma */
+const COMB_TOP = [
+  { tipos:['opiniao', 'cor'], n:{ det:'a', noun:'dress', adj:{ opiniao:'lovely', cor:'red' } }, why:'A dupla mais natural para descrever um objeto: o que acho + a cor.' },
+  { tipos:['tamanho', 'cor'], n:{ det:'a', noun:'car', adj:{ tamanho:'big', cor:'blue' } }, why:'Tamanho vem antes da cor: “a big blue car”, nunca “a blue big car”.' },
+  { tipos:['idade', 'cor'], n:{ det:'a', noun:'umbrella', adj:{ idade:'old', cor:'black' } }, why:'Idade antes da cor. Repare em “an old”: a/an segue o som da palavra seguinte.' },
+  { tipos:['cor', 'material'], n:{ det:'a', noun:'bag', adj:{ cor:'brown', material:'leather' } }, why:'Cor + material, o par clássico de loja e catálogo.' },
+  { tipos:['origem', 'material'], n:{ det:'a', noun:'jacket', adj:{ origem:'Italian', material:'leather' } }, why:'Quanto mais “classificatório”, mais perto do substantivo: origem → material.' },
+  { tipos:['material', 'proposito'], n:{ det:'a', noun:'table', adj:{ material:'wooden', proposito:'dining' } }, why:'O propósito fica colado ao substantivo: “a wooden dining table”.' },
+  { tipos:['forma', 'cor'], n:{ det:'a', noun:'box', adj:{ forma:'square', cor:'green' } }, why:'A forma antecede a cor: “a square green box”.' },
+  { tipos:['opiniao', 'tamanho', 'cor'], n:{ det:'a', noun:'lamp', adj:{ opiniao:'beautiful', tamanho:'small', cor:'white' } }, why:'O trio mais frequente: opino, meço, pinto.' },
+  { tipos:['tamanho', 'idade', 'cor'], n:{ det:'a', noun:'chair', adj:{ tamanho:'big', idade:'old', cor:'brown' } }, why:'Três fatos objetivos em fila: tamanho → idade → cor.' },
+  { tipos:['idade', 'cor', 'material'], n:{ det:'a', noun:'sofa', adj:{ idade:'old', cor:'brown', material:'leather' } }, why:'Idade → cor → material: a descrição de qualquer peça de brechó.' },
+  { tipos:['opiniao', 'idade', 'origem'], n:{ det:'a', noun:'vase', adj:{ opiniao:'lovely', idade:'antique', origem:'Chinese' } }, why:'Uma opinião abrindo e a origem fechando perto do substantivo.' },
+  { tipos:['opiniao', 'tamanho', 'idade', 'cor'], n:{ det:'a', noun:'house', adj:{ opiniao:'lovely', tamanho:'small', idade:'old', cor:'white' } }, why:'Quarteto de apresentação de imóvel: “a lovely small old white house”.' },
+  { tipos:['tamanho', 'cor', 'origem', 'material'], n:{ det:'a', noun:'bag', adj:{ tamanho:'small', cor:'red', origem:'Italian', material:'leather' } }, why:'Quarteto de vitrine: tamanho → cor → origem → material.' },
+  { tipos:['opiniao', 'idade', 'material', 'proposito'], n:{ det:'a', noun:'table', adj:{ opiniao:'lovely', idade:'old', material:'wooden', proposito:'dining' } }, why:'Quarteto de leilão: opinião, idade, material e finalidade.' }
+];
+const COMB_TIPOS = ADJ7_CHAVES;                                    /* índice 0–7 → chave do tipo, já na ordem fixa */
+function combLista(n){                                             /* todas as combinações de n tipos (índices crescentes) */
+  const out = [];
+  (function rec(ini, acc){
+    if(acc.length === n){ out.push(acc.slice()); return; }
+    for(let i = ini; i < 8; i++){ acc.push(i); rec(i + 1, acc); acc.pop(); }
+  })(0, []);
+  return out;
+}
+/* sorteio reproduzível (sem Math.random): a mesma "semente" sempre gera o mesmo conjunto de palavras */
+function combPr(a, b){ let x = (Math.imul(a + 7, 374761393) + Math.imul(b + 13, 668265263)) >>> 0; x = Math.imul(x ^ (x >>> 13), 1274126177) >>> 0; return (x ^ (x >>> 16)) >>> 0; }
+function combMontaCfg(tipos, idx){
+  let noun, adj = {};
+  if(combSem === 0){
+    noun = COMB_NOMES[idx % COMB_NOMES.length];
+    tipos.forEach(i => { adj[COMB_TIPOS[i]] = COMB_BASE[COMB_TIPOS[i]][(idx + i) % 8]; });
+  } else {
+    noun = NP_SUBS[combPr(combSem, idx) % NP_SUBS.length].en;
+    tipos.forEach(i => { const ops = ADJ7[i].ops; adj[COMB_TIPOS[i]] = ops[combPr(combSem * 1000 + idx, i) % ops.length].en; });
+  }
+  return { t:'past', a:'simples', f:'afirmativa', v:npSub(noun).v, np:{ det:'a', noun, adj } };
+}
+function combBuild(){
+  const lista = combN === 0
+    ? COMB_TOP.map(c => ({ tipos:c.tipos.map(k => COMB_TIPOS.indexOf(k)), cfg:{ t:'past', a:'simples', f:'afirmativa', v:npSub(c.n.noun).v, np:c.n }, why:c.why }))
+    : combLista(combN).map((tipos, idx) => ({ tipos, cfg:combMontaCfg(tipos, idx), why:'' }));
+  return lista.filter(c => [...combFiltro].every(i => c.tipos.includes(i)));
+}
+const combRot = i => `<b style="color:${ADJ_COLOR['adj_' + COMB_TIPOS[i]]}">${ADJ7[i].n}</b>`;
+function buildCombos(){
+  const box = document.getElementById('combosWrap'); if(!box) return;
+  combAtual = combBuild();
+  const tab = (n, rot, q) => `<button type="button" class="np-sub" data-comb-n="${n}" data-on="${combN === n}">${rot} <i>${q}</i></button>`;
+  const tipos = COMB_TIPOS.map((k, i) => `<button type="button" class="np-sub" data-comb-tipo="${i}" data-on="${combFiltro.has(i)}" style="--cat:${ADJ_COLOR['adj_' + k]}">${ADJ7[i].n}</button>`).join('');
+  const cards = combAtual.map((c, i) => {
+    const r = anatFrase(c.cfg);
+    return `<div class="anat-card comb-card" data-comb="${i}" role="button" tabindex="0" title="Tocar para carregar esta combinação no montador">
+      <h4>${c.tipos.map(combRot).join(' + ')}<span class="anat-usar">montar ↑</span></h4>
+      <div class="anat-frase-row"><div class="anat-frase">${r.en}</div>
+        <button class="audio-btn sm" data-text="${escapeHTML(r.texto)}" title="Ouvir">🔊</button></div>
+      <div class="anat-pt">${escapeHTML(r.pt)}</div>
+      ${c.why ? `<div class="why">${c.why}</div>` : ''}</div>`;
+  }).join('');
+  box.innerHTML = `
+    <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:6px;">
+      Em inglês a ordem se chama <b>OSASCOMP</b> — <i>Opinion, Size, Age, Shape, Colour, Origin, Material, Purpose</i>.
+      Dentro de qualquer combinação a fila é sempre esta; o que você treina aqui é <b>quais tipos andam juntos</b>.
+      Toque em um cartão para montar a frase e trocar as palavras.
+    </div>
+    <div class="np-subs" style="--cat:var(--brass); padding-left:0; padding-right:0;">
+      ${tab(0, 'as mais úteis', COMB_TOP.length)}${tab(2, 'duplas', 28)}${tab(3, 'trios', 56)}${tab(4, 'quartetos', 70)}
+    </div>
+    <div class="np-subs" style="padding-left:0; padding-right:0;" aria-label="Só combinações que contenham…">
+      <span class="comb-leg">contém:</span>${tipos}
+      <button type="button" class="np-sub" data-comb-limpa="1" style="--cat:var(--brass)">limpar</button>
+    </div>
+    <div class="np-subs" style="--cat:var(--brass); padding-left:0; padding-right:0;">
+      <button type="button" class="np-sub" data-comb-sorteia="1" data-on="${combSem > 0}">🎲 outras palavras</button>
+      <button type="button" class="np-sub" data-comb-modelo="1" data-on="${combSem === 0}">↺ palavras-modelo</button>
+      <span class="comb-leg">${combAtual.length} combinação(ões)</span>
+    </div>
+    <div class="anat-grid">${cards || '<div class="why">Nenhuma combinação contém todos os tipos marcados — desmarque algum.</div>'}</div>`;
+  box.querySelectorAll('[data-comb-n]').forEach(b => { b.onclick = () => { combN = +b.dataset.combN; buildCombos(); }; });
+  box.querySelectorAll('[data-comb-tipo]').forEach(b => { b.onclick = () => { const i = +b.dataset.combTipo; combFiltro.has(i) ? combFiltro.delete(i) : combFiltro.add(i); buildCombos(); }; });
+  const limpa = box.querySelector('[data-comb-limpa]'); if(limpa) limpa.onclick = () => { combFiltro.clear(); buildCombos(); };
+  const sorteia = box.querySelector('[data-comb-sorteia]'); if(sorteia) sorteia.onclick = () => { combSem++; buildCombos(); };
+  const modelo = box.querySelector('[data-comb-modelo]'); if(modelo) modelo.onclick = () => { combSem = 0; buildCombos(); };
+  box.querySelectorAll('.comb-card').forEach(card => {
+    const usar = e => { if(e.target.closest('.audio-btn')) return; aplicarNoMontador(combAtual[+card.dataset.comb].cfg); };
+    card.onclick = usar;
+    card.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); usar(e); } };
+  });
 }
 
 /* ================================================================================

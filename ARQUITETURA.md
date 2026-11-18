@@ -1,4 +1,4 @@
-# Painel Mestre do Inglês — arquitetura (v173)
+# Painel Mestre do Inglês — arquitetura (v176)
 
 App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clássico. O que roda no navegador é exatamente o que está no repositório.
 
@@ -11,7 +11,7 @@ App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clá
 | `pm-01` … `pm-14-*.js` | Código do app, na **ordem de carga** (ver abaixo). |
 | `expressoes.js` | Dados: banco de 100 famílias de expressões (carregado sob demanda). |
 | `data-trilha.js` | Dados: os 110 assuntos da Trilha (`TRILHA_DADOS`) e os **verbetes** (`TRILHA_VERBETES`). Carrega com a página, antes de `pm-13`. |
-| `data-adjetivos.js` | Dados + modelo do **objeto** (v173): os 8 tipos de adjetivo em ordem (opinião, tamanho, idade, forma, cor, origem, material, propósito), 68 substantivos, determinantes e `npMonta()` (monta EN marcado + PT, a/an por som, concordância, ordem). Carrega com a página, antes de `pm-09`. |
+| `data-adjetivos.js` | Dados + modelo do **objeto** (v174): os 8 tipos de adjetivo em ordem (opinião, tamanho, idade, forma, cor, origem, material, propósito), ~1.090 adjetivos em subcategorias (linhas `# Nome` no texto-fonte; `op.sub`), 68 substantivos, determinantes e `npMonta()` (monta EN marcado + PT, a/an por som, concordância, ordem). Carrega com a página, antes de `pm-09`. |
 | `sw.js` | Service worker: pré-cache de tudo e funcionamento offline. |
 | `ipa.js`, `ipa-uk.js` | Dados: dicionário de pronúncia US e UK (carregados sob demanda). |
 | `manifest.json`, `icon-*.png`, `*.woff2` | PWA e fontes. |
@@ -64,9 +64,11 @@ Cada assunto tem um verbete em `TRILHA_VERBETES[id]` com: `r` (como funciona), `
 - O escopo global compartilhado é simples, mas implícito: dependências entre módulos não estão declaradas.
 
 
-## O objeto: substantivo + 8 adjetivos (v173)
+## O objeto: substantivo + 8 adjetivos (v174)
 
 - Encaixes ids 30–39 (determinante, substantivo, 8 adjetivos), **sem renumerar** os 15 adverbiais (`SLOT_ORDEM`). Qualquer adjetivo liga o substantivo; desligar o substantivo limpa tudo; o verbo passa a um transitivo (`npVerboAuto`) e é restaurado ao desmontar.
 - A seleção `{det, noun, adj:{tipo:palavra}}` vira `col = {raw, pt}` via `npMonta`; `applySignal` aceita `col.raw` (já marcado) e `translate` acrescenta `col.pt` antes dos adverbiais de fim.
 - Cores: pares de controle `\u0010–\u001F` (`A7`, `ADJ7_MARCA`) e variáveis `--ad-*` (claro/escuro).
 - Escopo atual: montador e cartões da Anatomia, só singular. Motor principal, demais motores e Tabela-resumo: versões futuras.
+- Subcategorias (v175): cada tipo de adjetivo tem 5–11 grupos. O seletor do montador e o Glossário mostram chips (`np-sub`), títulos de grupo (`np-subh`) e busca, ligados por `npFiltroLiga` (filtra sem reconstruir).
+- Combinações (v176): na Anatomia, duplas (28), trios (56) e quartetos (70) dos 8 tipos + 14 "mais úteis" curadas (`COMB_TOP`), em `pm-10-glossario.js` (`buildCombos`). Filtro "contém", palavras-modelo (`COMB_BASE`) ou sorteio reproduzível (`combPr`); o cartão carrega a frase no montador (`aplicarNoMontador`).

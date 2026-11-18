@@ -492,7 +492,51 @@ const npCorId = r => r >= 32 ? ADJ_COLOR['adj_' + NP_ADJ_DO_ID[r]] : ADJ_COLOR.r
 function npOpcoesId(r){
   if(r === 30) return NP_DET.map(d => ({ w:d.en, pt:(d.pm === d.pf ? d.pm : d.pm + '/' + d.pf) + (d.pos ? ' … ' + d.pos : '') }));
   if(r === 31) return NP_SUBS.map(n => ({ w:n.en, pt:n.pt + ' (' + n.g + ')' }));
-  return ADJ7.find(t => t.k === NP_ADJ_DO_ID[r]).ops.map(o => ({ w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf }));
+  return ADJ7.find(t => t.k === NP_ADJ_DO_ID[r]).ops.map(o => ({ w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf, sub:o.sub }));
+}
+/* ---- subcategorias dos adjetivos (v175): chips + títulos de grupo + filtro, no seletor e no Glossário ---- */
+function npSubs(r){ const s = []; npOpcoesId(r).forEach(o => { if(o.sub && !s.includes(o.sub)) s.push(o.sub); }); return s; }
+/* chips: "todas" + uma por subcategoria, com a contagem; só aparecem quando há 2 ou mais */
+function npChipsHTML(r){
+  const s = npSubs(r); if(s.length < 2) return '';
+  const ops = npOpcoesId(r);
+  return `<div class="np-subs" role="group" aria-label="Subcategorias"><button type="button" class="np-sub" data-sub="" data-on="true">todas <i>${ops.length}</i></button>` +
+    s.map(n => `<button type="button" class="np-sub" data-sub="${escapeHTML(n)}" data-on="false">${escapeHTML(n)} <i>${ops.filter(o => o.sub === n).length}</i></button>`).join('') + '</div>';
+}
+/* itens com um título de grupo antes de cada subcategoria (itemFn desenha cada opção) */
+function npItensHTML(lista, itemFn){
+  let ant = null, h = '';
+  lista.forEach(o => {
+    if(o.sub && o.sub !== ant){ h += `<div class="np-subh">${escapeHTML(o.sub)}</div>`; }
+    ant = o.sub; h += itemFn(o);
+  });
+  return h;
+}
+/* liga chips + campo de busca de uma caixa: esconde itens (itemSel) e os títulos que ficaram sem itens.
+   Não reconstrói nada, então o foco do teclado e a rolagem ficam como estão. */
+function npFiltroLiga(box, itemSel){
+  if(!box) return;
+  let sub = '', q = '';
+  const busca = box.querySelector('input[type=search]');
+  const aplica = () => {
+    box.querySelectorAll(itemSel).forEach(it => {
+      it.hidden = !!((sub && it.dataset.sub !== sub) || (q && !it.textContent.toLowerCase().includes(q)));
+    });
+    box.querySelectorAll('.np-subh').forEach(h => {                /* título some se nenhum item do grupo aparece */
+      let n = h.nextElementSibling, vis = false;
+      while(n && !n.classList.contains('np-subh')){ if(!n.hidden) vis = true; n = n.nextElementSibling; }
+      h.hidden = !vis;
+    });
+  };
+  if(busca) busca.oninput = () => { q = busca.value.trim().toLowerCase(); aplica(); };
+  box.querySelectorAll('.np-sub').forEach(c => {
+    c.onclick = () => {
+      sub = c.dataset.sub;
+      box.querySelectorAll('.np-sub').forEach(x => { x.dataset.on = String(x === c); });
+      aplica();
+      try{ c.scrollIntoView({ inline:'center', block:'nearest', behavior:'smooth' }); }catch(e){}   /* o chip ativo não fica escondido no carrossel */
+    };
+  });
 }
 function npEscolhaId(r){
   const ops = npOpcoesId(r), e = montEscolha[r];
@@ -634,10 +678,11 @@ function buildMontador(){
         <div class="mont-picker-head">${montAberto >= 32 ? (montAberto - 31) + '. ' : ''}${NP_NOME[montAberto]} — ${NP_PERGUNTA[montAberto]}
           <span>${lista.length} opções</span></div>
         ${lista.length > 16 ? '<input type="search" class="mont-busca" placeholder="filtrar opções…" aria-label="Filtrar opções" autocomplete="off">' : ''}
+        ${npChipsHTML(montAberto)}
         <div class="mont-picker-list">
-          ${lista.map(o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sel="${o.w===atual}">
+          ${npItensHTML(lista, o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sub="${escapeHTML(o.sub || '')}" data-sel="${o.w===atual}">
             <span class="op-en">${escapeHTML(o.w)}</span>
-            <span class="op-pt">${escapeHTML(o.pt)}</span></button>`).join('')}
+            <span class="op-pt">${escapeHTML(o.pt)}</span></button>`)}
         </div></div>`;
     })() : (!foco2m && montAberto !== null && pecas[montAberto] ? (()=>{
       const s0 = pecas[montAberto], kk = adjKind(s0.cls, s0.w);
@@ -687,11 +732,7 @@ function buildMontador(){
   box.querySelectorAll('.mont-op').forEach(b=>{
     b.onclick = ()=>{ montEscolha[montAberto] = b.dataset.op; montAberto = null; buildMontador(); };
   });
-  const busca = box.querySelector('.mont-busca');                 /* v173: filtro das listas longas (não reconstrói) */
-  if(busca) busca.oninput = ()=>{
-    const q = busca.value.trim().toLowerCase();
-    box.querySelectorAll('.mont-op').forEach(o=>{ o.hidden = !!q && !o.textContent.toLowerCase().includes(q); });
-  };
+  npFiltroLiga(box.querySelector('.mont-picker'), '.mont-op');     /* v173/v175: busca + subcategorias (não reconstrói) */
   box.querySelectorAll('.mont-btn').forEach(b=>{
     b.onclick = ()=>{
       const act = b.dataset.act;

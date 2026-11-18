@@ -249,7 +249,7 @@ document.addEventListener('click', function(e){
   if(!e.target.closest || e.target.closest('.audio-btn, button, input, a')) return;
   const fr = e.target.closest(FALA_FRASES);
   if(fr){
-    if(fr.closest('.anat-card[data-ex], .anat-card[data-at]')) return;          /* cards que carregam o montador: o toque é deles */
+    if(fr.closest('.anat-card[data-ex], .anat-card[data-at], .anat-card[data-comb]')) return;          /* cards que carregam o montador: o toque é deles */
     const p = palavraNoPonto(e.clientX, e.clientY);
     if(p && fr.contains(p.node)){ speak(p.w); piscaPalavra(p); pronAbrir([p.w]); }
     return;
@@ -984,7 +984,7 @@ document.addEventListener('input', e => { if(e.target && e.target.id === 'sBusca
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.84';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.87';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
