@@ -1,4 +1,4 @@
-# Painel Mestre do Inglês — arquitetura (v172)
+# Painel Mestre do Inglês — arquitetura (v173)
 
 App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clássico. O que roda no navegador é exatamente o que está no repositório.
 
@@ -11,6 +11,7 @@ App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clá
 | `pm-01` … `pm-14-*.js` | Código do app, na **ordem de carga** (ver abaixo). |
 | `expressoes.js` | Dados: banco de 100 famílias de expressões (carregado sob demanda). |
 | `data-trilha.js` | Dados: os 110 assuntos da Trilha (`TRILHA_DADOS`) e os **verbetes** (`TRILHA_VERBETES`). Carrega com a página, antes de `pm-13`. |
+| `data-adjetivos.js` | Dados + modelo do **objeto** (v173): os 8 tipos de adjetivo em ordem (opinião, tamanho, idade, forma, cor, origem, material, propósito), 68 substantivos, determinantes e `npMonta()` (monta EN marcado + PT, a/an por som, concordância, ordem). Carrega com a página, antes de `pm-09`. |
 | `sw.js` | Service worker: pré-cache de tudo e funcionamento offline. |
 | `ipa.js`, `ipa-uk.js` | Dados: dicionário de pronúncia US e UK (carregados sob demanda). |
 | `manifest.json`, `icon-*.png`, `*.woff2` | PWA e fontes. |
@@ -29,6 +30,7 @@ A ordem importa: todos compartilham o mesmo escopo global (como antes, quando er
 | 06 | `pm-06-oracoes.js` | Motor da 2ª oração (tipos, reduzidas, dials Ⓐ e ⑩) |
 | 07 | `pm-07-modais.js` | Motor de modais v2 |
 | 08 | `pm-08-treino.js` | Caderno, shadowing, PWA, tema, Gatilhos, prática e verificação |
+| — | `data-adjetivos.js` | (dados, carregado antes do 09) adjetivos, substantivos e `npMonta` |
 | 09 | `pm-09-expressoes.js` | Banco de expressões, anatomia, atalhos, montador |
 | 10 | `pm-10-glossario.js` | Glossário por encaixe |
 | 11 | `pm-11-reduzidas.js` | Cobertura das reduzidas e utilitários da Gramática |
@@ -60,3 +62,11 @@ Cada assunto tem um verbete em `TRILHA_VERBETES[id]` com: `r` (como funciona), `
 
 - Os módulos 04 e 05 (~340 KB cada) misturam dados e lógica; o próximo passo natural é extrair os dados para arquivos `data-*.js`.
 - O escopo global compartilhado é simples, mas implícito: dependências entre módulos não estão declaradas.
+
+
+## O objeto: substantivo + 8 adjetivos (v173)
+
+- Encaixes ids 30–39 (determinante, substantivo, 8 adjetivos), **sem renumerar** os 15 adverbiais (`SLOT_ORDEM`). Qualquer adjetivo liga o substantivo; desligar o substantivo limpa tudo; o verbo passa a um transitivo (`npVerboAuto`) e é restaurado ao desmontar.
+- A seleção `{det, noun, adj:{tipo:palavra}}` vira `col = {raw, pt}` via `npMonta`; `applySignal` aceita `col.raw` (já marcado) e `translate` acrescenta `col.pt` antes dos adverbiais de fim.
+- Cores: pares de controle `\u0010–\u001F` (`A7`, `ADJ7_MARCA`) e variáveis `--ad-*` (claro/escuro).
+- Escopo atual: montador e cartões da Anatomia, só singular. Motor principal, demais motores e Tabela-resumo: versões futuras.

@@ -984,7 +984,7 @@ document.addEventListener('input', e => { if(e.target && e.target.id === 'sBusca
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.83';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.84';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
@@ -1277,6 +1277,13 @@ const MARK_OPEN = '\u0001', MARK_CLOSE = '\u0002', COMP_OPEN = '\u0003', COMP_CL
    ordem canônica recebe uma cor, de modo que a frase mostra visualmente a montagem —
    quanto → como → onde → quando. */
 const COMO_OPEN = '\u0007', COMO_CLOSE = '\u0008', ONDE_OPEN = '\u000B', ONDE_CLOSE = '\u000C';
+/* v173: os 8 adjetivos em ordem (opinião → tamanho → idade → forma → cor → origem → material → propósito) ganham um par de
+   delimitadores cada, nos códigos livres \u0010–\u001F (abre = par, fecha = ímpar). A tabela abaixo é a fonte única:
+   chave do encaixe → [abre, fecha]. */
+const ADJ7_CHAVES = ['opiniao', 'tamanho', 'idade', 'forma', 'cor', 'origem', 'material', 'proposito'];
+const ADJ7_MARCA = {}; ADJ7_CHAVES.forEach((k, i) => { ADJ7_MARCA[k] = [String.fromCharCode(0x10 + 2 * i), String.fromCharCode(0x11 + 2 * i)]; });
+const ADJ7_KIND = i => 'adj_' + ADJ7_CHAVES[i];
+function A7(k, s){ return ADJ7_MARCA[k][0] + s + ADJ7_MARCA[k][1]; }   /* adjetivo do tipo k */
 /* v94: o inverso de lowerFirstMarked — a 2ª oração passa a abrir a frase */
 function upperFirstMarked(s){
   const i = s.search(/[A-Za-z]/);
@@ -1306,10 +1313,10 @@ function C(s, cls){
 }
 function R(s){ return REG_OPEN + s + REG_CLOSE; } /* regência / collocation — azul */
 function J(s){ return CONJ_OPEN + s + CONJ_CLOSE; } /* v100: conjunção — magenta (cor que nenhum outro papel usa) */
-function stripMarks(s){ return s.replace(/[\u0001-\u0008\u000B\u000C\u000E\u000F]/g, ''); }
+function stripMarks(s){ return s.replace(/[\u0001-\u0008\u000B\u000C\u000E\u000F\u0010-\u001F]/g, ''); }
 function markedToSegments(s){
   const segments = [];
-  const re = /\u0001([^\u0002]*)\u0002|\u0003([^\u0004]*)\u0004|\u0005([^\u0006]*)\u0006|\u0007([^\u0008]*)\u0008|\u000B([^\u000C]*)\u000C|\u000E([^\u000F]*)\u000F/g;
+  const re = /\u0001([^\u0002]*)\u0002|\u0003([^\u0004]*)\u0004|\u0005([^\u0006]*)\u0006|\u0007([^\u0008]*)\u0008|\u000B([^\u000C]*)\u000C|\u000E([^\u000F]*)\u000F|([\u0010\u0012\u0014\u0016\u0018\u001A\u001C\u001E])([^\u0011\u0013\u0015\u0017\u0019\u001B\u001D\u001F]*)[\u0011\u0013\u0015\u0017\u0019\u001B\u001D\u001F]/g;
   let last = 0, m;
   while((m = re.exec(s))){
     if(m.index > last) segments.push({t: s.slice(last, m.index), kind:'neutral'});
@@ -1318,7 +1325,8 @@ function markedToSegments(s){
     else if(m[3] !== undefined) segments.push({t: m[3], kind:'regencia'});
     else if(m[4] !== undefined) segments.push({t: m[4], kind:'como'});
     else if(m[5] !== undefined) segments.push({t: m[5], kind:'onde'});
-    else segments.push({t: m[6], kind:'conj'});
+    else if(m[6] !== undefined) segments.push({t: m[6], kind:'conj'});
+    else segments.push({t: m[8], kind: ADJ7_KIND((m[7].charCodeAt(0) - 0x10) / 2)});   /* v173: adjetivos */
     last = re.lastIndex;
   }
   if(last < s.length) segments.push({t: s.slice(last), kind:'neutral'});
@@ -1330,6 +1338,7 @@ function escapeHTML(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
    nas etiquetas de ativos e no canvas do PNG. Mudar aqui muda tudo.
    O verde saiu: era próximo demais do teal das terminações verbais (-ed, -ing). */
 const ADJ_COLOR = { quando:'var(--violet)', como:'var(--orange)', onde:'var(--lime)', regencia:'var(--blue)', conj:'var(--conj)' };
+ADJ7_CHAVES.forEach(k => { ADJ_COLOR['adj_' + k] = 'var(--ad-' + k + ')'; });   /* v173: 8 cores novas, em pm.css */
 function markedToHTML(s, formatoColorVar){
   return markedToSegments(s).map(seg => {
     if(seg.kind==='neutral') return escapeHTML(seg.t);

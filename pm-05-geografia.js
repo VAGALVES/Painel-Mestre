@@ -384,7 +384,8 @@ function applySignal(text, signalMid, signalEnd, col, signalSplit, formato){
     listaMid.filter(m => !furaFila(m)).forEach(m => { words.splice(ponto, 0, C(m.w, m.cls)); ponto++; });
   }
   let t = words.join(" ");
-  if(col) t += ' ' + R(col.en);           /* regência/collocation cola no verbo, antes dos sinais de fim */
+  /* v173: col.raw = sintagma nominal já marcado (determinante + 8 adjetivos coloridos + substantivo); sem raw, a regência de sempre */
+  if(col) t += ' ' + (col.raw !== undefined ? col.raw : R(col.en));           /* regência/collocation cola no verbo, antes dos sinais de fim */
   if(signalSplit) t += ' ' + C(signalSplit.end, signalSplit.cls);
   else {
     const ends = Array.isArray(signalEnd) ? signalEnd : (signalEnd ? [signalEnd] : []);

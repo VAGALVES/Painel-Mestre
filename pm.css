@@ -15,12 +15,15 @@
     --brass:#c9a34e; --brass-dim:#8a744f; --teal:#4fb6a6; --red:#c1483d;
     --amber:#e0a458; --conj:#d072f2; --violet:#8f8fd6; --burnt-yellow:#c9972c; --rose:#c76d9e; --blue:#6b9fd8; --lime:#b9cf5c; --orange:#e09a5f; --paper:#ede6d6; --paper-dim:#a9a294;
     --line: rgba(237,230,214,0.10); --bg-top:#182130;
+    /* v173: os 8 adjetivos em ordem */
+    --ad-opiniao:#f79dcb; --ad-tamanho:#5dcdfa; --ad-idade:#a99cff; --ad-forma:#8fb35e; --ad-cor:#6bd6a9; --ad-origem:#df7e7f; --ad-material:#ca8acf; --ad-proposito:#ffbaa4;
   }
   :root[data-theme="light"]{
     --panel-deep:#f4f0e6; --panel:#ffffff; --panel-raised:#efe9db;
     --brass:#a8762c; --brass-dim:#8a744f; --teal:#227b6b; --red:#a83527;
     --amber:#b06f22; --conj:#9b2fc4; --violet:#5f57ad; --burnt-yellow:#96650f; --rose:#a03a6e; --blue:#2f5f9e; --lime:#5c6b18; --orange:#b3601a; --paper:#211c14; --paper-dim:#6e6656;
     --line: rgba(33,28,20,0.12); --bg-top:#fbf7ee;
+    --ad-opiniao:#90466e; --ad-tamanho:#006e94; --ad-idade:#6254a6; --ad-forma:#516f21; --ad-cor:#007652; --ad-origem:#984649; --ad-material:#824b86; --ad-proposito:#6e4200;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -591,6 +594,9 @@
     padding:8px 12px; font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em;
     display:flex; justify-content:space-between; align-items:center;}
   .mont-picker-head span{opacity:.75; text-transform:none; letter-spacing:0;}
+  .mont-busca{display:block; width:100%; box-sizing:border-box; border:0; border-bottom:1px solid var(--line); background:transparent; color:var(--paper); font:inherit; font-size:12px; padding:9px 12px; outline:none;}
+  .mont-busca:focus{background:color-mix(in srgb, var(--cat) 8%, transparent);}
+  .mont-op[hidden]{display:none;}
   .mont-picker-list{max-height:min(230px, 42vh); overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .mont-op{display:flex; justify-content:space-between; gap:12px; width:100%; text-align:left;
     background:transparent; border:0; border-bottom:1px solid var(--line); padding:9px 12px;

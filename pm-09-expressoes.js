@@ -398,6 +398,39 @@ const ATALHOS = [
     cfg:{ t:"past", a:"simples", f:"afirmativa", v:"work", ends:["hard","yesterday"] } },
 ];
 
+/* v173: o objeto — o substantivo e seus 8 adjetivos. Os cards carregam o sintagma em cfg.np e vão para o montador. */
+const ANAT_NP = "O objeto — o substantivo e seus 8 adjetivos";
+ANAT_EXEMPLOS.push(
+  { g:ANAT_NP, titulo:"Os oito, na ordem",
+    t:"past", a:"simples", f:"afirmativa", v:"buy",
+    np:{ det:"a", noun:"table", adj:{ opiniao:"lovely", tamanho:"big", idade:"old", forma:"round", cor:"red", origem:"Italian", material:"wooden", proposito:"dining" } },
+    why:"Opinião → tamanho → idade → forma → cor → origem → material → propósito. É raro passar de três, mas a fila é sempre esta: a opinião (quem fala) abre e o propósito (para que serve) fica colado ao substantivo, como em “dining table”." },
+  { g:ANAT_NP, titulo:"Propósito: o 8º, colado ao substantivo",
+    t:"past", a:"simples", f:"afirmativa", v:"buy",
+    np:{ det:"a", noun:"bag", adj:{ tamanho:"big", cor:"blue", proposito:"sleeping" } },
+    why:"O propósito (para que serve) vem por último, junto do substantivo: “a big blue sleeping bag”. Em português ele vira “de …” logo depois do substantivo: “um saco de dormir grande e azul”." },
+  { g:ANAT_NP, titulo:"Opinião + tamanho + cor",
+    t:"past", a:"simples", f:"afirmativa", v:"buy",
+    np:{ det:"a", noun:"car", adj:{ opiniao:"beautiful", tamanho:"small", cor:"red" } },
+    why:"O trio mais frequente. Quem opina vem primeiro; o tamanho antes da cor. Trocar de lugar (“a red small car”) soa estranho a qualquer nativo." },
+  { g:ANAT_NP, titulo:"Idade antes de cor",
+    t:"past", a:"simples", f:"afirmativa", v:"buy",
+    np:{ det:"an", noun:"bag", adj:{ idade:"old", cor:"brown", material:"leather" } },
+    why:"Idade → cor → material. Repare em “an”: a/an acompanha o SOM da primeira palavra depois dele (“an old”, mas “a brown”)." },
+  { g:ANAT_NP, titulo:"Origem e material colados ao substantivo",
+    t:"past", a:"simples", f:"afirmativa", v:"find",
+    np:{ det:"a", noun:"vase", adj:{ forma:"round", origem:"Chinese", material:"ceramic" } },
+    why:"Quanto mais “classificatório” o adjetivo (de onde é, do que é feito), mais perto do substantivo ele fica. Em português a lista vai depois do substantivo: “um vaso redondo chinês de cerâmica”." },
+  { g:ANAT_NP, titulo:"O objeto antes dos encaixes de fim",
+    t:"past", a:"simples", f:"afirmativa", v:"buy", ends:["quickly","at home","yesterday"],
+    np:{ det:"a", noun:"lamp", adj:{ opiniao:"lovely", idade:"old", origem:"French" } },
+    why:"A frase inteira: verbo → objeto (com seus adjetivos) → como → onde → quando. O sintagma nominal nunca é cortado pelos advérbios." },
+  { g:ANAT_NP, titulo:"Nada muda na negativa",
+    t:"past", a:"simples", f:"negativa", v:"buy",
+    np:{ det:"a", noun:"sofa", adj:{ tamanho:"huge", cor:"yellow", material:"velvet" } },
+    why:"Negar o verbo (didn’t buy) não mexe na ordem dos adjetivos: eles continuam em fila dentro do objeto." }
+);
+
 function anatFrase(cfg){
   /* Guarda de integridade: se um verbo ou sinal do exemplo não existir no banco (ou não valer
      naquele formato), o motor cairia no padrão em silêncio e o card mostraria outra frase.
@@ -416,13 +449,15 @@ function anatFrase(cfg){
   const mids = nomesMeio.map(achar).filter(Boolean);
   const ends = (cfg.ends || []).map(achar).filter(Boolean);
   const g = generate('fact', cfg.t, cfg.a, cfg.f, 'I', verb);
-  const raw = applySignal(g.text, mids.length ? mids : null, ends, null, null, cfg.f) + (g.isQuestion ? M('?') : '.');
-  const pt = translate('fact', cfg.t, cfg.a, cfg.f, 'I', mids.length ? mids : null, ends, cfg.v, null, null);
-  /* a legenda segue a ordem real da frase: início → meio → fim */
-  const slots = sortSlots(mids.concat(ends)).map(s=>{
-    const k = adjKind(s.cls, s.w);
-    return `<b style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[slotOf(s)]}</b>`;
-  });
+  /* v173: sintagma nominal opcional (determinante + adjetivos + substantivo) logo depois do verbo */
+  const np = cfg.np ? npMonta(cfg.np) : null, colNP = np ? { raw:np.raw, pt:np.pt, en:np.plain } : null;
+  const raw = applySignal(g.text, mids.length ? mids : null, ends, colNP, null, cfg.f) + (g.isQuestion ? M('?') : '.');
+  const pt = translate('fact', cfg.t, cfg.a, cfg.f, 'I', mids.length ? mids : null, ends, cfg.v, colNP, null);
+  /* a legenda segue a ordem real da frase: início → meio → objeto (adjetivos) → fim */
+  const etq = s=>{ const k = adjKind(s.cls, s.w); return `<b style="color:${ADJ_COLOR[k]}">${END_SLOT_NOME[slotOf(s)]}</b>`; };
+  const ord = sortSlots(mids.concat(ends));
+  const legNP = np ? ADJ7.filter(t => cfg.np.adj && cfg.np.adj[t.k]).map(t => `<b style="color:${ADJ_COLOR['adj_' + t.k]}">${t.n}</b>`) : [];
+  const slots = ord.filter(s => SLOT_ZONA(slotOf(s)) !== 'fim').map(etq).concat(legNP, ord.filter(s => SLOT_ZONA(slotOf(s)) === 'fim').map(etq));
   return { en: markedToHTML(raw, markColorVar(cfg.f)), pt, slots: slots.join(' → '), texto: stripMarks(raw) };
 }
 
@@ -438,6 +473,51 @@ let montAberto = null;             /* encaixe com o seletor aberto */
 const MONT_PREF = { 1:'a bit', 2:'quickly', 3:'more than usual', 4:'at home', 5:'twice', 6:'all day long',
   7:'about an hour ago', 8:'yesterday', 9:'first', 10:'at all', 11:'probably', 12:'also', 13:'often',
   14:'already', 15:'really' };
+
+/* ---- v173: o substantivo e os 8 adjetivos em ordem, como encaixes do montador ----
+   Ids próprios (30–39) para não mexer na numeração dos 15 encaixes adverbiais:
+     30 determinante · 31 substantivo · 32–39 = opinião, tamanho, idade, forma, cor, origem, material, propósito.
+   Os dados e o construtor npMonta() estão em data-adjetivos.js. Regra: adjetivo ou determinante ligados puxam o
+   substantivo junto (sem ele não há o que modificar); desligar o substantivo desliga o resto. Mesmo combinações
+   sem sentido podem ser encaixadas — o que se treina aqui é a ORDEM. */
+const NP_IDS = [30, 31, 32, 33, 34, 35, 36, 37, 38, 39];
+const NP_ADJ_DO_ID = {}; ADJ7_CHAVES.forEach((k, i) => { NP_ADJ_DO_ID[32 + i] = k; });
+const NP_NOME = { 30:'determinante', 31:'substantivo' }; ADJ7.forEach((t, i) => { NP_NOME[32 + i] = t.n; });
+const NP_PERGUNTA = { 30:'qual? de quem?', 31:'o quê?' }; ADJ7.forEach((t, i) => { NP_PERGUNTA[32 + i] = t.q; });
+/* verbos que aceitam objeto e já combinam com os substantivos; se o verbo atual for outro (work, go…), o montador
+   usa o verbo padrão do substantivo e devolve o anterior quando o substantivo sai */
+const NP_VERBOS_OK = new Set(['buy', 'have', 'find', 'see', 'take', 'wear', 'carry', 'sell', 'need', 'like', 'make']);
+const npEhId = r => r >= 30 && r <= 39;
+const npCorId = r => r >= 32 ? ADJ_COLOR['adj_' + NP_ADJ_DO_ID[r]] : ADJ_COLOR.regencia;
+function npOpcoesId(r){
+  if(r === 30) return NP_DET.map(d => ({ w:d.en, pt:(d.pm === d.pf ? d.pm : d.pm + '/' + d.pf) + (d.pos ? ' … ' + d.pos : '') }));
+  if(r === 31) return NP_SUBS.map(n => ({ w:n.en, pt:n.pt + ' (' + n.g + ')' }));
+  return ADJ7.find(t => t.k === NP_ADJ_DO_ID[r]).ops.map(o => ({ w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf }));
+}
+function npEscolhaId(r){
+  const ops = npOpcoesId(r), e = montEscolha[r];
+  if(e && ops.some(o => o.w === e)) return e;
+  return r === 30 ? NP_PADRAO.det : (r === 31 ? NP_PADRAO.noun : NP_PADRAO.adj[NP_ADJ_DO_ID[r]]);
+}
+function npSelAtual(){
+  const sel = { det: montOn.has(30) ? npEscolhaId(30) : null, noun: montOn.has(31) ? npEscolhaId(31) : null, adj:{} };
+  for(let r = 32; r <= 39; r++) if(montOn.has(r)) sel.adj[NP_ADJ_DO_ID[r]] = npEscolhaId(r);
+  return sel;
+}
+function npNormaliza(){ if(NP_IDS.some(r => r !== 31 && montOn.has(r))) montOn.add(31); }
+function npDesliga(r){ montOn.delete(r); if(r === 31) NP_IDS.forEach(x => montOn.delete(x)); }
+function npVerboAuto(){                                    /* o verbo acompanha o substantivo enquanto ele estiver encaixado */
+  if(montOn.has(31)){
+    const n = npSub(npEscolhaId(31));
+    if(MONT_COMBO.vAuto || !NP_VERBOS_OK.has(MONT_COMBO.v)){
+      if(!MONT_COMBO.vAuto) MONT_COMBO.vAntes = MONT_COMBO.v;
+      MONT_COMBO.v = n.v; MONT_COMBO.vAuto = true;
+    }
+  } else if(MONT_COMBO.vAuto){ MONT_COMBO.v = MONT_COMBO.vAntes || 'work'; delete MONT_COMBO.vAntes; MONT_COMBO.vAuto = false; }
+}
+Object.assign(SEG_INFO, (() => { const o = {};
+  ADJ7.forEach(t => { o['adj_' + t.k] = { k:'Adjetivo de ' + t.n + ' (' + t.ord + 'º dos 8)', t:'Pergunta: <i>' + t.q + '</i> Ordem antes do substantivo: opinião → tamanho → idade → forma → cor → origem → material → propósito. Podem faltar encaixes, mas os que vierem seguem sempre essa fila.' }; });
+  return o; })());
 
 function montOpcoes(){
   const key = `${MONT_COMBO.t}_${MONT_COMBO.a}`;
@@ -464,9 +544,26 @@ function montPecas(){
   });
   return escolhidos;
 }
+/* soquetes do objeto: determinante, substantivo e os 8 adjetivos, cada um com a cor do seu tipo */
+function npSocketsHTML(){
+  let h = `<div class="mont-zona" style="flex-basis:100%; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--brass-dim); margin-top:4px;">objeto · o substantivo e seus 8 adjetivos, nesta ordem</div>`;
+  NP_IDS.forEach(r => {
+    const on = montOn.has(r), esc = npEscolhaId(r), n = npOpcoesId(r).length;
+    const rot = r >= 32 ? `${r - 31}. ${NP_NOME[r]}` : NP_NOME[r];
+    const cab = on
+      ? `<b data-toggle="${r}">${rot}<button class="socket-x" data-off="${r}" title="Desencaixar">✕</button></b>`
+      : `<b data-toggle="${r}">${rot} · ${n}</b>`;
+    const escolha = on
+      ? `<button class="socket-peca" data-pick="${r}" aria-expanded="${montAberto === r}">${escapeHTML(esc)}<i>${montAberto === r ? '▴' : '▾'}</i></button>`
+      : `<span>${escapeHTML(esc)}</span>`;
+    h += `<div class="socket" data-slot="${r}" data-on="${on}" data-np="1" style="--cat:${npCorId(r)}">${cab}${escolha}</div>`;
+  });
+  return h;
+}
 function buildMontador(){
   const box = document.getElementById('montadorWrap');
   if(!box) return;
+  npNormaliza(); npVerboAuto();                      /* v173: substantivo/adjetivos e o verbo que os acompanha */
   const pecas = montPecas();
   const ordem = SLOT_ORDEM.filter(r=>pecas[r]);
   const usados = ordem.filter(r=>montOn.has(r));
@@ -477,13 +574,14 @@ function buildMontador(){
   const ends = usados.filter(r=>SLOT_ZONA(r) !== 'meio').map(r=>pecas[r]).filter(vale);
   const verb = verbById(MONT_COMBO.v);
   const g = generate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', verb);
-  const rawBase = applySignal(g.text, mids.length ? mids : null, ends, null, null, formato), fimM = g.isQuestion ? M('?') : '.';
+  const np = montOn.has(31) ? npMonta(npSelAtual()) : null, colNP = np ? { raw:np.raw, pt:np.pt, en:np.plain } : null;
+  const rawBase = applySignal(g.text, mids.length ? mids : null, ends, colNP, null, formato), fimM = g.isQuestion ? M('?') : '.';
   /* v110: 2ª oração também no montador */
   MONT_O2.fmt = formato;
   const o2mt = (MONT_O2.o2 && MONT_O2.o2.tipo) ? o2Em(O2_CTX_MONT, () => o2Compor()) : null;
   let ptBase;
   ptCondModo = o2mt ? (o2mt.ptModo || null) : null;                /* v120: principal no imperfeito (hábito no passado) */
-  try { ptBase = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', mids.length ? mids : null, ends, MONT_COMBO.v, null, null); }
+  try { ptBase = translate('fact', MONT_COMBO.t, MONT_COMBO.a, formato, 'I', mids.length ? mids : null, ends, MONT_COMBO.v, colNP, null); }
   finally { ptCondModo = null; }
   const jn = o2mt ? o2Junta(o2mt, rawBase, ptBase, fimM) : null;
   const foco2m = !!o2mt && o2Em(O2_CTX_MONT, () => o2Foco()) === 2;      /* v114: foco na 2ª oração */
@@ -493,13 +591,14 @@ function buildMontador(){
   ends.concat(mids).forEach(s=> porCor[adjKind(s.cls, s.w)]++);
 
   const opts = montOpcoes();
-  let sockets = '', zonaAtual = '';
+  let sockets = '', zonaAtual = '', npFeito = false;
   const ROTULO_ZONA = { 'início':'abre a frase', 'meio':'entre o auxiliar e o verbo', 'fim':'depois do verbo' };
   ordem.forEach(r=>{
     const s = pecas[r];
     const z = SLOT_ZONA(r);
     if(z !== zonaAtual){
       zonaAtual = z;
+      if(z === 'fim' && !npFeito){ sockets += npSocketsHTML(); npFeito = true; }      /* v173: o objeto vem entre o meio e o fim */
       sockets += `<div class="mont-zona" style="flex-basis:100%; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--brass-dim); margin-top:4px;">${z} · ${ROTULO_ZONA[z]}</div>`;
     }
     const k = adjKind(s.cls, s.w);
@@ -529,7 +628,18 @@ function buildMontador(){
     ${o2mt ? `<div class="why" style="font-size:10.5px; margin:2px 0 6px;">🔗 ${escapeHTML(o2mt.tipo.nome)}: ${escapeHTML(o2mt.estrutura)}</div>` : ''}
     <div class="dial-group foco-bar" id="montFocoBar" hidden></div>
     ${foco2m ? '<div class="signal-row" id="montO2Sinais"></div><div class="signal-hint" id="montO2Hint"></div>' : `<div class="mont-slots">${sockets}</div>`}
-    ${!foco2m && montAberto !== null && pecas[montAberto] ? (()=>{
+    ${!foco2m && montAberto !== null && npEhId(montAberto) ? (()=>{
+      const lista = npOpcoesId(montAberto), atual = npEscolhaId(montAberto), cor = npCorId(montAberto);
+      return `<div class="mont-picker" style="--cat:${cor}">
+        <div class="mont-picker-head">${montAberto >= 32 ? (montAberto - 31) + '. ' : ''}${NP_NOME[montAberto]} — ${NP_PERGUNTA[montAberto]}
+          <span>${lista.length} opções</span></div>
+        ${lista.length > 16 ? '<input type="search" class="mont-busca" placeholder="filtrar opções…" aria-label="Filtrar opções" autocomplete="off">' : ''}
+        <div class="mont-picker-list">
+          ${lista.map(o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sel="${o.w===atual}">
+            <span class="op-en">${escapeHTML(o.w)}</span>
+            <span class="op-pt">${escapeHTML(o.pt)}</span></button>`).join('')}
+        </div></div>`;
+    })() : (!foco2m && montAberto !== null && pecas[montAberto] ? (()=>{
       const s0 = pecas[montAberto], kk = adjKind(s0.cls, s0.w);
       const lista = opts[montAberto].filter(vale);
       return `<div class="mont-picker" style="--cat:${ADJ_COLOR[kk]}">
@@ -540,16 +650,17 @@ function buildMontador(){
             <span class="op-en">${escapeHTML(o.w)}</span>
             <span class="op-pt">${escapeHTML(SIGNAL_PT[o.w] || '—')}</span></button>`).join('')}
         </div></div>`;
-    })() : ''}
+    })() : '')}
     <div class="mont-acoes"${foco2m ? ' hidden' : ''}>
       <button class="mont-btn" data-act="todos">encaixar todos</button>
       <button class="mont-btn" data-act="limpar">desmontar</button>
       <button class="mont-btn" data-act="trio">só o trio clássico</button>
+      <button class="mont-btn" data-act="sete">os 8 adjetivos</button>
       <span class="mont-conta">${TENSE_LABEL[MONT_COMBO.t]} · ${ASPECT_LABEL[MONT_COMBO.a]} · ${verb.base} ·
-        ${ends.length + mids.length} encaixe(s) ·
+        ${ends.length + mids.length + (np ? np.n : 0)} encaixe(s) ·
         <span style="color:${ADJ_COLOR.como}">${porCor.como} como</span> ·
         <span style="color:${ADJ_COLOR.onde}">${porCor.onde} onde</span> ·
-        <span style="color:${ADJ_COLOR.quando}">${porCor.quando} quando</span></span>
+        <span style="color:${ADJ_COLOR.quando}">${porCor.quando} quando</span>${np ? ` · <span style="color:${ADJ_COLOR.regencia}">${np.n} adjetivo(s)</span>` : ''}</span>
     </div>
   </div>`;
 
@@ -557,12 +668,13 @@ function buildMontador(){
     el.onclick = (e)=>{
       if(e.target.tagName === 'SELECT') return;      /* trocar a peça não desencaixa */
       const r = +el.dataset.slot;
-      montOn.has(r) ? montOn.delete(r) : montOn.add(r);
+      if(montOn.has(r)){ npEhId(r) ? npDesliga(r) : montOn.delete(r); } else montOn.add(r);
+      if(montAberto !== null && npEhId(montAberto) && !montOn.has(montAberto)) montAberto = null;
       buildMontador();
     };
   });
   box.querySelectorAll('.socket-x').forEach(b=>{
-    b.onclick = (e)=>{ e.stopPropagation(); const r=+b.dataset.off; montOn.delete(r); if(montAberto===r) montAberto=null; buildMontador(); };
+    b.onclick = (e)=>{ e.stopPropagation(); const r=+b.dataset.off; npEhId(r) ? npDesliga(r) : montOn.delete(r); if(montAberto!==null && !montOn.has(montAberto)) montAberto=null; buildMontador(); };
   });
   box.querySelectorAll('.socket-peca').forEach(b=>{
     b.onclick = (e)=>{
@@ -575,12 +687,19 @@ function buildMontador(){
   box.querySelectorAll('.mont-op').forEach(b=>{
     b.onclick = ()=>{ montEscolha[montAberto] = b.dataset.op; montAberto = null; buildMontador(); };
   });
+  const busca = box.querySelector('.mont-busca');                 /* v173: filtro das listas longas (não reconstrói) */
+  if(busca) busca.oninput = ()=>{
+    const q = busca.value.trim().toLowerCase();
+    box.querySelectorAll('.mont-op').forEach(o=>{ o.hidden = !!q && !o.textContent.toLowerCase().includes(q); });
+  };
   box.querySelectorAll('.mont-btn').forEach(b=>{
     b.onclick = ()=>{
       const act = b.dataset.act;
-      if(act === 'todos') montOn = new Set(Object.keys(pecas).map(Number));
+      if(act === 'todos') montOn = new Set(Object.keys(pecas).map(Number).concat(NP_IDS));
       else if(act === 'limpar') montOn = new Set();
+      else if(act === 'sete'){ NP_IDS.forEach(r => montOn.add(r)); }             /* v173: determinante + substantivo + os 8 */
       else montOn = new Set([2, 4, 8]);
+      montAberto = null;
       buildMontador();
     };
   });

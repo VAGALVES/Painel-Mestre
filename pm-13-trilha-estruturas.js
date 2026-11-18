@@ -647,7 +647,7 @@ function estRender(){
     <select id="estA">${opt(EST_ADJ, ai)}</select>
     ${estLinha('comparativo', g.c + ' (than)', '', g.r)}${estLinha('superlativo', g.s, '', 'Superlativo leva <i>the</i>.')}
     ${estLinha('igualdade', 'as ' + ai + ' as', '', 'Igualdade: <i>as … as</i>; negativa: <i>not as … as</i>.')}
-    ${estLinha('ordem', 'opinion · size · age · shape · colour · origin · material', '', 'Ordem dos adjetivos antes do substantivo: <i>a lovely small old round red Italian wooden table</i> (raramente mais de três).')}</div>
+    ${estLinha('ordem', 'opinion · size · age · shape · colour · origin · material · purpose', '', 'Ordem dos adjetivos antes do substantivo: <i>a lovely small old round red Italian wooden dining table</i> (raramente mais de três). Treine as 8 posições no Montador da Anatomia.')}</div>
   <div class="num-card"><h3>🧭 Preposições · <i>Prepositions</i></h3>
     ${EST_PREP.map(x => estLinha(x[0], x[2], '', x[1])).join('')}
     <div class="num-reg">Dependentes (verbo + preposição), extraídas do banco de expressões:</div>${estDependentes()}</div>`;

@@ -80,6 +80,12 @@ function aplicarNoMontador(cfg){
   const pool = SIGNAL_WORDS[`${cfg.t}_${cfg.a}`] || [];
   MONT_COMBO.t = cfg.t; MONT_COMBO.a = cfg.a; MONT_COMBO.v = verbById(cfg.v).id; MONT_COMBO.f = cfg.f;
   montOn = new Set(); montEscolha = {}; montAberto = null;
+  MONT_COMBO.vAuto = false; delete MONT_COMBO.vAntes;          /* v173: o verbo do card manda */
+  if(cfg.np){                                                    /* sintagma nominal do card → soquetes 30–39 */
+    if(cfg.np.det){ montOn.add(30); montEscolha[30] = cfg.np.det; }
+    montOn.add(31); montEscolha[31] = cfg.np.noun;
+    ADJ7.forEach((t, i) => { if(cfg.np.adj && cfg.np.adj[t.k]){ montOn.add(32 + i); montEscolha[32 + i] = cfg.np.adj[t.k]; } });
+  }
 
   [].concat(cfg.mid || [], cfg.ends || []).forEach(x=>{
     const s = pool.find(y=>y.w === x);
@@ -115,12 +121,22 @@ function buildAnatomia(){
     'meio':'entre o auxiliar e o verbo principal — nesta ordem, e cada um com uma única função',
     'fim':'depois do verbo e do objeto'
   };
-  let linhas = '', zonaAtual = '';
+  let linhas = '', zonaAtual = '', npLinhas = false;
   SLOT_ORDEM.forEach(r=>{
     const s = exemploDoSlot(r); if(!s) return;
     const z = SLOT_ZONA(r);
     if(z !== zonaAtual){
       zonaAtual = z;
+      if(z === 'fim' && !npLinhas){
+        npLinhas = true;
+        linhas += `<tr><td colspan="4" style="border-top:1px solid var(--line); padding-top:9px; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--brass-dim);">
+          objeto <span style="text-transform:none; letter-spacing:0; opacity:.85;">— o substantivo e seus 8 adjetivos: logo depois do verbo, antes dos encaixes de fim</span></td></tr>`;
+        linhas += `<tr><td class="slot-n">·</td><td class="slot-nome" style="color:${ADJ_COLOR.regencia}">determinante</td><td class="slot-ex">qual? de quem?</td><td class="slot-ex">a / the / my</td></tr>`;
+        ADJ7.forEach(t => {
+          linhas += `<tr><td class="slot-n">${t.ord}º</td><td class="slot-nome" style="color:${ADJ_COLOR['adj_' + t.k]}">${t.n}</td><td class="slot-ex">${t.q}</td><td class="slot-ex">${t.ex} <span style="opacity:.6">· ${t.ops.length}</span></td></tr>`;
+        });
+        linhas += `<tr><td class="slot-n">·</td><td class="slot-nome" style="color:${ADJ_COLOR.regencia}">substantivo</td><td class="slot-ex">o quê?</td><td class="slot-ex">table</td></tr>`;
+      }
       linhas += `<tr><td colspan="4" style="border-top:1px solid var(--line); padding-top:9px; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--brass-dim);">
         ${z} <span style="text-transform:none; letter-spacing:0; opacity:.85;">— ${ZONA_TXT[z]}</span></td></tr>`;
     }
@@ -183,7 +199,8 @@ function buildAnatomia(){
       <b style="color:${ADJ_COLOR.onde}">onde</b> →
       <b style="color:${ADJ_COLOR.quando}">quando</b>.
       Se lembrar só disso, acerta a esmagadora maioria das frases. Antes do verbo vale outra
-      ordem, a do meio: ${nomesMeio}.
+      ordem, a do meio: ${nomesMeio}. E o objeto tem a sua própria fila, de oito adjetivos:
+      ${ADJ7.map(t => `<b style="color:${ADJ_COLOR['adj_' + t.k]}">${t.n}</b>`).join(' → ')}.
     </div>
 
     <div class="ref-class-label">Seis atalhos mentais</div>
