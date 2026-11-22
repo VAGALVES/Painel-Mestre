@@ -486,13 +486,15 @@ const NP_NOME = { 30:'determinante', 31:'substantivo' }; ADJ7.forEach((t, i) => 
 const NP_PERGUNTA = { 30:'qual? de quem?', 31:'o quê?' }; ADJ7.forEach((t, i) => { NP_PERGUNTA[32 + i] = t.q; });
 /* verbos que aceitam objeto e já combinam com os substantivos; se o verbo atual for outro (work, go…), o montador
    usa o verbo padrão do substantivo e devolve o anterior quando o substantivo sai */
-const NP_VERBOS_OK = new Set(['buy', 'have', 'find', 'see', 'take', 'wear', 'carry', 'sell', 'need', 'like', 'make']);
+const NP_VERBOS_OK = new Set(['buy', 'have', 'find', 'see', 'take', 'wear', 'carry', 'sell', 'need', 'like', 'make', 'visit', 'keep']);   /* v178: visit/keep vêm dos cartões de Argumentar */
 const npEhId = r => r >= 30 && r <= 39;
 const npCorId = r => r >= 32 ? ADJ_COLOR['adj_' + NP_ADJ_DO_ID[r]] : ADJ_COLOR.regencia;
 function npOpcoesId(r){
   if(r === 30) return subOrdena(30, NP_DET.map(d => ({ w:d.en, pt:(d.pm === d.pf ? d.pm : d.pm + '/' + d.pf) + (d.pos ? ' … ' + d.pos : '') })));
   if(r === 31) return subOrdena(31, NP_SUBS.map(n => ({ w:n.en, pt:n.pt + ' (' + n.g + ')' })));
-  return ADJ7.find(t => t.k === NP_ADJ_DO_ID[r]).ops.map(o => ({ w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf, sub:o.sub, subd:ADJ_SUB_DESC[o.sub] || '' }));
+  const tk = NP_ADJ_DO_ID[r];
+  return ADJ7.find(t => t.k === tk).ops.map(o => { const pi = argSubInfo(o.sub, tk) || ['', ''];     /* v178: polaridade e papel do grupo */
+    return { w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf, sub:o.sub, subd:ADJ_SUB_DESC[o.sub] || '', pol:pi[0], polp:pi[1] }; });
 }
 /* ---- v177: subcategorias em TODOS os encaixes (data-subcat.js) ----
    subOrdena agrupa uma lista de peças (objetos com .w) pelos grupos do encaixe r, na ordem em que foram
@@ -523,7 +525,7 @@ const npChipsHTML = r => chipsDeLista(npOpcoesId(r));
 function npItensHTML(lista, itemFn){
   let ant = null, h = '';
   lista.forEach(o => {
-    if(o.sub && o.sub !== ant){ h += `<div class="np-subh">${escapeHTML(o.sub)}${o.subd ? `<span>${escapeHTML(o.subd)}</span>` : ''}</div>`; }
+    if(o.sub && o.sub !== ant){ h += `<div class="np-subh">${escapeHTML(o.sub)}${o.subd || o.pol ? `<span>${escapeHTML(o.subd || '')}${o.pol ? `<em class="pol" data-p="${o.pol}" title="${escapeHTML(o.polp || '')}">${ARG_POL_ROT[o.pol]}</em>` : ''}</span>` : ''}</div>`; }
     ant = o.sub; h += itemFn(o);
   });
   return h;

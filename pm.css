@@ -610,6 +610,33 @@
   .np-wrap .np-subs{padding-left:0; padding-right:0;}
   @media (pointer:coarse){ .np-sub{min-height:36px;} }
   .comb-leg{flex:0 0 auto; align-self:center; font-size:10.5px; color:var(--paper-dim); padding:0 4px; white-space:nowrap;}
+
+  /* v178 · teoria em blocos recolhíveis, selos de polaridade e cartões de Argumentar com adjetivos */
+  .teoria{margin:8px 0 12px; border:1px solid var(--line); border-radius:10px; background:color-mix(in srgb, var(--brass) 5%, transparent);}
+  .teoria > summary{cursor:pointer; padding:10px 12px; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--brass); list-style:none; min-height:36px; display:flex; align-items:center;}
+  .teoria > summary::-webkit-details-marker{display:none;}
+  .teoria > summary::before{content:'▸'; margin-right:8px; transition:transform .15s;}
+  .teoria[open] > summary::before{transform:rotate(90deg);}
+  .teoria .t-corpo{padding:0 12px 10px; font-size:12px; line-height:1.6; color:var(--paper-dim);}
+  .teoria .t-corpo p{margin:0 0 9px;}
+  .teoria .t-corpo i{color:var(--paper);}
+  .teoria .t-regra{border-left:2px solid var(--brass); padding:3px 0 3px 10px; margin:4px 0 10px; color:var(--paper);}
+  .teoria .t-cuid ul{margin:4px 0 2px; padding-left:18px;}
+  .teoria .t-cuid li{margin:2px 0;}
+  .t-tab{width:100%; border-collapse:collapse; font-size:11px; margin:6px 0 12px;}
+  .t-tab th{text-align:left; font-weight:600; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--brass-dim); padding:4px 6px; border-bottom:1px solid var(--line);}
+  .t-tab td{padding:5px 6px; border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent); vertical-align:top;}
+  .pol{font-style:normal; display:inline-block; font-size:9.5px; letter-spacing:.03em; border:1px solid currentColor; border-radius:999px; padding:0 6px; margin-left:6px; white-space:nowrap; line-height:1.5;}
+  .pol[data-p="+"]{color:var(--teal);} .pol[data-p="-"]{color:var(--red);} .pol[data-p="±"]{color:var(--burnt-yellow);} .pol[data-p="0"]{color:var(--paper-dim);}
+  .arg-card h4 .arg-rel{display:block; font-weight:400; font-size:10.5px; letter-spacing:0; color:var(--paper-dim); margin-top:2px;}
+  .arg-resumo{margin-bottom:6px;}
+  .arg-ctrl{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:6px 0 4px;}
+  .arg-sel select{font:inherit; font-size:12px; background:var(--panel-raised); color:var(--paper); border:1px solid var(--line); border-radius:8px; padding:6px 8px; min-height:34px; max-width:60vw;}
+  .arg-leg{display:flex; flex-wrap:wrap; gap:4px 14px; font-size:11px; color:var(--paper-dim); margin:2px 0;}
+  .arg-adj i{font-style:normal; opacity:.8; margin-left:6px;}
+  .arg-nota{margin:0 0 4px;}
+  .arg-acoes{display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 2px;}
+  .arg-pool{max-height:none;}
   .mont-picker-list{max-height:min(230px, 42vh); overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .mont-op{display:flex; justify-content:space-between; gap:12px; width:100%; text-align:left;
     background:transparent; border:0; border-bottom:1px solid var(--line); padding:9px 12px;

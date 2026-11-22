@@ -245,7 +245,11 @@ function buildAnatomia(){
     <div class="anat-grid">${atalhosHTML}</div>
 
     <div class="ref-class-label">Combinações dos 8 adjetivos — duplas, trios e quartetos</div>
+    ${teoriaBloco('osascomp', 'Teoria: por que existe uma ordem (OSASCOMP)', teoriaParas(ARG_TEORIA_OSASCOMP))}
     <div id="combosWrap"></div>
+
+    <div class="ref-class-label">Argumentar com adjetivos — justificar, contrastar, conceder e mais</div>
+    <div id="argWrap"></div>
 
     <div class="ref-class-label">O teto por cor</div>
     <div class="cor-resumo">
@@ -288,7 +292,7 @@ function buildAnatomia(){
     <div class="ref-class-label">Glossário por encaixe</div>
     <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:2px;">
       O banco inteiro reorganizado pela pergunta que cada expressão responde — útil quando
-      você sabe qual encaixe quer preencher e precisa da peça. Inclui o objeto: determinantes, substantivos e as opções de cada um dos 8 adjetivos, na ordem da frase.
+      você sabe qual encaixe quer preencher e precisa da peça. Inclui o objeto: determinantes, substantivos e as opções de cada um dos 8 adjetivos, na ordem da frase. Nos adjetivos, cada grupo traz a sua <b>polaridade</b> — <span class="pol" data-p="+">＋ a favor</span> <span class="pol" data-p="-">− contra</span> <span class="pol" data-p="±">± depende</span> <span class="pol" data-p="0">0 só descreve</span> — que é a base da seção Argumentar com adjetivos.
     </div>
     <div id="glossarioWrap"></div>
 
@@ -331,6 +335,8 @@ function buildAnatomia(){
   buildMontador();
   buildGlossario();
   buildCombos();
+  buildArgumentar();
+  teoriaLiga(wrap);
 }
 
 /* ================================================================================
@@ -443,6 +449,124 @@ function buildCombos(){
     card.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); usar(e); } };
   });
 }
+
+/* ================================================================================
+   v178 · ARGUMENTAR COM ADJETIVOS — interface (os dados e as frases vêm de data-argumentar.js)
+   Uma seção da Anatomia: teoria geral, dois controles globais (objeto e tom) e 8 cartões, um por intenção.
+   Cada cartão mostra a frase inglesa colorida (conjunção em magenta, adjetivo na cor do seu tipo), a tradução,
+   o que cada adjetivo avalia (polaridade e dimensão), as variantes de conectivo, os adjetivos que servem
+   ali (toque para trocar) e a teoria da intenção. "montar ↑" leva a decisão e os adjetivos ao montador.
+   O estado vive em ARG; os blocos <details> lembram se estavam abertos entre um desenho e outro.
+   ================================================================================ */
+const TEORIA_ABERTA = new Set();
+const teoriaParas = ps => ps.map(p => `<p>${p}</p>`).join('');
+function teoriaBloco(id, titulo, corpo){
+  return `<details class="teoria" data-teo="${id}"${TEORIA_ABERTA.has(id) ? ' open' : ''}><summary>${titulo}</summary><div class="t-corpo">${corpo}</div></details>`;
+}
+function teoriaLiga(raiz){
+  raiz.querySelectorAll('details.teoria[data-teo]').forEach(d => {
+    d.ontoggle = () => { d.open ? TEORIA_ABERTA.add(d.dataset.teo) : TEORIA_ABERTA.delete(d.dataset.teo); };
+  });
+}
+const polBadge = p => `<em class="pol" data-p="${p}">${ARG_POL_ROT[p]}</em>`;
+
+function argTeoriaGeralHTML(){
+  const leg = ['+', '-', '±', '0'].map(p => `<tr><td>${polBadge(p)}</td><td>${ARG_POL_PT[p]}</td></tr>`).join('');
+  const tab = ARG_TABELA.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><i>${r[3]}</i></td></tr>`).join('');
+  return teoriaParas(ARG_TEORIA_GERAL) + `
+    <div class="t-regra"><b>Em uma linha:</b> a conjunção escolhe a <i>relação</i>; o adjetivo, com sua polaridade e sua dimensão, fornece o <i>conteúdo</i>.</div>
+    <table class="t-tab"><thead><tr><th>polaridade</th><th>significa</th></tr></thead><tbody>${leg}</tbody></table>
+    <table class="t-tab"><thead><tr><th>intenção</th><th>relação</th><th>lados</th><th>conectivos</th></tr></thead><tbody>${tab}</tbody></table>`;
+}
+function argCardInner(it){
+  const r = argGera(it.id), v = (ARG.vari[it.id] || 0) % it.vars.length;
+  const tabs = it.vars.map((x, i) => `<button type="button" class="np-sub" data-arg-var="${i}" data-on="${i === v}" style="--cat:var(--conj)">${x.n}</button>`).join('');
+  const conj = it.conj.map(c => `<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td>${c[2]}</td></tr>`).join('');
+  const teo = teoriaBloco('int-' + it.id, 'Teoria, conectivos e cuidados',
+    `<div class="t-regra"><b>Regra de coerência.</b> ${it.regra}</div>${teoriaParas(it.teoria)}
+     <table class="t-tab"><thead><tr><th>conectivo</th><th>em português</th><th>quando usar</th></tr></thead><tbody>${conj}</tbody></table>
+     <div class="t-cuid"><b>Cuidado</b><ul>${it.cuidado.map(c => `<li>${c}</li>`).join('')}</ul></div>`);
+  let corpo;
+  if(!r){
+    corpo = `<div class="why">Esta variante não tem exemplo válido para “${escapeHTML(ARG.noun)}”: troque o objeto ou a variante.</div>`;
+  } else {
+    const leg = r.adjs.map(l => `<span class="arg-adj"><b style="color:${ADJ_COLOR['adj_' + l.tipo]}">${l.en}</b> ${polBadge(l.pol)} <i>${ARG_DIM[l.dim]}</i></span>`).join('');
+    const chips = r.pool.map(l => `<button type="button" class="np-sub" data-arg-pick="${escapeHTML(l.en)}" data-on="${l === r.adjs[0]}" style="--cat:${ADJ_COLOR['adj_' + l.tipo]}"><i>${l.pol === '+' ? '＋' : (l.pol === '-' ? '−' : '±')}</i>${l.en}</button>`).join('');
+    corpo = `
+      <div class="anat-frase-row"><div class="anat-frase">${markedToHTML(r.raw, 'var(--teal)')}</div>
+        <button class="audio-btn sm" data-text="${escapeHTML(r.texto)}" title="Ouvir">🔊</button></div>
+      <div class="anat-pt">${escapeHTML(r.pt)}</div>
+      ${r.nota ? `<div class="why arg-nota">${r.nota}</div>` : ''}
+      <div class="arg-leg">${leg}</div>
+      <div class="comb-leg" style="margin-top:6px;">adjetivos que servem aqui — toque para trocar</div>
+      <div class="np-subs arg-pool" style="padding-left:0; padding-right:0;">${chips}</div>
+      <div class="arg-acoes"><button type="button" class="mont-btn" data-arg-nova="1">↻ outro exemplo</button>
+        <button type="button" class="mont-btn" data-arg-mont="1">montar ↑</button></div>`;
+  }
+  return `<h4>${it.nome}<span class="arg-rel">${it.rel} · ${it.q}</span></h4>
+    <div class="why arg-resumo">${it.resumo}</div>
+    <div class="np-subs" style="padding-left:0; padding-right:0;"><span class="comb-leg">conectivo:</span>${tabs}</div>
+    ${corpo}${teo}`;
+}
+function argCardLiga(card){
+  const id = card.dataset.int, it = ARG_INT.find(x => x.id === id);
+  const re = () => argRender(id);
+  card.querySelectorAll('[data-arg-var]').forEach(b => { b.onclick = () => { ARG.vari[id] = +b.dataset.argVar; ARG.pick[id] = null; re(); }; });
+  card.querySelectorAll('[data-arg-pick]').forEach(b => { b.onclick = () => { ARG.pick[id] = b.dataset.argPick; re(); }; });
+  const nova = card.querySelector('[data-arg-nova]'); if(nova) nova.onclick = () => { ARG.seed[id]++; ARG.pick[id] = null; re(); };
+  const mont = card.querySelector('[data-arg-mont]'); if(mont) mont.onclick = () => argMontar(id);
+  teoriaLiga(card);
+}
+function argRender(id){
+  const card = document.querySelector(`.arg-card[data-int="${id}"]`); if(!card) return;
+  const it = ARG_INT.find(x => x.id === id);
+  card.innerHTML = argCardInner(it);
+  argCardLiga(card);
+}
+/* leva a decisão e os adjetivos da frase para o montador (o adjetivo passa de predicativo a atributivo) */
+function argMontar(id){
+  const r = argGera(id); if(!r) return;
+  const vk = r.cx.V.b, vid = verbById(vk).id === vk ? vk : r.cx.n.v;
+  const adj = {}; r.adjs.forEach(l => { if(l.tipo && !adj[l.tipo]) adj[l.tipo] = l.en; });
+  const neg = !r.cx.pos && ['justificar', 'explicar', 'conceder'].includes(id);
+  aplicarNoMontador({ t:'past', a:'simples', f:neg ? 'negativa' : 'afirmativa', v:vid, np:{ det:'the', noun:r.cx.noun, adj } });
+}
+function buildArgumentar(){
+  const box = document.getElementById('argWrap'); if(!box) return;
+  const grupo = (rot, lista) => `<optgroup label="${rot}">${lista.map(s => `<option value="${s.en}"${s.en === ARG.noun ? ' selected' : ''}>${s.en} · ${s.pt}</option>`).join('')}</optgroup>`;
+  const k = s => argClasse(s.en).k;
+  const sel = grupo('Objetos', NP_SUBS.filter(s => k(s) === 'o')) + grupo('Lugares e construções', NP_SUBS.filter(s => k(s) === 'l')) + grupo('Animais', NP_SUBS.filter(s => k(s) === 'a'));
+  const tomTab = (t, rot) => `<button type="button" class="np-sub" data-arg-tom="${t}" data-on="${ARG.tom === t}" style="--cat:${t === '+' ? 'var(--teal)' : 'var(--red)'}">${rot}</button>`;
+  box.innerHTML = `
+    <div class="why" style="font-size:11px; color:var(--paper-dim); margin-bottom:6px;">
+      Os oito encaixes ensinam a <b>ordem</b> dos adjetivos; aqui eles passam a <b>argumentar</b>. Escolha um objeto, o tom
+      (a favor ou contra) e veja a mesma ideia virar oito relações: justificar, explicar, contrastar, conceder, concluir,
+      comparar, condicionar e acumular. Cada frase respeita a coerência de polaridade da sua relação.
+    </div>
+    ${teoriaBloco('arg-geral', 'Teoria: por que o adjetivo argumenta', argTeoriaGeralHTML())}
+    <div class="arg-ctrl">
+      <label class="arg-sel"><span class="comb-leg">objeto</span> <select id="argNoun">${sel}</select></label>
+      <div class="np-subs" style="padding-left:0; padding-right:0;"><span class="comb-leg">tom:</span>${tomTab('+', '＋ a favor')}${tomTab('-', '− contra')}</div>
+    </div>
+    ${ARG_INT.map(it => `<div class="anat-card arg-card" data-int="${it.id}"></div>`).join('')}`;
+  const nSel = box.querySelector('#argNoun');
+  nSel.onchange = () => { ARG.noun = nSel.value; ARG_INT.forEach(it => { ARG.pick[it.id] = null; argRender(it.id); }); };
+  box.querySelectorAll('[data-arg-tom]').forEach(b => {
+    b.onclick = () => { ARG.tom = b.dataset.argTom; box.querySelectorAll('[data-arg-tom]').forEach(x => { x.dataset.on = String(x === b); }); ARG_INT.forEach(it => argRender(it.id)); };
+  });
+  teoriaLiga(box);
+  ARG_INT.forEach(it => argRender(it.id));
+}
+/* teoria da 2ª oração: um bloco recolhido logo abaixo do dial da 2ª oração do console principal */
+function teoriaO2Injeta(){
+  const g = document.getElementById('o2DialGroup'); if(!g || document.getElementById('teoriaO2')) return;
+  const rel = ARG_REL.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><i>${r[2]}</i></td></tr>`).join('');
+  const d = document.createElement('div'); d.id = 'teoriaO2';
+  d.innerHTML = teoriaBloco('o2-teoria', 'Teoria: como as orações se relacionam',
+    teoriaParas(ARG_TEORIA_O2) + `<table class="t-tab"><thead><tr><th>relação</th><th>pergunta</th><th>conectivos</th></tr></thead><tbody>${rel}</tbody></table>`);
+  g.insertAdjacentElement('afterend', d); teoriaLiga(d);
+}
+teoriaO2Injeta();
 
 /* ================================================================================
    v123 · PARÁGRAFOS — repositório de inteligência e consulta
