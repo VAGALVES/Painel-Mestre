@@ -604,6 +604,7 @@
   .np-sub i{font-style:normal; opacity:.7; margin-left:3px;}
   .np-sub[data-on="true"]{border-color:var(--cat); color:var(--cat); background:color-mix(in srgb, var(--cat) 14%, transparent);}
   .np-subh{font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--brass-dim); padding:10px 12px 4px; background:color-mix(in srgb, var(--cat) 6%, transparent);}
+  .np-subh span{display:block; text-transform:none; letter-spacing:0; font-size:10.5px; color:var(--paper-dim); margin-top:2px; opacity:.9;}
   .np-subh[hidden]{display:none;}
   .gloss-grid .np-subh{grid-column:1 / -1; padding:12px 2px 5px; background:none; border-bottom:1px solid var(--line);}
   .np-wrap .np-subs{padding-left:0; padding-right:0;}

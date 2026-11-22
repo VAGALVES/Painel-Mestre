@@ -53,8 +53,8 @@ function buildGlossario(){
     /* encaixes do objeto: lista alfabética das opções, com filtro (opinião e origem passam de 40) */
     const ops = npOpcoesId(glossSlot).slice().sort((a,b)=> a.w.localeCompare(b.w));
     const cor = npCorId(glossSlot);
-    /* adjetivos: agrupados pelas subcategorias, na ordem em que foram escritas; os demais, em ordem alfabética */
-    const lista = glossSlot >= 32 ? npOpcoesId(glossSlot) : ops;
+    /* v177: todos os encaixes do objeto agrupados pelas subcategorias, na ordem em que foram escritas */
+    const lista = npOpcoesId(glossSlot);
     const itens = npItensHTML(lista, o => `<div class="gloss-item" style="--cat:${cor}" data-sub="${escapeHTML(o.sub || '')}" data-w="${escapeHTML(o.w.toLowerCase())}">
         <span class="gloss-en">${escapeHTML(o.w)}</span>
         <span class="gloss-right">
@@ -72,26 +72,30 @@ function buildGlossario(){
       </div>
       <div class="gloss-grid">${itens}</div>`;
   } else if(glossSlot !== null){
-    const itens = [...mapa[glossSlot].values()]
-      .sort((a,b)=> a.w.localeCompare(b.w))
-      .map(s=>{
+    /* v177: agrupado pelas subcategorias do encaixe (o que cada grupo significa aparece no título) */
+    const lista = subOrdena(glossSlot, [...mapa[glossSlot].values()]);
+    const itens = npItensHTML(lista, s=>{
         const k = adjKind(s.cls, s.w);
         const pos = s.pl === 'split' ? ' · partido' : '';
         /* o partido guarda as duas metades; fala a forma unida, que é como se ouve */
         const falar = s.pl === 'split' ? `${s.mid} ${s.end}` : s.w;
-        return `<div class="gloss-item" style="--cat:${ADJ_COLOR[k]}">
+        return `<div class="gloss-item" style="--cat:${ADJ_COLOR[k]}" data-sub="${escapeHTML(s.sub || '')}">
           <span class="gloss-en">${escapeHTML(s.w)}</span>
           <span class="gloss-right">
             <span class="gloss-pt">${escapeHTML(SIGNAL_PT[s.w] || '—')}${pos}</span>
             <button class="audio-btn sm" data-text="${escapeHTML(falar)}" title="Ouvir">🔊</button>
           </span></div>`;
-      }).join('');
+      });
     const s0 = mapa[glossSlot].values().next().value;
     const k0 = adjKind(s0.cls, s0.w);
     corpo = `<div class="gloss-head">
         <b style="color:${ADJ_COLOR[k0]}">${slotNum(glossSlot)}. ${END_SLOT_NOME[glossSlot]}</b>
         — responde <i>${SLOT_PERGUNTA[glossSlot] || ''}</i> · ${mapa[glossSlot].size} expressões
         <button class="gloss-fechar" data-gloss-close="1">recolher ✕</button>
+      </div>
+      <div class="np-wrap" style="--cat:${ADJ_COLOR[k0]}">
+        ${lista.length > 16 ? '<input type="search" class="mont-busca" id="glossBusca" placeholder="filtrar opções…" autocomplete="off">' : ''}
+        ${chipsDeLista(lista)}
       </div>
       <div class="gloss-grid">${itens}</div>`;
   }

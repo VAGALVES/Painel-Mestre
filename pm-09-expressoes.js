@@ -490,24 +490,40 @@ const NP_VERBOS_OK = new Set(['buy', 'have', 'find', 'see', 'take', 'wear', 'car
 const npEhId = r => r >= 30 && r <= 39;
 const npCorId = r => r >= 32 ? ADJ_COLOR['adj_' + NP_ADJ_DO_ID[r]] : ADJ_COLOR.regencia;
 function npOpcoesId(r){
-  if(r === 30) return NP_DET.map(d => ({ w:d.en, pt:(d.pm === d.pf ? d.pm : d.pm + '/' + d.pf) + (d.pos ? ' … ' + d.pos : '') }));
-  if(r === 31) return NP_SUBS.map(n => ({ w:n.en, pt:n.pt + ' (' + n.g + ')' }));
-  return ADJ7.find(t => t.k === NP_ADJ_DO_ID[r]).ops.map(o => ({ w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf, sub:o.sub }));
+  if(r === 30) return subOrdena(30, NP_DET.map(d => ({ w:d.en, pt:(d.pm === d.pf ? d.pm : d.pm + '/' + d.pf) + (d.pos ? ' … ' + d.pos : '') })));
+  if(r === 31) return subOrdena(31, NP_SUBS.map(n => ({ w:n.en, pt:n.pt + ' (' + n.g + ')' })));
+  return ADJ7.find(t => t.k === NP_ADJ_DO_ID[r]).ops.map(o => ({ w:o.en, pt:o.pm === o.pf ? o.pm : o.pm + '/' + o.pf, sub:o.sub, subd:ADJ_SUB_DESC[o.sub] || '' }));
+}
+/* ---- v177: subcategorias em TODOS os encaixes (data-subcat.js) ----
+   subOrdena agrupa uma lista de peças (objetos com .w) pelos grupos do encaixe r, na ordem em que foram
+   escritos, e marca cada peça com .sub (nome) e .subd (o que o grupo significa). Peça sem grupo cai em "Outras". */
+const SUBCAT_IDX = {};
+function subcatInfo(r){
+  if(!SUBCAT_IDX[r]){ const m = new Map(); (SUBCAT[r] || []).forEach(([n, d, ws], i) => ws.forEach(w => m.set(w, { i, n, d }))); SUBCAT_IDX[r] = m; }
+  return SUBCAT_IDX[r];
+}
+function subOrdena(r, lista){
+  const m = subcatInfo(r); if(!m.size) return lista;
+  return lista.map((o, k) => ({ o, k, s:m.get(o.w) }))
+    .sort((a, b) => ((a.s ? a.s.i : 99) - (b.s ? b.s.i : 99)) || (a.k - b.k))
+    .map(({ o, s }) => Object.assign({}, o, { sub:s ? s.n : 'Outras', subd:s ? s.d : '' }));
 }
 /* ---- subcategorias dos adjetivos (v175): chips + títulos de grupo + filtro, no seletor e no Glossário ---- */
 function npSubs(r){ const s = []; npOpcoesId(r).forEach(o => { if(o.sub && !s.includes(o.sub)) s.push(o.sub); }); return s; }
 /* chips: "todas" + uma por subcategoria, com a contagem; só aparecem quando há 2 ou mais */
-function npChipsHTML(r){
-  const s = npSubs(r); if(s.length < 2) return '';
-  const ops = npOpcoesId(r);
+function chipsDeLista(ops){
+  const s = []; ops.forEach(o => { if(o.sub && !s.includes(o.sub)) s.push(o.sub); });
+  if(s.length < 2) return '';
   return `<div class="np-subs" role="group" aria-label="Subcategorias"><button type="button" class="np-sub" data-sub="" data-on="true">todas <i>${ops.length}</i></button>` +
-    s.map(n => `<button type="button" class="np-sub" data-sub="${escapeHTML(n)}" data-on="false">${escapeHTML(n)} <i>${ops.filter(o => o.sub === n).length}</i></button>`).join('') + '</div>';
+    s.map(n => { const d = (ops.find(o => o.sub === n) || {}).subd || '';
+      return `<button type="button" class="np-sub" data-sub="${escapeHTML(n)}" data-on="false" title="${escapeHTML(d)}">${escapeHTML(n)} <i>${ops.filter(o => o.sub === n).length}</i></button>`; }).join('') + '</div>';
 }
+const npChipsHTML = r => chipsDeLista(npOpcoesId(r));
 /* itens com um título de grupo antes de cada subcategoria (itemFn desenha cada opção) */
 function npItensHTML(lista, itemFn){
   let ant = null, h = '';
   lista.forEach(o => {
-    if(o.sub && o.sub !== ant){ h += `<div class="np-subh">${escapeHTML(o.sub)}</div>`; }
+    if(o.sub && o.sub !== ant){ h += `<div class="np-subh">${escapeHTML(o.sub)}${o.subd ? `<span>${escapeHTML(o.subd)}</span>` : ''}</div>`; }
     ant = o.sub; h += itemFn(o);
   });
   return h;
@@ -686,14 +702,16 @@ function buildMontador(){
         </div></div>`;
     })() : (!foco2m && montAberto !== null && pecas[montAberto] ? (()=>{
       const s0 = pecas[montAberto], kk = adjKind(s0.cls, s0.w);
-      const lista = opts[montAberto].filter(vale);
+      const lista = subOrdena(montAberto, opts[montAberto].filter(vale));      /* v177: agrupado por subcategoria */
       return `<div class="mont-picker" style="--cat:${ADJ_COLOR[kk]}">
         <div class="mont-picker-head">${slotNum(montAberto)}. ${END_SLOT_NOME[montAberto]}
           <span>${lista.length} opções</span></div>
+        ${lista.length > 16 ? '<input type="search" class="mont-busca" placeholder="filtrar opções…" aria-label="Filtrar opções" autocomplete="off">' : ''}
+        ${chipsDeLista(lista)}
         <div class="mont-picker-list">
-          ${lista.map(o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sel="${o.w===s0.w}">
+          ${npItensHTML(lista, o=>`<button class="mont-op" data-op="${escapeHTML(o.w)}" data-sub="${escapeHTML(o.sub || '')}" data-sel="${o.w===s0.w}">
             <span class="op-en">${escapeHTML(o.w)}</span>
-            <span class="op-pt">${escapeHTML(SIGNAL_PT[o.w] || '—')}</span></button>`).join('')}
+            <span class="op-pt">${escapeHTML(SIGNAL_PT[o.w] || '—')}</span></button>`)}
         </div></div>`;
     })() : '')}
     <div class="mont-acoes"${foco2m ? ' hidden' : ''}>

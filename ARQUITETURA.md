@@ -1,4 +1,4 @@
-# Painel Mestre do Inglês — arquitetura (v176)
+# Painel Mestre do Inglês — arquitetura (v177)
 
 App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clássico. O que roda no navegador é exatamente o que está no repositório.
 
@@ -12,6 +12,7 @@ App estático (PWA), sem build e sem dependências: HTML + CSS + JavaScript clá
 | `expressoes.js` | Dados: banco de 100 famílias de expressões (carregado sob demanda). |
 | `data-trilha.js` | Dados: os 110 assuntos da Trilha (`TRILHA_DADOS`) e os **verbetes** (`TRILHA_VERBETES`). Carrega com a página, antes de `pm-13`. |
 | `data-adjetivos.js` | Dados + modelo do **objeto** (v174): os 8 tipos de adjetivo em ordem (opinião, tamanho, idade, forma, cor, origem, material, propósito), ~1.090 adjetivos em subcategorias (linhas `# Nome` no texto-fonte; `op.sub`), 68 substantivos, determinantes e `npMonta()` (monta EN marcado + PT, a/an por som, concordância, ordem). Carrega com a página, antes de `pm-09`. |
+| `data-subcat.js` | **Subcategorias** de todos os encaixes (v177): `SUBCAT[id] = [[nome, significado, [palavras]]]` para os 15 adverbiais e para determinante/substantivo (ids 30/31), e `ADJ_SUB_DESC` (significado das subcategorias dos 8 adjetivos). Arquivo gerado a partir de regras; toda expressão de `SIGNAL_WORDS` precisa ter grupo (o teste v177 falha se faltar). Carrega depois de `data-adjetivos.js`, antes de `pm-09`. |
 | `sw.js` | Service worker: pré-cache de tudo e funcionamento offline. |
 | `ipa.js`, `ipa-uk.js` | Dados: dicionário de pronúncia US e UK (carregados sob demanda). |
 | `manifest.json`, `icon-*.png`, `*.woff2` | PWA e fontes. |
@@ -72,3 +73,4 @@ Cada assunto tem um verbete em `TRILHA_VERBETES[id]` com: `r` (como funciona), `
 - Escopo atual: montador e cartões da Anatomia, só singular. Motor principal, demais motores e Tabela-resumo: versões futuras.
 - Subcategorias (v175): cada tipo de adjetivo tem 5–11 grupos. O seletor do montador e o Glossário mostram chips (`np-sub`), títulos de grupo (`np-subh`) e busca, ligados por `npFiltroLiga` (filtra sem reconstruir).
 - Combinações (v176): na Anatomia, duplas (28), trios (56) e quartetos (70) dos 8 tipos + 14 "mais úteis" curadas (`COMB_TOP`), em `pm-10-glossario.js` (`buildCombos`). Filtro "contém", palavras-modelo (`COMB_BASE`) ou sorteio reproduzível (`combPr`); o cartão carrega a frase no montador (`aplicarNoMontador`).
+- Subcategorias em todos os encaixes (v177): `subOrdena(r, lista)` agrupa qualquer lista de peças e marca `.sub`/`.subd`; `chipsDeLista` e `npItensHTML` desenham chips e títulos (com o significado do grupo); `npFiltroLiga` filtra por chip + busca. Vale no seletor do montador e no Glossário por encaixe. Peça nova sem grupo cai em "Outras" (e o teste v177 acusa).
