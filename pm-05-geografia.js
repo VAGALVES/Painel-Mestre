@@ -2432,6 +2432,8 @@ function o2Norm(){
   if(!t){ o.tipo = null; o.conj = 0; } else if(!(o.conj >= 0 && o.conj < t.conjs.length)) o.conj = 0;
   if(!Number.isInteger(o.opt) || o.opt < 0 || o.opt > 29) o.opt = 0;   /* v142: as listas de opções passaram de 3 (rger/rinf/rpart têm mais) */
   o.neg = !!o.neg;
+  o.adj = !!o.adj && !!t && !!ARG_O2_REGRA[t.k];            /* v179: 2ª oração = "it was + adjetivo do objeto" (só tipos com regra) */
+  if(o.adj){ o.custom = null; o.tr = null; }
   if(!(typeof o.q === 'string' && O2_Q[o.q])) o.q = null;   /* v131: sujeito concreto da substantiva (null = "it") */
   delete o.ini;                                          /* v96: a ordem é decidida pela conjunção, não pelo aluno */
   const trOk = ['caus>cons', 'cons>caus', 'conc>adv', 'final>cons', 'caus>of', 'cond>or'];
@@ -2447,6 +2449,8 @@ function o2TemaDe(v, tp){
 }
 /* até 3 opções coerentes com o verbo principal; src: ✓ curada · ≈ por tema · auto derivada dos antônimos/sinônimos */
 function o2Opcoes(k, v, cj){
+  /* v179: modo adjetivo — lista de adjetivos coerentes com a polaridade da principal (intercalados por dimensão) */
+  if(state.o2 && state.o2.adj && state.o2.tipo === k){ const st = o2AdjEstado(); if(st.ok) return st.ops.map(l => ({ en:l.en, pt:(st.g === 'f' ? l.pf : l.pm), adjL:l, src:'✓' })); }
   const ex = VERB_EXTRA[v.id] || { syn:[], ant:[] };
   const mapa = ws => { const out = [], vis = new Set(); ws.forEach(w => { const x = verbPorNome(w); if(x && x.id !== v.id && !vis.has(x.id)){ vis.add(x.id); out.push(x); } }); return out; };
   if(k === 'final'){
@@ -2513,6 +2517,7 @@ function o2Opcoes(k, v, cj){
 const nomeV = x => x.base + (x.prt ? ' ' + x.prt : '');
 /* texto curto da opção (para os chips) */
 function o2Rotulo(k, op){
+  if(op.adjL) return ({ '+':'＋ ', '-':'− ', '±':'± ' })[op.adjL.pol] + op.en;   /* v179: glifo da polaridade + adjetivo */
   if(k === 'final') return o2Sub(op.en, state.pronome);
   if(k === 'rger' || k === 'rinf') return o2Sub(op.en, state.pronome);
   if(k === 'rpart' || k === 'rrel' || k === 'conc' || k === 'obj' || k === 'cmp' || k === 'subj' || k === 'pred' || (k === 'oi' && !op.v) || k === 'cn' || k === 'ap') return op.en;

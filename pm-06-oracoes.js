@@ -321,6 +321,46 @@ function o2ComporRed(tipo, o, c, op, pr){
     estrutura: tipo.est, nota
   };
 }
+/* ---- v179 · 2ª oração em modo ADJETIVO DO OBJETO ("… because it was cheap") ---------------------------------
+   o2AdjEstado: diz se o modo vale AGORA (tipo/conjunção com regra, verbo de decisão, objeto concreto conhecido) e devolve
+   o objeto, a regra (a = alinhado · o = oposto), a polaridade da principal e a lista de adjetivos coerentes. */
+function o2AdjEstado(){
+  const o = state.o2, tipo = O2_TIPOS.find(t => t.k === o.tipo), R = { ok:false, aplica:false, msg:'' };
+  if(!tipo || !ARG_O2_REGRA[tipo.k]) return R;
+  R.aplica = true;
+  const c = tipo.conjs[o.conj] || tipo.conjs[0], regra = argO2Regra(tipo.k, c.en);
+  if(!regra){ R.msg = 'A conjunção <b>' + escapeHTML(c.en) + '</b> não aceita “it was + adjetivo”. Troque para ' + Object.keys(ARG_O2_REGRA[tipo.k]).map(x => '<b>' + x + '</b>').join(', ') + '.'; return R; }
+  if(!ARG_O2_VERBOS[state.verbo]){ R.msg = 'O adjetivo do objeto parte de um verbo de <b>decisão</b> sobre uma coisa: buy, rent, take, wear, carry, keep, visit, like, recommend, see, sell…'; return R; }
+  if(state.formato !== 'afirmativa' && state.formato !== 'negativa'){ R.msg = 'Use o formato afirmativo ou negativo.'; return R; }
+  let nome = null;
+  if(O2C && O2C.id === 'mont'){
+    if(montOn.has(31)){ const n = npEscolhaId(31); nome = n ? { noun:n, excl:Object.values(npSelAtual().adj || {}) } : null; }
+    if(!nome){ R.msg = 'Ligue o encaixe do <b>substantivo</b> (31) no montador: o adjetivo qualifica esse objeto.'; return R; }
+  } else {
+    const col = state.colocacao !== null ? (verbById(state.verbo).col || [])[state.colocacao] : null;
+    nome = col ? argNomeDeColocacao(col.en) : null;
+    if(!nome){ R.msg = 'Escolha no passo ④ uma colocação com <b>objeto concreto</b> (a gift, the bus, a car…) — ou use o Montador, onde você escolhe o substantivo.'; return R; }
+  }
+  const sub = npSub(nome.noun); if(!sub){ R.msg = 'Substantivo desconhecido.'; return R; }
+  R.noun = nome.noun; R.g = sub.g; R.regra = regra; R.tom = argO2Tom(state.verbo, state.formato); R.past = state.tempo === 'past';
+  R.ops = argAdjOpcoes(nome.noun, regra, R.tom, nome.excl);
+  if(!R.ops.length){ R.msg = 'Sem adjetivos coerentes para este objeto.'; return R; }
+  R.ok = true; return R;
+}
+function o2ComporAdj(tipo, c, op, st){
+  const L = op.adjL, r = argO2Cl(tipo.k, c.en, c.pt, { en:L.en, tipo:L.tipo, pm:L.pm, pf:L.pf }, st.g, st.past);
+  const lado = st.regra === 'a' ? 'do <b>mesmo lado</b> da decisão' : 'do lado <b>oposto</b> ao da decisão';
+  const nota = '<b>Adjetivo do objeto</b> — a 2ª oração retoma o objeto (<i>' + escapeHTML(st.noun) + '</i> → “it”) com <b>it ' + (st.past ? 'was' : 'is') + ' + adjetivo</b>. ' +
+    'A principal tem polaridade <b>' + (st.tom === '+' ? '＋ (a favor)' : '− (contra)') + '</b>; com <b>' + escapeHTML(c.en) + '</b> o adjetivo vem ' + lado + ', por isso só aparecem adjetivos ' + (st.regra === 'a' ? (st.tom === '+' ? '＋' : '−') : (st.tom === '+' ? '−' : '＋')) + '. ' +
+    (tipo.k === 'conc' && (c.en === 'despite' || c.en === 'in spite of') ? 'Depois de <b>despite / in spite of</b> a oração vira <b>-ing</b> (“despite being…”). ' : '') +
+    (st.tom === '-' && ARG_O2_VERBOS[state.verbo] === 1 ? 'A negativa inverte o lado da decisão. ' : '') + (ARG_O2_VERBOS[state.verbo] === -1 ? '<b>Sell</b> é o lado contrário de ficar com a coisa, então a polaridade se inverte. ' : '');
+  return {
+    tipo, op, en:(c.vg ? ',' : '') + ' ' + r.en, enCl:r.en, ptCl:r.pt, ini:o2IniEf(tipo, c),
+    enBody:r.en.slice(J(c.en).length + 1), ptBody:r.pt.slice(c.pt.length + 1),
+    ptJuntar: pt1 => { const m = pt1.match(/[.?!]\s*$/), fim = m ? m[0].trim() : '.'; return pt1.replace(/[.?!]\s*$/, '') + ' ' + r.pt + fim; },
+    estrutura:'+ ' + c.en + ' + it + be + adjetivo', nota
+  };
+}
 function o2Compor(){
   o2Norm();
   const o = state.o2, tipo = O2_TIPOS.find(t => t.k === o.tipo);
@@ -328,6 +368,7 @@ function o2Compor(){
   const bl = o2Bloqueio();
   if(bl.off || (bl.soFinal && tipo.k !== 'final' && tipo.k !== 'oq')) return null;   /* v161: "Do you know where she lives?" */
   const verb = verbById(state.verbo);
+  if(o.adj){ const sa = o2AdjEstado(); if(sa.ok){ const ca = tipo.conjs[o.conj] || tipo.conjs[0], oa = o2Opcoes(tipo.k, verb, o.conj), opa = oa[o.opt] || oa[0]; if(opa) return o2ComporAdj(tipo, ca, opa, sa); } }   /* v179 */
   const ops = o2Opcoes(tipo.k, verb, o.conj);
   let op = (o.custom && !['conc', 'rel', 'relx', 'obj', 'cmp', 'conf', 'prop', 'subj', 'pred', 'oi', 'cn', 'ap', 'rger', 'rpart', 'rinf', 'rrel'].includes(tipo.k)) ? (tipo.k === 'final' ? { en: nomeV(verbById(o.custom)), pt: ((PT_VERBS[o.custom] || {}).inf || '…'), src:'livre' } : { v:o.custom, neg:false, en:'', pt:'', src:'livre' }) : (ops[o.opt] || ops[0]);
   if(!op) return null;
@@ -506,7 +547,7 @@ function o2Ativar(k, extra){
   o2Norm();
   const o = state.o2, mudou = o.tipo !== k;
   o.tipo = k;
-  if(mudou){ o.conj = 0; o.opt = 0; o.neg = false; o.custom = null; o.c2 = null; o.cnd = null; o.tr = null; o.q = null; o.sj2 = null; o.tp2 = null; o.as2 = null; o.sl2 = { signalMids:[], signalEnds:[] }; }
+  if(mudou){ o.adj = false; o.conj = 0; o.opt = 0; o.neg = false; o.custom = null; o.c2 = null; o.cnd = null; o.tr = null; o.q = null; o.sj2 = null; o.tp2 = null; o.as2 = null; o.sl2 = { signalMids:[], signalEnds:[] }; }
   if(extra){ if('opt' in extra || 'custom' in extra || 'conj' in extra) o.c2 = null; Object.assign(o, extra); }
   o2Norm();
 }
@@ -860,11 +901,13 @@ function buildO2Core(){
           if(t.k === 'rrel' || t.forma === 'R') av.appendChild(chip('Ajustar o motor', false, () => { o2AjustaReduzida('rrel'); render(); }, 'Escolhe uma colocação-objeto e tira as palavras-sinal de fim'));   /* v136 */
           bd.appendChild(av); }
       }
+      /* v179: estado do modo adjetivo (usado pelos blocos abaixo) */
+      const adjSt = sel ? o2AdjEstado() : { aplica:false, ok:false }, adjOn = sel && !!o.adj && adjSt.ok;
       /* v96: transformações de sentido (substitui a antiga alternância manual de ordem) */
       {
-        const cT = t.conjs[sel ? o.conj : 0], opsT = sel ? o2Opcoes(t.k, verb, o.conj) : [], chaves = sel ? o2TrChaves(t, cT, o.custom ? null : opsT[o.opt]) : [];
+        const cT = t.conjs[sel ? o.conj : 0], opsT = sel ? o2Opcoes(t.k, verb, o.conj) : [], chaves = (sel && !adjOn) ? o2TrChaves(t, cT, o.custom ? null : opsT[o.opt]) : [];
         const extras = [];            /* unless ⇄ if…not: só troca de conectivo e polaridade */
-        if(sel && t.k === 'cond'){
+        if(sel && t.k === 'cond' && !adjOn){
           const est = o2CondEstado();
           if(cT.en === 'unless') extras.push({ rot:'→ if … not', fn: () => o2Ativar('cond', { conj:0, neg:true }) });
           else if(cT.en === 'if' && o.neg && est.cnd <= 1) extras.push({ rot:'→ unless (sem negação)', fn: () => o2Ativar('cond', { conj:1, neg:false }) });
@@ -877,14 +920,24 @@ function buildO2Core(){
           bd.appendChild(rt);
         }
       }
-      if(t.k !== 'adv' && t.forma !== 'D' && t.forma !== 'N' && t.forma !== 'P' && t.forma !== 'U' && t.forma !== 'Y' && !(t.forma === 'I' && sel && cjv && cjv.ef === 'how') && !(t.k === 'cond' && sel && o.conj === 1) && !(t.k === 'conc' && sel && o2ConcNome(o.conj))){
+      /* v179: predicado da 2ª oração — verbo (padrão) × adjetivo do objeto */
+      if(sel && adjSt.aplica){
+        const lp = document.createElement('div'); lp.className = 'signal-group-label'; lp.textContent = 'Predicado da 2ª oração'; bd.appendChild(lp);
+        const rp = document.createElement('div'); rp.className = 'signal-row-inner wrap-row o2-adjmodo';
+        rp.appendChild(chip('verbo', !o.adj, () => { o2Ativar(t.k, { adj:false }); render(); }, 'A 2ª oração usa um verbo (padrão)'));
+        rp.appendChild(chip('adjetivo do objeto ' + (adjSt.ok ? '<i class="o2-src">＋/−</i>' : '<i class="o2-src">✕</i>'), !!o.adj, () => { o2Ativar(t.k, { adj:true, opt:0 }); render(); }, 'it was + adjetivo, coerente com a polaridade da principal'));
+        bd.appendChild(rp);
+        if(o.adj && !adjSt.ok){ const av = document.createElement('div'); av.className = 'signal-hint o2-aviso'; av.innerHTML = '⚠️ ' + adjSt.msg; bd.appendChild(av); }
+        if(adjOn){ const hp = document.createElement('div'); hp.className = 'signal-hint'; hp.innerHTML = 'Principal <b>' + (adjSt.tom === '+' ? '＋ a favor' : '− contra') + '</b> · com <b>' + escapeHTML(t.conjs[o.conj].en) + '</b> o adjetivo é ' + (adjSt.regra === 'a' ? 'do <b>mesmo lado</b>' : 'do <b>lado oposto</b>') + '. Objeto: <b>' + escapeHTML(adjSt.noun) + '</b>.'; bd.appendChild(hp); }
+      }
+      if(!adjOn && t.k !== 'adv' && t.forma !== 'D' && t.forma !== 'N' && t.forma !== 'P' && t.forma !== 'U' && t.forma !== 'Y' && !(t.forma === 'I' && sel && cjv && cjv.ef === 'how') && !(t.k === 'cond' && sel && o.conj === 1) && !(t.k === 'conc' && sel && o2ConcNome(o.conj))){
         const l2 = document.createElement('div'); l2.className = 'signal-group-label'; l2.textContent = 'Polaridade da 2ª oração'; bd.appendChild(l2);
         const r2 = document.createElement('div'); r2.className = 'signal-row-inner wrap-row';
         r2.appendChild(chip('afirmativa', sel && !o.neg, () => { o2Ativar(t.k, { neg:false }); render(); }));
         r2.appendChild(chip('negativa', sel && o.neg, () => { o2Ativar(t.k, { neg:true }); render(); }));
         bd.appendChild(r2);
       }
-      const l3 = document.createElement('div'); l3.className = 'signal-group-label'; l3.textContent = t.k === 'rger' ? 'Verbo da reduzida — vira -ing (mesmo sujeito da principal)' : t.k === 'rpart' ? 'Particípio — como o sujeito está ou é tratado' : t.k === 'rinf' ? 'Verbo do objeto — o que se quer / evita / gosta de fazer' : t.k === 'rrel' ? 'Complemento do substantivo — a relativa reduzida' : t.k === 'obj' ? 'Adjetivo — o que a oração afirma (“it is…”)' : (t.k === 'rel' || t.k === 'relx') ? 'Verbo da relativa — o objeto é o substantivo da colocação' : t.k === 'cmp' ? 'Advérbio — modo/grau que se compara' : t.k === 'ap' ? 'Substantivo — o que será explicado depois dos dois-pontos' : t.k === 'cn' ? 'Substantivo abstrato — o que a oração completa' : t.k === 'oi' ? (cjv && cjv.ef === '-ing' ? 'Verbo no gerúndio — o que se fala/pensa' : 'Adjetivo — “how difficult it is”') : t.k === 'subj' ? 'Adjetivo — como a ideia é avaliada' : t.k === 'pred' ? 'Substantivo — “The … is that”' : t.k === 'conf' ? ((sel && o.conj >= 2) ? 'Substantivo — o que é seguido (“according to…”)' : 'Oração — o que foi combinado/dito (“as …”)') : t.k === 'prop' ? 'Verbo do 2º termo — o que cresce/diminui junto' : t.k === 'conc' ? ((sel && o.conj >= 3) ? 'Substantivo — o que “apesar de” enfrenta' : 'Adjetivo — como é a situação (“it is…”)') : 'Verbo da 2ª oração — sugestões que combinam com ' + nomeV(verb); bd.appendChild(l3);
+      const l3 = document.createElement('div'); l3.className = 'signal-group-label'; l3.textContent = t.k === 'rger' ? 'Verbo da reduzida — vira -ing (mesmo sujeito da principal)' : t.k === 'rpart' ? 'Particípio — como o sujeito está ou é tratado' : t.k === 'rinf' ? 'Verbo do objeto — o que se quer / evita / gosta de fazer' : t.k === 'rrel' ? 'Complemento do substantivo — a relativa reduzida' : t.k === 'obj' ? 'Adjetivo — o que a oração afirma (“it is…”)' : (t.k === 'rel' || t.k === 'relx') ? 'Verbo da relativa — o objeto é o substantivo da colocação' : t.k === 'cmp' ? 'Advérbio — modo/grau que se compara' : t.k === 'ap' ? 'Substantivo — o que será explicado depois dos dois-pontos' : t.k === 'cn' ? 'Substantivo abstrato — o que a oração completa' : t.k === 'oi' ? (cjv && cjv.ef === '-ing' ? 'Verbo no gerúndio — o que se fala/pensa' : 'Adjetivo — “how difficult it is”') : t.k === 'subj' ? 'Adjetivo — como a ideia é avaliada' : t.k === 'pred' ? 'Substantivo — “The … is that”' : t.k === 'conf' ? ((sel && o.conj >= 2) ? 'Substantivo — o que é seguido (“according to…”)' : 'Oração — o que foi combinado/dito (“as …”)') : t.k === 'prop' ? 'Verbo do 2º termo — o que cresce/diminui junto' : adjOn ? 'Adjetivo do objeto — “it ' + (adjSt.past ? 'was' : 'is') + '…” (só os coerentes com a polaridade)' : t.k === 'conc' ? ((sel && o.conj >= 3) ? 'Substantivo — o que “apesar de” enfrenta' : 'Adjetivo — como é a situação (“it is…”)') : 'Verbo da 2ª oração — sugestões que combinam com ' + nomeV(verb); bd.appendChild(l3);
       const ops = o2Opcoes(t.k, verb, sel ? o.conj : 0), r3 = document.createElement('div'); r3.className = 'signal-row-inner wrap-row';
       /* v143: listas longas (rger/rinf/rpart têm até 13 opções) mostram as 4 primeiras e um chip "+N"; a opção escolhida nunca fica escondida */
       const LIM = 4, aberta = !!o2MaisOpc[t.k] || ops.length <= LIM + 1 || (sel && !o.custom && o.opt >= LIM), vis = aberta ? ops : ops.slice(0, LIM);
@@ -905,7 +958,7 @@ function buildO2Core(){
       }
       /* v89.1: colocações do verbo 2 como complemento (quando a opção não traz objeto) */
       const opSel = o.custom ? { src:'livre' } : ops[o.opt], v2 = sel ? (o.custom || (opSel && opSel.v)) : null;
-      if(sel && v2 && o2PrecisaCpl(t.k, opSel) && (verbById(v2).col || []).length){
+      if(!adjOn && sel && v2 && o2PrecisaCpl(t.k, opSel) && (verbById(v2).col || []).length){
         const l4 = document.createElement('div'); l4.className = 'signal-group-label'; l4.textContent = 'Complemento — colocações de ' + nomeV(verbById(v2)); bd.appendChild(l4);
         const r4 = document.createElement('div'); r4.className = 'signal-row-inner wrap-row';
         r4.appendChild(chip('✨ automático (mesmo objeto)', o.c2 === null, () => { state.o2.c2 = null; render(); }, 'Se a principal tem objeto (passo ④), o verbo 2 herda o mesmo objeto; sem objeto na principal, nada é acrescentado'));
@@ -916,7 +969,7 @@ function buildO2Core(){
         bd.appendChild(r4);
       }
       /* outro verbo (livre): você decide a coerência — não se aplica à concessiva (adjetivo/substantivo) */
-      if(t.k !== 'conc' && t.forma !== 'V' && t.forma !== 'R' && t.forma !== 'S' && t.forma !== 'D' && t.forma !== 'N' && t.forma !== 'P' && t.forma !== 'U' && t.forma !== 'Y' && t.forma !== 'I' && t.forma !== 'W' && t.forma !== 'X'){
+      if(!adjOn && t.k !== 'conc' && t.forma !== 'V' && t.forma !== 'R' && t.forma !== 'S' && t.forma !== 'D' && t.forma !== 'N' && t.forma !== 'P' && t.forma !== 'U' && t.forma !== 'Y' && t.forma !== 'I' && t.forma !== 'W' && t.forma !== 'X'){
       const bus = document.createElement('input'); bus.type = 'text'; bus.className = 'pick-busca o2-busca'; bus.placeholder = 'outro verbo (inglês ou português)…';
       bus.value = o2Busca; bus.setAttribute('autocomplete', 'off'); bus.setAttribute('autocapitalize', 'none'); bus.spellcheck = false;
       const res = document.createElement('div'); res.className = 'signal-row-inner wrap-row o2-res';

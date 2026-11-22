@@ -984,7 +984,7 @@ document.addEventListener('input', e => { if(e.target && e.target.id === 'sBusca
    dos consoles, placar da prática e — o mais importante — a fila de erros a revisar.
    Tudo é opcional: se o armazenamento estiver indisponível (modo privado, permissão
    negada), o app funciona igual, só sem lembrar entre sessões. */
-const APP_VERSION = '3.88';   /* fonte única: rodapé e diagnósticos */
+const APP_VERSION = '3.90';   /* fonte única: rodapé e diagnósticos */
 const STORE_KEY = 'painel-mestre-ingles';
 function storeAvailable(){
   try{ const k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; }
