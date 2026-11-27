@@ -50,7 +50,7 @@ function vslRender(){
       <button type="button" class="chip${VSL.cartao ? ' on' : ''}" id="vslCartao" aria-pressed="${VSL.cartao}" title="Esconde a tradução dos exemplos até você tocar">modo cartão</button>
       <button type="button" class="chip${VSL.pend ? ' on' : ''}" id="vslPend" aria-pressed="${VSL.pend}" title="Mostra só o que ainda não foi marcado como estudado">só pendentes</button></div>
     <div class="vl-list${VSL.cartao ? ' vl-cartao' : ''}">${vis.map(i => vslCard(sec[0], i)).join('') || '<div class="vl-vazio">Nada encontrado.</div>'}</div>
-    <div class="vl-rod">Piloto: 1ª página de cada seção do site de origem. Textos e exemplos próprios; o link leva ao post original.</div>`;
+    <div class="vl-rod">Estruturas: as 7 páginas do site de origem; as outras seções ainda são piloto (1ª página). Textos e exemplos próprios; o link leva ao post original.</div>`;
   w.querySelectorAll('.vl-tab').forEach(b => { b.onclick = () => { VSL.aba = b.dataset.aba; vslRender(); }; });
   const bu = document.getElementById('vslBusca');
   bu.oninput = () => { VSL.busca = bu.value; const pos = bu.selectionStart; vslRender(); const nb = document.getElementById('vslBusca'); nb.focus(); try { nb.setSelectionRange(pos, pos); } catch(e){} };
