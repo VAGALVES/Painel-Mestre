@@ -1315,3 +1315,41 @@
     scroll-margin:calc(var(--nav-h, 56px) + 24px) 16px 40px;}
   html[data-tv="true"] .signal-chip:focus, html[data-tv="true"] .pronome-pill:focus, html[data-tv="true"] .nav-pill:focus{border-radius:999px; transform:scale(1.06);}
   html[data-tv="true"] #pronSheet{max-height:60%;}
+
+
+  /* ---- v181 · VS Lab ---- */
+  .vl-tabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch;}
+  .vl-tab{white-space:nowrap; flex:0 0 auto;}
+  .vl-tab i{font-style:normal; opacity:.7; font-size:11px; margin-left:3px;}
+  .vl-desc{font-size:13px; color:var(--paper-dim); margin:4px 0 8px;}
+  .vl-cnt{float:right; opacity:.7;}
+  .vl-tools{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px;}
+  .vl-busca{flex:1 1 160px; min-width:0; background:var(--panel); color:var(--paper); border:1px solid var(--line); border-radius:8px; padding:7px 9px; font-size:15px;}
+  .vl-card{border:1px solid var(--line); border-radius:10px; background:var(--panel-deep); margin:0 0 8px;}
+  .vl-card[data-ok="1"]{border-color:var(--teal);}
+  .vl-card summary{cursor:pointer; list-style:none; padding:10px 12px; display:grid; grid-template-columns:1fr auto; gap:2px 8px; align-items:baseline;}
+  .vl-card summary::-webkit-details-marker{display:none;}
+  .vl-t{font-weight:700; color:var(--paper); font-size:15px;}
+  .vl-p{grid-column:1; font-size:13px; color:var(--paper-dim);}
+  .vl-v{grid-column:2; grid-row:1; color:var(--teal); font-weight:700;}
+  .vl-body{padding:0 12px 12px; font-size:14px; line-height:1.5;}
+  .vl-rapida,.vl-forma,.vl-nota,.vl-cuid,.vl-relw{margin:8px 0; padding:8px 10px; border-radius:8px; background:var(--panel); border-left:3px solid var(--brass);}
+  .vl-cuid{border-left-color:var(--red);}
+  .vl-nota{border-left-color:var(--teal);}
+  .vl-body b{color:var(--brass); display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px;}
+  .vl-forma code{font-size:14px; color:var(--paper);}
+  .vl-sent{margin:10px 0 4px;}
+  .vl-k{font-weight:700; color:var(--paper); font-size:13px;}
+  .vl-e{margin:2px 0 6px; color:var(--paper-dim);}
+  .vl-ex{padding:6px 0; border-top:1px dashed var(--line); cursor:default;}
+  .vl-en{display:flex; align-items:flex-start; gap:8px; color:var(--paper); font-style:italic;}
+  .vl-pt{padding-left:34px; color:var(--paper-dim); font-size:13px;}
+  .vl-cartao .vl-ex .vl-pt{display:none; cursor:pointer;}
+  .vl-cartao .vl-ex{cursor:pointer;}
+  .vl-cartao .vl-ex.vl-mostra .vl-pt{display:block;}
+  .vl-rel{display:inline-block; border:1px solid var(--line); border-radius:12px; padding:1px 8px; margin:2px 4px 2px 0; font-size:12px; color:var(--paper-dim);}
+  .vl-foot{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:8px;}
+  .vl-src{font-size:12px; color:var(--brass);}
+  .vl-vazio,.vl-rod{font-size:12px; color:var(--paper-dim); padding:8px 2px;}
+  .vl-tab,.vl-tools .chip,.vl-done{background:var(--panel-raised); color:var(--paper); border:1px solid var(--line); border-radius:999px; padding:6px 12px; font:inherit; font-size:13px; cursor:pointer; min-height:34px;}
+  .vl-tab.on,.vl-tools .chip.on{border-color:var(--brass); color:var(--brass); background:var(--panel-deep);}

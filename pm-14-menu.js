@@ -90,6 +90,7 @@ const REF_MENU = [
   ['#', '', 'Tempo na frase'], ['block-adverbs-tempo', '🗂️', 'Expressões por tempo'], ['block-conj', '⏳', 'Conjunções de tempo'],
   ['#', '', 'Frases compostas'], ['block-oracoes', '🔗', 'Orações compostas'], ['block-gramatica', '🌳', 'Gramática das orações', true], ['block-paragrafos', '📚', 'Parágrafos', true],
   ['#', '', 'Som'], ['block-fon', '🔤', 'Regras fonéticas'], ['block-ed', '🔔', 'Pronúncia do -ed'],
+  ['#', '', 'VS Lab'], ['block-vslab', '🧪', 'Expressões e estruturas', true],
   ['#', '', 'Treino e revisão'], ['block-gatilhos', '⚡', 'Gatilhos de resposta', true], ['block-erros', '⚠️', 'Erros comuns'], ['block-caderno', '📓', 'Meu caderno']
 ];
 function refMenuFecha(){ const m = document.getElementById('refMenu'); if(m) m.hidden = true; const b = document.getElementById('navRef'); if(b) b.setAttribute('aria-expanded', 'false'); }

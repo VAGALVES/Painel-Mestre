@@ -404,6 +404,7 @@ function toggleBlock(id){
   if(id === 'block-trilha') trilhaRender();   /* v163 */
   if(id === 'block-numeros') numRender();   /* v164 */
   if(id === 'block-estruturas') estRender();   /* v164 */
+  if(id === 'block-vslab' && typeof vslRender === 'function') vslRender();   /* v181 */
   if(id === 'block-gatilhos') gatRender();   /* v159 */
   if(id === 'block-caderno') cadRender();   /* v158 */
   if(id === 'block-algo') algoRender();   /* v158: exemplos refletem o verbo do motor */
