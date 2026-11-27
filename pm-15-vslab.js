@@ -3,7 +3,7 @@
    --------------------------------------------------------------------------------
    Cinco seções, cada uma num arquivo de dados próprio (data-vslab-*.js → window.VSLAB_D):
      significa (expressões idiomáticas) · phrasal (phrasal verbs) · comodiz (como se diz) · diferenca (pares confundíveis) · estruturas.
-   Os itens são conteúdo ORIGINAL; "l" aponta para o post de origem da lista (índice em vslab/*.json).
+   Os itens são conteúdo ORIGINAL; "l" aponta para o post de origem da lista (índice de títulos mantido fora do repositório).
    Interface: abas por seção, busca, "modo cartão" (esconde a tradução até tocar) e marca de "estudado" (localStorage).
    ================================================================================ */
 const VSL_SECOES = [
@@ -13,6 +13,8 @@ const VSL_SECOES = [
   ['diferenca', '⚖️', 'Qual a diferença', 'Pares e trios que se confundem: como escolher.'],
   ['estruturas', '🧱', 'Estruturas', 'Padrões de frase: a fórmula, o uso e as armadilhas.']
 ];
+/* total de posts de cada seção no site de origem (índices coletados à parte, fora do repositório) — alimenta o rodapé de progresso */
+const VSL_TOTAL = { significa:1297, phrasal:1055, comodiz:758, diferenca:327, estruturas:98 };
 const VSL = { aba:'significa', busca:'', cartao:false, pend:false, ok:{} };
 try { VSL.ok = JSON.parse(localStorage.getItem('pm_vslab_ok') || '{}') || {}; VSL.cartao = localStorage.getItem('pm_vslab_card') === '1'; } catch(e){ VSL.ok = {}; }
 const vslSalva = () => { try { localStorage.setItem('pm_vslab_ok', JSON.stringify(VSL.ok)); localStorage.setItem('pm_vslab_card', VSL.cartao ? '1' : '0'); } catch(e){} };
@@ -50,7 +52,7 @@ function vslRender(){
       <button type="button" class="chip${VSL.cartao ? ' on' : ''}" id="vslCartao" aria-pressed="${VSL.cartao}" title="Esconde a tradução dos exemplos até você tocar">modo cartão</button>
       <button type="button" class="chip${VSL.pend ? ' on' : ''}" id="vslPend" aria-pressed="${VSL.pend}" title="Mostra só o que ainda não foi marcado como estudado">só pendentes</button></div>
     <div class="vl-list${VSL.cartao ? ' vl-cartao' : ''}">${vis.map(i => vslCard(sec[0], i)).join('') || '<div class="vl-vazio">Nada encontrado.</div>'}</div>
-    <div class="vl-rod">Estruturas: as 7 páginas do site de origem; as outras seções ainda são piloto (1ª página). Textos e exemplos próprios; o link leva ao post original.</div>`;
+    <div class="vl-rod">Cobertura: ${VSL_SECOES.map(x => x[2] + ' ' + (D[x[0]] || []).length + '/' + VSL_TOTAL[x[0]]).join(' · ')}. Textos e exemplos próprios; o link leva ao post original.</div>`;
   w.querySelectorAll('.vl-tab').forEach(b => { b.onclick = () => { VSL.aba = b.dataset.aba; vslRender(); }; });
   const bu = document.getElementById('vslBusca');
   bu.oninput = () => { VSL.busca = bu.value; const pos = bu.selectionStart; vslRender(); const nb = document.getElementById('vslBusca'); nb.focus(); try { nb.setSelectionRange(pos, pos); } catch(e){} };

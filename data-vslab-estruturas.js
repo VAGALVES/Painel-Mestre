@@ -1,4 +1,4 @@
-/* VS Lab · "Estruturas do inglês" (completa: 98 itens, as 7 páginas). Conteúdo original; lista do índice vslab/indice-estruturas.json.
+/* VS Lab · "Estruturas do inglês" (completa: 98 itens, as 7 páginas). Conteúdo original; lista do índice de títulos (mantido fora do repositório).
    Campo extra "f" = a fórmula da estrutura. Esquema base em data-vslab-significa.js. */
 window.VSLAB_D = window.VSLAB_D || {};
 VSLAB_D.estruturas = [
